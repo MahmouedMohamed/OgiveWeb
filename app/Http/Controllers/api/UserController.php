@@ -18,7 +18,6 @@ class UserController extends Controller
     public function login(){
         if(Auth::attempt(['email' => request('email'), 'password' => request('password')])){
             $user = Auth::user();
-            $this->content['status'] = 200;
             $this->content['token'] =  $user->createToken($user->getAuthIdentifier())->accessToken;
             $this->content['user'] = Auth::user();
             return response()->json($this->content);
@@ -50,10 +49,10 @@ class UserController extends Controller
                 'email' => request('email'),
                 'password' => Hash::make(request('password')),
             ]);
-            $this->content['status'] = 200;
+            $this->content['status'] = 'done';
         }
         else{
-            $this->content['status'] = 401;
+            $this->content['status'] = 'undone';
             $this->content['details']=$validator->errors()->all();
         }
         return response()->json($this->content);

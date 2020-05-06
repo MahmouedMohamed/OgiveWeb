@@ -25,7 +25,6 @@ Route::get('hhh',function (){
    return response('hhhhh',200);
 });
 
-
 Route::group(['namespace' => 'api'], function () {
     Route::post('/login', 'UserController@login');
 });
@@ -34,10 +33,10 @@ Route::group(['namespace' => 'api'], function () {
     Route::post('/register', 'UserController@register');
 });
 
-Route::post('/createMarker','MarkersController@createMarker');
+Route::post('/Marker','MarkersController@createMarker');
 
-Route::delete('/deleteMarker', 'MarkersController@deleteMarker');
+Route::put('/Marker', 'MarkersController@deleteMarker');
 
-Route::get('/getMarkers', 'MarkersController@getAllMarkers');
+Route::get('/Markers', 'MarkersController@getAllMarkers');
 
 Route::put('/updateUserLocation','UserLocationController@updateUserLocation');

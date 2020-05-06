@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMarkersTable extends Migration
+class CreateFoodsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,13 @@ class CreateMarkersTable extends Migration
      */
     public function up()
     {
-        Schema::create('markers', function (Blueprint $table) {
+        Schema::create('foods', function (Blueprint $table) {
+            $table->unsignedBigInteger('marker_id');
             $table->bigIncrements('id');
-            $table->double('Latitude');
-            $table->double('Longitude');
-            $table->unsignedBigInteger('user_id');
-            $table->timestamps();
+            $table->string('name');
+            $table->text('description');
+            $table->integer('quantity');
+            $table->integer('priority');
         });
     }
 
@@ -29,6 +30,6 @@ class CreateMarkersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('markers');
+        Schema::dropIfExists('foods');
     }
 }

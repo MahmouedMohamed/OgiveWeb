@@ -11,12 +11,12 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Auth::routes();
-
+Route::get('/','HomeController@index')->name('home');
+Route::get('/feedme',function ()
+{
+    return view('feedme');
+})->name('feedme');
 //Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/profile/{user}', 'ProfileController@index')->name('profile.show');

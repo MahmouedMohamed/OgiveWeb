@@ -50,7 +50,7 @@ class User extends Authenticatable
 
     public function markers()
     {
-        return $this->hasMany(Marker::class)->orderBy('created_at','DESC');
+        return $this->hasMany(Marker::class)->orderBy('id','DESC');
     }
     public function location()
     {
