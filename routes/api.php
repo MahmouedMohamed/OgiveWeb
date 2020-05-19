@@ -35,8 +35,12 @@ Route::group(['namespace' => 'api'], function () {
 
 Route::post('/Marker','MarkersController@createMarker');
 
-Route::put('/Marker', 'MarkersController@deleteMarker');
+Route::delete('/Marker', 'MarkersController@deleteMarker');
 
 Route::get('/Markers', 'MarkersController@getAllMarkers');
 
 Route::put('/updateUserLocation','UserLocationController@updateUserLocation');
+
+Route::get('/Memories', 'MemoryController@getAllMemories');
+
+Route::post('/Memory','MemoryController@createMemory');
