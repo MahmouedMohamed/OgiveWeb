@@ -56,4 +56,8 @@ class User extends Authenticatable
     {
         return $this->hasOne(UserLocation::class)->orderBy('user_id','DESC');
     }
+    public function memories()
+    {
+        return $this->hasMany(Memory::class)->orderBy('id','DESC');
+    }
 }
