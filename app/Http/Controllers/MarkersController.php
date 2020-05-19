@@ -24,7 +24,6 @@ class MarkersController extends Controller
             'Latitude' => ['required'],
             'Longitude' => ['required'],
             'user_id' => ['required'],
-            'status' => ['required'],
             'name' => ['required'],
             'description' => ['required'],
             'quantity' => ['required'],
@@ -42,12 +41,12 @@ class MarkersController extends Controller
                 'name' => request('name'),
                 'description' => request('description'),
                 'quantity' => request('quantity'),
-                'priority' => request('quantity'),
+                'priority' => request('priority'),
             ]);
-            $this->content['status'] = 200;
+            $this->content['status'] = 'done';
         }
         else{
-            $this->content['status'] = 405;
+            $this->content['status'] = 'undone';
             $this->content['details']=$validator->errors()->all();
         }
         return response()->json($this->content);
@@ -56,18 +55,16 @@ class MarkersController extends Controller
         $marker = Marker::updateOrCreate(['id' => request()->input('id')], [
             'Latitude' => request()->input('Latitude'),
             'Longitude' => request()->input('Longitude'),
-            'status' => request()->input('status'),
         ]);
         $response["status"] = 200;
         $response["marker"] = $marker;
         return response()->json($response);
     }
     public function deleteMarker(Request $request){
-        $marker = Marker::updateOrCreate(['id' => request()->input('id')], [
-            'status' => request()->input('status'),
-        ]);
-        $response["status"] = 200;
-        $response["marker"] = $marker;
+        $marker = Marker::findOrFail(request()->input('id'));
+        $marker->food->delete();
+        $marker->delete();
+        $response["status"] = 'done';
         return response()->json($response);
     }
     public function getAllMarkers()
