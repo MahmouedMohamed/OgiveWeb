@@ -62,7 +62,7 @@ class MarkersController extends Controller
     }
     public function deleteMarker(Request $request){
         $marker = Marker::findOrFail(request()->input('id'));
-        $marker->food->delete();
+        $marker->food()->delete();
         $marker->delete();
         $response["status"] = 'done';
         return response()->json($response);
