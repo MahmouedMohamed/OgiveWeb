@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Like;
 use App\Memory;
 use App\User;
 use Illuminate\Http\Request;
@@ -48,9 +49,22 @@ class MemoryController extends Controller
         $result = Memory::all()->sortBy('id');
         foreach ($result as $memory) {
 //            $memory['image'] =  public_path().$memory['image'];   ///if hosting
-            $memory['image'] = url()->previous().'\/storage\/'.$memory['image'];
+            $memory['image'] = url()->previous().'\/\/\/\/storage\/\/\/\/'.$memory['image'];
+            $memory['likes'] = Like::all()->where('memory_id', '=', $memory['id'])->values();
         }
         $response["memories"] = $result;
+        return response()->json($response);
+    }
+    public function deleteMemory(Request $request){
+        $memory = Memory::findOrFail(request()->input('id'));
+//        $memory->likes->delete();
+//        $likes = Like::all()->where('memory_id', '=', request()->input('id'));
+//        $marker->food->delete();
+        if($memory->likes !=null){
+            $memory->likes()->delete();
+        }
+        $memory->delete();
+        $response["status"] = 'done';
         return response()->json($response);
     }
 }

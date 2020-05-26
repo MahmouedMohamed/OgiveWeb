@@ -44,3 +44,6 @@ Route::put('/updateUserLocation','UserLocationController@updateUserLocation');
 Route::get('/Memories', 'MemoryController@getAllMemories');
 
 Route::post('/Memory','MemoryController@createMemory');
+
+Route::delete('/Memory', 'MemoryController@deleteMemory');
+Route::post('/Like','LikesController@likeUnlike');
