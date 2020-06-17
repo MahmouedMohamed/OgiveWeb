@@ -12,19 +12,6 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-
-
-
-
-Route::get('hhh',function (){
-   return response('hhhhh',200);
-});
-
 Route::group(['namespace' => 'api'], function () {
     Route::post('/login', 'UserController@login');
 });
@@ -32,18 +19,18 @@ Route::group(['namespace' => 'api'], function () {
 Route::group(['namespace' => 'api'], function () {
     Route::post('/register', 'UserController@register');
 });
+Route::group(['namespace' => 'api','middleware' => 'auth:api'], function(){
+    Route::get('/markers', 'MarkersController@getAll');
+    Route::post('/marker','MarkersController@create');
+    Route::delete('/marker', 'MarkersController@delete');
 
-Route::post('/Marker','MarkersController@createMarker');
+    Route::get('/memories', 'MemoryController@getAllMemories');
+    Route::post('/memory','MemoryController@createMemory');
+    Route::delete('/memory', 'MemoryController@deleteMemory');
 
-Route::delete('/Marker', 'MarkersController@deleteMarker');
+    Route::post('/like','LikesController@likeUnlike');
+});
 
-Route::get('/Markers', 'MarkersController@getAllMarkers');
 
-Route::put('/updateUserLocation','UserLocationController@updateUserLocation');
 
-Route::get('/Memories', 'MemoryController@getAllMemories');
 
-Route::post('/Memory','MemoryController@createMemory');
-
-Route::delete('/Memory', 'MemoryController@deleteMemory');
-Route::post('/Like','LikesController@likeUnlike');
