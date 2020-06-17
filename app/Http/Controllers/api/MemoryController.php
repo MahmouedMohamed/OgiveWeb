@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\api;
+use App\Http\Controllers\Controller;
 
-use App\Like;
 use App\Memory;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 
 class MemoryController extends Controller
@@ -13,9 +14,20 @@ class MemoryController extends Controller
     public function __construct(){
         $this->content = array();
     }
-    public function createMemory(Request $request){
+    public function getAllMemories()
+    {
+        $loadPath = env('APP_UPLOADS_DIR') . DIRECTORY_SEPARATOR;
+        $memories = Memory::all()->sortBy('id');
+        foreach ($memories as $memory) {
+//            $memory['image'] =  public_path().$memory['image'];   ///if hosting
+            $memory['image'] = url()->previous().'\/\/\/\/storage\/\/\/\/'.$memory['image'];
+            $memory['likes'] = $memory->likes;
+        }
+        $response["memories"] = $memories;
+        return response()->json($response);
+    }
+    public function createMemory(){
         $data=request()->all();
-        $user = User::findOrFail(request()->input('user_id'));
         $rules= [
             'user_id' => ['required'],
             'person_name' => ['required'],
@@ -25,10 +37,10 @@ class MemoryController extends Controller
             'image' => ['required','image'],
         ];
         $validator = Validator::make($data,$rules);
-        if($validator->passes()&&$user!=null){
+        if($validator->passes()){
+            $user = User::findOrFail(request()->input('user_id'));
             $imagePath = request('image')->store('uploads','public');
             $user->memories()->create([
-                'user_id' => $data['user_id'],
                 'person_name' => $data['person_name'],
                 'birth' => $data['birth'],
                 'death' => $data['death'],
@@ -42,18 +54,6 @@ class MemoryController extends Controller
             $this->content['details']=$validator->errors()->all();
         }
         return response()->json($this->content);
-    }
-    public function getAllMemories()
-    {
-        $loadPath = env('APP_UPLOADS_DIR') . DIRECTORY_SEPARATOR;
-        $result = Memory::all()->sortBy('id');
-        foreach ($result as $memory) {
-//            $memory['image'] =  public_path().$memory['image'];   ///if hosting
-            $memory['image'] = url()->previous().'\/\/\/\/storage\/\/\/\/'.$memory['image'];
-            $memory['likes'] = Like::all()->where('memory_id', '=', $memory['id'])->values();
-        }
-        $response["memories"] = $result;
-        return response()->json($response);
     }
     public function deleteMemory(Request $request){
         $memory = Memory::findOrFail(request()->input('id'));

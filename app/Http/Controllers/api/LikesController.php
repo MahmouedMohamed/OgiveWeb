@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\api;
+use App\Http\Controllers\Controller;
 
 use App\Like;
 use App\Memory;
+use App\User;
 use Illuminate\Http\Request;
 
 class LikesController extends Controller
@@ -12,20 +14,18 @@ class LikesController extends Controller
         $like = Like::where('user_id', '=', request()->input('user_id'))
             ->where('memory_id', '=', request()->input('memory_id'))
             ->first();
-        $status = '';
         if($like!=null){
-            $like = Like::where('user_id', '=', request()->input('user_id'))
-                ->where('memory_id', '=', request()->input('memory_id'))
-                ->first();
             $like->delete();
             $status = 'unlike';
         }
         else{
-            $memory = Memory::findOrFail(request()->input('memory_id'));
-            $memory->likes()->create([
-                'user_id' => request()->input('user_id'),
-                'memory_id' => request()->input('memory_id'),
-            ]);
+            Memory::findOrFail(request('memory_id'))
+                ->likes()
+                ->create(
+                    [
+                    'user_id' => request()->input('user_id'),
+                ]
+        );
             $status = 'like';
         }
         $response["status"] = $status;
