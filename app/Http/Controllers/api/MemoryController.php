@@ -57,12 +57,7 @@ class MemoryController extends Controller
     }
     public function deleteMemory(Request $request){
         $memory = Memory::findOrFail(request()->input('id'));
-//        $memory->likes->delete();
-//        $likes = Like::all()->where('memory_id', '=', request()->input('id'));
-//        $marker->food->delete();
-        if($memory->likes !=null){
-            $memory->likes()->delete();
-        }
+        File::delete('storage/'.$memory->image);
         $memory->delete();
         $response["status"] = 'done';
         return response()->json($response);
