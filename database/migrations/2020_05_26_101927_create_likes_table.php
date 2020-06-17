@@ -15,9 +15,11 @@ class CreateLikesTable extends Migration
     {
         Schema::create('likes', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('user_id');
-            $table->integer('memory_id');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('memory_id');
             $table->timestamps();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('memory_id')->references('id')->on('memories')->onDelete('cascade');
         });
     }
 

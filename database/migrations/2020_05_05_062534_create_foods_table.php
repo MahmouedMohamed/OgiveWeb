@@ -20,6 +20,8 @@ class CreateFoodsTable extends Migration
             $table->text('description');
             $table->integer('quantity');
             $table->integer('priority');
+            $table->foreign('marker_id')->references('id')->on('markers')->onDelete('cascade');
+
         });
     }
 

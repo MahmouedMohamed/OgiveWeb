@@ -19,7 +19,6 @@ class User extends Authenticatable
     protected $fillable = [
         'name', 'email', 'password','user_name'
     ];
-
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -37,27 +36,20 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-
-    public function profile()
+    public function accessTokens()
     {
-        return $this->hasOne(Profile::class);
+        return $this->hasMany(OauthAccessToken::class);
     }
-
-    public function posts()
-    {
-        return $this->hasMany(Post::class)->orderBy('created_at','DESC');
-    }
-
     public function markers()
     {
         return $this->hasMany(Marker::class)->orderBy('id','DESC');
     }
-    public function location()
-    {
-        return $this->hasOne(UserLocation::class)->orderBy('user_id','DESC');
-    }
     public function memories()
     {
         return $this->hasMany(Memory::class)->orderBy('id','DESC');
+    }
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
     }
 }

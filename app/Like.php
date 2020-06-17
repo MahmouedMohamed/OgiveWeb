@@ -6,9 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Like extends Model
 {
-    protected $guarded=[];
+    protected $fillable = ['user_id'];
     public function memory()
     {
         return $this->belongsTo(Memory::class);
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

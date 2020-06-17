@@ -6,10 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Marker extends Model
 {
-    protected $guarded=[];
-
     protected $fillable=[
-        'Latitude','Longitude','user_id'
+        'Latitude','Longitude'
     ];
 
     public function user()

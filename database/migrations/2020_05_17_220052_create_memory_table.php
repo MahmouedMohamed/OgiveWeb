@@ -22,6 +22,8 @@ class CreateMemoryTable extends Migration
             $table->text('life_story');
             $table->string('image');
             $table->timestamps();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
         });
     }
 
