@@ -4,7 +4,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-use App\User;
+use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 
@@ -28,7 +28,7 @@ class UserController extends Controller
         }
         else{
             $this->content['error'] = "Unauthorized";
-            return response()->json($this->content);
+            return response()->json($this->content,401);
         }
     }
 
@@ -41,14 +41,12 @@ class UserController extends Controller
         $data=request()->all();
         $rules= [
             'name' => ['required', 'string', 'max:255'],
-            'user_name' => ['required','string', 'max:255', 'unique:users'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8'],
         ];
         $validator = Validator::make($data,$rules);
             if($validator->passes()){User::create([
                 'name' => request('name'),
-                'user_name' => request('user_name'),
                 'email' => request('email'),
                 'password' => Hash::make(request('password')),
             ]);

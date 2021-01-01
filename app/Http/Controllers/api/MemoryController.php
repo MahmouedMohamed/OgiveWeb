@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 
-use App\Memory;
-use App\User;
+use App\Models\Memory;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
@@ -14,7 +14,7 @@ class MemoryController extends Controller
     public function __construct(){
         $this->content = array();
     }
-    public function getAllMemories()
+    public function getAll()
     {
         $loadPath = env('APP_UPLOADS_DIR') . DIRECTORY_SEPARATOR;
         $memories = Memory::all()->sortBy('id');
@@ -26,7 +26,7 @@ class MemoryController extends Controller
         $response["memories"] = $memories;
         return response()->json($response);
     }
-    public function createMemory(){
+    public function create(){
         $data=request()->all();
         $rules= [
             'user_id' => ['required'],
@@ -55,7 +55,7 @@ class MemoryController extends Controller
         }
         return response()->json($this->content);
     }
-    public function deleteMemory(Request $request){
+    public function delete(Request $request){
         $memory = Memory::findOrFail(request()->input('id'));
         File::delete('storage/'.$memory->image);
         $memory->delete();

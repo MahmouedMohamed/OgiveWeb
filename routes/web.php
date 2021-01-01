@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -11,22 +13,10 @@
 |
 */
 
+Route::get('/', function () {
+    return view('welcome');
+});
+
 Auth::routes();
-Route::get('/','HomeController@index')->name('home');
-Route::get('/feedme',function ()
-{
-    return view('feedme');
-})->name('feedme');
-//Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/profile/{user}', 'ProfileController@index')->name('profile.show');
-
-Route::get('/p/create','PostsController@create');
-Route::post('/p','PostsController@store');
-
-//Route::post('/marker','MarkersController@createMarker');   //for creating product
-Route::get('/marker/{id}','MarkersController@updateMarker'); //for updating product
-Route::post('/marker/{id}','MarkersController@deleteMarker');  // for deleting product
-//Route::get('/marker','MarkersController@get');
-
-//Route::type('/where to go','which controller'@'which method');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

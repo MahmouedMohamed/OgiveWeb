@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 
-use App\Like;
-use App\Memory;
-use App\User;
+use App\Models\Like;
+use App\Models\Memory;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class LikesController extends Controller

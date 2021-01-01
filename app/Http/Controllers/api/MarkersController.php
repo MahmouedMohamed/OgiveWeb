@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Marker;
-use App\User;
+use App\Models\Marker;
+use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 
 class MarkersController extends Controller
