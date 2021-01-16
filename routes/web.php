@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\PetController;
+use App\Http\Controllers\PetsArticleController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,3 +22,11 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+//Route::view('pets', 'breedMe.pets.pets');
+ Route::resource('pets', PetController::class);
+// ->middleware('auth');
+// Route::get('pets', [PetController::class, 'index']);
+// Route::post('add-pet', [PetController::class, 'store'])->middleware('auth');;
+
+
+

@@ -24,6 +24,8 @@ class CreatePetsTable extends Migration
             $table->string('image');
             $table->boolean('status')->default(1);
             $table->timestamps();
+            $table->softDeletes();
+
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }

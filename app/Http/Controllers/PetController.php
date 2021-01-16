@@ -13,8 +13,9 @@ class PetController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        //
+    {   
+      
+         return view('breedMe.pets.pets');
     }
 
     /**
@@ -24,7 +25,7 @@ class PetController extends Controller
      */
     public function create()
     {
-        //
+        // return view('breedMe.pets.add-pet');
     }
 
     /**
