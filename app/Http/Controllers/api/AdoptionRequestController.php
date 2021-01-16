@@ -1,10 +1,17 @@
 <?php
 
 namespace App\Http\Controllers\api;
+<<<<<<< Updated upstream
 use App\Http\Controllers\Controller;
 
 use App\Models\AdoptionRequest;
 use Illuminate\Http\Request;
+=======
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Laravel\Ui\Presets\React;
+>>>>>>> Stashed changes
 
 class AdoptionRequestController extends Controller
 {
@@ -16,6 +23,7 @@ class AdoptionRequestController extends Controller
     public function index()
     {
         //
+<<<<<<< Updated upstream
     }
 
     /**
@@ -26,6 +34,9 @@ class AdoptionRequestController extends Controller
     public function create()
     {
         //
+=======
+     
+>>>>>>> Stashed changes
     }
 
     /**
@@ -42,6 +53,7 @@ class AdoptionRequestController extends Controller
     /**
      * Display the specified resource.
      *
+<<<<<<< Updated upstream
      * @param  \App\Models\AdoptionRequest  $adoptionRequest
      * @return \Illuminate\Http\Response
      */
@@ -57,6 +69,12 @@ class AdoptionRequestController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit(AdoptionRequest $adoptionRequest)
+=======
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+>>>>>>> Stashed changes
     {
         //
     }
@@ -65,10 +83,17 @@ class AdoptionRequestController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+<<<<<<< Updated upstream
      * @param  \App\Models\AdoptionRequest  $adoptionRequest
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, AdoptionRequest $adoptionRequest)
+=======
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+>>>>>>> Stashed changes
     {
         //
     }
@@ -76,10 +101,17 @@ class AdoptionRequestController extends Controller
     /**
      * Remove the specified resource from storage.
      *
+<<<<<<< Updated upstream
      * @param  \App\Models\AdoptionRequest  $adoptionRequest
      * @return \Illuminate\Http\Response
      */
     public function destroy(AdoptionRequest $adoptionRequest)
+=======
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+>>>>>>> Stashed changes
     {
         //
     }

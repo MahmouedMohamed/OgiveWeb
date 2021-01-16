@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Pet extends Model
 {
     use HasFactory;
+<<<<<<< Updated upstream
     /**
      * The attributes that are mass assignable.
      *
@@ -20,6 +22,21 @@ class Pet extends Model
         'type',
         'image',
         'notes'
+=======
+    use SoftDeletes;
+
+    protected $fillable = [
+        'id',
+        'name',
+        'age',
+        'type',
+        'sex',
+        'notes',
+        'status',
+        'image',
+        'user_id',
+        
+>>>>>>> Stashed changes
     ];
     public function user()
     {
