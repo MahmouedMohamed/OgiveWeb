@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PetResource;
 use App\Http\Controllers\API\BaseController as BaseController;
+use Spatie\QueryBuilder\QueryBuilder;
 
 use App\Models\Pet;
 use App\Models\User;
@@ -81,7 +82,6 @@ class PetController extends BaseController
      */
     public function update(Request $request, Pet $pet)
     {
-        //
         // $data=$request->all();
         if(!empty($request['user_id'])){
             $user = User::find(request()->input('user_id'));
@@ -102,7 +102,6 @@ class PetController extends BaseController
         $pet->notes = $request['notes'];
         
         $pet->save();
-      
         return response()->json([], 200);
     }
 
@@ -137,5 +136,15 @@ class PetController extends BaseController
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048e',
 
         ]);
+    }
+    public function filterByType(){
+        $result = QueryBuilder::for(Pet::class)
+                ->allowedFilters('type')
+                ->get();
+        if($result->isEmpty()){
+            return $this->sendError('No Pets are found.');
+        }
+       return $this->sendResponse($result, 'Pets Retrieved successfully.');
+
     }
 }

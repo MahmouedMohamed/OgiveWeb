@@ -39,3 +39,4 @@ Route::group(['middleware' => 'auth:api'], function(){
 // Route::delete('/pet/{id}',[PetController::class, 'destroy']);
 
 Route::apiResource('pet', PetController::class);
+Route::get('/pet',[PetController::class, 'filterByType']);
