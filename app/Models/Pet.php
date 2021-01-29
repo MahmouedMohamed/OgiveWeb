@@ -9,34 +9,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Pet extends Model
 {
     use HasFactory;
-<<<<<<< Updated upstream
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
         'name',
         'age',
         'sex',
         'type',
         'image',
-        'notes'
-=======
-    use SoftDeletes;
-
-    protected $fillable = [
-        'id',
-        'name',
-        'age',
-        'type',
-        'sex',
-        'notes',
         'status',
-        'image',
         'user_id',
-        
->>>>>>> Stashed changes
+        'notes',
     ];
     public function user()
     {

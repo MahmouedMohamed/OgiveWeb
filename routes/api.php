@@ -5,15 +5,9 @@ use App\Http\Controllers\api\UserController;
 use App\Http\Controllers\api\MarkersController;
 use App\Http\Controllers\api\MemoryController;
 use App\Http\Controllers\api\LikesController;
-<<<<<<< Updated upstream
 use App\Http\Controllers\api\PetController;
-=======
 
-use App\Http\Controllers\api\PetController;
-use App\Http\Resources\PetResource;
-use App\Models\Pet;
 
->>>>>>> Stashed changes
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -36,20 +30,12 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::delete('/memory',[MemoryController::class, 'delete']);
     Route::post('/like',[LikesController::class, 'likeUnlike']);
 });
-<<<<<<< Updated upstream
+
 //ToDo: Add This APIs to be auth by 2oauth token
-Route::get('/pet',[PetController::class, 'index']);
-Route::get('/pet/{id}',[PetController::class, 'show']);
-Route::post('/pet',[PetController::class, 'store']);
-Route::patch('/pet/{id}',[PetController::class, 'update']);
-Route::delete('/pet/{id}',[PetController::class, 'destroy']);
+// Route::get('/pet',[PetController::class, 'index']);
+// Route::get('/pet/{id}',[PetController::class, 'show']);
+// Route::post('/pet',[PetController::class, 'store']);
+// Route::patch('/pet/{id}',[PetController::class, 'update']);
+// Route::delete('/pet/{id}',[PetController::class, 'destroy']);
 
-=======
-
-Route::resource('pets', PetController::class);
-
-// Route::get('/pets/{pet}', function(Pet $pet) {
-//     return new PetResource($pet);
-// });
->>>>>>> Stashed changes
-
+Route::apiResource('pet', PetController::class);

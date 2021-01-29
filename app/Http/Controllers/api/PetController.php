@@ -3,19 +3,14 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-<<<<<<< Updated upstream
+use App\Http\Resources\PetResource;
+use App\Http\Controllers\API\BaseController as BaseController;
 
 use App\Models\Pet;
 use App\Models\User;
 use Illuminate\Http\Request;
-=======
-use App\Http\Resources\PetResource;
-use Illuminate\Http\Request;
-use App\Models\Pet;
-use Illuminate\Support\Facades\Validator;
->>>>>>> Stashed changes
 
-class PetController extends Controller
+class PetController extends BaseController
 {
     /**
      * Display a listing of the resource.
@@ -24,28 +19,26 @@ class PetController extends Controller
      */
     public function index()
     {
-<<<<<<< Updated upstream
-        //
-=======
-        return new PetResource(Pet::all());
-
->>>>>>> Stashed changes
+       // return Pet::all();
+       // return PetResource::collection(Pet::all());
+        $pets = Pet::all();
+        return $this->sendResponse($pets, 'Pets retrieved successfully.');   
     }
 
     /**
      * Store a newly created resource in storage.
      *
+     * 
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-<<<<<<< Updated upstream
         $validated = $this->validatePet($request);
         // $data=request()->all();
         $user = User::find(request()->input('user_id'));
         if (!$user) {
-            return response()->json(['Err_Flag' => true, 'Err_Desc' => "User Not Found"], 404);
+            return $this->sendError('User Not Found');     
         }
         $imagePath = $request['image']->store('uploads', 'public');
         $user->pets()->create([
@@ -58,118 +51,79 @@ class PetController extends Controller
             'status' => true
         ]);
         return response()->json([], 200);
-=======
-        
-        $imageName = time().'.'.$request->image->extension();  
-        $path = $request->image->move(public_path('images'), $imageName);
-        $data = $request->all();
-        $validator = Validator::make($data, [
-            'name' => 'required',
-            'type' => 'required',
-            'sex' => 'required',
-            'age' => 'required',
-        ]);
-        if ($validator->fails()) {
-            return response(['error' => $validator->errors(), 'Validation Error']);
-        }
-        $pet = Pet::create([
-            "name" => $request['name'],
-            "age" => $request['age'],
-            "type" => $request['type'],
-            "sex" => $request['sex'],
-            "notes" => $request['notes'],
-            "user_id" => $request['user_id'],
-            "image" => $path
-         ] );
-        return response()->json(['Err_Flag'=> false ,"message" => "Pet is added successfully"], 200);
-        
->>>>>>> Stashed changes
     }
 
     /**
      * Display the specified resource.
      *
-<<<<<<< Updated upstream
      * @param  \App\Models\Pet  $pet
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Pet $pet)
-    {
-        //
-=======
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        return new PetResource($id);
-
-        // $pet = Pet::find($id);
-        // if($pet){
-        //     return response()->json($pet, 200);
-        // }else{
-        //     return response()->json(['Err_Flag'=> true,'Err_Desc' => "Pet is not found"] , 404);
-        // }
->>>>>>> Stashed changes
+    
+        //  return new PetResource(Pet::findOrFail($id));
+        $pet = Pet::find($id);
+  
+        if (is_null($pet)) {
+            return $this->sendError('Pet not found.');
+        }
+   
+        return $this->sendResponse($pet, 'Pet retrieved successfully.');
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-<<<<<<< Updated upstream
      * @param  \App\Models\Pet  $pet
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Pet $pet)
     {
         //
-=======
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request,$id)
-    {
-        //
-        
-        $pet = Pet::find($id);
-        $name = $request->input('name');
-        var_dump($name);
-        return $name;
-        if($request->has('image')) {
-            $image = $request->file('image');
-            $filename = $image->getClientOriginalName();
-            $image->move(public_path('images/'), $filename);
-            $pet->image = $request->file('image')->getClientOriginalName();
+        // $data=$request->all();
+        if(!empty($request['user_id'])){
+            $user = User::find(request()->input('user_id'));
+            if (!$user){
+                return $this->sendError('User Not Found');     
+            }
         }
-        $request->validate([
-            'name' => 'required',
-            'age' => 'required',
-            'type' => 'required',
-            'user_id' => 'required'
-        ]);
+        $pet = Pet::find($pet->id);
+        if($request->hasFile('image')){
+            $imagePath = $request['image']->store('uploads', 'public');
+            $pet->image = $imagePath;
+        }
+        $pet->user_id = $request['user_id'];
         $pet->name = $request['name'];
         $pet->age = $request['age'];
-        $pet->type = $request['type'];
         $pet->sex = $request['sex'];
+        $pet->type = $request['type'];
         $pet->notes = $request['notes'];
-        $pet->status = $request['status'];
-        $pet->user_id = $request['user_id'];
+        
         $pet->save();
-        return response()->json(["Err_Flag => false","message => Updated Successfully"],200);
->>>>>>> Stashed changes
+      
+        return response()->json([], 200);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-<<<<<<< Updated upstream
      * @param  \App\Models\Pet  $pet
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Pet $pet)
+    public function destroy($id)
     {
-        //
+        $pet = Pet::find($id);
+        if($pet){
+            $pet->delete();
+            Storage::delete('public/uploads'); // Change it to delete the image from public
+            $pet->delete();
+            return $this->sendResponse([], 'Pet deleted successfully.');
+        }else{
+            return $this->sendError('Pet not found.');
+        }
+       
     }
     public function validatePet(Request $request)
     {
@@ -180,24 +134,8 @@ class PetController extends Controller
             'sex' => 'required|in:male,female',
             'type' => 'required',
             'notes' => 'max:1024',
-            'image' => 'required|image',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048e',
+
         ]);
     }
 }
-=======
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        $pet = Pet::Find($id);
-        if($pet){
-            $pet->delete();
-            return response()->json(['Err_Flag'=> false,'message' => "Pet is successfully delete"] , 200);
-    
-        }else{
-            return response()->json(['Err_Flag'=> true,'Err_Desc' => "Pet Couldnt delete"] , 404);
-        }
-    }
-}
->>>>>>> Stashed changes
