@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Consultation;
 use Illuminate\Http\Request;
 
-class ConsultationController extends Controller
+class ConsultationController extends BaseController
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +15,8 @@ class ConsultationController extends Controller
      */
     public function index()
     {
-        //
+        $consultations = Consultation::all();
+        return $this->sendResponse($consultations, 'Consultations are retrieved successfully.');
     }
 
     /**
@@ -36,7 +37,19 @@ class ConsultationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'user_id' => 'required',
+            'description' => 'required',
+        ]);
+        $consultation = new Consultation();
+        if ($request->hasFile('image')) {
+            $imagePath = $request['image']->store('uploads', 'public');
+            $consultation->image = $imagePath;
+        }
+        $consultation->user_id = $request['user_id'];
+        $consultation->description =$request['description'];
+        $consultation->save();
+        return $this->sendResponse([], 'The Consultation is  added successfully.');
     }
 
     /**
@@ -81,6 +94,8 @@ class ConsultationController extends Controller
      */
     public function destroy(Consultation $consultation)
     {
-        //
+        $consultation = Consultation::find($consultation->id);
+        $consultation->delete();
+        
     }
 }

@@ -20,10 +20,10 @@ class PetController extends BaseController
      */
     public function index()
     {
-       // return Pet::all();
-       // return PetResource::collection(Pet::all());
+        // return Pet::all();
+        // return PetResource::collection(Pet::all());
         $pets = Pet::all();
-        return $this->sendResponse($pets, 'Pets retrieved successfully.');   
+        return $this->sendResponse($pets, 'Pets retrieved successfully.');
     }
 
     /**
@@ -39,7 +39,7 @@ class PetController extends BaseController
         // $data=request()->all();
         $user = User::find(request()->input('user_id'));
         if (!$user) {
-            return $this->sendError('User Not Found');     
+            return $this->sendError('User Not Found');
         }
         $imagePath = $request['image']->store('uploads', 'public');
         $user->pets()->create([
@@ -62,14 +62,14 @@ class PetController extends BaseController
      */
     public function show($id)
     {
-    
+
         //  return new PetResource(Pet::findOrFail($id));
         $pet = Pet::find($id);
-  
+
         if (is_null($pet)) {
             return $this->sendError('Pet not found.');
         }
-   
+
         return $this->sendResponse($pet, 'Pet retrieved successfully.');
     }
 
@@ -83,14 +83,15 @@ class PetController extends BaseController
     public function update(Request $request, Pet $pet)
     {
         // $data=$request->all();
-        if(!empty($request['user_id'])){
+        // $this->authorize('update', $pet);
+        if (!empty($request['user_id'])) {
             $user = User::find(request()->input('user_id'));
-            if (!$user){
-                return $this->sendError('User Not Found');     
+            if (!$user) {
+                return $this->sendError('User Not Found');
             }
         }
         $pet = Pet::find($pet->id);
-        if($request->hasFile('image')){
+        if ($request->hasFile('image')) {
             $imagePath = $request['image']->store('uploads', 'public');
             $pet->image = $imagePath;
         }
@@ -100,7 +101,7 @@ class PetController extends BaseController
         $pet->sex = $request['sex'];
         $pet->type = $request['type'];
         $pet->notes = $request['notes'];
-        
+
         $pet->save();
         return response()->json([], 200);
     }
@@ -114,15 +115,14 @@ class PetController extends BaseController
     public function destroy($id)
     {
         $pet = Pet::find($id);
-        if($pet){
+        if ($pet) {
             $pet->delete();
             Storage::delete('public/uploads'); // Change it to delete the image from public
             $pet->delete();
             return $this->sendResponse([], 'Pet deleted successfully.');
-        }else{
+        } else {
             return $this->sendError('Pet not found.');
         }
-       
     }
     public function validatePet(Request $request)
     {
@@ -137,14 +137,14 @@ class PetController extends BaseController
 
         ]);
     }
-    public function filterByType(){
+    public function filterByType()
+    {
         $result = QueryBuilder::for(Pet::class)
-                ->allowedFilters('type')
-                ->get();
-        if($result->isEmpty()){
+            ->allowedFilters('type')
+            ->get();
+        if ($result->isEmpty()) {
             return $this->sendError('No Pets are found.');
         }
-       return $this->sendResponse($result, 'Pets Retrieved successfully.');
-
+        return $this->sendResponse($result, 'Pets Retrieved successfully.');
     }
 }

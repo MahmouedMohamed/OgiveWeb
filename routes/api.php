@@ -1,12 +1,13 @@
 <?php
 
+use App\Http\Controllers\api\ConsultationController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\api\UserController;
 use App\Http\Controllers\api\MarkersController;
 use App\Http\Controllers\api\MemoryController;
 use App\Http\Controllers\api\LikesController;
 use App\Http\Controllers\api\PetController;
-
+use App\Models\Pet;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,3 +41,9 @@ Route::group(['middleware' => 'auth:api'], function(){
 
 Route::apiResource('pet', PetController::class);
 Route::get('/pet',[PetController::class, 'filterByType']);
+
+Route::put('/pet/{pet}', function (Pet $pet) {
+    // The current user may update the post...
+})->middleware('can:update,pet');
+
+Route::apiResource('consultations', ConsultationController::class);
