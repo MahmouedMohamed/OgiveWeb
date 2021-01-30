@@ -51,7 +51,7 @@ class PetController extends BaseController
             'image' => $imagePath,
             'status' => true
         ]);
-        return response()->json([], 200);
+        return $this->sendResponse([], 'Pet is added successfully.');
     }
 
     /**

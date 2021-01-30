@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\api\AdoptionRequestController;
 use App\Http\Controllers\api\ConsultationController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\api\UserController;
@@ -50,3 +51,7 @@ Route::put('/pet/{pet}', function (Pet $pet) {
 
 Route::apiResource('consultations', ConsultationController::class);
 Route::apiResource('comments', ConsultationCommentController::class);
+Route::apiResource('requests', AdoptionRequestController::class);
+
+Route::post('myRequests', [AdoptionRequestController::class,'getRequests']);
+Route::post('sendRequest', [AdoptionRequestController::class,'sendRequest']);
