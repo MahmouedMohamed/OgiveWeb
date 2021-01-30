@@ -7,6 +7,8 @@ use App\Http\Controllers\api\MarkersController;
 use App\Http\Controllers\api\MemoryController;
 use App\Http\Controllers\api\LikesController;
 use App\Http\Controllers\api\PetController;
+use App\Http\Controllers\api\ConsultationCommentController;
+
 use App\Models\Pet;
 
 /*
@@ -47,3 +49,4 @@ Route::put('/pet/{pet}', function (Pet $pet) {
 })->middleware('can:update,pet');
 
 Route::apiResource('consultations', ConsultationController::class);
+Route::apiResource('comments', ConsultationCommentController::class);
