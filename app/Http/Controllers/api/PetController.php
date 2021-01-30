@@ -65,11 +65,9 @@ class PetController extends BaseController
 
         //  return new PetResource(Pet::findOrFail($id));
         $pet = Pet::find($id);
-
         if (is_null($pet)) {
             return $this->sendError('Pet not found.');
         }
-
         return $this->sendResponse($pet, 'Pet retrieved successfully.');
     }
 
@@ -83,19 +81,19 @@ class PetController extends BaseController
     public function update(Request $request, Pet $pet)
     {
         // $data=$request->all();
-        // $this->authorize('update', $pet);
-        if (!empty($request['user_id'])) {
-            $user = User::find(request()->input('user_id'));
-            if (!$user) {
-                return $this->sendError('User Not Found');
-            }
-        }
+        $this->authorize('update', $pet);
+        // if (!empty($request['user_id'])) {
+        //     $user = User::find(request()->input('user_id'));
+        //     if (!$user) {
+        //         return $this->sendError('User Not Found');
+        //     }
+        // }
         $pet = Pet::find($pet->id);
         if ($request->hasFile('image')) {
             $imagePath = $request['image']->store('uploads', 'public');
             $pet->image = $imagePath;
         }
-        $pet->user_id = $request['user_id'];
+        // $pet->user_id = $request['user_id'];
         $pet->name = $request['name'];
         $pet->age = $request['age'];
         $pet->sex = $request['sex'];

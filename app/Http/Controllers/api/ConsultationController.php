@@ -58,9 +58,15 @@ class ConsultationController extends BaseController
      * @param  \App\Models\Consultation  $consultation
      * @return \Illuminate\Http\Response
      */
-    public function show(Consultation $consultation)
+    public function show($id)
     {
-        //
+        $consultation = Consultation::find($id);
+        if($consultation){
+            return $this->sendResponse($consultation,'The Consultation is retrieved successfully');
+        }else{
+            return $this->sendError('The Consultation not found.');
+        }
+
     }
 
     /**
@@ -83,7 +89,15 @@ class ConsultationController extends BaseController
      */
     public function update(Request $request, Consultation $consultation)
     {
-        //
+        $consultation = Consultation::find($consultation->id);
+        $consultation->description = $request['description'];
+        if ($request->hasFile('image')) {
+            $imagePath = $request['image']->store('uploads','public');
+            $consultation->image = $imagePath;
+        }
+        $consultation->save();
+        return $this->sendResponse([], 'The Consultation is updated successfully.');
+
     }
 
     /**
@@ -92,10 +106,16 @@ class ConsultationController extends BaseController
      * @param  \App\Models\Consultation  $consultation
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Consultation $consultation)
+    public function destroy($id)
     {
-        $consultation = Consultation::find($consultation->id);
-        $consultation->delete();
-        
+        $consultation = Consultation::find($id);
+        if ($consultation) {
+            $consultation->delete();
+            // Storage::delete('public/uploads'); // Change it to delete the image from public
+            $consultation->delete();
+            return $this->sendResponse([], 'The Consultation is deleted successfully.');
+        } else {
+            return $this->sendError('The Consultation not found.');
+        }
     }
 }
