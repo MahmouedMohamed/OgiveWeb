@@ -1,12 +1,14 @@
 <?php
 
 namespace App\Http\Controllers\api;
+
 use App\Http\Controllers\Controller;
 
 use App\Models\PetsArticle;
+use Faker\Provider\Base;
 use Illuminate\Http\Request;
 
-class PetsArticleController extends Controller
+class PetsArticleController extends BaseController
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +17,8 @@ class PetsArticleController extends Controller
      */
     public function index()
     {
-        //
+        $articles = PetsArticle::all();
+        return $this->sendResponse($articles, "Articles are retrieved Successfully");
     }
 
     /**
@@ -36,7 +39,15 @@ class PetsArticleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $article = new PetsArticle();
+        $article->title = $request['title'];
+        $article->description = $request['description'];
+        if ($request->hasFile('image')) {
+            $imagePath = $request['image']->store('uploads', 'public');
+            $article->image = $imagePath;
+        }
+        $article->save();
+        return $this->sendResponse([], "Article is added Successfully");
     }
 
     /**
@@ -45,9 +56,14 @@ class PetsArticleController extends Controller
      * @param  \App\Models\PetsArticle  $petsArticle
      * @return \Illuminate\Http\Response
      */
-    public function show(PetsArticle $petsArticle)
+    public function show($id)
     {
-        //
+        $article = PetsArticle::find($id);
+        if ($article) {
+            return $this->sendResponse($article, "Article is retrieved Successfully");
+        } else {
+            return $this->sendError("No Article Found");
+        }
     }
 
     /**
@@ -68,9 +84,22 @@ class PetsArticleController extends Controller
      * @param  \App\Models\PetsArticle  $petsArticle
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, PetsArticle $petsArticle)
+    public function update(Request $request,  $id)
     {
-        //
+        //As an admin I can edit article
+        $article = PetsArticle::find($id);
+        if ($article) {
+            $article->title = $request['title'];
+            $article->description = $request['description'];
+            if ($request->hasFile('image')) {
+                $imagePath = $request['image']->store('uploads', 'public');
+                $article->image = $imagePath;
+            }
+            $article->save();
+            return $this->sendResponse([], "Article is updated Successfully");
+        } else {
+            return $this->sendError("No Article Found");
+        }
     }
 
     /**
@@ -79,8 +108,15 @@ class PetsArticleController extends Controller
      * @param  \App\Models\PetsArticle  $petsArticle
      * @return \Illuminate\Http\Response
      */
-    public function destroy(PetsArticle $petsArticle)
+    public function destroy($id)
     {
-        //
+        $article = PetsArticle::find($id);
+        if ($article) {
+            $article->delete();
+            //Delete The image
+            return $this->sendResponse([], "Article is deleted Successfully");
+        } else {
+            return $this->sendError("No Article Found");
+        }
     }
 }

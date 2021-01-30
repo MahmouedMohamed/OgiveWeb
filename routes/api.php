@@ -9,8 +9,11 @@ use App\Http\Controllers\api\MemoryController;
 use App\Http\Controllers\api\LikesController;
 use App\Http\Controllers\api\PetController;
 use App\Http\Controllers\api\ConsultationCommentController;
-
+use App\Http\Controllers\api\PetsArticleController;
+use App\Http\Controllers\api\PlaceController;
 use App\Models\Pet;
+// use Illuminate\Routing\Route;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,3 +58,10 @@ Route::apiResource('requests', AdoptionRequestController::class);
 
 Route::post('myRequests', [AdoptionRequestController::class,'getRequests']);
 Route::post('sendRequest', [AdoptionRequestController::class,'sendRequest']);
+
+Route::apiResource('articles', PetsArticleController::class);
+
+Route::apiResource('places', PlaceController::class);
+Route::get('sales',[PlaceController::class,'sales']);
+Route::get('clinics',[PlaceController::class,'clinics']);
+Route::get('filterPlacesByType',[PlaceController::class,'filterByType']);
