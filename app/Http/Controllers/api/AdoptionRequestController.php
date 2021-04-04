@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Http\Controllers\Controller;
-
 use App\Models\AdoptionRequest;
 use Illuminate\Http\Request;
 
@@ -51,8 +49,9 @@ class AdoptionRequestController extends BaseController
             'adoption_place' => 'required',
             'experience' => 'required',
             'accepted_terms' => 'required',
-            'address' => 'required'
+            'address' => 'required',
         ]);
+
         $adoptionRequest = new AdoptionRequest();
         $adoptionRequest->user_id = $request['user_id'];
         $adoptionRequest->phone_number = $request['phone_number'];
