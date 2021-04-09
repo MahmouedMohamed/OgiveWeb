@@ -1,43 +1,44 @@
 <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <nav class="navbar navbar-expand-lg">
+    <div class="row">
+        <div class="col-lg-12">
+            <nav class="navbar navbar-expand-lg ">
+                <img src="{{asset('images/logoBreedMe.png')}}" alt="Logo">
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-                    <a class="navbar-brand" href="#">
-                        <img src="{{asset('images/logoBreedMe.png')}}" alt="Logo">
-                    </a>
-
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTwo" aria-controls="navbarTwo" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="toggler-icon"></span>
-                        <span class="toggler-icon"></span>
-                        <span class="toggler-icon"></span>
-                    </button>
-
-
-                    <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
-                        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                            <li class="nav-item active">
-                                <a class="nav-link" href="{{{url('/')}}}">Home <span class="sr-only">(current)</span></a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">About Us</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Products</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Services</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Contact</a>
-                            </li>
-                        </ul>
-
-                    </div>
-
-
-                </nav> 
-                <!-- navbar -->
-            </div>
-        </div> <!-- row -->
-    </div> <!-- container -->
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link px-3" href="#"><b>How it works</b></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link px-3" href="#"><b>Rehome Your Pet</b></a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <b>Resources</b>
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="#">Action</a>
+                                <a class="dropdown-item" href="#">Another action</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Something else here</a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link px-3" href="#"><b>Shelter / Rescue</b></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link px-3" href="#"><b>Log in</b></a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <!-- navbar -->
+        </div>
+    </div> <!-- row -->
+</div> <!-- container -->
