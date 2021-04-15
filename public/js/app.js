@@ -65780,6 +65780,17 @@ module.exports = function(module) {
 
 /***/ }),
 
+/***/ "./resources/css/app.css":
+/*!*******************************!*\
+  !*** ./resources/css/app.css ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
 /***/ "./resources/js/app.js":
 /*!*****************************!*\
   !*** ./resources/js/app.js ***!
@@ -65896,19 +65907,20 @@ if (document.getElementById('example')) {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-// removed by extract-text-webpack-plugin
+throw new Error("Module build failed (from ./node_modules/css-loader/index.js):\nModuleBuildError: Module build failed (from ./node_modules/sass-loader/dist/cjs.js):\nError: Node Sass version 5.0.0 is incompatible with ^4.0.0.\n    at getSassImplementation (C:\\Users\\ShroukSobhy\\Documents\\Ogive\\node_modules\\sass-loader\\dist\\getSassImplementation.js:46:13)\n    at Object.loader (C:\\Users\\ShroukSobhy\\Documents\\Ogive\\node_modules\\sass-loader\\dist\\index.js:40:61)\n    at C:\\Users\\ShroukSobhy\\Documents\\Ogive\\node_modules\\webpack\\lib\\NormalModule.js:316:20\n    at C:\\Users\\ShroukSobhy\\Documents\\Ogive\\node_modules\\loader-runner\\lib\\LoaderRunner.js:367:11\n    at C:\\Users\\ShroukSobhy\\Documents\\Ogive\\node_modules\\loader-runner\\lib\\LoaderRunner.js:233:18\n    at runSyncOrAsync (C:\\Users\\ShroukSobhy\\Documents\\Ogive\\node_modules\\loader-runner\\lib\\LoaderRunner.js:143:3)\n    at iterateNormalLoaders (C:\\Users\\ShroukSobhy\\Documents\\Ogive\\node_modules\\loader-runner\\lib\\LoaderRunner.js:232:2)\n    at C:\\Users\\ShroukSobhy\\Documents\\Ogive\\node_modules\\loader-runner\\lib\\LoaderRunner.js:205:4\n    at C:\\Users\\ShroukSobhy\\Documents\\Ogive\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:85:15\n    at processTicksAndRejections (internal/process/task_queues.js:79:11)");
 
 /***/ }),
 
 /***/ 0:
-/*!*************************************************************!*\
-  !*** multi ./resources/js/app.js ./resources/sass/app.scss ***!
-  \*************************************************************/
+/*!*************************************************************************************!*\
+  !*** multi ./resources/js/app.js ./resources/sass/app.scss ./resources/css/app.css ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! E:\Ogive\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! E:\Ogive\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\ShroukSobhy\Documents\Ogive\resources\js\app.js */"./resources/js/app.js");
+__webpack_require__(/*! C:\Users\ShroukSobhy\Documents\Ogive\resources\sass\app.scss */"./resources/sass/app.scss");
+module.exports = __webpack_require__(/*! C:\Users\ShroukSobhy\Documents\Ogive\resources\css\app.css */"./resources/css/app.css");
 
 
 /***/ })

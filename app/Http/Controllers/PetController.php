@@ -19,9 +19,9 @@ class PetController extends Controller
         $res = app()->handle($req);
         $responseBody = $res->getContent();
         $result = json_decode($responseBody, true);
+        $pets = $result['data']['data'];
 
-        $pets = $result['data'];
-        return view('breedme.main', compact('pets'));
+        return view('breedme.main', ['pets'=> $pets] );
     }
 
     /**
@@ -58,7 +58,8 @@ class PetController extends Controller
         $responseBody = $res->getContent();
         $result = json_decode($responseBody, true);
         $pet = $result['data'];
-        return view('breedme.pages.onepet', compact('pet'));
+        $user_info = $pet['user'];
+        return view('breedme.pages.onepet', compact('pet','user_info'));
 
     }
 

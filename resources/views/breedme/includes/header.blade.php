@@ -2,7 +2,10 @@
     <div class="row">
         <div class="col-lg-12">
             <nav class="navbar navbar-expand-lg ">
-                <img src="{{asset('images/logoBreedMe.png')}}" alt="Logo">
+            <a href="{{url('/')}}">
+            <img src="{{asset('images/logoBreedMe.png')}}" alt="Logo">
+            </a>
+           
                 <button class="navbar-toggler" type="button" data-toggle="collapse"
                     data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                     aria-label="Toggle navigation">
@@ -33,7 +36,7 @@
                             <a class="nav-link px-3" href="#"><b>Shelter / Rescue</b></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link px-3" href="#"><b>Log in</b></a>
+                            <a class="nav-link px-3" href="{{url('/login')}}"><b>Log in</b></a>
                         </li>
                     </ul>
                 </div>

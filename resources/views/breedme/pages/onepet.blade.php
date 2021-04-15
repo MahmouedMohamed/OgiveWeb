@@ -33,7 +33,7 @@
                 <h3> Facts About Me </h3>
                 <div class="card-desc">
                     <h3>{{$pet['name']}}</h3>
-                    <i class="fas fa-map-marker-alt"></i> Owner Place
+                    <i class="fas fa-map-marker-alt"></i>  {{$user_info['address']}}
                     <div class="row">
                         <div class="col-4">
                             <span class="border-box text-center">
@@ -43,7 +43,7 @@
                         </div>
                         <div class="col-4">
                             <span class="border-box text-center">
-                                <b>{{$pet['age']}}</b>
+                                <b>{{$pet['age']}} Months</b>
                                 <p>Age</p>
                             </span>
                         </div>
@@ -64,9 +64,9 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="d-flex flex-row user-info"><img class="rounded-circle"
-                                    src="{{url('img/mahmoued.jpg')}}" width="40" height="50">
+                                    src="{{url($user_info['image'])}}" width="40" height="50">
                                 <div class="d-flex flex-column justify-content-start ml-2"><span
-                                        class="d-block font-weight-bold name">Mahmoued Mohamed</span><span
+                                        class="d-block font-weight-bold name"> {{$user_info['user_name']}}</span><span
                                         class="date text-black-50">Shared publicly - Jan 2021</span></div>
                             </div>
                         </div>

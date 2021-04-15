@@ -103,7 +103,7 @@
      -moz-border-radius: 55px 55px 55px 55px;
      -webkit-border-radius: 55px 55px 55px 55px;
      border: 1px double #000000;
-     text-align: center; 
+     text-align: center;
      border-radius: 30px;*/
      padding: 0.6em 2em;
      border-radius: 8px;
@@ -164,3 +164,12 @@
  }
 
  /* End card section */
+
+ .footer-img{
+     height: 200px;
+ }
+ .center {
+     margin: auto;
+     width: 60%;
+     padding: 10px;
+ }
