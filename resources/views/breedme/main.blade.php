@@ -5,12 +5,9 @@
     <meta charset="utf-8">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- <link rel="stylesheet" href="{{asset('landing/assets/css/bootstrap.min.css')}}"> -->
-    <!-- <link rel="stylesheet" href="{{asset('landing/assets/css/default.css')}}"> -->
     <link rel="stylesheet" href="{{asset('/landing/assets/css/style.css')}}">
     <link rel="stylesheet" href="{{asset('css/style.css')}}">
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" /> -->
     <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css">
     <link rel="shortcut icon" type="image/jpg" href="{{asset('img/ogive.png')}}"/>
     <link href="/tailwind.css" rel="stylesheet">
@@ -22,7 +19,39 @@
 @include('breedme.includes.header')
 
 
-<!-- Section: Sidebar -->
+
+<div id="intro">
+</div>
+<section class="search-sec">
+    <div class="container">
+
+        <form action="#" method="post" novalidate="novalidate">
+                    <div class="row text-center">
+                        <div class="col-lg-4 col-md-4 col-sm-12 pr-1">
+                            <input type="text" class="form-control search-slt" placeholder="Enter Pickup City">
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-12 pr-1">
+                            <input type="text" class="form-control search-slt" placeholder="Enter Pet City">
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-12 pr-1">
+                            <select class="form-control search-slt" id="exampleFormControlSelect1">
+                                <option>Select type</option>
+                                <option>Dog</option>
+                                <option>Cat</option>
+                                <option>Birds</option>
+                                <option>Spiders</option>
+                                <option>Others</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-1 col-md-1 col-sm-12 pr-1">
+                            <button type="button" class="btn btn-danger wrn-btn">Search</button>
+                        </div>
+                    </div>
+        </form>
+    </div>
+</section>
+
+
     <div class="test">
         <section class="details-card">
             <div class="container">
@@ -114,6 +143,7 @@
         <div class="row">
             <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
                 <h5 class="text-uppercase">For Questions and Suggestions</h5>
+                <hr class="deep-orange accent-2 mb-4 mt-0 d-inline-block mx-auto" style="width: 60px;">
 
                 <ul class="list-unstyled mb-0">
                     <li>
@@ -170,14 +200,12 @@
     <!--====== Jquery js ======-->
     <script src="{{asset('landing/assets/js/vendor/jquery-1.12.4.min.js')}}"></script>
     <script src="{{asset('landing/assets/js/vendor/modernizr-3.7.1.min.js')}}"></script>
-
     <!--====== Bootstrap js ======-->
     <script src="{{asset('landing/assets/js/popper.min.js')}}"></script>
     <script src="{{asset('landing/assets/js/bootstrap.min.js')}}"></script>
-
-
     <!--====== Main js ======-->
     <script src="{{asset('landing/assets/js/main.js')}}"></script>
+<script src="{{asset('js/custom.js')}}"></script>
 
 </body>
 

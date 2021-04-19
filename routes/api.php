@@ -46,7 +46,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 // Route::delete('/pet/{id}',[PetController::class, 'destroy']);
 
 Route::apiResource('pets', PetController::class);
-Route::get('/pet', [PetController::class, 'filterByType']);
+Route::get('/filterByType', [PetController::class, 'filterByType']);
 
 Route::put('/pet/{pet}', function (Pet $pet) {
     // The current user may update the post...

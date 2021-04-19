@@ -173,3 +173,24 @@
      width: 60%;
      padding: 10px;
  }
+ html,
+ body,
+ header,
+ #intro {
+     height: 100%;
+ }
+
+ #intro {
+     background: url("/images/unsplashDog.jpg")no-repeat center center fixed;
+     -webkit-background-size: cover;
+     -moz-background-size: cover;
+     -o-background-size: cover;
+     background-size: cover;
+ }
+.deep-orange{
+    background-color: #f7691d;
+}
+.scrolling-navbar.scrolled{
+     background-color: #fff !important;
+     transition: background-color 200ms linear;
+}
