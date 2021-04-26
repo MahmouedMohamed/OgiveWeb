@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Pet;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class PetController extends Controller
 {
@@ -14,7 +15,13 @@ class PetController extends Controller
      */
     public function index()
     {
-        //
+        $req = Request::create('http://127.0.0.1:8000/api/pets', 'GET');
+        $res = app()->handle($req);
+        $responseBody = $res->getContent();
+        $result = json_decode($responseBody, true);
+        $pets = $result['data']['data'];
+
+        return view('breedme.main', ['pets'=> $pets] );
     }
 
     /**
@@ -44,9 +51,16 @@ class PetController extends Controller
      * @param  \App\Models\Pet  $pet
      * @return \Illuminate\Http\Response
      */
-    public function show(Pet $pet)
+    public function show($id)
     {
-        //
+        $req = Request::create('http://127.0.0.1:8000/api/pets/' . $id, 'GET');
+        $res = app()->handle($req);
+        $responseBody = $res->getContent();
+        $result = json_decode($responseBody, true);
+        $pet = $result['data'];
+        $user_info = $pet['user'];
+        return view('breedme.pages.onepet', compact('pet','user_info'));
+
     }
 
     /**
@@ -61,6 +75,7 @@ class PetController extends Controller
     }
 
     /**
+     *
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request

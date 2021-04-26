@@ -22,14 +22,15 @@ class PetController extends BaseController
     {
         // return Pet::all();
         // return PetResource::collection(Pet::all());
-        $pets = Pet::all();
+        $pets = Pet::with('user')->paginate(8);
+
         return $this->sendResponse($pets, 'Pets retrieved successfully.');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * 
+     *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
@@ -64,7 +65,7 @@ class PetController extends BaseController
     {
 
         //  return new PetResource(Pet::findOrFail($id));
-        $pet = Pet::find($id);
+        $pet = Pet::with('user')->find($id);
         if (is_null($pet)) {
             return $this->sendError('Pet not found.');
         }
