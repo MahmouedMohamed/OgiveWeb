@@ -33,7 +33,12 @@
                 <h3> Facts About Me </h3>
                 <div class="card-desc">
                     <h3>{{$pet['name']}}</h3>
+<<<<<<< Updated upstream
                     <i class="fas fa-map-marker-alt"></i>  {{$user_info['address']}}
+=======
+                    <i class="fas fa-map-marker-alt"></i>
+                    {{$user_info['address']}}
+>>>>>>> Stashed changes
                     <div class="row">
                         <div class="col-4">
                             <span class="border-box text-center">
@@ -67,7 +72,15 @@
                                     src="{{url($user_info['image'])}}" width="40" height="50">
                                 <div class="d-flex flex-column justify-content-start ml-2"><span
                                         class="d-block font-weight-bold name"> {{$user_info['user_name']}}</span><span
+<<<<<<< Updated upstream
                                         class="date text-black-50">Shared publicly - Jan 2021</span></div>
+=======
+                                        class="date text-black-50">Shared publicly -
+                                         {{
+                                            $d = $pet['created_at']
+                                            echo $d->format('Y-m-d\TH:i:s.u');
+                                        }}</span></div>
+>>>>>>> Stashed changes
                             </div>
                         </div>
                         <div class="col-md-6 float-right">

@@ -72,6 +72,10 @@
                                 <div class="row">
                                     <div class="col-6">
                                     <i class="fas fa-map-marker-alt"></i> {{$pet['user']['address']}}
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
                                     </div>
                                     <div class="col-6">
                                     <a class="see-more float-right" href="/pet/{{$pet['id']}}" title="{{$pet['name']}}">See more</a>
