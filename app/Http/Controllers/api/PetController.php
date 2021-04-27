@@ -18,12 +18,8 @@ class PetController extends BaseController
     {
         // return Pet::all();
         // return PetResource::collection(Pet::all());
-<<<<<<< Updated upstream
         $pets = Pet::with('user')->paginate(8);
 
-=======
-        $pets = Pet::with('user')->get(); //all()
->>>>>>> Stashed changes
         return $this->sendResponse($pets, 'Pets retrieved successfully.');
     }
 
