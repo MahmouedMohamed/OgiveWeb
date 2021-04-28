@@ -2,11 +2,7 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Http\Controllers\Controller;
-use App\Http\Resources\PetResource;
 use App\Http\Controllers\API\BaseController as BaseController;
-use Spatie\QueryBuilder\QueryBuilder;
-
 use App\Models\Pet;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -50,7 +46,7 @@ class PetController extends BaseController
             'type' => $request['type'],
             'notes' => $request['notes'],
             'image' => $imagePath,
-            'status' => true
+            'status' => true,
         ]);
         return $this->sendResponse([], 'Pet is added successfully.');
     }
@@ -136,14 +132,16 @@ class PetController extends BaseController
 
         ]);
     }
-    public function filterByType()
-    {
-        $result = QueryBuilder::for(Pet::class)
-            ->allowedFilters('type')
-            ->get();
-        if ($result->isEmpty()) {
-            return $this->sendError('No Pets are found.');
-        }
-        return $this->sendResponse($result, 'Pets Retrieved successfully.');
-    }
+    // public function filterByType()
+    // {
+    //     $result = QueryBuilder::for(Pet::class) {
+    //             ->allowedFilters('type')
+    //             ->get();
+    //     }
+
+    //     if ($result->isEmpty()) {
+    //         return $this->sendError('No Pets are found.');
+    //     }
+    //     return $this->sendResponse($result, 'Pets Retrieved successfully.');
+    // }
 }

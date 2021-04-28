@@ -34,3 +34,6 @@ Route::get('/pets/add', function () {
 
 Route::get('/', [PetController::class, 'index']);
 Route::get('pet/{id}', [PetController::class, 'show']);
+Route::get('/about-us', function (){
+    return view('breedme.pages.about-us');
+});

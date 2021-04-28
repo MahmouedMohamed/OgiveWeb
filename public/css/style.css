@@ -1,5 +1,13 @@
  /* card details start  */
-
+ body {
+     background-image: url("/images/Blog Banner 560x315 px.png");
+     background-color: #cccccc;
+     height: 100%;
+     /* Center and scale the image nicely */
+     background-position: center;
+     background-repeat: no-repeat;
+     background-size: cover;
+ }
  @import url('https://fonts.googleapis.com/css?family=Raleway:400,400i,500,500i,600,600i,700,700i,800,800i,900,900i|Roboto+Condensed:400,400i,700,700i');
  section {
      padding: 100px 0;
@@ -164,6 +172,7 @@
  }
 
  /* End card section */
+<<<<<<< Updated upstream
 
  .footer-img{
      height: 200px;
@@ -194,3 +203,5 @@
      background-color: #fff !important;
      transition: background-color 200ms linear;
 }
+=======
+>>>>>>> Stashed changes
