@@ -34,8 +34,11 @@ Route::get('/pets/add', function () {
 
 Route::get('/', [PetController::class, 'index']);
 Route::get('pet/{id}', [PetController::class, 'show']);
-Route::get('/about-us', function (){
+Route::get('/about-us', function () {
     return view('breedme.pages.about-us');
+});
+Route::get('/articles', function () {
+    return view('breedme.pages.articles');
 });
 
 //Added For Ahed Future Web

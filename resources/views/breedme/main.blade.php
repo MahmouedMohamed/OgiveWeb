@@ -17,9 +17,6 @@
 
 <body>
 @include('breedme.includes.header')
-
-
-
 <div id="intro">
 </div>
 <section class="search-sec">
@@ -72,32 +69,12 @@
                                 <div class="row">
                                     <div class="col-6">
                                     <i class="fas fa-map-marker-alt"></i> {{$pet['user']['address']}}
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
                                     </div>
                                     <div class="col-6">
                                     <a class="see-more float-right" href="/pet/{{$pet['id']}}" title="{{$pet['name']}}">See more</a>
                                     </div>
                                 </div>
-                                <!-- <div class="row">
-                                    <div class="col-6">
-                                        <p>Sex: {{$pet['sex']}}</p>
-                                    </div>
-                                    <div class="col-6">
-                                        <p>Age: {{$pet['age']}}</p>
-                                    </div>
-                                </div>
-                                <p>Notes: {{$pet['notes']}}</p> -->
-                                <!-- Button trigger modal -->
-                                <!-- <button type="button" class="btn btn-card" data-toggle="modal"
-                                    data-target="#exampleModal">
-                                    Request
-                                </button> -->
 
-
-                                <!-- <a href="#" class="btn-card">Request</a> -->
                             </div>
                         </div>
                     </div>
@@ -105,7 +82,7 @@
                     @endforeach
                     @endif
 
-
+                    {{$pets->links()}}
                 </div>
             </div>
         </section>
@@ -194,10 +171,7 @@
         © 2021 Copyright:
         <a class="text-dark" href="https://Breedme.com/">Breedme.ogive.com</a>
     </div>
-    <!-- Copyright -->
 </footer>
-<!-- Footer -->
-
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>

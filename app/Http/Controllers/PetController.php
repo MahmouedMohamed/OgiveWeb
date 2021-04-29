@@ -15,18 +15,13 @@ class PetController extends Controller
      */
     public function index()
     {
-        $req = Request::create('http://127.0.0.1:8000/api/pets', 'GET');
-        $res = app()->handle($req);
-        $responseBody = $res->getContent();
-        $result = json_decode($responseBody, true);
-<<<<<<< Updated upstream
-        $pets = $result['data']['data'];
-
-        return view('breedme.main', ['pets'=> $pets] );
-=======
-        $pets = $result['data'];
+        // $req = Request::create('http://127.0.0.1:8000/api/pets', 'GET');
+        // $res = app()->handle($req);
+        // $responseBody = $res->getContent();
+        // $result = json_decode($responseBody, true);
+        // $pets = $result['data'];
+        $pets = Pet::with('user')->paginate(8);
         return view('breedme.main', compact('pets'));
->>>>>>> Stashed changes
     }
 
     /**
@@ -58,17 +53,15 @@ class PetController extends Controller
      */
     public function show($id)
     {
-        $req = Request::create('http://127.0.0.1:8000/api/pets/' . $id, 'GET');
-        $res = app()->handle($req);
-        $responseBody = $res->getContent();
-        $result = json_decode($responseBody, true);
-        $pet = $result['data'];
-        $user_info = $pet['user'];
-<<<<<<< Updated upstream
-        return view('breedme.pages.onepet', compact('pet','user_info'));
-=======
-        return view('breedme.pages.onepet', compact('pet', 'user_info'));
->>>>>>> Stashed changes
+        // $req = Request::create('http://127.0.0.1:8000/api/pets/' . $id, 'GET');
+        // $res = app()->handle($req);
+        // $responseBody = $res->getContent();
+        // $result = json_decode($responseBody, true);
+        // $pet = $result['data'];
+        // $user_info = $pet['user'];
+        $pet = Pet::with('user')->find($id);
+        // $user_info[] = $pet['user'];
+        return view('breedme.pages.onepet', compact('pet'));
 
     }
 

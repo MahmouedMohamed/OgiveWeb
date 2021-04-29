@@ -18,8 +18,7 @@ class PetController extends BaseController
     {
         // return Pet::all();
         // return PetResource::collection(Pet::all());
-        $pets = Pet::with('user')->paginate(8);
-
+        $pets = Pet::with('user')->get();
         return $this->sendResponse($pets, 'Pets retrieved successfully.');
     }
 
