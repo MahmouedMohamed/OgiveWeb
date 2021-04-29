@@ -77,4 +77,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(ConsultationComment::class);
     }
+    public function createdNeedies()
+    {
+        return $this->hasMany(Needy::class,'createdBy');
+    }
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class,'giver');
+    }
 }
