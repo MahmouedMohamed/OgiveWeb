@@ -37,3 +37,19 @@ Route::get('pet/{id}', [PetController::class, 'show']);
 Route::get('/about-us', function (){
     return view('breedme.pages.about-us');
 });
+
+//Added For Ahed Future Web
+Route::get('/ahed', [HomeController::class, 'ahedIndex'])->name('ahed');
+Route::get('/ahed/cases', [CasesController::class, 'index']);
+Route::get('/ahed/cases/{id}', [CasesController::class, 'show']);
+Route::post('/ahed/cases', [CasesController::class, 'store']);
+Route::get('/ahed/cases/{id}/edit', [CasesController::class, 'edit']);
+Route::put('/ahed/cases/{id}/edit', [CasesController::class, 'update']);
+Route::delete('/ahed/cases/{id}', [CasesController::class, 'delete']);
+
+Route::get('/ahed/transactions/{user}', [TransactionsController::class, 'index']);
+Route::get('/ahed/transactions/{id}', [TransactionsController::class, 'show']);
+Route::post('/ahed/transactions', [TransactionsController::class, 'store']);
+Route::get('/ahed/transactions/{id}/edit', [TransactionsController::class, 'edit']);
+Route::put('/ahed/transactions/{id}/edit', [TransactionsController::class, 'update']);
+Route::delete('/ahed/transactions/{id}', [TransactionsController::class, 'delete']);
