@@ -6,7 +6,8 @@ use App\Http\Controllers\API\BaseController as BaseController;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Needy;
-use App\Models\NeedyMedia;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class NeediesController extends BaseController
 {
@@ -17,7 +18,7 @@ class NeediesController extends BaseController
      */
     public function index()
     {
-        $needies = Needy::with('mediasBefore')->with('mediasAfter')->paginate(8);
+        $needies = Needy::with('mediasBefore:id,path,needy')->with('mediasAfter:id,path,needy')->paginate(8);
         return $this->sendResponse($needies, 'Cases retrieved successfully.');
     }
 
@@ -29,7 +30,10 @@ class NeediesController extends BaseController
      */
     public function store(Request $request)
     {
+        //Validate Request
         $validated = $this->validateNeedy($request);
+        if($validated->fails())
+            return $this->sendError('Invalid data',$validated->messages(),400);
         // $data=request()->all();
         $user = User::find(request()->input('createdBy'));
         if (!$user) {
@@ -49,7 +53,6 @@ class NeediesController extends BaseController
             'details' => $request['details'],
             'need' => $request['need'],
             'address' => $request['address'],
-            'image' => $imagePath,
             'status' => true,
         ]);
         foreach ($imagePaths as $imagePath) {
@@ -68,7 +71,10 @@ class NeediesController extends BaseController
      */
     public function show($id)
     {
-        //
+        $needy = Needy::find($id);
+        if($needy == null)
+            return $this->sendError('Not Found');
+        return $this->sendResponse($needy->with('mediasBefore:id,path,needy')->with('mediasAfter:id,path,needy')->get(),'Data Retrieved Successfully!');
     }
 
     /**
@@ -80,7 +86,55 @@ class NeediesController extends BaseController
      */
     public function update(Request $request, $id)
     {
-        //
+        //Check needy exists
+        $needy = Needy::find($id);
+        if($needy == null)
+            return $this->sendError('Needy Not Found');
+        //Check user who is updating exists
+        $user = User::find($request['userId']);
+        if($user == null)
+            return $this->sendError('User Not Found');
+        //Check if current user can update
+        if (! $user->can('update',$needy)) {
+            return $this->sendForbidden('You can\'t edit this needy.');
+        }
+        //Validate Request
+        $validated = $this->validateNeedy($request);
+        if($validated->fails())
+            return $this->sendError('Invalid data',$validated->messages(),400);
+        //Image Saving
+        $images = $request['images'];
+        $imagePaths = array();
+        //1- Delete from disk
+        foreach ($needy->medias as $media) {
+            Storage::delete('public/'.$media->path);
+        }
+        //2- Remove Previous Media associated
+        $needy->medias()->delete();
+        //3- Add All coming media
+        foreach ($images as $image) {
+            // return $images;
+            $imagePath = $image->store('uploads', 'public');
+            array_push($imagePaths, $imagePath);
+        }
+        //Update 
+        $needy->update([
+            'name' => $request['name'],
+            'age' => $request['age'],
+            'severity' => $request['severity'],
+            'type' => $request['type'],
+            'details' => $request['details'],
+            'need' => $request['need'],
+            'address' => $request['address'],
+            'status' => true,
+        ]);
+        //4- Create relation with media uploaded
+        foreach ($imagePaths as $imagePath) {
+            $needy->medias()->create([
+                'path' => $imagePath,
+            ]);
+        }
+        return $this->sendResponse([], 'Needy Updated Successfully!');
     }
 
     /**
@@ -95,16 +149,25 @@ class NeediesController extends BaseController
     }
     public function validateNeedy(Request $request)
     {
-        return $request->validate([
+        return Validator::make($request->all(), [
             'createdBy' => 'required',
             'name' => 'required|max:255',
             'age' => 'required|integer|max:100',
             'severity' => 'required|integer|min:1|max:10',
             'type' => 'required|in:Finding Living,Upgrade Standard of Living,Bride Preparation,Debt,Cure',
             'details' => 'required|max:1024',
-            'need' => 'required|min:1',
+            'need' => 'required|numeric|min:1',
             'address' => 'required',
             'images.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048e',
-        ]);
+        ], [
+            'required'=> 'This field is required',
+            'min'=> 'Invalid size, min size is :min',
+            'max'=> 'Invalid size, max size is :max',
+            'integer' => 'Invalid type, only numbers are supported',
+            'in' => 'Invalid type, support values are :values',
+            'image' => 'Invalid type, only images are accepted',
+            'mimes' => 'Invalid type, supported types are :values',
+            'numeric' => 'Invalid type, only numbers are supported'
+            ]);
     }
 }
