@@ -44,4 +44,14 @@ class Needy extends Model
     {
         return $this->need == $this->collected;
     }
+    public function approve()
+    {
+        $this->approved = true;
+        $this->save();
+    }
+    public function disapprove()
+    {
+        $this->approved = false;
+        $this->save();
+    }
 }

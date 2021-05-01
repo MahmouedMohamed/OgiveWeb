@@ -1,31 +1,20 @@
 import axios from 'axios';
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { Table, Button } from 'reactstrap';
-import Navbar from './Navbar';
-import {
-    Container,
-    Typography,
-    Grid,
-    Card,
-    CardActions,
-    CardContent,
-    CardMedia,
+import { useState } from 'react';
 
-} from '@material-ui/core';
-import ChildComponent from './ChildComponent';
 class Needie extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
-            needies: [],
+            id: this.props.match.params.id
         }
     }
-    loadNeedies() {
-        let url = 'http://127.0.0.1:8000/api/ahed/needies';
+    loadNeedie() {
+        let id = this.state.id;
+        let url = 'http://127.0.0.1:8000/api/ahed/needies/' + id;
         axios.get(url)
             .then((response) => {
-                console.log(response.data.data.data)
+                console.log(url)
                 this.setState({
                     needies: response.data.data.data,
                 })
@@ -35,26 +24,13 @@ class Needie extends React.Component {
             })
     }
     componentDidMount() {
-        this.loadNeedies()
+        this.loadNeedie()
+
     }
     render() {
-        let needies = this.state.needies.map((needie) => {
-            return (
-                <tr key={needie.id}>
-                    <td>{needie.id}</td>
-                    <td>{needie.name}</td>
-                </tr>
-            )
-        })
         return (
             <div>
-                <div className="container">
-                    <Typography variant="h3" className="text-center">التملُّك الكامل لا يثبته إلا العطاء، فكل ما لا تستطيع إعطاءه يتملكك.
-                </Typography>
-                    <ChildComponent data={this.state.needies} />
-                </div>
-
-
+                wtf
             </div >
         );
 

@@ -24,9 +24,8 @@ function App() {
                 <Route exact path="/donate">
                     <DonationForm />
                 </Route>
-                <Route exact path="/needie/:id">
-                    <Needie />
-                </Route>
+                <Route exact path="/needie/:id" component={Needie} />
+
 
                 {/* <Route path='/:id' component={SingleProject} /> */}
 

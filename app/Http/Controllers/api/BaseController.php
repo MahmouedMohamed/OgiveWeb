@@ -33,4 +33,14 @@ class BaseController extends Controller
 
         return response()->json($response, $code);
     }
+    public function sendForbidden($message)
+    {
+    	$response = [
+            'Err_Flag' => true,
+            'message' => $message,
+        ];
+
+
+        return response()->json($response, 403);
+    }
 }

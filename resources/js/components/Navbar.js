@@ -7,7 +7,7 @@ function Navbar() {
     return (
         <div>
             <ReactBootStrap.Navbar bg="light" expand="lg">
-                <ReactBootStrap.Navbar.Brand href="#home"><i class="fab fa-github fa-lg	"></i></ReactBootStrap.Navbar.Brand>
+                <ReactBootStrap.Navbar.Brand href="#home"><i className="fab fa-github fa-lg	"></i></ReactBootStrap.Navbar.Brand>
                 <ReactBootStrap.Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <ReactBootStrap.Navbar.Collapse id="basic-navbar-nav">
                     <ReactBootStrap.Nav className="ml-auto">

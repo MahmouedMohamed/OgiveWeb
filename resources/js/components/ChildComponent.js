@@ -2,9 +2,6 @@ import React, { Component } from "react";
 import { Row, Col, Card } from "react-bootstrap";
 import { CardActions, Grid, Typography } from '@material-ui/core';
 import * as ReactBootStrap from 'react-bootstrap';
-// import useStyles from './styles';
-// const { classes } = useStyles();
-// import { makeStyles } from "@material-ui/core/styles";
 import ProgressBar from 'react-bootstrap/ProgressBar'
 import Badge from 'react-bootstrap/Badge'
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
@@ -25,7 +22,7 @@ class ChildComponent extends Component {
                             }
                             <img
                                 src="https://mdbootstrap.com/img/new/standard/city/062.jpg"
-                                class="card-img-top"
+                                className="card-img-top"
                                 alt="..."
                             />
                             <Badge variant="light">{needie.type} </Badge>

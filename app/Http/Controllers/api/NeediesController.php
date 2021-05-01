@@ -1,11 +1,11 @@
 <?php
-
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\Needy;
-use App\Models\User;
-use Illuminate\Http\Request;
+use App\Models\NeedyMedia;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class NeediesController extends BaseController
 {
@@ -16,7 +16,7 @@ class NeediesController extends BaseController
      */
     public function index()
     {
-        $needies = Needy::with('mediasBefore')->with('mediasAfter')->paginate(8);
+        $needies = Needy::with('mediasBefore:id,path,needy')->with('mediasAfter:id,path,needy')->paginate(8);
         return $this->sendResponse($needies, 'Cases retrieved successfully.');
     }
 
@@ -28,8 +28,12 @@ class NeediesController extends BaseController
      */
     public function store(Request $request)
     {
-        $validated = $this->validateNeedy($request);
-        // $data=request()->all();
+        //Validate Request
+        $validated = $this->validateNeedy($request, 'store');
+        if ($validated->fails()) {
+            return $this->sendError('Invalid data', $validated->messages(), 400);
+        }
+
         $user = User::find(request()->input('createdBy'));
         if (!$user) {
             return $this->sendError('User Not Found');
@@ -48,7 +52,6 @@ class NeediesController extends BaseController
             'details' => $request['details'],
             'need' => $request['need'],
             'address' => $request['address'],
-            'image' => $imagePath,
             'status' => true,
         ]);
         foreach ($imagePaths as $imagePath) {
@@ -67,7 +70,12 @@ class NeediesController extends BaseController
      */
     public function show($id)
     {
-        //
+        $needy = Needy::find($id);
+        if ($needy == null) {
+            return $this->sendError('Not Found');
+        }
+
+        return $this->sendResponse($needy->with('mediasBefore:id,path,needy')->with('mediasAfter:id,path,needy')->get(), 'Data Retrieved Successfully!');
     }
 
     /**
@@ -79,31 +87,250 @@ class NeediesController extends BaseController
      */
     public function update(Request $request, $id)
     {
-        //
-    }
+        //Check needy exists
+        $needy = Needy::find($id);
+        if ($needy == null) {
+            return $this->sendError('Needy Not Found');
+        }
 
+        //Check user who is updating exists
+        $user = User::find($request['userId']);
+        if ($user == null) {
+            return $this->sendError('User Not Found');
+        }
+
+        //Check if current user can update
+        if (!$user->can('update', $needy)) {
+            return $this->sendForbidden('You aren\'t authorized to edit this needy.');
+        }
+        //Validate Request
+        $validated = $this->validateNeedy($request, 'update');
+        if ($validated->fails()) {
+            return $this->sendError('Invalid data', $validated->messages(), 400);
+        }
+
+        //Update
+        $needy->update([
+            'name' => $request['name'],
+            'age' => $request['age'],
+            'severity' => $request['severity'],
+            'type' => $request['type'],
+            'details' => $request['details'],
+            'need' => $request['need'],
+            'address' => $request['address'],
+            'status' => true,
+        ]);
+        return $this->sendResponse([], 'Needy Updated Successfully!');
+    }
     /**
-     * Remove the specified resource from storage.
+     * Update the specified resource in storage.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function addAssociatedImage(Request $request, $id)
     {
-        //
+        //Check needy exists
+        $needy = Needy::find($id);
+        if ($needy == null) {
+            return $this->sendError('Needy Not Found');
+        }
+
+        //Check user who is updating exists
+        $user = User::find($request['userId']);
+        if ($user == null) {
+            return $this->sendError('User Not Found');
+        }
+
+        //Check if current user can update
+        if (!$user->can('update', $needy)) {
+            return $this->sendForbidden('You aren\'t authorized to edit this needy.');
+        }
+        //Validate Request
+        $validated = $this->validateNeedy($request, 'addImage');
+        if ($validated->fails()) {
+            return $this->sendError('Invalid data', $validated->messages(), 400);
+        }
+
+        $image = $request['image'];
+        $imagePath = $image->store('uploads', 'public');
+        $needy->medias()->create([
+            'path' => $imagePath,
+            'before' => $request['before'],
+        ]);
+        return $this->sendResponse([], 'Image Added successfully!');
     }
-    public function validateNeedy(Request $request)
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function removeAssociatedImage(Request $request, $id)
     {
-        return $request->validate([
-            'createdBy' => 'required',
-            'name' => 'required|max:255',
-            'age' => 'required|integer|max:100',
-            'severity' => 'required|integer|min:1|max:10',
-            'type' => 'required|in:Finding Living,Upgrade Standard of Living,Bride Preparation,Debt,Cure',
-            'details' => 'required|max:1024',
-            'need' => 'required|min:1',
-            'address' => 'required',
-            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048e',
+        //Check needy exists
+        $needy = Needy::find($id);
+        if ($needy == null) {
+            return $this->sendError('Needy Not Found');
+        }
+
+        //Check user who is updating exists
+        $user = User::find($request['userId']);
+        if ($user == null) {
+            return $this->sendError('User Not Found');
+        }
+
+        //Check if current user can update
+        if (!$user->can('update', $needy)) {
+            return $this->sendForbidden('You aren\'t authorized to edit this needy.');
+        }
+        //Check needy media exists
+        $needyMedia = NeedyMedia::find($request['imageId']);
+        if ($needyMedia == null) {
+            return $this->sendError('Needy Media Not Found');
+        }
+
+        Storage::delete('public/' . $needyMedia->path);
+        $needyMedia->delete();
+        return $this->sendResponse([], 'Image Deleted successfully!');
+    }
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Request $request, $id)
+    {
+        $needy = Needy::find($id);
+        if ($needy == null) {
+            return $this->sendError('Not Found');
+        }
+
+        //Check user who is updating exists
+        $user = User::find($request['userId']);
+        if ($user == null) {
+            return $this->sendError('User Not Found');
+        }
+
+        //Check if current user can update
+        if (!$user->can('delete', $needy)) {
+            return $this->sendForbidden('You aren\'t authorized to edit this needy.');
+        }
+        //Remove images from disk before deleting to save storage
+        foreach ($needy->medias as $media) {
+            Storage::delete('public/' . $media->path);
+        }
+        $needy->delete();
+        return $this->sendResponse([], 'Needy Deleted successfully!');
+    }
+
+    /**
+     * Approve the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function approve(Request $request, $id)
+    {
+        //Check needy exists
+        $needy = Needy::find($id);
+        if ($needy == null) {
+            return $this->sendError('Needy Not Found');
+        }
+
+        //Check user who is updating exists
+        $user = User::find($request['userId']);
+        if ($user == null) {
+            return $this->sendError('User Not Found');
+        }
+
+        //Check if current user can approve
+        if (!$user->can('approve', $needy)) {
+            return $this->sendForbidden('You aren\'t authorized to approve this needy.');
+        }
+        $needy->approve();
+        return $this->sendResponse([], 'Needy Approved Successfully!');
+    }
+    /**
+     * Disapprove the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function disapprove(Request $request, $id)
+    {
+        //Check needy exists
+        $needy = Needy::find($id);
+        if ($needy == null) {
+            return $this->sendError('Needy Not Found');
+        }
+
+        //Check user who is updating exists
+        $user = User::find($request['userId']);
+        if ($user == null) {
+            return $this->sendError('User Not Found');
+        }
+
+        //Check if current user can disapprove
+        if (!$user->can('disapprove', $needy)) {
+            return $this->sendForbidden('You aren\'t authorized to disapprove this needy.');
+        }
+        $needy->disapprove();
+        return $this->sendResponse([], 'Needy Disapprove Successfully!');
+    }
+
+    public function validateNeedy(Request $request, string $related)
+    {
+        $rules = null;
+        switch ($related) {
+            case 'store':
+                $rules = [
+                    'createdBy' => 'required',
+                    'name' => 'required|max:255',
+                    'age' => 'required|integer|max:100',
+                    'severity' => 'required|integer|min:1|max:10',
+                    'type' => 'required|in:Finding Living,Upgrade Standard of Living,Bride Preparation,Debt,Cure',
+                    'details' => 'required|max:1024',
+                    'need' => 'required|numeric|min:1',
+                    'address' => 'required',
+                    'images' => 'required',
+                    'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048e',
+                ];
+                break;
+            case 'update':
+                $rules = [
+                    'createdBy' => 'required',
+                    'name' => 'required|max:255',
+                    'age' => 'required|integer|max:100',
+                    'severity' => 'required|integer|min:1|max:10',
+                    'type' => 'required|in:Finding Living,Upgrade Standard of Living,Bride Preparation,Debt,Cure',
+                    'details' => 'required|max:1024',
+                    'need' => 'required|numeric|min:1',
+                    'address' => 'required',
+                ];
+                break;
+            case 'addImage':
+                $rules = [
+                    'image' => 'required|mimes:jpeg,png,jpg,gif,svg|max:2048e',
+                    'before' => 'required|boolean',
+                ];
+                break;
+        }
+        return Validator::make($request->all(), $rules, [
+            'required' => 'This field is required',
+            'min' => 'Invalid size, min size is :min',
+            'max' => 'Invalid size, max size is :max',
+            'integer' => 'Invalid type, only numbers are supported',
+            'in' => 'Invalid type, support values are :values',
+            'image' => 'Invalid type, only images are accepted',
+            'mimes' => 'Invalid type, supported types are :values',
+            'numeric' => 'Invalid type, only numbers are supported',
         ]);
     }
 }
