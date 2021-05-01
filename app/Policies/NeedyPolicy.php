@@ -16,6 +16,24 @@ class NeedyPolicy
      * @param  \App\Models\User  $user
      * @return mixed
      */
+    public function approve(User $user){
+        return $user->isAdmin();
+    }
+    /**
+     * Determine whether the user can view any models.
+     *
+     * @param  \App\Models\User  $user
+     * @return mixed
+     */
+    public function disapprove(User $user){
+        return $user->isAdmin();
+    }
+    /**
+     * Determine whether the user can view any models.
+     *
+     * @param  \App\Models\User  $user
+     * @return mixed
+     */
     public function viewAny(User $user)
     {
         //

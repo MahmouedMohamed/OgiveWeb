@@ -71,5 +71,7 @@ Route::get('filterPlacesByType', [PlaceController::class, 'filterByType']);
 
 // Route::group(['middleware' => 'auth:api'], function () {
     Route::apiResource('/ahed/needies', NeediesController::class);
+    Route::post('/ahed/needies/approve/{id}', [NeediesController::class, 'approve']);
+    Route::post('/ahed/needies/disapprove/{id}', [NeediesController::class, 'disapprove']);
     Route::apiResource('/ahed/transactions', TransactionsController::class);
 // });
