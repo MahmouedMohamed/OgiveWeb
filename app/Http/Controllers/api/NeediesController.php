@@ -1,11 +1,10 @@
 <?php
-
 namespace App\Http\Controllers\api;
-
 use App\Http\Controllers\API\BaseController as BaseController;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Needy;
+use App\Models\NeedyMedia;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -31,14 +30,14 @@ class NeediesController extends BaseController
     public function store(Request $request)
     {
         //Validate Request
-        $validated = $this->validateNeedy($request);
+        $validated = $this->validateNeedy($request, 'store');
         if ($validated->fails())
             return $this->sendError('Invalid data', $validated->messages(), 400);
         $user = User::find(request()->input('createdBy'));
         if (!$user) {
             return $this->sendError('User Not Found');
         }
-        $images = $request['imagesBefore'];
+        $images = $request['images'];
         $imagePaths = array();
         foreach ($images as $image) {
             $imagePath = $image->store('uploads', 'public');
@@ -98,31 +97,9 @@ class NeediesController extends BaseController
             return $this->sendForbidden('You aren\'t authorized to edit this needy.');
         }
         //Validate Request
-        $validated = $this->validateNeedy($request);
+        $validated = $this->validateNeedy($request, 'update');
         if ($validated->fails())
             return $this->sendError('Invalid data', $validated->messages(), 400);
-        //Image Saving
-        $imagesBefore = $request['imagesBefore'];
-        $imagesBeforePaths = array();
-        $imagesAfter = $request['imagesAfter'];
-        $imagesAfterPaths = array();
-        //1- Delete from disk
-        foreach ($needy->medias as $media) {
-            Storage::delete('public/' . $media->path);
-        }
-        //2- Remove Previous Media associated
-        $needy->medias()->delete();
-        //3- Add All coming media
-        foreach ($imagesBefore as $imageBefore) {
-            // return $images;
-            $imagePath = $imageBefore->store('uploads', 'public');
-            array_push($imagesBeforePaths, $imagePath);
-        }
-        foreach ($imagesAfter as $imageAfter) {
-            // return $images;
-            $imagePath = $imageAfter->store('uploads', 'public');
-            array_push($imagesAfterPaths, $imagePath);
-        }
         //Update 
         $needy->update([
             'name' => $request['name'],
@@ -134,22 +111,70 @@ class NeediesController extends BaseController
             'address' => $request['address'],
             'status' => true,
         ]);
-        //4- Create relation with media uploaded
-        foreach ($imagesBeforePaths as $imageBeforePath) {
-            $needy->medias()->create([
-                'path' => $imageBeforePath,
-            ]);
-        }
-        foreach ($imagesAfterPaths as $imageAfterPath) {
-            $needy->medias()->create([
-                'path' => $imageAfterPath,
-                'before' => false
-            ]);
-        }
-
         return $this->sendResponse([], 'Needy Updated Successfully!');
     }
-
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function addAssociatedImage(Request $request, $id)
+    {
+        //Check needy exists
+        $needy = Needy::find($id);
+        if ($needy == null)
+            return $this->sendError('Needy Not Found');
+        //Check user who is updating exists
+        $user = User::find($request['userId']);
+        if ($user == null)
+            return $this->sendError('User Not Found');
+        //Check if current user can update
+        if (!$user->can('update', $needy)) {
+            return $this->sendForbidden('You aren\'t authorized to edit this needy.');
+        }
+        //Validate Request
+        $validated = $this->validateNeedy($request, 'addImage');
+        if ($validated->fails())
+            return $this->sendError('Invalid data', $validated->messages(), 400);
+        $image = $request['image'];
+        $imagePath = $image->store('uploads', 'public');
+        $needy->medias()->create([
+            'path' => $imagePath,
+            'before' => $request['before']
+        ]);
+        return $this->sendResponse([], 'Image Added successfully!');
+    }
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function removeAssociatedImage(Request $request, $id)
+    {
+        //Check needy exists
+        $needy = Needy::find($id);
+        if ($needy == null)
+            return $this->sendError('Needy Not Found');
+        //Check user who is updating exists
+        $user = User::find($request['userId']);
+        if ($user == null)
+            return $this->sendError('User Not Found');
+        //Check if current user can update
+        if (!$user->can('update', $needy)) {
+            return $this->sendForbidden('You aren\'t authorized to edit this needy.');
+        }
+        //Check needy media exists
+        $needyMedia = NeedyMedia::find($request['imageId']);
+        if ($needyMedia == null)
+            return $this->sendError('Needy Media Not Found');
+        Storage::delete('public/' . $needyMedia->path);
+        $needyMedia->delete();
+        return $this->sendResponse([], 'Image Deleted successfully!');
+    }
     /**
      * Remove the specified resource from storage.
      *
@@ -162,7 +187,7 @@ class NeediesController extends BaseController
     }
 
     /**
-     * Update the specified resource in storage.
+     * Approve the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -178,7 +203,7 @@ class NeediesController extends BaseController
         $user = User::find($request['userId']);
         if ($user == null)
             return $this->sendError('User Not Found');
-        //Check if current user can update
+        //Check if current user can approve
         if (!$user->can('approve', $needy)) {
             return $this->sendForbidden('You aren\'t authorized to approve this needy.');
         }
@@ -186,7 +211,7 @@ class NeediesController extends BaseController
         return $this->sendResponse([], 'Needy Approved Successfully!');
     }
     /**
-     * Update the specified resource in storage.
+     * Disapprove the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -202,28 +227,51 @@ class NeediesController extends BaseController
         $user = User::find($request['userId']);
         if ($user == null)
             return $this->sendError('User Not Found');
-        //Check if current user can update
+        //Check if current user can disapprove
         if (!$user->can('disapprove', $needy)) {
             return $this->sendForbidden('You aren\'t authorized to disapprove this needy.');
         }
         $needy->disapprove();
         return $this->sendResponse([], 'Needy Disapprove Successfully!');
     }
-    public function validateNeedy(Request $request)
+    public function validateNeedy(Request $request, string $related)
     {
-        return Validator::make($request->all(), [
-            'createdBy' => 'required',
-            'name' => 'required|max:255',
-            'age' => 'required|integer|max:100',
-            'severity' => 'required|integer|min:1|max:10',
-            'type' => 'required|in:Finding Living,Upgrade Standard of Living,Bride Preparation,Debt,Cure',
-            'details' => 'required|max:1024',
-            'need' => 'required|numeric|min:1',
-            'address' => 'required',
-            'imagesBefore' => 'required',
-            'imagesBefore.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048e',
-            'imagesAfter.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048e',
-        ], [
+        $rules = null;
+        switch ($related) {
+            case 'store':
+                $rules = [
+                    'createdBy' => 'required',
+                    'name' => 'required|max:255',
+                    'age' => 'required|integer|max:100',
+                    'severity' => 'required|integer|min:1|max:10',
+                    'type' => 'required|in:Finding Living,Upgrade Standard of Living,Bride Preparation,Debt,Cure',
+                    'details' => 'required|max:1024',
+                    'need' => 'required|numeric|min:1',
+                    'address' => 'required',
+                    'images' => 'required',
+                    'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048e'
+                ];
+                break;
+            case 'update':
+                $rules = [
+                    'createdBy' => 'required',
+                    'name' => 'required|max:255',
+                    'age' => 'required|integer|max:100',
+                    'severity' => 'required|integer|min:1|max:10',
+                    'type' => 'required|in:Finding Living,Upgrade Standard of Living,Bride Preparation,Debt,Cure',
+                    'details' => 'required|max:1024',
+                    'need' => 'required|numeric|min:1',
+                    'address' => 'required'
+                ];
+                break;
+            case 'addImage':
+                $rules = [
+                    'image' => 'required|mimes:jpeg,png,jpg,gif,svg|max:2048e',
+                    'before' => 'required|boolean'
+                ];
+                break;
+        }
+        return Validator::make($request->all(), $rules, [
             'required' => 'This field is required',
             'min' => 'Invalid size, min size is :min',
             'max' => 'Invalid size, max size is :max',
