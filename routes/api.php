@@ -6,12 +6,12 @@ use App\Http\Controllers\api\ConsultationController;
 use App\Http\Controllers\api\LikesController;
 use App\Http\Controllers\api\MarkersController;
 use App\Http\Controllers\api\MemoryController;
+use App\Http\Controllers\api\NeediesController;
 use App\Http\Controllers\api\PetController;
 use App\Http\Controllers\api\PetsArticleController;
 use App\Http\Controllers\api\PlaceController;
-use App\Http\Controllers\api\UserController;
-use App\Http\Controllers\api\NeediesController;
 use App\Http\Controllers\api\TransactionsController;
+use App\Http\Controllers\api\UserController;
 use App\Models\Pet;
 use Illuminate\Http\Request;
 // use Illuminate\Routing\Route;
@@ -68,8 +68,7 @@ Route::get('sales', [PlaceController::class, 'sales']);
 Route::get('clinics', [PlaceController::class, 'clinics']);
 Route::get('filterPlacesByType', [PlaceController::class, 'filterByType']);
 
-
 // Route::group(['middleware' => 'auth:api'], function () {
-    Route::apiResource('/ahed/needies', NeediesController::class);
-    Route::apiResource('/ahed/transactions', TransactionsController::class);
+Route::apiResource('/ahed/needies', NeediesController::class);
+Route::apiResource('/ahed/transactions', TransactionsController::class);
 // });

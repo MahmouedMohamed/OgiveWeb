@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PetController;
 use Illuminate\Support\Facades\Route;
 
@@ -31,7 +32,6 @@ Route::get('/pets', function () {
 Route::get('/pets/add', function () {
     return view('breedme.pages.addpet');
 })->name('pet-add');
-
 Route::get('/', [PetController::class, 'index']);
 Route::get('pet/{id}', [PetController::class, 'show']);
 Route::get('/about-us', function () {
@@ -41,7 +41,7 @@ Route::get('/articles', function () {
     return view('breedme.pages.articles');
 });
 
-//Added For Ahed Future Web
+// Route::prefix('Al-Ahed')->group(function () {
 Route::get('/ahed', [HomeController::class, 'ahedIndex'])->name('ahed');
 Route::get('/ahed/cases', [CasesController::class, 'index']);
 Route::get('/ahed/cases/{id}', [CasesController::class, 'show']);
@@ -56,3 +56,7 @@ Route::post('/ahed/transactions', [TransactionsController::class, 'store']);
 Route::get('/ahed/transactions/{id}/edit', [TransactionsController::class, 'edit']);
 Route::put('/ahed/transactions/{id}/edit', [TransactionsController::class, 'update']);
 Route::delete('/ahed/transactions/{id}', [TransactionsController::class, 'delete']);
+// });
+// Route::get('/Al-Ahed/{path?}', function () {
+//     return view('ahed.ahed');
+// });
