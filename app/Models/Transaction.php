@@ -36,16 +36,4 @@ class Transaction extends Model
         }
         $this->save();
     }
-    public function medias()
-    {
-        return $this->hasMany(NeedyMedia::class);
-    }
-    public function mediasBefore()
-    {
-        return $this->medias->where('before','1');
-    }
-    public function mediasAfter()
-    {
-        return $this->medias->where('before','0');
-    }
 }
