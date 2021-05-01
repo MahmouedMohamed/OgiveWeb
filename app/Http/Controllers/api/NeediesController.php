@@ -32,14 +32,13 @@ class NeediesController extends BaseController
     {
         //Validate Request
         $validated = $this->validateNeedy($request);
-        if($validated->fails())
-            return $this->sendError('Invalid data',$validated->messages(),400);
-        // $data=request()->all();
+        if ($validated->fails())
+            return $this->sendError('Invalid data', $validated->messages(), 400);
         $user = User::find(request()->input('createdBy'));
         if (!$user) {
             return $this->sendError('User Not Found');
         }
-        $images = $request['images'];
+        $images = $request['imagesBefore'];
         $imagePaths = array();
         foreach ($images as $image) {
             $imagePath = $image->store('uploads', 'public');
@@ -72,9 +71,9 @@ class NeediesController extends BaseController
     public function show($id)
     {
         $needy = Needy::find($id);
-        if($needy == null)
+        if ($needy == null)
             return $this->sendError('Not Found');
-        return $this->sendResponse($needy->with('mediasBefore:id,path,needy')->with('mediasAfter:id,path,needy')->get(),'Data Retrieved Successfully!');
+        return $this->sendResponse($needy->with('mediasBefore:id,path,needy')->with('mediasAfter:id,path,needy')->get(), 'Data Retrieved Successfully!');
     }
 
     /**
@@ -88,34 +87,41 @@ class NeediesController extends BaseController
     {
         //Check needy exists
         $needy = Needy::find($id);
-        if($needy == null)
+        if ($needy == null)
             return $this->sendError('Needy Not Found');
         //Check user who is updating exists
         $user = User::find($request['userId']);
-        if($user == null)
+        if ($user == null)
             return $this->sendError('User Not Found');
         //Check if current user can update
-        if (! $user->can('update',$needy)) {
-            return $this->sendForbidden('You can\'t edit this needy.');
+        if (!$user->can('update', $needy)) {
+            return $this->sendForbidden('You aren\'t authorized to edit this needy.');
         }
         //Validate Request
         $validated = $this->validateNeedy($request);
-        if($validated->fails())
-            return $this->sendError('Invalid data',$validated->messages(),400);
+        if ($validated->fails())
+            return $this->sendError('Invalid data', $validated->messages(), 400);
         //Image Saving
-        $images = $request['images'];
-        $imagePaths = array();
+        $imagesBefore = $request['imagesBefore'];
+        $imagesBeforePaths = array();
+        $imagesAfter = $request['imagesAfter'];
+        $imagesAfterPaths = array();
         //1- Delete from disk
         foreach ($needy->medias as $media) {
-            Storage::delete('public/'.$media->path);
+            Storage::delete('public/' . $media->path);
         }
         //2- Remove Previous Media associated
         $needy->medias()->delete();
         //3- Add All coming media
-        foreach ($images as $image) {
+        foreach ($imagesBefore as $imageBefore) {
             // return $images;
-            $imagePath = $image->store('uploads', 'public');
-            array_push($imagePaths, $imagePath);
+            $imagePath = $imageBefore->store('uploads', 'public');
+            array_push($imagesBeforePaths, $imagePath);
+        }
+        foreach ($imagesAfter as $imageAfter) {
+            // return $images;
+            $imagePath = $imageAfter->store('uploads', 'public');
+            array_push($imagesAfterPaths, $imagePath);
         }
         //Update 
         $needy->update([
@@ -129,11 +135,18 @@ class NeediesController extends BaseController
             'status' => true,
         ]);
         //4- Create relation with media uploaded
-        foreach ($imagePaths as $imagePath) {
+        foreach ($imagesBeforePaths as $imageBeforePath) {
             $needy->medias()->create([
-                'path' => $imagePath,
+                'path' => $imageBeforePath,
             ]);
         }
+        foreach ($imagesAfterPaths as $imageAfterPath) {
+            $needy->medias()->create([
+                'path' => $imageAfterPath,
+                'before' => false
+            ]);
+        }
+
         return $this->sendResponse([], 'Needy Updated Successfully!');
     }
 
@@ -207,16 +220,18 @@ class NeediesController extends BaseController
             'details' => 'required|max:1024',
             'need' => 'required|numeric|min:1',
             'address' => 'required',
-            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048e',
+            'imagesBefore' => 'required',
+            'imagesBefore.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048e',
+            'imagesAfter.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048e',
         ], [
-            'required'=> 'This field is required',
-            'min'=> 'Invalid size, min size is :min',
-            'max'=> 'Invalid size, max size is :max',
+            'required' => 'This field is required',
+            'min' => 'Invalid size, min size is :min',
+            'max' => 'Invalid size, max size is :max',
             'integer' => 'Invalid type, only numbers are supported',
             'in' => 'Invalid type, support values are :values',
             'image' => 'Invalid type, only images are accepted',
             'mimes' => 'Invalid type, supported types are :values',
             'numeric' => 'Invalid type, only numbers are supported'
-            ]);
+        ]);
     }
 }
