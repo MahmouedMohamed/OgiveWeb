@@ -83,7 +83,7 @@ class NeedyPolicy
      */
     public function delete(User $user, Needy $needy)
     {
-        //
+        return $user->id == $needy->createdBy || $user->isAdmin();
     }
 
     /**

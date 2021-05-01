@@ -178,12 +178,29 @@ class NeediesController extends BaseController
     /**
      * Remove the specified resource from storage.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request,$id)
     {
-        //
+        $needy = Needy::find($id);
+        if ($needy == null)
+            return $this->sendError('Not Found');
+        //Check user who is updating exists
+        $user = User::find($request['userId']);
+        if ($user == null)
+            return $this->sendError('User Not Found');
+        //Check if current user can update
+        if (!$user->can('delete', $needy)) {
+            return $this->sendForbidden('You aren\'t authorized to edit this needy.');
+        }
+        //Remove images from disk before deleting to save storage
+        foreach ($needy->medias as $media) {
+            Storage::delete('public/' . $media->path);
+        }
+        $needy->delete();
+        return $this->sendResponse([], 'Needy Deleted successfully!');    
     }
 
     /**
@@ -234,6 +251,7 @@ class NeediesController extends BaseController
         $needy->disapprove();
         return $this->sendResponse([], 'Needy Disapprove Successfully!');
     }
+
     public function validateNeedy(Request $request, string $related)
     {
         $rules = null;
