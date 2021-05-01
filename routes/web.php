@@ -43,7 +43,7 @@ Route::get('/articles', function () {
 
 // Route::prefix('Al-Ahed')->group(function () {
 Route::get('/ahed', [HomeController::class, 'ahedIndex'])->name('ahed');
-Route::get('/ahed/cases', [CasesController::class, 'index']);
+Route::get('/ahed/cases', [NeediesController::class, 'index']);
 Route::get('/ahed/cases/{id}', [CasesController::class, 'show']);
 Route::post('/ahed/cases', [CasesController::class, 'store']);
 Route::get('/ahed/cases/{id}/edit', [CasesController::class, 'edit']);

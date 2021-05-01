@@ -70,12 +70,12 @@ class NeediesController extends BaseController
      */
     public function show($id)
     {
-        $needy = Needy::find($id);
+        $needy = Needy::with('mediasBefore:id,path,needy')->with('mediasAfter:id,path,needy')->find($id);
         if ($needy == null) {
             return $this->sendError('Not Found');
         }
 
-        return $this->sendResponse($needy->with('mediasBefore:id,path,needy')->with('mediasAfter:id,path,needy')->get(), 'Data Retrieved Successfully!');
+        return $this->sendResponse($needy, 'Data Retrieved Successfully!');
     }
 
     /**

@@ -12,7 +12,7 @@ function Navbar() {
                 <ReactBootStrap.Navbar.Collapse id="basic-navbar-nav">
                     <ReactBootStrap.Nav className="ml-auto">
                         {/* <ReactBootStrap.Nav.Link to='/home'>Section 1</ReactBootStrap.Nav.Link> */}
-                        <Link to="/" className="nav-link">الصفحة الرئيسية</Link>
+                        <Link to="/ahed" className="nav-link">الصفحة الرئيسية</Link>
                         <Link to="/about" className="nav-link">عن عهد</Link>
                         <ReactBootStrap.Nav.Link href="">التبرعات</ReactBootStrap.Nav.Link>
                         <ReactBootStrap.Nav.Link href="#link">تطوع</ReactBootStrap.Nav.Link>

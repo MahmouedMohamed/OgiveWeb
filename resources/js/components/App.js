@@ -15,7 +15,7 @@ function App() {
         <BrowserRouter>
             <Navbar />
             <Switch>
-                <Route exact path="/">
+                <Route exact path="/ahed">
                     <Home />
                 </Route>
                 <Route exact path="/about">
