@@ -81,9 +81,13 @@ class User extends Authenticatable
     {
         return $this->hasMany(Needy::class,'createdBy');
     }
-    public function transactions()
+    public function onlinetransactions()
     {
-        return $this->hasMany(Transaction::class,'giver');
+        return $this->hasMany(OnlineTransaction::class,'giver');
+    }
+    public function offlinetransactions()
+    {
+        return $this->hasMany(OfflineTransaction::class,'giver');
     }
     //To Be Done using roles or just a column
     public function isAdmin(){

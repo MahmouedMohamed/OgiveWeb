@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\Transaction;
+use App\Models\OfflineTransaction;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class TransactionPolicy
+class OfflineTransactionPolicy
 {
     use HandlesAuthorization;
 
@@ -25,12 +25,12 @@ class TransactionPolicy
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Transaction  $transaction
+     * @param  \App\Models\OfflineTransaction  $offlineTransaction
      * @return mixed
      */
-    public function view(User $user, Transaction $transaction)
+    public function view(User $user, OfflineTransaction $offlineTransaction)
     {
-        return $user->id == $transaction->giver || $user->isAdmin();
+        //
     }
 
     /**
@@ -48,10 +48,10 @@ class TransactionPolicy
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Transaction  $transaction
+     * @param  \App\Models\OfflineTransaction  $offlineTransaction
      * @return mixed
      */
-    public function update(User $user, Transaction $transaction)
+    public function update(User $user, OfflineTransaction $offlineTransaction)
     {
         //
     }
@@ -60,10 +60,10 @@ class TransactionPolicy
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Transaction  $transaction
+     * @param  \App\Models\OfflineTransaction  $offlineTransaction
      * @return mixed
      */
-    public function delete(User $user, Transaction $transaction)
+    public function delete(User $user, OfflineTransaction $offlineTransaction)
     {
         //
     }
@@ -72,10 +72,10 @@ class TransactionPolicy
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Transaction  $transaction
+     * @param  \App\Models\OfflineTransaction  $offlineTransaction
      * @return mixed
      */
-    public function restore(User $user, Transaction $transaction)
+    public function restore(User $user, OfflineTransaction $offlineTransaction)
     {
         //
     }
@@ -84,10 +84,10 @@ class TransactionPolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Transaction  $transaction
+     * @param  \App\Models\OfflineTransaction  $offlineTransaction
      * @return mixed
      */
-    public function forceDelete(User $user, Transaction $transaction)
+    public function forceDelete(User $user, OfflineTransaction $offlineTransaction)
     {
         //
     }

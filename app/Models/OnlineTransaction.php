@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Transaction extends Model
+class OnlineTransaction extends Model
 {
     use HasFactory;
     protected $fillable = [
@@ -25,12 +25,13 @@ class Transaction extends Model
     public function transferAmount($amount)
     {
         $needy = Needy::find($this->needy);
-        if($needy->satisfied()){
+        if($needy->satisfied){
             $this->remaining = $amount;
         }
         else if($needy->need <= $needy->collected + $amount){
             $this->remaining = $needy->collected + $amount - $needy->need; 
             $needy->collected = $needy->need;
+            $needy->satisfied = 1;
         }
         else{
             $needy->collected += $amount;

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTransactionsTable extends Migration
+class CreateOnlineTransactionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateTransactionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('transactions', function (Blueprint $table) {
+        Schema::create('online_transactions', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('giver');
             $table->unsignedBigInteger('needy');
@@ -22,6 +22,7 @@ class CreateTransactionsTable extends Migration
             $table->timestamps();
             $table->foreign('giver')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('needy')->references('id')->on('needies')->onDelete('cascade');
+
         });
     }
 
@@ -32,6 +33,6 @@ class CreateTransactionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('transactions');
+        Schema::dropIfExists('online_transactions');
     }
 }

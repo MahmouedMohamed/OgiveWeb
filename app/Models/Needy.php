@@ -24,9 +24,9 @@ class Needy extends Model
     {
         return $this->belongsTo(User::class);
     }
-    public function transactions()
+    public function onlinetransactions()
     {
-        return $this->hasMany(Transaction::class,'needy');
+        return $this->hasMany(OnlineTransaction::class,'needy');
     }
     public function medias()
     {

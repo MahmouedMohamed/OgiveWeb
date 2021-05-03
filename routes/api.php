@@ -10,7 +10,8 @@ use App\Http\Controllers\api\NeediesController;
 use App\Http\Controllers\api\PetController;
 use App\Http\Controllers\api\PetsArticleController;
 use App\Http\Controllers\api\PlaceController;
-use App\Http\Controllers\api\TransactionsController;
+use App\Http\Controllers\api\OnlineTransactionsController;
+use App\Http\Controllers\api\OfflineTransactionsController;
 use App\Http\Controllers\api\UserController;
 use App\Models\Pet;
 use Illuminate\Http\Request;
@@ -74,5 +75,6 @@ Route::post('/ahed/needies/addImage/{id}', [NeediesController::class, 'addAssoci
 Route::post('/ahed/needies/removeImage/{id}', [NeediesController::class, 'removeAssociatedImage']);
 Route::post('/ahed/needies/approve/{id}', [NeediesController::class, 'approve']);
 Route::post('/ahed/needies/disapprove/{id}', [NeediesController::class, 'disapprove']);
-Route::apiResource('/ahed/transactions', TransactionsController::class);
+Route::apiResource('/ahed/onlinetransactions', OnlineTransactionsController::class);
+Route::apiResource('/ahed/offlinetransactions', OfflineTransactionsController::class);
 // });

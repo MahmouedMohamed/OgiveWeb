@@ -5,12 +5,12 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\Needy;
-use App\Models\Transaction;
+use App\Models\OnlineTransaction;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class TransactionsController extends BaseController
+class OnlineTransactionsController extends BaseController
 {
     /**
      * Display a listing of the resource.
@@ -23,7 +23,7 @@ class TransactionsController extends BaseController
         if (!$user) {
             return $this->sendError('User Not Found');
         }
-        return $this->sendResponse($user->transactions()->paginate(8), 'Transactions retrieved successfully.');
+        return $this->sendResponse($user->onlinetransactions()->paginate(8), 'Transactions retrieved successfully.');
     }
 
     /**
@@ -51,7 +51,10 @@ class TransactionsController extends BaseController
         if (!$needy->approved) {
             return $this->sendError('Kindly wait until Case is approved so you can donate.',[],403);
         }
-        $transaction = $user->transactions()->create([
+        if ($needy->satisfied){
+            return $this->sendError('Case already satisfied, Kindly check another one',[]);
+        }
+        $transaction = $user->onlinetransactions()->create([
             'needy' => $needy->id,
             'amount' => $request['amount'],
             'remaining' => $request['amount']
@@ -71,7 +74,7 @@ class TransactionsController extends BaseController
     public function show(Request $request,$id)
     {
         //Check transaction exists
-        $transaction = Transaction::find($id);
+        $transaction = OnlineTransaction::find($id);
         if ($transaction == null) {
             return $this->sendError('Transaction Not Found');
         }
