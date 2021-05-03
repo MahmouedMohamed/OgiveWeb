@@ -23,6 +23,7 @@ class CreateNeediesTable extends Migration
             $table->double('need')->default(0);
             $table->double('collected')->default(0);
             $table->string('address');
+            $table->boolean('satisfied')->default(0);
             $table->boolean('approved')->default(0);
             $table->unsignedBigInteger('createdBy');
             $table->timestamps();
