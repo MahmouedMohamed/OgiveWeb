@@ -1,11 +1,10 @@
 <?php
 
+namespace App\Http\Controllers;
 
-namespace App\Http\Controllers\api;
-use App\Http\Controllers\API\BaseController as BaseController;
 use Illuminate\Http\Request;
 
-class TransactionsController extends BaseController
+class OfflineTransactionsController extends Controller
 {
     /**
      * Display a listing of the resource.

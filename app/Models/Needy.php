@@ -16,6 +16,7 @@ class Needy extends Model
         'details',
         'need',
         'collected',
+        'satisfied',
         'address',
         'approved',
         'createdBy'
@@ -24,9 +25,9 @@ class Needy extends Model
     {
         return $this->belongsTo(User::class);
     }
-    public function transactions()
+    public function onlinetransactions()
     {
-        return $this->hasMany(Transaction::class,'needy');
+        return $this->hasMany(OnlineTransaction::class,'needy');
     }
     public function medias()
     {
@@ -39,10 +40,6 @@ class Needy extends Model
     public function mediasAfter()
     {
         return $this->medias()->where('before','0');
-    }
-    public function satisfied()
-    {
-        return $this->need == $this->collected;
     }
     public function approve()
     {
