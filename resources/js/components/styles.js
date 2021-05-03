@@ -4,7 +4,11 @@ import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles((theme) => ({
     donate: {
         backgroundColor: theme.blue
+    },
+    needieName: {
+        backgroundColor: blue,
     }
+
 }));
 
 export default useStyles;

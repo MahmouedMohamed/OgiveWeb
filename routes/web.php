@@ -60,3 +60,7 @@ Route::delete('/ahed/transactions/{id}', [TransactionsController::class, 'delete
 // Route::get('/Al-Ahed/{path?}', function () {
 //     return view('ahed.ahed');
 // });
+
+Route::view('/{path?}', 'ahed.ahed')
+    ->where('path', '.*')
+    ->name('react');

@@ -9,6 +9,7 @@ import NotFoundPage from './NotFoundPage'
 import About from './About'
 import DonationForm from './DonationForm';
 import Needie from './Needie';
+import ContactUs from './ContactUs';
 
 function App() {
     return (
@@ -21,11 +22,14 @@ function App() {
                 <Route exact path="/about">
                     <About />
                 </Route>
+                <Route exact path="/donate/:id">
+                    <DonationForm />
+                </Route>
                 <Route exact path="/donate">
                     <DonationForm />
                 </Route>
                 <Route exact path="/needie/:id" component={Needie} />
-
+                <Route exact path="/contact-us" component={ContactUs} />
 
                 {/* <Route path='/:id' component={SingleProject} /> */}
 

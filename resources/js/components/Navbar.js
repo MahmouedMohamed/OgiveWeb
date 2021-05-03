@@ -1,7 +1,7 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import * as ReactBootStrap from 'react-bootstrap';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import Button from 'react-bootstrap/Button';
 
 function Navbar() {
     return (
@@ -16,9 +16,14 @@ function Navbar() {
                         <Link to="/about" className="nav-link">عن عهد</Link>
                         <ReactBootStrap.Nav.Link href="">التبرعات</ReactBootStrap.Nav.Link>
                         <ReactBootStrap.Nav.Link href="#link">تطوع</ReactBootStrap.Nav.Link>
-                        <ReactBootStrap.Nav.Link href="#link">تواصل معنا</ReactBootStrap.Nav.Link>
-                        <ReactBootStrap.Button variant="outline-success">  تبرع الآن</ReactBootStrap.Button>
-
+                        {/* <ReactBootStrap.Nav.Link href="/contact-us">تواصل معنا</ReactBootStrap.Nav.Link> */}
+                        <Link to="/contact-us" className="nav-link">تواصل معنا</Link>
+                        {/* <ReactBootStrap.Button variant="outline-primary">  تبرع الآن</ReactBootStrap.Button> */}
+                        <Link to="/donate">
+                            <Button variant="outline-primary" color="primary">
+                                تبرع الآن
+                            </Button>
+                        </Link>
                     </ReactBootStrap.Nav>
                 </ReactBootStrap.Navbar.Collapse>
                 <ReactBootStrap.Navbar.Collapse id="basic-navbar-nav">

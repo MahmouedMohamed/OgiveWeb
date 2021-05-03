@@ -1,0 +1,19 @@
+.link {
+    color: black;
+    display: inline-block;
+    text-decoration: none;
+}
+
+.link:hover {
+    text-decoration: underline;
+    color: cornflowerblue
+}
+
+.input {
+    width: 90%;
+}
+
+.image {
+    width: 560px;
+    height: 430px
+}

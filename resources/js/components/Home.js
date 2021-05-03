@@ -4,14 +4,7 @@ import ReactDOM from 'react-dom';
 import { Table, Button } from 'reactstrap';
 import Navbar from './Navbar';
 import {
-    Container,
     Typography,
-    Grid,
-    Card,
-    CardActions,
-    CardContent,
-    CardMedia,
-
 } from '@material-ui/core';
 import useStyles from './styles';
 import ChildComponent from './ChildComponent';
@@ -51,20 +44,9 @@ class Home extends React.Component {
             <div>
                 <div className="container">
                     <Typography variant="h3" className="text-center">التملُّك الكامل لا يثبته إلا العطاء، فكل ما لا تستطيع إعطاءه يتملكك.
-                </Typography>
+                     </Typography>
                     <ChildComponent data={this.state.needies} />
-                    {/* <Grid container spacing={3}>
-                        {needies.map((needie) => (
-                            <Grid item xs={12} md={4} sm={6}>
-                                <CardContent className="card-header">Header</CardContent>
-                            </Grid>
-                        ))}
-                    </Grid> */}
-                    {/* </Container> */}
-
                 </div>
-
-
             </div >
         );
 
