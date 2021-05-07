@@ -11,6 +11,15 @@ class OfflineTransactionPolicy
     use HandlesAuthorization;
 
     /**
+     * Determine whether the user can collect transaction.
+     *
+     * @param  \App\Models\User  $user
+     * @return mixed
+     */
+    public function collect(User $user){
+        return $user->isAdmin();
+    }
+    /**
      * Determine whether the user can view any models.
      *
      * @param  \App\Models\User  $user
@@ -30,7 +39,7 @@ class OfflineTransactionPolicy
      */
     public function view(User $user, OfflineTransaction $offlineTransaction)
     {
-        //
+        return $user->id == $offlineTransaction->giver || $user->isAdmin();
     }
 
     /**
@@ -65,7 +74,7 @@ class OfflineTransactionPolicy
      */
     public function delete(User $user, OfflineTransaction $offlineTransaction)
     {
-        //
+        return $user->id == $offlineTransaction->giver || $user->isAdmin();
     }
 
     /**
