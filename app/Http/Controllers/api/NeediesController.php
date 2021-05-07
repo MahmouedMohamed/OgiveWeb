@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\API\BaseController as BaseController;
@@ -6,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Needy;
 use App\Models\NeedyMedia;
+use App\Models\CaseType;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -290,6 +292,7 @@ class NeediesController extends BaseController
     public function validateNeedy(Request $request, string $related)
     {
         $rules = null;
+        $caseType = new CaseType();
         switch ($related) {
             case 'store':
                 $rules = [
@@ -297,7 +300,7 @@ class NeediesController extends BaseController
                     'name' => 'required|max:255',
                     'age' => 'required|integer|max:100',
                     'severity' => 'required|integer|min:1|max:10',
-                    'type' => 'required|in:Finding Living,Upgrade Standard of Living,Bride Preparation,Debt,Cure',
+                    'type' => 'required|in:'.$caseType->toString(),
                     'details' => 'required|max:1024',
                     'need' => 'required|numeric|min:1',
                     'address' => 'required',
@@ -311,7 +314,7 @@ class NeediesController extends BaseController
                     'name' => 'required|max:255',
                     'age' => 'required|integer|max:100',
                     'severity' => 'required|integer|min:1|max:10',
-                    'type' => 'required|in:Finding Living,Upgrade Standard of Living,Bride Preparation,Debt,Cure',
+                    'type' => 'required|in'.$caseType->toString(),
                     'details' => 'required|max:1024',
                     'need' => 'required|numeric|min:1',
                     'address' => 'required',
