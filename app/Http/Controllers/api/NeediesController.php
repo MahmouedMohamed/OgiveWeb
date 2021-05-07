@@ -232,63 +232,6 @@ class NeediesController extends BaseController
         return $this->sendResponse([], 'Needy Deleted successfully!');
     }
 
-    /**
-     * Approve the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function approve(Request $request, $id)
-    {
-        //Check needy exists
-        $needy = Needy::find($id);
-        if ($needy == null) {
-            return $this->sendError('Needy Not Found');
-        }
-
-        //Check user who is updating exists
-        $user = User::find($request['userId']);
-        if ($user == null) {
-            return $this->sendError('User Not Found');
-        }
-
-        //Check if current user can approve
-        if (!$user->can('approve', $needy)) {
-            return $this->sendForbidden('You aren\'t authorized to approve this needy.');
-        }
-        $needy->approve();
-        return $this->sendResponse([], 'Needy Approved Successfully!');
-    }
-    /**
-     * Disapprove the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function disapprove(Request $request, $id)
-    {
-        //Check needy exists
-        $needy = Needy::find($id);
-        if ($needy == null) {
-            return $this->sendError('Needy Not Found');
-        }
-
-        //Check user who is updating exists
-        $user = User::find($request['userId']);
-        if ($user == null) {
-            return $this->sendError('User Not Found');
-        }
-
-        //Check if current user can disapprove
-        if (!$user->can('disapprove', $needy)) {
-            return $this->sendForbidden('You aren\'t authorized to disapprove this needy.');
-        }
-        $needy->disapprove();
-        return $this->sendResponse([], 'Needy Disapprove Successfully!');
-    }
-
     public function validateNeedy(Request $request, string $related)
     {
         $rules = null;
