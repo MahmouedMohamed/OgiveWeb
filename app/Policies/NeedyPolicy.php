@@ -11,7 +11,7 @@ class NeedyPolicy
     use HandlesAuthorization;
 
     /**
-     * Determine whether the user can view any models.
+     * Determine whether the user can approve.
      *
      * @param  \App\Models\User  $user
      * @return mixed
@@ -20,7 +20,7 @@ class NeedyPolicy
         return $user->isAdmin();
     }
     /**
-     * Determine whether the user can view any models.
+     * Determine whether the user can disapprove.
      *
      * @param  \App\Models\User  $user
      * @return mixed

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\API\BaseController as BaseController;
@@ -6,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Needy;
 use App\Models\NeedyMedia;
+use App\Models\CaseType;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -230,66 +232,10 @@ class NeediesController extends BaseController
         return $this->sendResponse([], 'Needy Deleted successfully!');
     }
 
-    /**
-     * Approve the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function approve(Request $request, $id)
-    {
-        //Check needy exists
-        $needy = Needy::find($id);
-        if ($needy == null) {
-            return $this->sendError('Needy Not Found');
-        }
-
-        //Check user who is updating exists
-        $user = User::find($request['userId']);
-        if ($user == null) {
-            return $this->sendError('User Not Found');
-        }
-
-        //Check if current user can approve
-        if (!$user->can('approve', $needy)) {
-            return $this->sendForbidden('You aren\'t authorized to approve this needy.');
-        }
-        $needy->approve();
-        return $this->sendResponse([], 'Needy Approved Successfully!');
-    }
-    /**
-     * Disapprove the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function disapprove(Request $request, $id)
-    {
-        //Check needy exists
-        $needy = Needy::find($id);
-        if ($needy == null) {
-            return $this->sendError('Needy Not Found');
-        }
-
-        //Check user who is updating exists
-        $user = User::find($request['userId']);
-        if ($user == null) {
-            return $this->sendError('User Not Found');
-        }
-
-        //Check if current user can disapprove
-        if (!$user->can('disapprove', $needy)) {
-            return $this->sendForbidden('You aren\'t authorized to disapprove this needy.');
-        }
-        $needy->disapprove();
-        return $this->sendResponse([], 'Needy Disapprove Successfully!');
-    }
-
     public function validateNeedy(Request $request, string $related)
     {
         $rules = null;
+        $caseType = new CaseType();
         switch ($related) {
             case 'store':
                 $rules = [
@@ -297,7 +243,7 @@ class NeediesController extends BaseController
                     'name' => 'required|max:255',
                     'age' => 'required|integer|max:100',
                     'severity' => 'required|integer|min:1|max:10',
-                    'type' => 'required|in:Finding Living,Upgrade Standard of Living,Bride Preparation,Debt,Cure',
+                    'type' => 'required|in:'.$caseType->toString(),
                     'details' => 'required|max:1024',
                     'need' => 'required|numeric|min:1',
                     'address' => 'required',
@@ -311,7 +257,7 @@ class NeediesController extends BaseController
                     'name' => 'required|max:255',
                     'age' => 'required|integer|max:100',
                     'severity' => 'required|integer|min:1|max:10',
-                    'type' => 'required|in:Finding Living,Upgrade Standard of Living,Bride Preparation,Debt,Cure',
+                    'type' => 'required|in'.$caseType->toString(),
                     'details' => 'required|max:1024',
                     'need' => 'required|numeric|min:1',
                     'address' => 'required',

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\api\AdminController;
 use App\Http\Controllers\api\AdoptionRequestController;
 use App\Http\Controllers\api\ConsultationCommentController;
 use App\Http\Controllers\api\ConsultationController;
@@ -73,8 +74,9 @@ Route::get('filterPlacesByType', [PlaceController::class, 'filterByType']);
 Route::apiResource('/ahed/needies', NeediesController::class);
 Route::post('/ahed/needies/addImage/{id}', [NeediesController::class, 'addAssociatedImage']);
 Route::post('/ahed/needies/removeImage/{id}', [NeediesController::class, 'removeAssociatedImage']);
-Route::post('/ahed/needies/approve/{id}', [NeediesController::class, 'approve']);
-Route::post('/ahed/needies/disapprove/{id}', [NeediesController::class, 'disapprove']);
 Route::apiResource('/ahed/onlinetransactions', OnlineTransactionsController::class);
 Route::apiResource('/ahed/offlinetransactions', OfflineTransactionsController::class);
+Route::post('/ahed/admin/approve/{id}', [AdminController::class,'approve']);
+Route::post('/ahed/admin/disapprove/{id}', [AdminController::class,'disapprove']);
+Route::post('/ahed/admin/collect', [AdminController::class,'collectOfflineTransaction']);
 // });

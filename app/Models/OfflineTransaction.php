@@ -27,4 +27,9 @@ class OfflineTransaction extends Model
     {
         return $this->belongsTo(Needy::class);
     }
+    public function collect()
+    {
+        $this->collected = true;
+        $this->save();
+    }
 }

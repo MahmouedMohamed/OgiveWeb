@@ -52,7 +52,7 @@ class OnlineTransactionsController extends BaseController
             return $this->sendError('Kindly wait until Case is approved so you can donate.',[],403);
         }
         if ($needy->satisfied){
-            return $this->sendError('Case already satisfied, Kindly check another one',[]);
+            return $this->sendError('Case already satisfied, Kindly check another one',[],403);
         }
         $transaction = $user->onlinetransactions()->create([
             'needy' => $needy->id,
@@ -65,7 +65,7 @@ class OnlineTransactionsController extends BaseController
     }
 
     /**
-     * Update the specified resource in storage.
+     * Display the specified resource.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
