@@ -26,13 +26,11 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 //     return view('breedme.main');
 // });
 
-Route::get('/pets', function () {
-    return view('breedme.pages.pets');
-});
+Route::get('/pets', [PetController::class, 'index']);
 Route::get('/pets/add', function () {
     return view('breedme.pages.addpet');
 })->name('pet-add');
-Route::get('/', [PetController::class, 'index']);
+// Route::get('/', [PetController::class, 'index']);
 Route::get('pet/{id}', [PetController::class, 'show']);
 Route::get('/about-us', function () {
     return view('breedme.pages.about-us');
@@ -60,7 +58,11 @@ Route::delete('/ahed/transactions/{id}', [TransactionsController::class, 'delete
 // Route::get('/Al-Ahed/{path?}', function () {
 //     return view('ahed.ahed');
 // });
-
-Route::view('/{path?}', 'ahed.ahed')
+Route::prefix('ahed')->group(function () {
+    Route::view('/{path?}', 'ahed.ahed')
+        ->where('path', '.*')
+        ->name('react');
+});
+Route::view('/{path?}', 'ogive.main')
     ->where('path', '.*')
     ->name('react');

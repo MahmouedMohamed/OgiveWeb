@@ -18,7 +18,7 @@
         "cross-env": "^7.0",
         "jquery": "^3.2",
         "laravel-mix": "^5.0.1",
-        "lodash": "^4.17.19",
+        "lodash": "^4.17.21",
         "popper.js": "^1.12",
         "postcss": "^7.0.35",
         "react": "^16.14.0",
@@ -29,12 +29,17 @@
         "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.1.0"
     },
     "dependencies": {
+        "@fortawesome/fontawesome-svg-core": "^1.2.35",
+        "@fortawesome/free-brands-svg-icons": "^5.15.3",
+        "@fortawesome/react-fontawesome": "^0.1.14",
         "@material-ui/core": "^4.11.4",
+        "font-awesome": "^4.7.0",
         "install": "^0.13.0",
         "node-sass": "^5.0.0",
         "npm": "^7.11.2",
         "react-bootstrap": "^1.5.2",
         "react-bootstrap-validation": "^0.1.11",
+        "react-js-pagination": "^3.0.3",
         "react-router-dom": "^5.2.0",
         "reactstrap": "^8.9.0"
     }
