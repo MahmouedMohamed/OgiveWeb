@@ -134,7 +134,7 @@ class NeediesController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function addAssociatedImage(Request $request, $id)
+    public function addAssociatedImages(Request $request, $id)
     {
         //Check needy exists
         $needy = Needy::find($id);
@@ -158,13 +158,19 @@ class NeediesController extends BaseController
             return $this->sendError('Invalid data', $validated->messages(), 400);
         }
 
-        $image = $request['image'];
-        $imagePath = $image->store('uploads', 'public');
-        $needy->medias()->create([
-            'path' => $imagePath,
-            'before' => $request['before'],
-        ]);
-        return $this->sendResponse([], 'Image Added successfully!');
+        $images = $request['images'];
+        $imagePaths = array();
+        foreach ($images as $image) {
+            $imagePath = $image->store('uploads', 'public');
+            array_push($imagePaths, $imagePath);
+        }
+        foreach ($imagePaths as $imagePath) {
+            $needy->medias()->create([
+                'path' => $imagePath,
+                'before' => $request['before'],
+            ]);
+        }
+        return $this->sendResponse([], 'Images Added successfully!');
     }
     /**
      * Update the specified resource in storage.
@@ -266,7 +272,8 @@ class NeediesController extends BaseController
                 break;
             case 'addImage':
                 $rules = [
-                    'image' => 'required|mimes:jpeg,png,jpg,gif,svg|max:2048e',
+                    'images' => 'required',
+                    'images.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048e',
                     'before' => 'required|boolean',
                 ];
                 break;
