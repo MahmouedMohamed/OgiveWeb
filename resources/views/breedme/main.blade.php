@@ -143,13 +143,13 @@
 
                 <ul class="list-unstyled">
                     <li>
-                        <a href="#!" class="text-dark">Link 1</a>
+                        <a href="/pets" class="text-dark">Breed Me</a>
                     </li>
                     <li>
-                        <a href="#!" class="text-dark">Link 2</a>
+                        <a href="#!" class="text-dark">Feed Me</a>
                     </li>
                     <li>
-                        <a href="#!" class="text-dark">Link 3</a>
+                        <a href="/ahed/ahed" class="text-dark">عهد</a>
                     </li>
                     <li>
                         <a href="#!" class="text-dark">Link 4</a>

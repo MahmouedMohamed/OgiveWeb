@@ -17,5 +17,6 @@
 
 <body>
 @include('breedme.includes.header')
-<div id="intro">
-</div>
+<!-- <div id="intro">
+</div> -->
+This is articles page

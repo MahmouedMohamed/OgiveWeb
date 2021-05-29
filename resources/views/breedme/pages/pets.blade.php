@@ -1,4 +1,5 @@
 @extends('breedme.layouts.default')
 @section('content')
-    i am the projects page
+<div id="app">
+</div>
 @stop

@@ -12,7 +12,7 @@
 ?>">
 
                 <div class="container">
-                    <a class="navbar-brand" href="{{url('/')}}">
+                    <a class="navbar-brand" href="{{url('/pets')}}">
                         <img src="{{asset('images/logoBreedMe.png')}}" alt="Logo">
                     </a>
                     <!-- Collapse button -->
@@ -27,7 +27,7 @@
                         <!-- Links -->
                         <ul class="navbar-nav mr-auto smooth-scroll">
                             <li class="nav-item">
-                                <a class="nav-link" href="#intro">Home</a>
+                                <a class="nav-link" href="/pets">Home</a>
                             </li>
                             <li class="nav-item">
                             <a class="nav-link" href="/articles">Articles</a>

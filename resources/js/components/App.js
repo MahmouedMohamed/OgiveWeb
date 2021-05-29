@@ -17,19 +17,23 @@ function App() {
             <Navbar />
             <Switch>
                 <Route exact path="/ahed">
-                    <Home />
-                </Route>
-                <Route exact path="/about">
+                    {/* Temp Page */}
                     <About />
                 </Route>
-                <Route exact path="/donate/:id">
+                <Route exact path="/ahed/ahed">
+                    <Home />
+                </Route>
+                <Route exact path="/ahed/about">
+                    <About />
+                </Route>
+                <Route exact path="/ahed/donate/:id">
                     <DonationForm />
                 </Route>
-                <Route exact path="/donate">
+                <Route exact path="/ahed/donate">
                     <DonationForm />
                 </Route>
-                <Route exact path="/needie/:id" component={Needie} />
-                <Route exact path="/contact-us" component={ContactUs} />
+                <Route exact path="/ahed/needie/:id" component={Needie} />
+                <Route exact path="/ahed/contact-us" component={ContactUs} />
 
                 {/* <Route path='/:id' component={SingleProject} /> */}
 
