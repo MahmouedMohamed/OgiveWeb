@@ -56,7 +56,9 @@ class NeediesController extends BaseController
             'details' => $request['details'],
             'need' => $request['need'],
             'address' => $request['address'],
-            'status' => true,
+        ]);
+        $needy->update([
+            'url' => url('/').'/ahed/needies/'.$needy->id
         ]);
         foreach ($imagePaths as $imagePath) {
             $needy->medias()->create([

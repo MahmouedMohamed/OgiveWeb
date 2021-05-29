@@ -26,6 +26,7 @@ class CreateNeediesTable extends Migration
             $table->boolean('satisfied')->default(0);
             $table->boolean('approved')->default(0);
             $table->unsignedBigInteger('createdBy');
+            $table->string('url')->nullable();
             $table->timestamps();
             $table->foreign('createdBy')->references('id')->on('users')->onDelete('cascade');
         });

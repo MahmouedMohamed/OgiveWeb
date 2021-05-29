@@ -19,7 +19,8 @@ class Needy extends Model
         'satisfied',
         'address',
         'approved',
-        'createdBy'
+        'createdBy',
+        'url'
     ];
     public function createdBy()
     {
@@ -28,6 +29,10 @@ class Needy extends Model
     public function onlinetransactions()
     {
         return $this->hasMany(OnlineTransaction::class,'needy');
+    }
+    public function offlinetransactions()
+    {
+        return $this->hasMany(OfflineTransaction::class,'needy');
     }
     public function medias()
     {
