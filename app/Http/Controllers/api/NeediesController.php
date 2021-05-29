@@ -269,7 +269,7 @@ class NeediesController extends BaseController
                     'name' => 'required|max:255',
                     'age' => 'required|integer|max:100',
                     'severity' => 'required|integer|min:1|max:10',
-                    'type' => 'required|in' . $caseType->toString(),
+                    'type' => 'required|in:' . $caseType->toString(),
                     'details' => 'required|max:1024',
                     'need' => 'required|numeric|min:1',
                     'address' => 'required',
@@ -278,7 +278,7 @@ class NeediesController extends BaseController
             case 'addImage':
                 $rules = [
                     'images' => 'required',
-                    'images.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048e',
+                    'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048e',
                     'before' => 'required|boolean',
                 ];
                 break;
