@@ -20,7 +20,7 @@ class NeediesController extends BaseController
      */
     public function index()
     {
-        $needies = Needy::with('mediasBefore:id,path,needy')->with('mediasAfter:id,path,needy')->paginate(8);
+        $needies = Needy::with('mediasBefore:id,path,needy')->with('mediasAfter:id,path,needy')->where('approved','=',1)->paginate(8);
         return $this->sendResponse($needies, 'Cases retrieved successfully.');
     }
 
@@ -122,7 +122,6 @@ class NeediesController extends BaseController
             'details' => $request['details'],
             'need' => $request['need'],
             'address' => $request['address'],
-            'status' => true,
         ]);
         return $this->sendResponse([], 'Needy Updated Successfully!');
     }
