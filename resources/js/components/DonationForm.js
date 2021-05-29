@@ -4,8 +4,11 @@ import Button from 'react-bootstrap/Button';
 import Box from '@material-ui/core/Box';
 import {
     Container,
-    Typography,
 
+} from '@material-ui/core';
+import {
+    CardActions, Grid, Typography, FormControl,
+    InputLabel, OutlinedInput, InputAdornment,
 } from '@material-ui/core';
 import { Row, Col, Card, Nav } from "react-bootstrap";
 import Tab from 'react-bootstrap/Tab';
@@ -82,7 +85,17 @@ class DonationForm extends React.Component {
                                                 تبرع اونلاين
                                             </Card.Title>
                                             <Form>
-                                                <Select options={renderNeedies()} />
+                                                <Card.Header className="text-center font-weight-bold user-info">
+                                                    البيانات الحالة
+                                                </Card.Header>
+                                                <Form.Group controlId="formBasicEmail">
+                                                    <Form.Label className="text-right start">الحالة </Form.Label>
+                                                    <Select options={renderNeedies()} />
+                                                </Form.Group>
+                                                <Form.Group fullWidth variant="outlined " className="text-right">
+                                                    <Form.Label className="text-right start">المبلغ </Form.Label>
+                                                    <Form.Control type="number" placeholder="المبلغ المتبرع به" />
+                                                </Form.Group>
                                                 <Card.Header className="text-center font-weight-bold user-info">
                                                     البيانات الشخصية
                                                 </Card.Header>
@@ -108,6 +121,17 @@ class DonationForm extends React.Component {
                                             <Card.Title>
                                                 تبرع من منزلك
                                             </Card.Title>
+                                            <Card.Header className="text-center font-weight-bold user-info">
+                                                البيانات الحالة
+                                                </Card.Header>
+                                            <Form.Group controlId="formBasicEmail">
+                                                <Form.Label className="text-right start">الحالة </Form.Label>
+                                                <Select options={renderNeedies()} />
+                                            </Form.Group>
+                                            <Form.Group fullWidth variant="outlined " className="text-right">
+                                                <Form.Label className="text-right start">المبلغ </Form.Label>
+                                                <Form.Control type="number" placeholder="المبلغ المتبرع به" />
+                                            </Form.Group>
                                             <Card.Header className="text-center font-weight-bold user-info">
                                                 البيانات الشخصية
                                                 </Card.Header>
