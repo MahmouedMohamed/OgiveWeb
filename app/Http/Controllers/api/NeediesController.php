@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\API\BaseController as BaseController;
-use Illuminate\Http\Request;
-use App\Models\User;
+use App\Models\CaseType;
 use App\Models\Needy;
 use App\Models\NeedyMedia;
-use App\Models\CaseType;
+use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -24,6 +24,11 @@ class NeediesController extends BaseController
         return $this->sendResponse($needies, 'Cases retrieved successfully.');
     }
 
+    public function getAllNeedies()
+    {
+        $needies = Needy::with('mediasBefore:id,path,needy')->with('mediasAfter:id,path,needy')->get();
+        return $this->sendResponse($needies, 'Cases retrieved successfully.');
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -243,7 +248,7 @@ class NeediesController extends BaseController
                     'name' => 'required|max:255',
                     'age' => 'required|integer|max:100',
                     'severity' => 'required|integer|min:1|max:10',
-                    'type' => 'required|in:'.$caseType->toString(),
+                    'type' => 'required|in:' . $caseType->toString(),
                     'details' => 'required|max:1024',
                     'need' => 'required|numeric|min:1',
                     'address' => 'required',
@@ -257,7 +262,7 @@ class NeediesController extends BaseController
                     'name' => 'required|max:255',
                     'age' => 'required|integer|max:100',
                     'severity' => 'required|integer|min:1|max:10',
-                    'type' => 'required|in'.$caseType->toString(),
+                    'type' => 'required|in' . $caseType->toString(),
                     'details' => 'required|max:1024',
                     'need' => 'required|numeric|min:1',
                     'address' => 'required',
