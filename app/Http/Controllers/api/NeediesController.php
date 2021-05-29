@@ -20,7 +20,7 @@ class NeediesController extends BaseController
      */
     public function index()
     {
-        $needies = Needy::with('mediasBefore:id,path,needy')->with('mediasAfter:id,path,needy')->paginate(8);
+        $needies = Needy::with('mediasBefore:id,path,needy')->with('mediasAfter:id,path,needy')->where('approved','=',1)->paginate(8);
         return $this->sendResponse($needies, 'Cases retrieved successfully.');
     }
 
@@ -61,7 +61,9 @@ class NeediesController extends BaseController
             'details' => $request['details'],
             'need' => $request['need'],
             'address' => $request['address'],
-            'status' => true,
+        ]);
+        $needy->update([
+            'url' => url('/').'/ahed/needies/'.$needy->id
         ]);
         foreach ($imagePaths as $imagePath) {
             $needy->medias()->create([
@@ -127,7 +129,6 @@ class NeediesController extends BaseController
             'details' => $request['details'],
             'need' => $request['need'],
             'address' => $request['address'],
-            'status' => true,
         ]);
         return $this->sendResponse([], 'Needy Updated Successfully!');
     }
@@ -138,7 +139,7 @@ class NeediesController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function addAssociatedImage(Request $request, $id)
+    public function addAssociatedImages(Request $request, $id)
     {
         //Check needy exists
         $needy = Needy::find($id);
@@ -162,13 +163,19 @@ class NeediesController extends BaseController
             return $this->sendError('Invalid data', $validated->messages(), 400);
         }
 
-        $image = $request['image'];
-        $imagePath = $image->store('uploads', 'public');
-        $needy->medias()->create([
-            'path' => $imagePath,
-            'before' => $request['before'],
-        ]);
-        return $this->sendResponse([], 'Image Added successfully!');
+        $images = $request['images'];
+        $imagePaths = array();
+        foreach ($images as $image) {
+            $imagePath = $image->store('uploads', 'public');
+            array_push($imagePaths, $imagePath);
+        }
+        foreach ($imagePaths as $imagePath) {
+            $needy->medias()->create([
+                'path' => $imagePath,
+                'before' => $request['before'],
+            ]);
+        }
+        return $this->sendResponse([], 'Images Added successfully!');
     }
     /**
      * Update the specified resource in storage.
@@ -262,7 +269,7 @@ class NeediesController extends BaseController
                     'name' => 'required|max:255',
                     'age' => 'required|integer|max:100',
                     'severity' => 'required|integer|min:1|max:10',
-                    'type' => 'required|in' . $caseType->toString(),
+                    'type' => 'required|in:' . $caseType->toString(),
                     'details' => 'required|max:1024',
                     'need' => 'required|numeric|min:1',
                     'address' => 'required',
@@ -270,7 +277,8 @@ class NeediesController extends BaseController
                 break;
             case 'addImage':
                 $rules = [
-                    'image' => 'required|mimes:jpeg,png,jpg,gif,svg|max:2048e',
+                    'images' => 'required',
+                    'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048e',
                     'before' => 'required|boolean',
                 ];
                 break;
