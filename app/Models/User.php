@@ -19,8 +19,12 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'user_name',
         'email',
         'password',
+        'gender',
+        'phone_number',
+        'address'
     ];
 
     /**
@@ -56,5 +60,37 @@ class User extends Authenticatable
     public function likes()
     {
         return $this->hasMany(Like::class);
+    }
+    public function pets()
+    {
+        return $this->hasMany(Pet::class);
+    }
+    public function adoptionRequests()
+    {
+        return $this->hasMany(AdoptionRequest::class);
+    }
+    public function consultations()
+    {
+        return $this->hasMany(Consultation::class);
+    }
+    public function consultationsComments()
+    {
+        return $this->hasMany(ConsultationComment::class);
+    }
+    public function createdNeedies()
+    {
+        return $this->hasMany(Needy::class,'createdBy');
+    }
+    public function onlinetransactions()
+    {
+        return $this->hasMany(OnlineTransaction::class,'giver');
+    }
+    public function offlinetransactions()
+    {
+        return $this->hasMany(OfflineTransaction::class,'giver');
+    }
+    //To Be Done using roles or just a column
+    public function isAdmin(){
+        return false;
     }
 }

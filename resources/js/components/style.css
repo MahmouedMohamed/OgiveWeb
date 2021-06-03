@@ -1,0 +1,65 @@
+.link {
+    color: black;
+    display: inline-block;
+    text-decoration: none;
+}
+
+.link:hover {
+    text-decoration: underline;
+    color: cornflowerblue
+}
+
+.input {
+    width: 90%;
+}
+
+.image {
+    width: 560px;
+    height: 430px
+}
+
+.bg-img {
+    background-image: url("/img/donate.jpg");
+    height: 210px;
+    box-shadow: -41px 7px 35px -28px rgba(0, 0, 0, 0.75);
+}
+
+.hero {
+    /* Photo by mnm.all on Unsplash */
+    background: url('/img/giving (2).jpg') center;
+    background-size: cover;
+    padding: 4rem 2rem;
+    /* Grid styles */
+    display: grid;
+    align-items: center;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    margin-bottom: 20px;
+    height: 250px;
+}
+
+.img {
+    padding-bottom: 20px;
+}
+
+.contact-card {
+    padding-bottom: 20px;
+}
+
+.font-weight-bold {
+    font-size: 1.5rem;
+}
+
+.user-info {
+    background-color: white;
+}
+
+.body {
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0 !important;
+    font-family: Fnt-r;
+}
+
+.footer {
+    background-color: #f7f9fc;
+}

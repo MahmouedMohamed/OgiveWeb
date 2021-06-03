@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 
+use Illuminate\Http\Request;
 class UserController extends Controller
 {
     public function __construct(){
@@ -36,26 +37,32 @@ class UserController extends Controller
         return response()->json(['user' => Auth::user()]);
     }
 
-    public function register()
+    public function register(Request $request)
     {
         $data=request()->all();
-        $rules= [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8'],
-        ];
-        $validator = Validator::make($data,$rules);
-            if($validator->passes()){User::create([
+        $this->validateUser($request);
+        User::create([
                 'name' => request('name'),
+                'user_name' => request('user_name'),
                 'email' => request('email'),
+                'gender' => request('gender'),
                 'password' => Hash::make(request('password')),
+                'phone_number' => request('phone_number'),
             ]);
-            $this->content['status'] = 'done';
-        }
-        else{
-            $this->content['status'] = 'undone';
-            $this->content['details']=$validator->errors()->all();
-        }
-        return response()->json($this->content);
+        return response()->json([],200);
+    }
+    public function validateUser(Request $request)
+    {
+        return $request->validate([
+            'name' => 'required|string|max:255',
+            'user_name' => 'required|string|max:255|unique:users',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8',
+            'gender' => 'required|in:male,female',
+            //|regex:^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$
+            'phone_number' => 'required',
+            'address' => 'string|max:1024',
+            'image' => 'image',
+        ]);
     }
 }
