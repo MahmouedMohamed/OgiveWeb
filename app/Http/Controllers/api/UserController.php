@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Profile;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
@@ -25,6 +26,8 @@ class UserController extends Controller
                     $user->createToken($user->getAuthIdentifier())->accessToken;
 
             $this->content['user'] = Auth::user();
+            $profile = Profile::findOrFail(Auth::user()->profile);
+            $this->content['profile'] = $profile;
             return response()->json($this->content);
         }
         else{
@@ -41,6 +44,13 @@ class UserController extends Controller
     {
         $data=request()->all();
         $this->validateUser($request);
+        $profile = Profile::create([]);
+        $image = $request['image'];
+        if($image != null){
+            $imagePath = $image->store('users', 'public');
+            $profile->image = "/storage/" . $imagePath;
+            $profile->save();
+        }
         User::create([
                 'name' => request('name'),
                 'user_name' => request('user_name'),
@@ -48,6 +58,7 @@ class UserController extends Controller
                 'gender' => request('gender'),
                 'password' => Hash::make(request('password')),
                 'phone_number' => request('phone_number'),
+                'profile' =>$profile->id
             ]);
         return response()->json([],200);
     }
