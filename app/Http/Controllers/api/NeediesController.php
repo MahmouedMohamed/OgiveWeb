@@ -51,7 +51,6 @@ class NeediesController extends BaseController
         $imagePaths = array();
         foreach ($images as $image) {
             $imagePath = $image->store('uploads', 'public');
-            array_push($imagePaths, $imagePath);
             array_push($imagePaths, "/storage/" . $imagePath);
         }
         $needy = $user->createdNeedies()->create([
@@ -168,7 +167,6 @@ class NeediesController extends BaseController
         $imagePaths = array();
         foreach ($images as $image) {
             $imagePath = $image->store('uploads', 'public');
-            array_push($imagePaths, $imagePath);
             array_push($imagePaths, "/storage/" . $imagePath);
         }
         foreach ($imagePaths as $imagePath) {
@@ -209,8 +207,7 @@ class NeediesController extends BaseController
         if ($needyMedia == null) {
             return $this->sendError('Needy Media Not Found');
         }
-
-        Storage::delete('public/' . $needyMedia->path);
+        Storage::delete('public/' . substr($needyMedia->path,9));
         $needyMedia->delete();
         return $this->sendResponse([], 'Image Deleted successfully!');
     }
