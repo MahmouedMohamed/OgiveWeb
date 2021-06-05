@@ -37,7 +37,7 @@ class PetController extends BaseController
         if (!$user) {
             return $this->sendError('User Not Found');
         }
-        $imagePath = $request['image']->store('uploads', 'public');
+        $imagePath = "/storage/" . $request['image']->store('uploads', 'public');
         $user->pets()->create([
             'name' => $request['name'],
             'age' => $request['age'],
@@ -87,7 +87,7 @@ class PetController extends BaseController
         $pet = Pet::find($pet->id);
         if ($request->hasFile('image')) {
             $imagePath = $request['image']->store('uploads', 'public');
-            $pet->image = $imagePath;
+            $pet->image = "/storage/" . $imagePath;
         }
         // $pet->user_id = $request['user_id'];
         $pet->name = $request['name'];

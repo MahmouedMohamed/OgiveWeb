@@ -52,6 +52,7 @@ class NeediesController extends BaseController
         foreach ($images as $image) {
             $imagePath = $image->store('uploads', 'public');
             array_push($imagePaths, $imagePath);
+            array_push($imagePaths, "/storage/" . $imagePath);
         }
         $needy = $user->createdNeedies()->create([
             'name' => $request['name'],
@@ -168,6 +169,7 @@ class NeediesController extends BaseController
         foreach ($images as $image) {
             $imagePath = $image->store('uploads', 'public');
             array_push($imagePaths, $imagePath);
+            array_push($imagePaths, "/storage/" . $imagePath);
         }
         foreach ($imagePaths as $imagePath) {
             $needy->medias()->create([
