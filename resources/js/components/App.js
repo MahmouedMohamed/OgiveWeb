@@ -10,6 +10,7 @@ import About from './About'
 import DonationForm from './DonationForm';
 import Needie from './Needie';
 import ContactUs from './ContactUs';
+import { ProtectedRoute } from "./includes/protected.route";
 
 function App() {
     return (
@@ -29,9 +30,9 @@ function App() {
                 <Route exact path="/ahed/donate/:id">
                     <DonationForm />
                 </Route>
-                <Route exact path="/ahed/donate">
+                <ProtectedRoute exact path="/ahed/donate">
                     <DonationForm />
-                </Route>
+                </ProtectedRoute>
                 <Route exact path="/ahed/needie/:id" component={Needie} />
                 <Route exact path="/ahed/contact-us" component={ContactUs} />
 
