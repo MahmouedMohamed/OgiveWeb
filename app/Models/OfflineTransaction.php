@@ -14,6 +14,7 @@ class OfflineTransaction extends Model
         'amount',
         'preferredSection',
         'address',
+        'phoneNumber',
         'startCollectDate',
         'endCollectDate',
         'selectedDate',
