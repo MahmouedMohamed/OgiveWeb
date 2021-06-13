@@ -24,7 +24,8 @@ class User extends Authenticatable
         'password',
         'gender',
         'phone_number',
-        'address'
+        'address',
+        'profile'
     ];
 
     /**
@@ -48,6 +49,10 @@ class User extends Authenticatable
     public function accessTokens()
     {
         return $this->hasMany(OauthAccessToken::class);
+    }
+    public function profile()
+    {
+        return $this->hasOne(Profile::class);
     }
     public function markers()
     {

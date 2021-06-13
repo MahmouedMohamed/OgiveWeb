@@ -20,6 +20,7 @@ class CreateOfflineTransactionsTable extends Migration
             $table->double('amount');
             $table->text('preferredSection');
             $table->text('address');
+            $table->string('phoneNumber')->nullable();
             $table->dateTime('startCollectDate');
             $table->dateTime('endCollectDate');
             $table->dateTime('selectedDate')->nullable();

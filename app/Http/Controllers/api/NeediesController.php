@@ -6,6 +6,7 @@ use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\CaseType;
 use App\Models\Needy;
 use App\Models\NeedyMedia;
+use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -20,8 +21,17 @@ class NeediesController extends BaseController
      */
     public function index()
     {
-        $needies = Needy::with('mediasBefore:id,path,needy')->with('mediasAfter:id,path,needy')->where('approved','=',1)->paginate(8);
-        return $this->sendResponse($needies, 'Cases retrieved successfully.');
+        $needies = Needy::with('mediasBefore:id,path,needy')
+            ->with('mediasAfter:id,path,needy')
+            ->where('approved', '=', 1)
+            ->paginate(8);
+        $updatedNeedies = $needies->getCollection();
+        foreach ($updatedNeedies as $needy) {
+            $profile = Profile::findOrFail($needy->createdBy()->get('profile'))->first();
+            $needy['createdBy'] = $needy->createdBy()->get()->first();
+            $needy['createdBy']['image'] = $profile->image;
+        }
+        return $this->sendResponse($needies->setCollection($updatedNeedies), 'Cases retrieved successfully.');
     }
 
     public function getAllNeedies()
@@ -51,7 +61,7 @@ class NeediesController extends BaseController
         $imagePaths = array();
         foreach ($images as $image) {
             $imagePath = $image->store('uploads', 'public');
-            array_push($imagePaths, $imagePath);
+            array_push($imagePaths, "/storage/" . $imagePath);
         }
         $needy = $user->createdNeedies()->create([
             'name' => $request['name'],
@@ -63,7 +73,7 @@ class NeediesController extends BaseController
             'address' => $request['address'],
         ]);
         $needy->update([
-            'url' => url('/').'/ahed/needies/'.$needy->id
+            'url' => url('/') . '/ahed/needies/' . $needy->id
         ]);
         foreach ($imagePaths as $imagePath) {
             $needy->medias()->create([
@@ -167,7 +177,7 @@ class NeediesController extends BaseController
         $imagePaths = array();
         foreach ($images as $image) {
             $imagePath = $image->store('uploads', 'public');
-            array_push($imagePaths, $imagePath);
+            array_push($imagePaths, "/storage/" . $imagePath);
         }
         foreach ($imagePaths as $imagePath) {
             $needy->medias()->create([
@@ -207,8 +217,7 @@ class NeediesController extends BaseController
         if ($needyMedia == null) {
             return $this->sendError('Needy Media Not Found');
         }
-
-        Storage::delete('public/' . $needyMedia->path);
+        Storage::delete('public/' . substr($needyMedia->path, 9));
         $needyMedia->delete();
         return $this->sendResponse([], 'Image Deleted successfully!');
     }
