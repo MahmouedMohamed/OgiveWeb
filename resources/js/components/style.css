@@ -19,9 +19,10 @@
 }
 
 .bg-img {
-    background-image: url("/img/donate.jpg");
-    height: 210px;
-    box-shadow: -41px 7px 35px -28px rgba(0, 0, 0, 0.75);
+    background-image: url("/img/community.png");
+    height: 500px;
+    background-repeat: no-repeat;
+    /* box-shadow: -41px 7px 35px -28px rgba(0, 0, 0, 0.75); */
 }
 
 .hero {
@@ -42,7 +43,10 @@
 }
 
 .contact-card {
-    padding-bottom: 20px;
+    margin-bottom: 40px;
+    box-shadow: -41px 7px 35px -28px rgba(0, 0, 0, 0.75);
+    background-image: url("/img/donate.jpg");
+    height: 210px;
 }
 
 .font-weight-bold {

@@ -16,6 +16,8 @@
     <link type="text/css" rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Google+Sans:400,500,700|Google+Sans+Text:400">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link href="/demo/demo.css" rel="stylesheet" />
+
 </head>
 
 <body class="antialiased" dir="rtl">

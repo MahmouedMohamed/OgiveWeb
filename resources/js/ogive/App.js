@@ -4,6 +4,9 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import OgiveMainPage from './components/OgiveMainPage';
 import Navbar from './components/Navbar';
+import { lazy } from "react";
+import Projects from './components/Projects'
+import Intro from './components/Intro'
 
 function App() {
     return (
@@ -11,7 +14,8 @@ function App() {
             {/* Ogive header */}
             <BrowserRouter>
                 <Navbar />
-
+                <Intro />
+                <Projects />
                 <Switch>
                     <Route exact path="/">
                         <OgiveMainPage />
