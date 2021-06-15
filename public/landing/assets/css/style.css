@@ -17,14 +17,13 @@
 
 -----------------------------------------------------------------------------------*/
 
-
 /*===========================
       01.COMMON css 
 ===========================*/
 
 @import url("https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800");
 body {
-    font-family: "Poppins", sans-serif;
+    font-family: !important "Cairo";
     font-weight: normal;
     font-style: normal;
     color: #121212;
@@ -42,31 +41,20 @@ img {
     max-width: 100%;
 }
 
-a:focus,
-input:focus,
-textarea:focus,
-button:focus {
+a:focus, input:focus, textarea:focus, button:focus {
     text-decoration: none;
     outline: none;
 }
 
-a:focus,
-a:hover {
+a:focus, a:hover {
     text-decoration: none;
 }
 
-i,
-span,
-a {
+i, span, a {
     display: inline-block;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+h1, h2, h3, h4, h5, h6 {
     font-family: "Poppins", sans-serif;
     font-weight: 600;
     color: #121212;
@@ -97,8 +85,7 @@ h6 {
     font-size: 16px;
 }
 
-ul,
-ol {
+ul, ol {
     margin: 0px;
     padding: 0px;
     list-style-type: none;
@@ -120,13 +107,11 @@ p {
     height: 100%;
 }
 
-
 /*===== All Slick Slide Outline Style =====*/
 
 .slick-slide {
     outline: 0;
 }
-
 
 /*===== All Section Title Style =====*/
 
@@ -150,7 +135,6 @@ p {
     color: #6c6c6c;
     margin-top: 24px;
 }
-
 
 /*===== All Preloader Style =====*/
 
@@ -257,7 +241,6 @@ p {
     -o-animation: ytp-right-spin 1333ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
     animation: ytp-right-spin 1333ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
 }
-
 
 /* Preloader Animations */
 
@@ -495,7 +478,6 @@ p {
     }
 }
 
-
 /*===========================
     11.BUTTON css 
 ===========================*/
@@ -546,7 +528,6 @@ p {
         line-height: 40px;
     }
 }
-
 
 /*===== standard Buttons =====*/
 
@@ -749,7 +730,6 @@ p {
     -o-animation: iconTranslateY 0.5s forwards;
     animation: iconTranslateY 0.5s forwards;
 }
-
 
 /*===== Light Rounded Buttons =====*/
 
@@ -963,7 +943,6 @@ p {
     animation: iconTranslateY 0.5s forwards;
 }
 
-
 /*===== Semi Rounded Buttons =====*/
 
 .semi-rounded-buttons ul li {
@@ -1173,7 +1152,6 @@ p {
     -o-animation: iconTranslateY 0.5s forwards;
     animation: iconTranslateY 0.5s forwards;
 }
-
 
 /*===== Rounded Buttons =====*/
 
@@ -1385,7 +1363,6 @@ p {
     animation: iconTranslateY 0.5s forwards;
 }
 
-
 /*===== Success Buttons =====*/
 
 .success-buttons ul li {
@@ -1593,7 +1570,6 @@ p {
     -o-animation: iconTranslateY 0.5s forwards;
     animation: iconTranslateY 0.5s forwards;
 }
-
 
 /*===== Warning Buttons =====*/
 
@@ -1816,7 +1792,6 @@ p {
     animation: iconTranslateY 0.5s forwards;
 }
 
-
 /*===== Info Buttons =====*/
 
 .info-buttons ul li {
@@ -2024,7 +1999,6 @@ p {
     -o-animation: iconTranslateY 0.5s forwards;
     animation: iconTranslateY 0.5s forwards;
 }
-
 
 /*===== Danger Buttons =====*/
 
@@ -2301,7 +2275,6 @@ p {
     line-height: 40px !important;
     font-size: 12px;
 }
-
 
 /*===== Regular Icon Buttons =====*/
 
@@ -2599,7 +2572,6 @@ p {
     background-color: transparent;
 }
 
-
 /*===== Group Buttons =====*/
 
 .group-buttons .btn-group {
@@ -2811,7 +2783,6 @@ p {
     background-position: right center;
 }
 
-
 /*===========================
     06.FORM ELEMENTS css 
 ===========================*/
@@ -2856,8 +2827,7 @@ p {
     position: relative;
 }
 
-.form-input .input-items input,
-.form-input .input-items textarea {
+.form-input .input-items input, .form-input .input-items textarea {
     width: 100%;
     height: 44px;
     border: 2px solid;
@@ -2866,7 +2836,6 @@ p {
     position: relative;
     font-size: 16px;
 }
-
 
 .form-input .input-items select {
     width: 100%;
@@ -2877,10 +2846,12 @@ p {
     position: relative;
     font-size: 16px;
 }
+
 .form-input .input-items.default select {
     border-color: #a4a4a4;
     color: #6c6c6c;
 }
+
 .form-input .input-items textarea {
     padding-top: 8px;
     height: 130px;
@@ -2895,37 +2866,31 @@ p {
     z-index: 9;
 }
 
-.form-input .input-items.default input,
-.form-input .input-items.default textarea {
+.form-input .input-items.default input, .form-input .input-items.default textarea {
     border-color: #a4a4a4;
     color: #6c6c6c;
 }
 
-.form-input .input-items.default input:focus,
-.form-input .input-items.default textarea:focus {
+.form-input .input-items.default input:focus, .form-input .input-items.default textarea:focus {
     border-color: #0067f4;
 }
 
-.form-input .input-items.default input::placeholder,
-.form-input .input-items.default textarea::placeholder {
+.form-input .input-items.default input::placeholder, .form-input .input-items.default textarea::placeholder {
     color: #6c6c6c;
     opacity: 1;
 }
 
-.form-input .input-items.default input::-moz-placeholder,
-.form-input .input-items.default textarea::-moz-placeholder {
+.form-input .input-items.default input::-moz-placeholder, .form-input .input-items.default textarea::-moz-placeholder {
     color: #6c6c6c;
     opacity: 1;
 }
 
-.form-input .input-items.default input::-moz-placeholder,
-.form-input .input-items.default textarea::-moz-placeholder {
+.form-input .input-items.default input::-moz-placeholder, .form-input .input-items.default textarea::-moz-placeholder {
     color: #6c6c6c;
     opacity: 1;
 }
 
-.form-input .input-items.default input::-webkit-input-placeholder,
-.form-input .input-items.default textarea::-webkit-input-placeholder {
+.form-input .input-items.default input::-webkit-input-placeholder, .form-input .input-items.default textarea::-webkit-input-placeholder {
     color: #6c6c6c;
     opacity: 1;
 }
@@ -2934,32 +2899,27 @@ p {
     color: #6c6c6c;
 }
 
-.form-input .input-items.active input,
-.form-input .input-items.active textarea {
+.form-input .input-items.active input, .form-input .input-items.active textarea {
     border-color: #0067f4;
     color: #121212;
 }
 
-.form-input .input-items.active input::placeholder,
-.form-input .input-items.active textarea::placeholder {
+.form-input .input-items.active input::placeholder, .form-input .input-items.active textarea::placeholder {
     color: #121212;
     opacity: 1;
 }
 
-.form-input .input-items.active input::-moz-placeholder,
-.form-input .input-items.active textarea::-moz-placeholder {
+.form-input .input-items.active input::-moz-placeholder, .form-input .input-items.active textarea::-moz-placeholder {
     color: #121212;
     opacity: 1;
 }
 
-.form-input .input-items.active input::-moz-placeholder,
-.form-input .input-items.active textarea::-moz-placeholder {
+.form-input .input-items.active input::-moz-placeholder, .form-input .input-items.active textarea::-moz-placeholder {
     color: #121212;
     opacity: 1;
 }
 
-.form-input .input-items.active input::-webkit-input-placeholder,
-.form-input .input-items.active textarea::-webkit-input-placeholder {
+.form-input .input-items.active input::-webkit-input-placeholder, .form-input .input-items.active textarea::-webkit-input-placeholder {
     color: #121212;
     opacity: 1;
 }
@@ -2968,32 +2928,27 @@ p {
     color: #0067f4;
 }
 
-.form-input .input-items.error input,
-.form-input .input-items.error textarea {
+.form-input .input-items.error input, .form-input .input-items.error textarea {
     border-color: #fc3832;
     color: #fc3832;
 }
 
-.form-input .input-items.error input::placeholder,
-.form-input .input-items.error textarea::placeholder {
+.form-input .input-items.error input::placeholder, .form-input .input-items.error textarea::placeholder {
     color: #fc3832;
     opacity: 1;
 }
 
-.form-input .input-items.error input::-moz-placeholder,
-.form-input .input-items.error textarea::-moz-placeholder {
+.form-input .input-items.error input::-moz-placeholder, .form-input .input-items.error textarea::-moz-placeholder {
     color: #fc3832;
     opacity: 1;
 }
 
-.form-input .input-items.error input::-moz-placeholder,
-.form-input .input-items.error textarea::-moz-placeholder {
+.form-input .input-items.error input::-moz-placeholder, .form-input .input-items.error textarea::-moz-placeholder {
     color: #fc3832;
     opacity: 1;
 }
 
-.form-input .input-items.error input::-webkit-input-placeholder,
-.form-input .input-items.error textarea::-webkit-input-placeholder {
+.form-input .input-items.error input::-webkit-input-placeholder, .form-input .input-items.error textarea::-webkit-input-placeholder {
     color: #fc3832;
     opacity: 1;
 }
@@ -3002,32 +2957,27 @@ p {
     color: #fc3832;
 }
 
-.form-input .input-items.success input,
-.form-input .input-items.success textarea {
+.form-input .input-items.success input, .form-input .input-items.success textarea {
     border-color: #4da422;
     color: #4da422;
 }
 
-.form-input .input-items.success input::placeholder,
-.form-input .input-items.success textarea::placeholder {
+.form-input .input-items.success input::placeholder, .form-input .input-items.success textarea::placeholder {
     color: #4da422;
     opacity: 1;
 }
 
-.form-input .input-items.success input::-moz-placeholder,
-.form-input .input-items.success textarea::-moz-placeholder {
+.form-input .input-items.success input::-moz-placeholder, .form-input .input-items.success textarea::-moz-placeholder {
     color: #4da422;
     opacity: 1;
 }
 
-.form-input .input-items.success input::-moz-placeholder,
-.form-input .input-items.success textarea::-moz-placeholder {
+.form-input .input-items.success input::-moz-placeholder, .form-input .input-items.success textarea::-moz-placeholder {
     color: #4da422;
     opacity: 1;
 }
 
-.form-input .input-items.success input::-webkit-input-placeholder,
-.form-input .input-items.success textarea::-webkit-input-placeholder {
+.form-input .input-items.success input::-webkit-input-placeholder, .form-input .input-items.success textarea::-webkit-input-placeholder {
     color: #4da422;
     opacity: 1;
 }
@@ -3036,33 +2986,28 @@ p {
     color: #4da422;
 }
 
-.form-input .input-items.disabled input,
-.form-input .input-items.disabled textarea {
+.form-input .input-items.disabled input, .form-input .input-items.disabled textarea {
     border-color: #a4a4a4;
     color: #6c6c6c;
     background: none;
 }
 
-.form-input .input-items.disabled input::placeholder,
-.form-input .input-items.disabled textarea::placeholder {
+.form-input .input-items.disabled input::placeholder, .form-input .input-items.disabled textarea::placeholder {
     color: #6c6c6c;
     opacity: 1;
 }
 
-.form-input .input-items.disabled input::-moz-placeholder,
-.form-input .input-items.disabled textarea::-moz-placeholder {
+.form-input .input-items.disabled input::-moz-placeholder, .form-input .input-items.disabled textarea::-moz-placeholder {
     color: #6c6c6c;
     opacity: 1;
 }
 
-.form-input .input-items.disabled input::-moz-placeholder,
-.form-input .input-items.disabled textarea::-moz-placeholder {
+.form-input .input-items.disabled input::-moz-placeholder, .form-input .input-items.disabled textarea::-moz-placeholder {
     color: #6c6c6c;
     opacity: 1;
 }
 
-.form-input .input-items.disabled input::-webkit-input-placeholder,
-.form-input .input-items.disabled textarea::-webkit-input-placeholder {
+.form-input .input-items.disabled input::-webkit-input-placeholder, .form-input .input-items.disabled textarea::-webkit-input-placeholder {
     color: #6c6c6c;
     opacity: 1;
 }
@@ -3071,8 +3016,7 @@ p {
     color: #6c6c6c;
 }
 
-.form-style-two .form-input .input-items input,
-.form-style-two .form-input .input-items textarea {
+.form-style-two .form-input .input-items input, .form-style-two .form-input .input-items textarea {
     border-radius: 5px;
     padding-left: 12px;
     padding-right: 44px;
@@ -3087,8 +3031,7 @@ p {
     text-align: center;
 }
 
-.form-style-three .form-input .input-items input,
-.form-style-three .form-input .input-items textarea {
+.form-style-three .form-input .input-items input, .form-style-three .form-input .input-items textarea {
     border-radius: 50px;
     text-align: center;
 }
@@ -3098,8 +3041,7 @@ p {
     margin-bottom: 0;
 }
 
-.form-style-four .form-input .input-items input,
-.form-style-four .form-input .input-items textarea {
+.form-style-four .form-input .input-items input, .form-style-four .form-input .input-items textarea {
     border-top: 0;
     border-left: 0;
     border-right: 0;
@@ -3118,16 +3060,13 @@ p {
     padding: 0 5px;
 }
 
-.form-style-five .form-input .input-items input,
-.form-style-five .form-input .input-items textarea {
+.form-style-five .form-input .input-items input, .form-style-five .form-input .input-items textarea {
     border-radius: 5px;
 }
-
 
 /*===========================
         09.NAVBAR css 
 ===========================*/
-
 
 /*===========================
        10.SLIDER css 
@@ -3323,8 +3262,7 @@ p {
     }
 }
 
-.carousel .carousel-control-prev,
-.carousel .carousel-control-next {
+.carousel .carousel-control-prev, .carousel .carousel-control-next {
     top: 50%;
     font-size: 32px;
     color: #fff;
@@ -3347,22 +3285,19 @@ p {
 }
 
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
-    .carousel .carousel-control-prev,
-    .carousel .carousel-control-next {
+    .carousel .carousel-control-prev, .carousel .carousel-control-next {
         left: 30px;
     }
 }
 
 @media only screen and (min-width: 768px) and (max-width: 991px) {
-    .carousel .carousel-control-prev,
-    .carousel .carousel-control-next {
+    .carousel .carousel-control-prev, .carousel .carousel-control-next {
         display: none;
     }
 }
 
 @media (max-width: 767px) {
-    .carousel .carousel-control-prev,
-    .carousel .carousel-control-next {
+    .carousel .carousel-control-prev, .carousel .carousel-control-next {
         display: none;
     }
 }
@@ -3390,11 +3325,9 @@ p {
     }
 }
 
-
 /*===========================
       17.FEATURES css 
 ===========================*/
-
 
 /*===== features TWO =====*/
 
@@ -3479,7 +3412,6 @@ p {
     margin-top: 29px;
 }
 
-
 /*===========================
       18.PORTFOLIO css 
 ===========================*/
@@ -3548,13 +3480,11 @@ p {
     transition: all 0.3s ease-out 0s;
 }
 
-.portfolio-menu ul li:hover,
-.portfolio-menu ul li.active {
+.portfolio-menu ul li:hover, .portfolio-menu ul li.active {
     color: #fff;
 }
 
-.portfolio-menu ul li:hover::before,
-.portfolio-menu ul li.active::before {
+.portfolio-menu ul li:hover::before, .portfolio-menu ul li.active::before {
     opacity: 1;
 }
 
@@ -3623,7 +3553,6 @@ p {
     visibility: visible;
 }
 
-
 /*===========================
       16.PRICING css 
 ===========================*/
@@ -3633,7 +3562,6 @@ p {
     padding-top: 120px;
     padding-bottom: 130px;
 }
-
 
 /*===== PRICING STYLE NINE =====*/
 
@@ -3740,7 +3668,6 @@ p {
     box-shadow: 0 3px 16px 0 rgba(0, 0, 0, 0.16);
 }
 
-
 /*===========================
        15.ABOUT css 
 ===========================*/
@@ -3839,11 +3766,9 @@ p {
     width: 100%;
 }
 
-
 /*===========================
       26.TESTIMONIAL css 
 ===========================*/
-
 
 /*===== TESTIMONIAL STYLE THREE =====*/
 
@@ -4070,11 +3995,9 @@ p {
     }
 }
 
-
 /*===========================
         13.TEAM css 
 ===========================*/
-
 
 /*===== TEAM STYLE ELEVEN =====*/
 
@@ -4232,7 +4155,6 @@ p {
     color: #fff;
 }
 
-
 /*===========================
       19.CONTACT css 
 ===========================*/
@@ -4243,8 +4165,7 @@ p {
     background-color: #f4f6f7;
 }
 
-p.form-message.success,
-p.form-message.error {
+p.form-message.success, p.form-message.error {
     font-size: 16px;
     color: #333;
     background: #ddd;
@@ -4253,8 +4174,7 @@ p.form-message.error {
     margin-left: 15px;
 }
 
-p.form-message.success.form-message.error,
-p.form-message.error.form-message.error {
+p.form-message.success.form-message.error, p.form-message.error.form-message.error {
     color: #f00;
 }
 
@@ -4320,11 +4240,9 @@ p.form-message.error.form-message.error {
     font-weight: 400;
 }
 
-
 /*===========================
     21.FOOTER css 
 ===========================*/
-
 
 /*===== FOOTER FIVE =====*/
 
@@ -4435,7 +4353,6 @@ p.form-message.error.form-message.error {
     color: #fff;
 }
 
-
 /*===== BACK TO TOP =====*/
 
 .back-to-top {
@@ -4463,6 +4380,5 @@ p.form-message.error.form-message.error {
     color: #fff;
     background-color: #0067f4;
 }
-
 
 /*# sourceMappingURL=style.css.map */

@@ -11,12 +11,16 @@ import DonationForm from './DonationForm';
 import Needie from './Needie';
 import ContactUs from './ContactUs';
 import { ProtectedRoute } from "./includes/protected.route";
+import Footer from './Footer';
 
 function App() {
     return (
         <BrowserRouter>
             <Navbar />
             <Switch>
+                <Route exact path="/login">
+                    {/* Temp Page */}
+                </Route>
                 <Route exact path="/ahed">
                     {/* Temp Page */}
                     <About />
@@ -39,6 +43,7 @@ function App() {
                 {/* <Route path='/:id' component={SingleProject} /> */}
 
             </Switch>
+            <Footer />
 
             {/* <Switch>
                 <Route exact path="/">

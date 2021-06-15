@@ -67,3 +67,15 @@
 .footer {
     background-color: #f7f9fc;
 }
+
+.primary-color {
+    color: #3a9fc0;
+}
+
+@import url("https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800");
+body {
+    font-family: "Cairo";
+    font-weight: normal;
+    font-style: normal;
+    color: #121212;
+}

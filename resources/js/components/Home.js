@@ -8,7 +8,6 @@ import {
 } from '@material-ui/core';
 import useStyles from './styles';
 import ChildComponent from './ChildComponent';
-import Footer from './Footer';
 import { Row, Col, Card, Container } from "react-bootstrap";
 import "./style.css";
 
@@ -93,7 +92,6 @@ class Home extends React.Component {
                         </Col>
                     </Row>
                 </Container>
-                <Footer />
             </div>
         );
 
