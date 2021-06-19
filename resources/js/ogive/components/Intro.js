@@ -11,9 +11,10 @@ function Intro() {
                     <div className="container">
                         <div className="row">
                             <div className="col-md-6">
-                                <h1 className="title">Your Story Starts With Us.</h1>
-                                <h4>Every landing page needs a small description after the big bold title, that&apos;s why we added this text here. Add here all the information that can make you or your product create the first impression.</h4>
+                                <h1 className="title">Your Story Starts With Us</h1>
+                                <h4>Ogive helps you to leave a beautiful effect on others, You don't have to be a doctor to help others</h4>
                                 <a href="#" target="_blank" className="btn btn-danger btn-raised btn-lg">
+                                    {/* VIDEO ABOUT US */}
                                     <i className="fa fa-play"></i> Watch video
                                 </a>
                             </div>

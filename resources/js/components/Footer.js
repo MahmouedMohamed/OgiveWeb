@@ -11,8 +11,6 @@ function Footer() {
                     <Row>
                         <Col md="2">
                             <h5 className="title">اشترك في النشرة البريدية</h5>
-
-
                         </Col>
                         <Col md="6">
                             <h5 className="title">روابط سريعة</h5>

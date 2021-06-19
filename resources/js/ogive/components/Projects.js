@@ -7,7 +7,7 @@ import { useHistory } from "react-router-dom";
 const images = [
     {
         url: '/img/comingsoon.jpg',
-        title: 'Ogive',
+        title: 'عهد',
         width: '40%',
         path: "/ahed/ahed"
 

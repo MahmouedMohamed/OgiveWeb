@@ -1,25 +1,40 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-
-import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import OgiveMainPage from './components/OgiveMainPage';
-import Navbar from './components/Navbar';
-import { lazy } from "react";
-import Projects from './components/Projects'
-import Intro from './components/Intro'
+import MainPage from './pets/MainPage';
 
+import Login from './components/Login/Login';
+import Register from './components/Register';
+
+import PetDetails from './pets/PetDetails';
+
+import { App as Ahed } from '../components/App';
 function App() {
     return (
         <div>
             {/* Ogive header */}
             <BrowserRouter>
-                <Navbar />
-                <Intro />
-                <Projects />
                 <Switch>
                     <Route exact path="/">
                         <OgiveMainPage />
                     </Route>
+                    <Route exact path="/login">
+                        <Login />
+                    </Route>
+                    <Route exact path="/register">
+                        <Register />
+                    </Route>
+                    <Route exact path="/pets">
+                        <MainPage />
+                    </Route>
+                    <Route exact path="/ahed/ahed">
+                        {/* Ahed */}
+                        <Ahed />
+                    </Route>
+                    {/* Move them inside /Pets but didnt work(try later) */}
+                    <Route path="/pets/pet/:id" component={PetDetails} />
+
                 </Switch>
 
             </BrowserRouter>

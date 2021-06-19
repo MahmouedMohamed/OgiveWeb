@@ -19,25 +19,25 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 
-Auth::routes();
+// Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 // Route::get('/breedMe', function () {
 //     return view('breedme.main');
 // });
 
-Route::get('/pets', [PetController::class, 'index']);
-Route::get('/pets/add', function () {
-    return view('breedme.pages.addpet');
-})->name('pet-add');
-// Route::get('/', [PetController::class, 'index']);
-Route::get('pet/{id}', [PetController::class, 'show']);
-Route::get('/about-us', function () {
-    return view('breedme.pages.about-us');
-});
-Route::get('/articles', function () {
-    return view('breedme.pages.articles');
-});
+// Route::get('/pets', [PetController::class, 'index']);
+// Route::get('/pets/add', function () {
+//     return view('breedme.pages.addpet');
+// })->name('pet-add');
+// // Route::get('/', [PetController::class, 'index']);
+// Route::get('pet/{id}', [PetController::class, 'show']);
+// Route::get('/about-us', function () {
+//     return view('breedme.pages.about-us');
+// });
+// Route::get('/articles', function () {
+//     return view('breedme.pages.articles');
+// });
 
 // Route::prefix('Al-Ahed')->group(function () {
 Route::get('/ahed', [HomeController::class, 'ahedIndex'])->name('ahed');

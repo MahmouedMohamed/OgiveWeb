@@ -1,13 +1,19 @@
-import axios from 'axios';
 import React from 'react';
+import Projects from './Projects';
+import Intro from './Intro';
+import Navbar from './Includes/Navbar';
+import Footer from './Includes/Footer';
 class OgiveMainPage extends React.Component {
 
     render() {
         return (
             <div>
+                <Navbar />
                 <div className="container">
-                    hi OgiveMainPage
+                    <Intro />
+                    <Projects />
                 </div>
+                <Footer />
             </div>
         );
 
