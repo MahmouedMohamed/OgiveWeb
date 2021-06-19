@@ -77,7 +77,5 @@ Route::post('/ahed/needies/addImages/{id}', [NeediesController::class, 'addAssoc
 Route::post('/ahed/needies/removeImage/{id}', [NeediesController::class, 'removeAssociatedImage']);
 Route::apiResource('/ahed/onlinetransactions', OnlineTransactionsController::class);
 Route::apiResource('/ahed/offlinetransactions', OfflineTransactionsController::class);
-Route::post('/ahed/admin/approve/{id}', [AdminController::class, 'approve']);
-Route::post('/ahed/admin/disapprove/{id}', [AdminController::class, 'disapprove']);
-Route::post('/ahed/admin/collect', [AdminController::class, 'collectOfflineTransaction']);
+Route::get('/ahed/ahedachievement/{id}', [UserController::class, 'getAhedAchievementRecords']);
 // });
