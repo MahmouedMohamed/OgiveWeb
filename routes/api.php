@@ -78,4 +78,5 @@ Route::post('/ahed/needies/removeImage/{id}', [NeediesController::class, 'remove
 Route::apiResource('/ahed/onlinetransactions', OnlineTransactionsController::class);
 Route::apiResource('/ahed/offlinetransactions', OfflineTransactionsController::class);
 Route::get('/ahed/ahedachievement/{id}', [UserController::class, 'getAhedAchievementRecords']);
+Route::get('/admin', [AdminController::class,'generalAdminDashboard']);
 // });
