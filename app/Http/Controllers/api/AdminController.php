@@ -6,11 +6,7 @@ use App\Http\Controllers\API\BaseController as BaseController;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Needy;
-use App\Models\NeedyMedia;
-use App\Models\CaseType;
 use App\Models\OfflineTransaction;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
 
 class AdminController extends BaseController
 {
