@@ -3,7 +3,7 @@
 namespace App\Models;
 class CaseType
 {
-    public $types = ['Finding Living', 'Upgrade Standard of Living', 'Bride Preparation', 'Debt', 'Cure'];
+    public $types = ['إيجاد مسكن مناسب', 'تحسين مستوي المعيشة', 'تجهيز عروس', 'ديون', 'علاج'];
     public function toString()
     {
         $s = "";
