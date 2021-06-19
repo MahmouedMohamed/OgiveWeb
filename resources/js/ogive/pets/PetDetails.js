@@ -39,6 +39,9 @@ class PetDetails extends React.Component {
     render() {
         let petName = this.state.pet.name
         let petType = this.state.pet.type
+        let petImage = this.state.pet.image
+        let petNotes = this.state.pet.notes
+        let petSex = this.state.pet.sex
 
         const mystyle = {
             color: "white",
@@ -77,8 +80,15 @@ class PetDetails extends React.Component {
 
                         <p>{petName}</p>
                         <p>{petType}</p>
-                        {/* <p>{this.state.pet}</p> */}
-
+                        <p>{petSex}</p>
+                        <p>{petNotes}</p>
+                        <img
+                            className="d-block"
+                            src={"/" + petImage}
+                            alt="Second slide"
+                            width={200}
+                            height={400}
+                        />
 
                     </Card>
                 </Container>

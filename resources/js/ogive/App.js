@@ -8,8 +8,7 @@ import Login from './components/Login/Login';
 import Register from './components/Register';
 
 import PetDetails from './pets/PetDetails';
-
-import { App as Ahed } from '../components/App';
+import Ahed from './Ahed/Ahed';
 function App() {
     return (
         <div>
@@ -28,7 +27,7 @@ function App() {
                     <Route exact path="/pets">
                         <MainPage />
                     </Route>
-                    <Route exact path="/ahed/ahed">
+                    <Route path="/ahed/ahed">
                         {/* Ahed */}
                         <Ahed />
                     </Route>

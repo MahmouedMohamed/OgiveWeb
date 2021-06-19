@@ -40,29 +40,29 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 // });
 
 // Route::prefix('Al-Ahed')->group(function () {
-Route::get('/ahed', [HomeController::class, 'ahedIndex'])->name('ahed');
-Route::get('/ahed/cases', [NeediesController::class, 'index']);
-Route::get('/ahed/cases/{id}', [CasesController::class, 'show']);
-Route::post('/ahed/cases', [CasesController::class, 'store']);
-Route::get('/ahed/cases/{id}/edit', [CasesController::class, 'edit']);
-Route::put('/ahed/cases/{id}/edit', [CasesController::class, 'update']);
-Route::delete('/ahed/cases/{id}', [CasesController::class, 'delete']);
+// Route::get('/ahed', [HomeController::class, 'ahedIndex'])->name('ahed');
+// Route::get('/ahed/cases', [NeediesController::class, 'index']);
+// Route::get('/ahed/cases/{id}', [CasesController::class, 'show']);
+// Route::post('/ahed/cases', [CasesController::class, 'store']);
+// Route::get('/ahed/cases/{id}/edit', [CasesController::class, 'edit']);
+// Route::put('/ahed/cases/{id}/edit', [CasesController::class, 'update']);
+// Route::delete('/ahed/cases/{id}', [CasesController::class, 'delete']);
 
-Route::get('/ahed/transactions/{user}', [TransactionsController::class, 'index']);
-Route::get('/ahed/transactions/{id}', [TransactionsController::class, 'show']);
-Route::post('/ahed/transactions', [TransactionsController::class, 'store']);
-Route::get('/ahed/transactions/{id}/edit', [TransactionsController::class, 'edit']);
-Route::put('/ahed/transactions/{id}/edit', [TransactionsController::class, 'update']);
-Route::delete('/ahed/transactions/{id}', [TransactionsController::class, 'delete']);
+// Route::get('/ahed/transactions/{user}', [TransactionsController::class, 'index']);
+// Route::get('/ahed/transactions/{id}', [TransactionsController::class, 'show']);
+// Route::post('/ahed/transactions', [TransactionsController::class, 'store']);
+// Route::get('/ahed/transactions/{id}/edit', [TransactionsController::class, 'edit']);
+// Route::put('/ahed/transactions/{id}/edit', [TransactionsController::class, 'update']);
+// Route::delete('/ahed/transactions/{id}', [TransactionsController::class, 'delete']);
 // });
 // Route::get('/Al-Ahed/{path?}', function () {
 //     return view('ahed.ahed');
 // });
-Route::prefix('ahed')->group(function () {
-    Route::view('/{path?}', 'ahed.ahed')
-        ->where('path', '.*')
-        ->name('react');
-});
+// Route::prefix('ahed')->group(function () {
+//     Route::view('/{path?}', 'ahed.ahed')
+//         ->where('path', '.*')
+//         ->name('react');
+// });
 Route::view('/{path?}', 'ogive.main')
     ->where('path', '.*')
     ->name('react');
