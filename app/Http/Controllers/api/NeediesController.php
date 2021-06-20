@@ -35,7 +35,6 @@ class NeediesController extends BaseController
         return $this->sendResponse($needies->setCollection($updatedNeedies), 'Cases retrieved successfully.');
     }
 
-    public function getAllNeedies()
     /**
      * Display a listing of the resource.
      *
