@@ -72,7 +72,7 @@ Route::get('filterPlacesByType', [PlaceController::class, 'filterByType']);
 
 // Route::group(['middleware' => 'auth:api'], function () {
 Route::apiResource('/ahed/needies', NeediesController::class);
-Route::get('/ahed/allNeedies', [NeediesController::class, 'getAllNeedies']);
+Route::get('/ahed/urgentneedies', [NeediesController::class,'urgentIndex']);
 Route::post('/ahed/needies/addImages/{id}', [NeediesController::class, 'addAssociatedImages']);
 Route::post('/ahed/needies/removeImage/{id}', [NeediesController::class, 'removeAssociatedImage']);
 Route::apiResource('/ahed/onlinetransactions', OnlineTransactionsController::class);
