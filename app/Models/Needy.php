@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 
 class Needy extends Model
 {
@@ -24,7 +25,7 @@ class Needy extends Model
     ];
     public function createdBy()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class,'createdBy');
     }
     public function onlinetransactions()
     {

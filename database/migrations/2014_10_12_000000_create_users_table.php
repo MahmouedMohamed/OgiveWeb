@@ -21,9 +21,10 @@ class CreateUsersTable extends Migration
             $table->string('gender')->default('female');
             $table->string('phone_number')->nullable();
             $table->string('address')->nullable();
-            $table->string('image')->nullable();
+            $table->unsignedBigInteger('profile')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->foreign('profile')->references('id')->on('profiles')->onDelete('cascade');
             $table->rememberToken();
             $table->timestamps();
         });

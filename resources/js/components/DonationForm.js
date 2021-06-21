@@ -4,8 +4,11 @@ import Button from 'react-bootstrap/Button';
 import Box from '@material-ui/core/Box';
 import {
     Container,
-    Typography,
 
+} from '@material-ui/core';
+import {
+    CardActions, Grid, Typography, FormControl,
+    InputLabel, OutlinedInput, InputAdornment,
 } from '@material-ui/core';
 import { Row, Col, Card, Nav } from "react-bootstrap";
 import Tab from 'react-bootstrap/Tab';
@@ -82,7 +85,17 @@ class DonationForm extends React.Component {
                                                 تبرع اونلاين
                                             </Card.Title>
                                             <Form>
-                                                <Select options={renderNeedies()} />
+                                                <Card.Header className="text-center font-weight-bold user-info">
+                                                    البيانات الحالة
+                                                </Card.Header>
+                                                <Form.Group controlId="formBasicEmail">
+                                                    <Form.Label className="text-right start">الحالة </Form.Label>
+                                                    <Select options={renderNeedies()} />
+                                                </Form.Group>
+                                                <Form.Group fullWidth variant="outlined " className="text-right">
+                                                    <Form.Label className="text-right start">المبلغ </Form.Label>
+                                                    <Form.Control type="number" placeholder="المبلغ المتبرع به" />
+                                                </Form.Group>
                                                 <Card.Header className="text-center font-weight-bold user-info">
                                                     البيانات الشخصية
                                                 </Card.Header>
@@ -95,6 +108,45 @@ class DonationForm extends React.Component {
                                                     <Form.Label>البريد الالكتروني</Form.Label>
                                                     <Form.Control type="email" />
                                                 </Form.Group>
+                                                <Card.Header className="text-center font-weight-bold user-info">
+                                                    بيانات بطاقة الدفع
+                                                </Card.Header>
+                                                <div class="form-group">
+                                                    <label for="username">Full name (on the card)</label>
+                                                    <input type="text" name="username" placeholder="Jassa" required class="form-control" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="cardNumber">رقم البطاقة</label>
+                                                    <div class="input-group">
+                                                        <input type="text" name="cardNumber" placeholder="Your card number" class="form-control" required />
+                                                        <div class="input-group-append">
+                                                            <span class="input-group-text text-muted">
+                                                                <i class="fa fa-cc-visa mx-1"></i>
+                                                                <i class="fa fa-cc-amex mx-1"></i>
+                                                                <i class="fa fa-cc-mastercard mx-1"></i>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm-8">
+                                                        <div class="form-group">
+                                                            <label><span class="hidden-xs">Expiration</span></label>
+                                                            <div class="input-group">
+                                                                <input type="number" placeholder="MM" name="" class="form-control" required />
+                                                                <input type="number" placeholder="YY" name="" class="form-control" required />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <div class="form-group mb-4">
+                                                            <label data-toggle="tooltip" title="Three-digits code on the back of your card">CVV
+                                                            <i class="fa fa-question-circle"></i>
+                                                            </label>
+                                                            <input type="text" required class="form-control" />
+                                                        </div>
+                                                    </div>
+                                                </div>
                                                 <Button variant="primary" type="submit">
                                                     إتمام
                                             </Button>
@@ -108,6 +160,17 @@ class DonationForm extends React.Component {
                                             <Card.Title>
                                                 تبرع من منزلك
                                             </Card.Title>
+                                            <Card.Header className="text-center font-weight-bold user-info">
+                                                البيانات الحالة
+                                                </Card.Header>
+                                            <Form.Group controlId="formBasicEmail">
+                                                <Form.Label className="text-right start">الحالة </Form.Label>
+                                                <Select options={renderNeedies()} />
+                                            </Form.Group>
+                                            <Form.Group fullWidth variant="outlined " className="text-right">
+                                                <Form.Label className="text-right start">المبلغ </Form.Label>
+                                                <Form.Control type="number" placeholder="المبلغ المتبرع به" />
+                                            </Form.Group>
                                             <Card.Header className="text-center font-weight-bold user-info">
                                                 البيانات الشخصية
                                                 </Card.Header>

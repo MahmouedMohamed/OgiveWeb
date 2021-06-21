@@ -10,9 +10,10 @@ import Badge from 'react-bootstrap/Badge'
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import Box from '@material-ui/core/Box';
 import Button from 'react-bootstrap/Button';
+// import Button from '@material-ui/core/Button';
+// import DeleteIcon from '@material-ui/icons/Delete';
 import "./style.css";
 import Pagination from "react-js-pagination";
-
 class ChildComponent extends Component {
     constructor(props) {
         super(props);
@@ -74,10 +75,16 @@ class ChildComponent extends Component {
                                             <Link to={`/donate/${needie.id}`} className="btn btn-primary">
                                                 <Button variant="outlined" color="primary">
                                                     تبرع
-                                            </Button>
+                                                </Button>
                                             </Link>
                                         </Grid>
                                         <Grid item xs={8}>
+                                            {/* <Button
+                                                variant="contained"
+                                                color="secondary"
+                                            >
+                                                <FavoriteBorderIcon />
+                                            </Button> */}
                                             <FormControl fullWidth variant="outlined">
                                                 <InputLabel htmlFor="outlined-adornment-amount">المبلغ</InputLabel>
                                                 <OutlinedInput
@@ -86,6 +93,7 @@ class ChildComponent extends Component {
                                                     startAdornment={<InputAdornment position="start">£</InputAdornment>}
                                                 />
                                             </FormControl>
+
                                         </Grid>
                                     </Grid>
                                 </Card.Body>

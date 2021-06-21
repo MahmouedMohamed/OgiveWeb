@@ -4,12 +4,10 @@ import ReactDOM from 'react-dom';
 import { Table, Button } from 'reactstrap';
 import Navbar from './Navbar';
 import {
-
     Grid, Typography
 } from '@material-ui/core';
 import useStyles from './styles';
 import ChildComponent from './ChildComponent';
-import Footer from './Footer';
 import { Row, Col, Card, Container } from "react-bootstrap";
 import "./style.css";
 
@@ -59,7 +57,7 @@ class Home extends React.Component {
                 <section className="hero">
                     <article>
                         <Typography variant="h2" className="text-center">التملُّك الكامل لا يثبته إلا العطاء، فكل ما لا تستطيع إعطاءه يتملكك.
-                                </Typography>
+                        </Typography>
                     </article>
                 </section>
                 <Container>
@@ -70,7 +68,7 @@ class Home extends React.Component {
                         </Col>
                         <Col xs={6} md={2}>
                             <Card style={{ width: '18rem' }} className="contact-card">
-                                <Card.Body className="bg-img">
+                                <Card.Body>
                                     <i className="fas fa-hand-holding-medical"></i>
                                     <Card.Title className="text-center">يمكنك التبرع من خلال الخط الساخن </Card.Title>
                                     <Card.Text className="text-center bold">
@@ -78,12 +76,12 @@ class Home extends React.Component {
                                     </Card.Text>
                                     <footer className="text-center blockquote-footer pb-4">
                                         ليصلك مندوبنا لحد باب البيت
-                                        </footer>
+                                    </footer>
                                 </Card.Body>
                             </Card>
 
-                            <Card style={{ width: '18rem' }}>
-                                <Card.Body className="bg-img">
+                            <Card style={{ width: '18rem' }} className="contact-card">
+                                <Card.Body>
                                     <i className="fas fa-hand-holding-medical"></i>
                                     <Card.Title className="text-center">للتبرع من خلال الرسائل</Card.Title>
                                     <Card.Text className="text-center bold">
@@ -94,7 +92,6 @@ class Home extends React.Component {
                         </Col>
                     </Row>
                 </Container>
-                <Footer />
             </div>
         );
 

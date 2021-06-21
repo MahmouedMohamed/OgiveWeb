@@ -10,12 +10,17 @@ import About from './About'
 import DonationForm from './DonationForm';
 import Needie from './Needie';
 import ContactUs from './ContactUs';
+import { ProtectedRoute } from "./includes/protected.route";
+import Footer from './Footer';
 
 function App() {
     return (
         <BrowserRouter>
             <Navbar />
             <Switch>
+                <Route exact path="/login">
+                    {/* Temp Page */}
+                </Route>
                 <Route exact path="/ahed">
                     {/* Temp Page */}
                     <About />
@@ -29,15 +34,16 @@ function App() {
                 <Route exact path="/ahed/donate/:id">
                     <DonationForm />
                 </Route>
-                <Route exact path="/ahed/donate">
+                <ProtectedRoute exact path="/ahed/donate">
                     <DonationForm />
-                </Route>
+                </ProtectedRoute>
                 <Route exact path="/ahed/needie/:id" component={Needie} />
                 <Route exact path="/ahed/contact-us" component={ContactUs} />
 
                 {/* <Route path='/:id' component={SingleProject} /> */}
 
             </Switch>
+            <Footer />
 
             {/* <Switch>
                 <Route exact path="/">
@@ -56,6 +62,6 @@ function App() {
 
 export default App;
 
-if (document.getElementById('app')) {
-    ReactDOM.render(<App />, document.getElementById('app'));
-}
+// if (document.getElementById('app')) {
+//     ReactDOM.render(<App />, document.getElementById('app'));
+// }

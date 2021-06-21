@@ -27,7 +27,7 @@ function Navbar() {
                 </ReactBootStrap.Navbar.Collapse>
                 <ReactBootStrap.Navbar.Collapse id="basic-navbar-nav">
                     <ReactBootStrap.Nav className="mr-auto">
-                        <ReactBootStrap.Nav.Link href="#home">تسجيل</ReactBootStrap.Nav.Link>
+                        <ReactBootStrap.Nav.Link href="/login">تسجيل</ReactBootStrap.Nav.Link>
                         <ReactBootStrap.Nav.Link href="#link">اشتراك</ReactBootStrap.Nav.Link>
                     </ReactBootStrap.Nav>
                 </ReactBootStrap.Navbar.Collapse>

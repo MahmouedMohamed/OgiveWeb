@@ -72,12 +72,15 @@ Route::get('filterPlacesByType', [PlaceController::class, 'filterByType']);
 
 // Route::group(['middleware' => 'auth:api'], function () {
 Route::apiResource('/ahed/needies', NeediesController::class);
-Route::get('/ahed/allNeedies', [NeediesController::class, 'getAllNeedies']);
+Route::get('/ahed/urgentneedies', [NeediesController::class,'urgentIndex']);
+Route::get('/ahed/neediesWithIDs', [NeediesController::class,'getNeediesWithIDs']);
 Route::post('/ahed/needies/addImages/{id}', [NeediesController::class, 'addAssociatedImages']);
 Route::post('/ahed/needies/removeImage/{id}', [NeediesController::class, 'removeAssociatedImage']);
 Route::apiResource('/ahed/onlinetransactions', OnlineTransactionsController::class);
 Route::apiResource('/ahed/offlinetransactions', OfflineTransactionsController::class);
-Route::post('/ahed/admin/approve/{id}', [AdminController::class, 'approve']);
-Route::post('/ahed/admin/disapprove/{id}', [AdminController::class, 'disapprove']);
-Route::post('/ahed/admin/collect', [AdminController::class, 'collectOfflineTransaction']);
+Route::get('/ahed/ahedachievement/{id}', [UserController::class, 'getAhedAchievementRecords']);
+Route::post('/ahed/admin/approve/{id}', [AdminController::class,'approve']);
+Route::post('/ahed/admin/disapprove/{id}', [AdminController::class,'disapprove']);
+Route::post('/ahed/admin/collect', [AdminController::class,'collectOfflineTransaction']);
+Route::get('/admin', [AdminController::class,'generalAdminDashboard']);
 // });
