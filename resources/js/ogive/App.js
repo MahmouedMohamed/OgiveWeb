@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import OgiveMainPage from './components/OgiveMainPage';
 import MainPage from './pets/MainPage';
 
@@ -9,11 +9,21 @@ import Register from './components/Register';
 
 import PetDetails from './pets/PetDetails';
 import Ahed from './Ahed/Ahed';
+
+function NoMatch() {
+    return (
+        <div>
+            <h3>
+                No match for to this Link
+            </h3>
+        </div>
+    );
+}
 function App() {
     return (
         <div>
             {/* Ogive header */}
-            <BrowserRouter>
+            <Router>
                 <Switch>
                     <Route exact path="/">
                         <OgiveMainPage />
@@ -27,16 +37,30 @@ function App() {
                     <Route exact path="/pets">
                         <MainPage />
                     </Route>
-                    <Route path="/ahed/ahed">
-                        {/* Ahed */}
+                    {/* Ahed Pages */}
+                    <Route exact path="/ahed/ahed">
+                        <Ahed />
+                    </Route>
+                    <Route path="/ahed/about">
+                        <Ahed />
+                    </Route>
+                    <Route path="/ahed/needie/:id">
+                        <Ahed />
+                    </Route>
+                    <Route path="/ahed/contact-us">
+                        <Ahed />
+                    </Route>
+                    <Route path="/ahed/donate">
                         <Ahed />
                     </Route>
                     {/* Move them inside /Pets but didnt work(try later) */}
                     <Route path="/pets/pet/:id" component={PetDetails} />
-
+                    <Route path="*">
+                        <NoMatch />
+                    </Route>
                 </Switch>
 
-            </BrowserRouter>
+            </Router>
         </div>
 
     );

@@ -35,6 +35,8 @@ class UserController extends BaseController
 
             $this->content['user'] = Auth::user();
             $profile = Profile::findOrFail(Auth::user()->profile);
+            return $profile;
+
             $this->content['profile'] = $profile;
             return $this->sendResponse($this->content, 'Data Retrieved Successfully');
         } else {

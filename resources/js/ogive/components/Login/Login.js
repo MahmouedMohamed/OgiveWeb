@@ -12,7 +12,7 @@ function Login() {
             <div className="login">
                 <React.Fragment>
                     <div className="d-flex justify-content-center h-100">
-                        <div className="card">
+                        <div className="card" id="loginForm">
                             <div class="card-header">
                                 <h3>Login</h3>
                                 {/* <div class="d-flex justify-content-end social_icon">
