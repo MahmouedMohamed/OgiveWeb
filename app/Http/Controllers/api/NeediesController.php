@@ -24,6 +24,7 @@ class NeediesController extends BaseController
         $needies = Needy::with('mediasBefore:id,path,needy')
             ->with('mediasAfter:id,path,needy')
             ->where('approved', '=', 1)
+            ->where('severity', '<', '7')->latest()
             ->paginate(8);
         $updatedNeedies = $needies->getCollection();
         foreach ($updatedNeedies as $needy) {
@@ -34,9 +35,41 @@ class NeediesController extends BaseController
         return $this->sendResponse($needies->setCollection($updatedNeedies), 'Cases retrieved successfully.');
     }
 
-    public function getAllNeedies()
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function urgentIndex()
     {
-        $needies = Needy::with('mediasBefore:id,path,needy')->with('mediasAfter:id,path,needy')->get();
+        $needies = Needy::with('mediasBefore:id,path,needy')
+            ->with('mediasAfter:id,path,needy')
+            ->where('approved', '=', 1)
+            ->where('severity', '>=', '7')->latest()
+            ->paginate(8);
+        $updatedNeedies = $needies->getCollection();
+        foreach ($updatedNeedies as $needy) {
+            $profile = Profile::findOrFail($needy->createdBy()->get('profile'))->first();
+            $needy['createdBy'] = $needy->createdBy()->get()->first();
+            $needy['createdBy']['image'] = $profile->image;
+        }
+        return $this->sendResponse($needies->setCollection($updatedNeedies), 'Cases retrieved successfully.');
+    }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getNeediesWithIDs(Request $request)
+    {
+        $needies = Needy::with('mediasBefore:id,path,needy')
+            ->with('mediasAfter:id,path,needy')
+            ->where('approved', '=', 1)->whereIn('id', $request['ids'])->latest()->get();
+        foreach ($needies as $needy) {
+            $profile = Profile::findOrFail($needy->createdBy()->get('profile'))->first();
+            $needy['createdBy'] = $needy->createdBy()->get()->first();
+            $needy['createdBy']['image'] = $profile->image;
+        }
         return $this->sendResponse($needies, 'Cases retrieved successfully.');
     }
     /**
