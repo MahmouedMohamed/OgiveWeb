@@ -128,7 +128,9 @@ class NeediesController extends BaseController
         if ($needy == null) {
             return $this->sendError('Not Found');
         }
-
+        $profile = Profile::findOrFail($needy->createdBy()->get('profile'))->first();
+        $needy['createdBy'] = $needy->createdBy()->get()->first();
+        $needy['createdBy']['image'] = $profile->image;
         return $this->sendResponse($needy, 'Data Retrieved Successfully!');
     }
 
