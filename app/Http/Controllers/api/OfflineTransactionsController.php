@@ -23,7 +23,7 @@ class OfflineTransactionsController extends BaseController
         if (!$user) {
             return $this->sendError('User Not Found');
         }
-        return $this->sendResponse($user->offlineTransactions()->paginate(8), 'Transactions retrieved successfully.');
+        return $this->sendResponse($user->offlineTransactions, 'Transactions retrieved successfully.');
     }
 
     /**
@@ -133,7 +133,7 @@ class OfflineTransactionsController extends BaseController
         $transaction->delete();
         return $this->sendResponse([],'Data Deleted Successfully!');
     }
-    
+
     public function validateTransaction(Request $request)
     {
         $caseType = new CaseType();
