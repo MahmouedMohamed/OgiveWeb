@@ -1,6 +1,5 @@
 import React, { memo } from 'react'
 
-import AppsIcon from '@material-ui/icons/Apps';
 import { Container, Row, Col } from 'react-bootstrap';
 
 function Intro() {

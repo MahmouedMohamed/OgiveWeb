@@ -11,24 +11,12 @@ import Needie from './Needie';
 import ContactUs from './ContactUs';
 import DonationForm from './DonationForm';
 import Nav from 'react-bootstrap/Nav';
-import { Provider, Heading, Subhead } from 'rebass';
-import {
-    Hero, CallToAction, ScrollDownIndicator
-} from 'react-landing-page';
+
 function Ahed() {
     return (
         <React.Fragment>
             <Navbar />
-            <Hero
-                color="black"
-                // bg="white"
-                backgroundImage="/img/gofundme_homepage_illustration_959.png"
-            >
-                <Heading>عهد</Heading>
-                <Subhead>تبرع من اليوم</Subhead>
-                <CallToAction href="#cases" mt={3}>ابدأ في عهد</CallToAction>
-                <ScrollDownIndicator />
-            </Hero>
+
             {/* <nav className="navbar navbar-expand-lg navbar-light bg-light">
                 <a className="navbar-brand" href="#">
                     <img src="img/adopt_icn.jpg" className="d-inline-block align-top" alt="" />

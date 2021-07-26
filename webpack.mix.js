@@ -17,4 +17,3 @@ mix.js('resources/js/app.js', 'public/js')
     .react()
     .sass('resources/sass/app.scss', 'public/css');
 
-mix.browserSync('http://192.168.1.88:8000');

@@ -6,10 +6,6 @@ import {
     Container,
 
 } from '@material-ui/core';
-import {
-    CardActions, Grid, Typography, FormControl,
-    InputLabel, OutlinedInput, InputAdornment,
-} from '@material-ui/core';
 import { Row, Col, Card, Nav } from "react-bootstrap";
 import Tab from 'react-bootstrap/Tab';
 import Carousel from 'react-bootstrap/Carousel';
@@ -26,19 +22,17 @@ class DonationForm extends React.Component {
         this.state = {
             needies: [],
         };
-        // this.handleChange = this.handleChange.bind(this);
-        // this.onSubmit = this.onSubmit.bind(this);
     }
 
     loadNeedies() {
         let url = "http://127.0.0.1:8000/api/ahed/allNeedies";
+        console.log(url);
         axios
             .get(url)
             .then((response) => {
                 this.setState({
-                    needies: response.data.data,
+                    needies: response.data.data.data,
                 });
-                console.log(response.data.data);
             })
             .catch((error) => {
                 console.log(error);
@@ -49,12 +43,10 @@ class DonationForm extends React.Component {
     }
     render() {
         // Old way to render in option 
-
         const renderNeedies = () => {
             let neediesList = [];
             this.state.needies.map((needie, index) => (
                 neediesList.push({ label: needie.name, value: needie.id })
-
             ));
             return neediesList;
         };
