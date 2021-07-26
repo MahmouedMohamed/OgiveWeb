@@ -23,7 +23,7 @@ class OnlineTransactionsController extends BaseController
         if (!$user) {
             return $this->sendError('User Not Found');
         }
-        return $this->sendResponse($user->onlinetransactions()->paginate(8), 'Transactions retrieved successfully.');
+        return $this->sendResponse($user->onlinetransactions, 'Transactions retrieved successfully.');
     }
 
     /**
@@ -114,8 +114,8 @@ class OnlineTransactionsController extends BaseController
     public function destroy($id)
     {
         //cancellation process to be considered
-        //Money guarantee back must be done before deletion 
-        //IF money already 
+        //Money guarantee back must be done before deletion
+        //IF money already
     }
     public function validateTransaction(Request $request)
     {
