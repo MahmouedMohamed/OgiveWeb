@@ -103,6 +103,45 @@ class OfflineTransactionsController extends BaseController
     public function update(Request $request, $id)
     {
         //
+        $transaction = OfflineTransaction::find($id);
+        if ($transaction == null) {
+            return $this->sendError('Transaction Not Found');
+        }
+
+        //Check if user who is updating exists
+        $user = User::find($request['userId']);
+        if ($user == null) {
+            return $this->sendError('User Not Found');
+        }
+
+        if (!$user->can('update', $transaction)) {
+            return $this->sendForbidden('You aren\'t authorized to update this transaction');
+        }
+
+        $validated = $this->validateTransaction($request, 'update');
+        if ($validated->fails())
+            return $this->sendError('Invalid data', $validated->messages(), 400);
+
+        $needy = Needy::find(request()->input('needy'));
+        if (!$needy) {
+            return $this->sendError('Case Not Found');
+        }
+        if (!$needy->approved) {
+            return $this->sendError('Kindly wait until Case is approved so you can donate.', [], 403);
+        }
+        if ($needy->satisfied) {
+            return $this->sendError('Case already satisfied, Kindly check another one', [], 403);
+        }
+
+        $transaction->update([
+            'needy' => $needy->id,
+            'amount' => $request['amount'],
+            'preferredSection' => $request['preferredSection'],
+            'address' => $request['address'],
+            'startCollectDate' => $request['startCollectDate'],
+            'endCollectDate' => $request['endCollectDate'],
+        ]);
+        return $this->sendResponse([], 'Transaction Updated Successfully');
     }
 
     /**
