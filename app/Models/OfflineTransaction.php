@@ -30,6 +30,19 @@ class OfflineTransaction extends Model
     }
     public function collect()
     {
+        if ($this->needy != null) {
+            $needy = Needy::find($this->needy);
+            if ($needy->satisfied) {
+                //ToDo: transfer to another needy with same section
+            } else if ($needy->need <= $needy->collected + $this->amount) {
+                //ToDo: transfer remaining to another needy with same section
+                $needy->collected = $needy->need;
+                $needy->satisfied = 1;
+            } else {
+                $needy->collected += $this->amount;
+            }
+            $needy->save();
+        }
         $this->collected = true;
         $this->save();
     }
