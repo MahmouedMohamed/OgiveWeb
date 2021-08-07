@@ -16,7 +16,8 @@ class OfflineTransactionPolicy
      * @param  \App\Models\User  $user
      * @return mixed
      */
-    public function collect(User $user){
+    public function collect(User $user)
+    {
         return $user->isAdmin();
     }
     /**
@@ -62,7 +63,9 @@ class OfflineTransactionPolicy
      */
     public function update(User $user, OfflineTransaction $offlineTransaction)
     {
-        //
+        return ($user->id == $offlineTransaction->giver || $user->isAdmin()) &&
+         $offlineTransaction->selectedDate == null &&
+          !($offlineTransaction->collected);
     }
 
     /**
@@ -74,7 +77,9 @@ class OfflineTransactionPolicy
      */
     public function delete(User $user, OfflineTransaction $offlineTransaction)
     {
-        return $user->id == $offlineTransaction->giver || $user->isAdmin();
+        return ($user->id == $offlineTransaction->giver || $user->isAdmin()) &&
+        $offlineTransaction->selectedDate == null &&
+         !($offlineTransaction->collected);
     }
 
     /**
