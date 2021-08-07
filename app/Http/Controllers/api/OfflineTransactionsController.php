@@ -174,7 +174,9 @@ class OfflineTransactionsController extends BaseController
     }
 
     public function validateTransaction(Request $request)
+    public function validateTransaction(Request $request, string $related)
     {
+        $rules = null;
         $caseType = new CaseType();
         return Validator::make($request->all(), [
             'giver' => 'required',
@@ -185,6 +187,29 @@ class OfflineTransactionsController extends BaseController
             'startCollectDate' => 'required|date|before:endCollectDate',
             'endCollectDate' => 'required|date|after:startCollectDate',
         ], [
+        switch ($related) {
+            case 'store':
+                $rules = [
+                    'needy' => 'required|max:255',
+                    'amount' => 'required|numeric|min:1',
+                    'preferredSection' => 'required|in:' . $caseType->toString(),
+                    'address' => 'required',
+                    'startCollectDate' => 'required|date|before:endCollectDate',
+                    'endCollectDate' => 'required|date|after:startCollectDate',
+                ];
+                break;
+            case 'update':
+                $rules = [
+                    'needy' => 'required|max:255',
+                    'amount' => 'required|numeric|min:1',
+                    'preferredSection' => 'required|in:' . $caseType->toString(),
+                    'address' => 'required',
+                    'startCollectDate' => 'required|date|before:endCollectDate',
+                    'endCollectDate' => 'required|date|after:startCollectDate',
+                ];
+                break;
+        }
+        return Validator::make($request->all(), $rules, [
             'required' => 'This field is required',
             'min' => 'Invalid size, min size is :min',
             'max' => 'Invalid size, max size is :max',
