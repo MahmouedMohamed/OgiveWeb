@@ -35,32 +35,47 @@ class OfflineTransactionsController extends BaseController
     public function store(Request $request)
     {
         // return $this->toString(['Finding Living','Upgrade Standard of Living','Bride Preparation','Debt','Cure']);
-        $validated = $this->validateTransaction($request);
+        $validated = $this->validateTransaction($request, 'store');
         if ($validated->fails())
             return $this->sendError('Invalid data', $validated->messages(), 400);
-        $user = User::find(request()->input('giver'));
-        if (!$user) {
-            return $this->sendError('User Not Found');
-        }
         $needy = Needy::find(request()->input('needy'));
         if (!$needy) {
             return $this->sendError('Case Not Found');
         }
         if (!$needy->approved) {
-            return $this->sendError('Kindly wait until Case is approved so you can donate.',[],403);
+            return $this->sendError('Kindly wait until Case is approved so you can donate.', [], 403);
         }
-        if ($needy->satisfied){
-            return $this->sendError('Case already satisfied, Kindly check another one',[],403);
+        if ($needy->satisfied) {
+            return $this->sendError('Case already satisfied, Kindly check another one', [], 403);
         }
-        $user->offlineTransactions()->create([
-            'needy' => $needy->id,
-            'amount' => $request['amount'],
-            'preferredSection' => $request['preferredSection'],
-            'address' => $request['address'],
-            'startCollectDate' => $request['startCollectDate'],
-            'endCollectDate' => $request['endCollectDate'],
-            'collected' => 0,
-        ]);
+        if (request()->input('giver') != null) {
+            $user = User::find(request()->input('giver'));
+            if (!$user) {
+                return $this->sendError('User Not Found');
+            }
+            $user->offlineTransactions()->create([
+                'needy' => $needy->id,
+                'amount' => $request['amount'],
+                'preferredSection' => $request['preferredSection'],
+                'address' => $request['address'],
+                'startCollectDate' => $request['startCollectDate'],
+                'endCollectDate' => $request['endCollectDate'],
+                'phoneNumber' => $request['phoneNumber'],
+                'collected' => 0,
+            ]);
+        }else{
+            OfflineTransaction::create([
+                'needy' => $needy->id,
+                'amount' => $request['amount'],
+                'preferredSection' => $request['preferredSection'],
+                'address' => $request['address'],
+                'startCollectDate' => $request['startCollectDate'],
+                'endCollectDate' => $request['endCollectDate'],
+                'phoneNumber' => $request['phoneNumber'],
+                'collected' => 0,
+            ]);
+        }
+
         return $this->sendResponse([], 'Thank You For Your Contribution, We will contact you soon!');
     }
 
@@ -71,7 +86,7 @@ class OfflineTransactionsController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request,$id)
+    public function show(Request $request, $id)
     {
         //Check transaction exists
         $transaction = OfflineTransaction::find($id);
@@ -102,7 +117,6 @@ class OfflineTransactionsController extends BaseController
      */
     public function update(Request $request, $id)
     {
-        //
         $transaction = OfflineTransaction::find($id);
         if ($transaction == null) {
             return $this->sendError('Transaction Not Found');
@@ -170,23 +184,13 @@ class OfflineTransactionsController extends BaseController
             return $this->sendForbidden('You aren\'t authorized to delete this transaction.');
         }
         $transaction->delete();
-        return $this->sendResponse([],'Data Deleted Successfully!');
+        return $this->sendResponse([], 'Transaction Deleted Successfully!');
     }
 
-    public function validateTransaction(Request $request)
     public function validateTransaction(Request $request, string $related)
     {
         $rules = null;
         $caseType = new CaseType();
-        return Validator::make($request->all(), [
-            'giver' => 'required',
-            'needy' => 'required|max:255',
-            'amount' => 'required|numeric|min:1',
-            'preferredSection' => 'required|in:'.$caseType->toString(),
-            'address' => 'required',
-            'startCollectDate' => 'required|date|before:endCollectDate',
-            'endCollectDate' => 'required|date|after:startCollectDate',
-        ], [
         switch ($related) {
             case 'store':
                 $rules = [
