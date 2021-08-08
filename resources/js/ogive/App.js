@@ -9,6 +9,7 @@ import Register from './components/Register';
 
 import PetDetails from './pets/PetDetails';
 import Ahed from './Ahed/Ahed';
+
 function NoMatch() {
     return (
         <div>
@@ -47,9 +48,6 @@ function App() {
                         <Ahed />
                     </Route>
                     <Route path="/ahed/contact-us">
-                        <Ahed />
-                    </Route>
-                    <Route path="/ahed/join-us">
                         <Ahed />
                     </Route>
                     <Route path="/ahed/donate">
