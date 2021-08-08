@@ -15,9 +15,9 @@ import Box from '@material-ui/core/Box';
 import Button from 'react-bootstrap/Button';
 import Pagination from "react-js-pagination";
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
-import {
-    Hero, CallToAction, ScrollDownIndicator
-} from 'react-landing-page';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick-theme.css';
+import 'slick-carousel/slick/slick.css';
 const theme = createTheme({
     typography: {
         subtitle1: {
@@ -39,6 +39,7 @@ class Cases extends Component {
         super();
         this.state = {
             needies: [],
+            urgentNeedies: [],
             current_page: 1,
             total: 1,
             per_page: 1,
@@ -66,16 +67,119 @@ class Cases extends Component {
                 console.log(error)
             })
     }
+    loadUrgentNeedies() {
+        let url = `http://127.0.0.1:8000/api/ahed/urgentneedies`;
+        axios.get(url)
+            .then((response) => {
+                console.log(response.data.data.data)
+                this.setState({
+                    urgentNeedies: response.data.data.data,
+                })
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }
     componentDidMount() {
         this.loadNeedies();
-        console.log("call")
+        console.log("Done Needies")
+        this.loadUrgentNeedies();
+        console.log("Done loadUrgentNeedies")
+
     }
 
     render() {
+        const settings = {
+            dots: true,
+            infinite: true,
+            speed: 500,
+            slidesToShow: 3,
+            slidesToScroll: 1,
+            responsive: [
+                {
+                    breakpoint: 1024,
+                    settings: {
+                        slidesToShow: 3,
+                        slidesToScroll: 3,
+                        infinite: true,
+                        dots: true
+                    }
+                },
+                {
+                    breakpoint: 600,
+                    settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 2,
+                        initialSlide: 2
+                    }
+                },
+                {
+                    breakpoint: 480,
+                    settings: {
+                        slidesToShow: 1,
+                        slidesToScroll: 1
+                    }
+                }
+            ]
+        };
         return (
             <React.Fragment>
                 <Container>
+                    <Typography variant="h4">حالات حرجة</Typography>
+                    <Slider {...settings}>
+                        {this.state.urgentNeedies && this.state.urgentNeedies.map((needie, index) => (
+                            <div>
+                                <Card style={{ width: '18rem' }} spacing={2} elevation={1} height={40} >
+                                    <img
+                                        src="https://mdbootstrap.com/img/new/standard/city/062.jpg"
+                                        className="card-img-top"
+                                    />
+                                    <Box
+                                        bgcolor="primary.main"
+                                        color="primary.contrastText"
+                                        p={1}
+                                        px={5}
+                                        borderRadius={8}
+                                        mx={5}
+                                        textAlign="center"
+                                    >
+                                        {needie.type}
+                                    </Box>
+                                    <CardContent>
+                                        <Typography color="textSecondary" component="p" style={{ height: "100%" }}>
+                                            <Link to={`/ahed/needie/${needie.id}`}>
+                                                <Typography variant="h6" className="link">
+                                                    {needie.name}
+                                                </Typography>
+                                            </Link>
+                                        </Typography>
+                                        <CardActions>
+                                            <Typography>هدفنا: {needie.need} ج.م</Typography>
+                                        </CardActions>
+                                        <Box pb={2}>
+                                            <ProgressBar variant="primary"
+                                                now={(needie.collected / needie.need) * 100}
+                                                label={`${(needie.collected / needie.need) * 100}%`}
+                                                className="progressbartext"
+                                            />
+                                        </Box>
+                                        <Box className="center">
+
+                                            <Link to={`/donate/${needie.id}`} className="btn btn-primary">
+                                                <Button variant="outlined" color="primary">
+                                                    تبرع
+                                                </Button>
+                                            </Link>
+
+                                        </Box>
+                                    </CardContent>
+                                </Card>
+                            </div>
+                        ))}
+                    </Slider>
+                    <br></br>
                     <Row id="cases">
+                        <Typography variant="h4">حالات عادية</Typography>
                         {this.state.needies && this.state.needies.map((needie, index) => (
                             <Col key={index}>
                                 <Card style={{ width: '18rem' }} spacing={2} elevation={1} height={40} >
@@ -141,6 +245,7 @@ class Cases extends Component {
                         )
                         }
                     </Row>
+                 
                     <Pagination
                         activePage={this.state.current_page}
                         itemsCountPerPage={this.state.per_page}
@@ -150,7 +255,6 @@ class Cases extends Component {
                         linkClass="page-link"
                     />
                     <hr className="featurette-divider" />
-
                     <div className="row featurette">
                         <div className="col-md-7">
                             <h2 className="featurette-heading">متوفر الآن <span className="text-muted">عهد بين يديك</span></h2>
