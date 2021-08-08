@@ -2,7 +2,7 @@ import { Card } from '@material-ui/core';
 import axios from 'axios';
 import React from 'react';
 import { useState } from 'react';
-import { CardBody, CardText } from 'reactstrap';
+import { CardBody, CardText, CardTitle } from 'reactstrap';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import { Media } from 'react-bootstrap';
 import Container from 'react-bootstrap/Container'
@@ -25,8 +25,6 @@ class Needie extends React.Component {
                 this.setState({
                     needie: response.data.data,
                 })
-                console.log(response.data.data)
-
             })
             .catch(error => {
                 console.log(error)
@@ -40,67 +38,36 @@ class Needie extends React.Component {
         let needieType = this.state.needie.type
         let needieDetails = this.state.needie.details
         let needieNeed = this.state.needie.need
-        const mystyle = {
-            color: "white",
-            backgroundColor: "DodgerBlue",
-            padding: "10px",
-            fontFamily: "Arial"
-        };
         return (
             <div>
                 <Container>
                     <Card>
-                        <CardText>{needieName}</CardText>
+                        <h5>{needieName}</h5>
                         <CardBody>
-                            <Media className="justify-content-end">
-                                <Media.Body>
-                                    <Row>
-                                        <Col>
-                                            <img
-                                                width={100}
-                                                height={500}
-                                                className="ml-3"
-                                                src="/img/poorboy.jpg"
-                                                alt="Generic placeholder"
-                                            />
-                                        </Col>
-                                        <Col>
-                                            <Row>
-                                                <Col>
-                                                    <h5>{needieName}</h5>
-                                                    <p>
-                                                        {needieDetails}
-                                                    </p>
-                                                    <div>
-                                                        <ProgressBar variant="success" now={40} label={`${40}%`} />
-                                                    </div>
-
-                                                    {/* <Form inline>
-                                                        <Form.Group>
-                                                            <Form.Label htmlFor="inputPassword6">ادخل القيمة النقدية هنا</Form.Label>
-                                                            <Form.Control
-                                                                type="password"
-                                                                className={mystyle}
-                                                                id="inputPassword6"
-                                                                aria-describedby="passwordHelpInline"
-                                                            />
-
-                                                        </Form.Group>
-                                                    </Form> */}
-                                                </Col>
-
-                                            </Row>
-                                        </Col>
-                                    </Row>
-                                </Media.Body>
-
-                            </Media>
+                            <Row>
+                                <Col md={8}>
+                                    <p>
+                                        {needieDetails}
+                                    </p>
+                                </Col>
+                                <Col md={4}>
+                                    <img
+                                        src="/img/28483.jpg"
+                                        alt="Generic placeholder"
+                                    />
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col  md={8}>
+                                    <ProgressBar variant="success" now={40} label={`${40}%`} />
+                                </Col>
+                            </Row>
                         </CardBody>
                     </Card>
 
                 </Container>
 
-            </div>
+            </div >
 
         );
 

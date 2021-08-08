@@ -168,3 +168,7 @@ input:focus {
 .card.pricing .card-body {
     padding: 1.75rem;
 }
+#donationFormImg{
+    max-width: 100%;
+
+}

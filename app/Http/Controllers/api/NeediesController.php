@@ -59,6 +59,16 @@ class NeediesController extends BaseController
         }
         return $this->sendResponse($needies->setCollection($updatedNeedies), 'Cases retrieved successfully.');
     }
+    public function allNeedies()
+    {
+
+        $needies = Needy::all();
+        $allNeedies = array();
+        foreach ($needies as $needy) {
+            array_push($allNeedies, $needy);
+        }
+        return $this->sendResponse($needies, 'Cases retrieved successfully.');
+    }
     /**
      * Display a listing of the resource.
      *

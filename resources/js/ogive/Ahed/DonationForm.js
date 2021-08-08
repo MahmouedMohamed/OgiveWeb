@@ -31,7 +31,7 @@ class DonationForm extends React.Component {
             .get(url)
             .then((response) => {
                 this.setState({
-                    needies: response.data.data.data,
+                    needies: response.data.data,
                 });
             })
             .catch((error) => {
@@ -53,7 +53,7 @@ class DonationForm extends React.Component {
         return (
             <div className="text-right" >
                 <div className="img">
-                    <img src="https://baheya.org/uploads/sliders/196901601478973.png" alt="" />
+                    <img src="https://baheya.org/uploads/sliders/196901601478973.png" alt="" id="donationFormImg" />
                 </div>
                 <Tab.Container id="left-tabs-example" defaultActiveKey="first">
                     <Row>
@@ -67,7 +67,7 @@ class DonationForm extends React.Component {
                                 </Nav.Item>
                             </Nav>
                         </Col>
-                        <Col sm={9}>
+                        <Col sm={6}>
                             <Tab.Content>
                                 <Tab.Pane eventKey="first">
                                     <Card>
@@ -188,8 +188,30 @@ class DonationForm extends React.Component {
                                         </Container>
                                     </Card>
                                 </Tab.Pane>
-
                             </Tab.Content>
+                        </Col>
+                        <Col md={3}>
+                            <Card style={{ width: '18rem' }} className="contact-card">
+                                <Card.Body>
+                                    <i className="fas fa-hand-holding-medical"></i>
+                                    <Card.Title className="text-center">يمكنك التبرع من خلال الخط الساخن </Card.Title>
+                                    <Card.Text className="text-center bold">
+                                        12345
+                                    </Card.Text>
+                                    <footer className="text-center blockquote-footer pb-4">
+                                        ليصلك مندوبنا لحد باب البيت
+                                    </footer>
+                                </Card.Body>
+                            </Card>
+                            <Card style={{ width: '18rem' }} className="contact-card">
+                                <Card.Body>
+                                    <i className="fas fa-hand-holding-medical"></i>
+                                    <Card.Title className="text-center">للتبرع من خلال الرسائل</Card.Title>
+                                    <Card.Text className="text-center bold">
+                                        أرسل رسالة ل 12345 بكلمة "قلب" للتبرع بـ 5 جنيه
+                                    </Card.Text>
+                                </Card.Body>
+                            </Card>
                         </Col>
                     </Row>
                 </Tab.Container>
