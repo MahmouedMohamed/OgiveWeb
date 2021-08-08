@@ -9,8 +9,11 @@ import AboutAhed from './AboutAhed';
 import Content from './Content';
 import Needie from './Needie';
 import ContactUs from './ContactUs';
+import JoinUs from './JoinUs';
+import CharitiesForm from './JoinUs/CharitiesForm';
 import DonationForm from './DonationForm';
 import Nav from 'react-bootstrap/Nav';
+import './Includes/style.css';
 
 function Ahed() {
     return (
@@ -45,6 +48,12 @@ function Ahed() {
                 </Route>
                 <Route path="/ahed/contact-us">
                     <ContactUs />
+                </Route>
+                <Route exact path="/ahed/join-us">
+                    <JoinUs />
+                </Route>
+                <Route path="/ahed/join-us/charities">
+                    <CharitiesForm/>
                 </Route>
                 <Route path="/ahed/needie/:id" component={Needie}>
                 </Route>
