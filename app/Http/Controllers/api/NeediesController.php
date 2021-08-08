@@ -28,9 +28,11 @@ class NeediesController extends BaseController
             ->paginate(8);
         $updatedNeedies = $needies->getCollection();
         foreach ($updatedNeedies as $needy) {
-            $profile = Profile::findOrFail($needy->createdBy()->get('profile'))->first();
-            $needy['createdBy'] = $needy->createdBy()->get()->first();
-            $needy['createdBy']['image'] = $profile->image;
+            $profile = Profile::find($needy->createdBy()->get('profile'))->first();
+            if ($profile) {
+                $needy['createdBy'] = $needy->createdBy()->get()->first();
+                $needy['createdBy']['image'] = $profile->image;
+            }
         }
         return $this->sendResponse($needies->setCollection($updatedNeedies), 'Cases retrieved successfully.');
     }
@@ -49,9 +51,11 @@ class NeediesController extends BaseController
             ->paginate(8);
         $updatedNeedies = $needies->getCollection();
         foreach ($updatedNeedies as $needy) {
-            $profile = Profile::findOrFail($needy->createdBy()->get('profile'))->first();
-            $needy['createdBy'] = $needy->createdBy()->get()->first();
-            $needy['createdBy']['image'] = $profile->image;
+            $profile = Profile::find($needy->createdBy()->get('profile'))->first();
+            if ($profile) {
+                $needy['createdBy'] = $needy->createdBy()->get()->first();
+                $needy['createdBy']['image'] = $profile->image;
+            }
         }
         return $this->sendResponse($needies->setCollection($updatedNeedies), 'Cases retrieved successfully.');
     }
