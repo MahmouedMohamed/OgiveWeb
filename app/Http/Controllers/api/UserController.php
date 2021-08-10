@@ -50,7 +50,10 @@ class UserController extends BaseController
     public function register(Request $request)
     {
         $data = request()->all();
-        $this->validateUser($request);
+        $validated = $this->validateUser($request);
+        if ($validated->fails()) {
+            return $this->sendError('Invalid data', $validated->messages(), 400);
+        }
         $profile = Profile::create([]);
         $image = $request['image'];
         if ($image != null) {
@@ -71,7 +74,7 @@ class UserController extends BaseController
     }
     public function validateUser(Request $request)
     {
-        return $request->validate([
+        return Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'user_name' => 'required|string|max:255|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
@@ -81,6 +84,15 @@ class UserController extends BaseController
             'phone_number' => 'required',
             'address' => 'string|max:1024',
             'image' => 'image',
+        ], [
+            'required' => 'This field is required',
+            'min' => 'Invalid size, min size is :min',
+            'max' => 'Invalid size, max size is :max',
+            'integer' => 'Invalid type, only numbers are supported',
+            'in' => 'Invalid type, support values are :values',
+            'image' => 'Invalid type, only images are accepted',
+            'mimes' => 'Invalid type, supported types are :values',
+            'numeric' => 'Invalid type, only numbers are supported',
         ]);
     }
     public function getAhedAchievementRecords($id)
@@ -88,18 +100,18 @@ class UserController extends BaseController
         $user = User::find($id);
 
         if ($user) {
-        ///Get Number of needies that user helped
-        $neediesApprovedForUser = Needy::where('createdBy', '=', $user->id)->where('approved', '=', '1')->get()->pluck('id')->unique()->toArray();
-        $neediesDonatedOfflineFor = OfflineTransaction::where('giver', '=', $user->id)->where('collected', '=', '1')->get()->pluck('needy')->unique()->toArray();
-        $neediesDonatedOnlineFor = OnlineTransaction::where('giver', '=', $user->id)->get()->pluck('needy')->unique()->toArray();
-        $neediesHelped = collect(array_merge($neediesApprovedForUser, $neediesDonatedOfflineFor, $neediesDonatedOnlineFor));
-        $this->content['NumberOfNeediesUserHelped'] = $neediesHelped->unique()->count();
+            ///Get Number of needies that user helped
+            $neediesApprovedForUser = Needy::where('createdBy', '=', $user->id)->where('approved', '=', '1')->get()->pluck('id')->unique()->toArray();
+            $neediesDonatedOfflineFor = OfflineTransaction::where('giver', '=', $user->id)->where('collected', '=', '1')->get()->pluck('needy')->unique()->toArray();
+            $neediesDonatedOnlineFor = OnlineTransaction::where('giver', '=', $user->id)->get()->pluck('needy')->unique()->toArray();
+            $neediesHelped = collect(array_merge($neediesApprovedForUser, $neediesDonatedOfflineFor, $neediesDonatedOnlineFor));
+            $this->content['NumberOfNeediesUserHelped'] = $neediesHelped->unique()->count();
 
-        ///Get Value of all transactions
-        $valueOfOfflineDonation = OfflineTransaction::where('giver', '=', $user->id)->where('collected', '=', '1')->get()->pluck('amount')->toArray();
-        $valueOfOnlineDonation = OnlineTransaction::where('giver', '=', $user->id)->get()->pluck('amount')->toArray();
-        $valueOfDontaion = collect(array_merge($valueOfOfflineDonation, $valueOfOnlineDonation));
-        $this->content['ValueOfDonation'] = $valueOfDontaion->sum();
+            ///Get Value of all transactions
+            $valueOfOfflineDonation = OfflineTransaction::where('giver', '=', $user->id)->where('collected', '=', '1')->get()->pluck('amount')->toArray();
+            $valueOfOnlineDonation = OnlineTransaction::where('giver', '=', $user->id)->get()->pluck('amount')->toArray();
+            $valueOfDontaion = collect(array_merge($valueOfOfflineDonation, $valueOfOnlineDonation));
+            $this->content['ValueOfDonation'] = $valueOfDontaion->sum();
         }
         ///All Needies satisfied
         $neediesSatisfied = Needy::where('satisfied', '=', '1')->get()->pluck('id')->unique()->count();
@@ -126,6 +138,6 @@ class UserController extends BaseController
         ///neediesNotSatisfied
         $neediesNotSatisfied = Needy::where('satisfied', '=', '0')->get()->pluck('id')->unique()->count();
         $this->content['NeediesNotSatisfied'] = $neediesNotSatisfied;
-        return $this->sendResponse($this->content,'Achievement Records Returned Successfully');
+        return $this->sendResponse($this->content, 'Achievement Records Returned Successfully');
     }
 }

@@ -25,27 +25,27 @@ class Needy extends Model
     ];
     public function createdBy()
     {
-        return $this->belongsTo(User::class,'createdBy');
+        return $this->belongsTo(User::class, 'createdBy');
     }
     public function onlinetransactions()
     {
-        return $this->hasMany(OnlineTransaction::class,'needy');
+        return $this->hasMany(OnlineTransaction::class, 'needy');
     }
     public function offlinetransactions()
     {
-        return $this->hasMany(OfflineTransaction::class,'needy');
+        return $this->hasMany(OfflineTransaction::class, 'needy');
     }
     public function medias()
     {
-        return $this->hasMany(NeedyMedia::class,'needy');
+        return $this->hasMany(NeedyMedia::class, 'needy');
     }
     public function mediasBefore()
     {
-        return $this->medias()->where('before','1');
+        return $this->medias()->where('before', '1');
     }
     public function mediasAfter()
     {
-        return $this->medias()->where('before','0');
+        return $this->medias()->where('before', '0');
     }
     public function approve()
     {

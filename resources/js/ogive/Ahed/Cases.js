@@ -52,7 +52,7 @@ class Cases extends Component {
         this.setState({ current_page: pageNumber }, () => { this.loadNeedies(); });
     }
     loadNeedies() {
-        let url = `http://127.0.0.1:8000/api/ahed/needies?page=${this.state.current_page}`;
+        let url = `http://192.168.1.175:8000/api/ahed/needies?page=${this.state.current_page}`;
         axios.get(url)
             .then((response) => {
                 console.log(response.data.data.data)
@@ -68,7 +68,7 @@ class Cases extends Component {
             })
     }
     loadUrgentNeedies() {
-        let url = `http://127.0.0.1:8000/api/ahed/urgentneedies`;
+        let url = `http://192.168.1.175:8000/api/ahed/urgentneedies`;
         axios.get(url)
             .then((response) => {
                 console.log(response.data.data.data)
@@ -130,6 +130,7 @@ class Cases extends Component {
                         {this.state.urgentNeedies && this.state.urgentNeedies.map((needie, index) => (
                             <div>
                                 <Card style={{ width: '18rem' }} spacing={2} elevation={1} height={40} >
+                                    
                                     <img
                                         src="https://mdbootstrap.com/img/new/standard/city/062.jpg"
                                         className="card-img-top"
