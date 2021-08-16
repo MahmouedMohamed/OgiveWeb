@@ -68,9 +68,10 @@ class UserController extends BaseController
             'gender' => request('gender'),
             'password' => Hash::make(request('password')),
             'phone_number' => request('phone_number'),
+            'address' => request('address'),
             'profile' => $profile->id
         ]);
-        return $this->sendResponse('','User Created Successfully');
+        return $this->sendResponse('', 'User Created Successfully');
     }
     public function validateUser(Request $request)
     {
@@ -139,5 +140,37 @@ class UserController extends BaseController
         $neediesNotSatisfied = Needy::where('satisfied', '=', '0')->get()->pluck('id')->unique()->count();
         $this->content['NeediesNotSatisfied'] = $neediesNotSatisfied;
         return $this->sendResponse($this->content, 'Achievement Records Returned Successfully');
+    }
+
+    public function updateProfilePicture(Request $request, $id)
+    {
+        $user = User::find($id);
+        if ($user == null) {
+            return $this->sendError('المستخدم غير موجود'); ///Case Not Found
+        }
+        if ($request['userId'] != $id)
+            return $this->sendForbidden('أنت لا تملك صلاحية تعديل هذا الملف الشخصي');  ///You aren\'t authorized to delete this transaction.
+
+        $validated = $this->validateImage($request);
+        if ($validated->fails())
+            return $this->sendError('Invalid data', $validated->messages(), 400);
+
+        $profile = Profile::find($user->profile);
+        $imagePath = $request['image']->store('uploads', 'public');
+        $profile->update([
+            'image' => '/storage/'.$imagePath
+        ]);
+        return $this->sendResponse([], 'تم إضافة الصورة بنجاح');    ///Image Updated Successfully!
+
+    }
+
+    public function validateImage(Request $request)
+    {
+        $rules = [
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ];
+        return Validator::make($request->all(), $rules, [
+            'image' => 'قيمة خاطئة، يمكن قبول الصور فقط',
+        ]);
     }
 }
