@@ -268,7 +268,7 @@ class NeediesController extends BaseController
         }
         Storage::delete('public/' . substr($needyMedia->path, 9));
         $needyMedia->delete();
-        return $this->sendResponse([], 'تم مسح الوسائط بنجاح');  ///Image Deleted successfully!
+        return $this->sendResponse([], 'تم إزالة الوسائط بنجاح');  ///Image Deleted successfully!
     }
     /**
      * Remove the specified resource from storage.
@@ -292,14 +292,14 @@ class NeediesController extends BaseController
 
         //Check if current user can update
         if (!$user->can('delete', $needy)) {
-            return $this->sendForbidden('أنت لا تملك صلاحية مسح الحالة');  ///You aren\'t authorized to delete this needy.
+            return $this->sendForbidden('أنت لا تملك صلاحية إزالة الحالة');  ///You aren\'t authorized to delete this needy.
         }
         //Remove images from disk before deleting to save storage
         foreach ($needy->medias as $media) {
             Storage::delete('public/' . $media->path);
         }
         $needy->delete();
-        return $this->sendResponse([], 'تم مسح الحالة بنجاح');  ///Needy Deleted successfully!
+        return $this->sendResponse([], 'تم إزالة الحالة بنجاح');  ///Needy Deleted successfully!
     }
 
     public function validateNeedy(Request $request, string $related)

@@ -49,10 +49,10 @@ class OnlineTransactionsController extends BaseController
             return $this->sendError('الحالة غير موجودة');  ///Case Not Found
         }
         if (!$needy->approved) {
-            return $this->sendError('من فضلك أنتظر لحين تأكيد الحالة',[],403);    ///Kindly wait until Case is approved so you can donate.
+            return $this->sendError('من فضلك أنتظر لحين تأكيد الحالة', [], 403);    ///Kindly wait until Case is approved so you can donate.
         }
-        if ($needy->satisfied){
-            return $this->sendError('تم جمع اللازم لهذة الحالة، من فضلك تفقد حالة أخري',[],403); ///Case already satisfied, Kindly check another one
+        if ($needy->satisfied) {
+            return $this->sendError('تم جمع اللازم لهذة الحالة، من فضلك تفقد حالة أخري', [], 403); ///Case already satisfied, Kindly check another one
         }
         $transaction = $user->onlinetransactions()->create([
             'needy' => $needy->id,
@@ -71,7 +71,7 @@ class OnlineTransactionsController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request,$id)
+    public function show(Request $request, $id)
     {
         //Check transaction exists
         $transaction = OnlineTransaction::find($id);

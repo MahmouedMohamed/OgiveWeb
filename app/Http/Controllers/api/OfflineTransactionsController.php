@@ -182,10 +182,10 @@ class OfflineTransactionsController extends BaseController
 
         //Check if current user can show transaction
         if (!$user->can('delete', $transaction)) {
-            return $this->sendForbidden('أنت لا تملك صلاحية مسح هذا التعامل');  ///You aren\'t authorized to delete this transaction.
+            return $this->sendForbidden('أنت لا تملك صلاحية إزالة هذا التعامل');  ///You aren\'t authorized to delete this transaction.
         }
         $transaction->delete();
-        return $this->sendResponse([], 'تم المسح بنجاح');    ///Transaction Deleted Successfully!
+        return $this->sendResponse([], 'تم إزالة العنصر بنجاح');    ///Transaction Deleted Successfully!
     }
 
     public function validateTransaction(Request $request, string $related)
