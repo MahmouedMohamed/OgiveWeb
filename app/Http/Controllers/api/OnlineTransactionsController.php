@@ -21,9 +21,9 @@ class OnlineTransactionsController extends BaseController
     {
         $user = User::find(request()->input('userId'));
         if (!$user) {
-            return $this->sendError('User Not Found');
+            return $this->sendError('المستخدم غير موجود');  ///User Not Found
         }
-        return $this->sendResponse($user->onlinetransactions, 'Transactions retrieved successfully.');
+        return $this->sendResponse($user->onlinetransactions, 'تم إسترجاع البيانات بنجاح'); ///Transactions retrieved successfully.
     }
 
     /**
@@ -39,20 +39,20 @@ class OnlineTransactionsController extends BaseController
         //Validate Request
         $validated = $this->validateTransaction($request);
         if ($validated->fails())
-            return $this->sendError('Invalid data', $validated->messages(), 400);
+            return $this->sendError('خطأ في البيانات', $validated->messages(), 400);   ///Invalid data.
         $user = User::find(request()->input('giver'));
         if (!$user) {
-            return $this->sendError('User Not Found');
+            return $this->sendError('المستخدم غير موجود');  ///User Not Found
         }
         $needy = Needy::find(request()->input('needy'));
         if (!$needy) {
-            return $this->sendError('Case Not Found');
+            return $this->sendError('الحالة غير موجودة');  ///Case Not Found
         }
         if (!$needy->approved) {
-            return $this->sendError('Kindly wait until Case is approved so you can donate.',[],403);
+            return $this->sendError('من فضلك أنتظر لحين تأكيد الحالة',[],403);    ///Kindly wait until Case is approved so you can donate.
         }
         if ($needy->satisfied){
-            return $this->sendError('Case already satisfied, Kindly check another one',[],403);
+            return $this->sendError('تم جمع اللازم لهذة الحالة، من فضلك تفقد حالة أخري',[],403); ///Case already satisfied, Kindly check another one
         }
         $transaction = $user->onlinetransactions()->create([
             'needy' => $needy->id,
@@ -61,7 +61,7 @@ class OnlineTransactionsController extends BaseController
         ]);
         //ToDo: if failed remove transaction
         $transaction->transferAmount($request['amount']);
-        return $this->sendResponse([], 'Thank You For Your Contribution!');
+        return $this->sendResponse([], 'شكراً لمساهمتك القيمة'); ///Thank You For Your Contribution!
     }
 
     /**
@@ -76,21 +76,21 @@ class OnlineTransactionsController extends BaseController
         //Check transaction exists
         $transaction = OnlineTransaction::find($id);
         if ($transaction == null) {
-            return $this->sendError('Transaction Not Found');
+            return $this->sendError('هذا التعامل غير موجود');   ///Transaction Not Found
         }
 
         //Check user who is updating exists
         $user = User::find($request['userId']);
         if ($user == null) {
-            return $this->sendError('User Not Found');
+            return $this->sendError('المستخدم غير موجود');  ///User Not Found
         }
 
         //Check if current user can show transaction
         if (!$user->can('view', $transaction)) {
-            return $this->sendForbidden('You aren\'t authorized to show this transaction.');
+            return $this->sendForbidden('أنت لا تملك صلاحية عرض هذا التعامل');    ///You aren\'t authorized to show this transaction.
         }
 
-        return $this->sendResponse($transaction, 'Data Retrieved Successfully!');
+        return $this->sendResponse($transaction, 'تم إسترجاع البيانات بنجاح');   ///Data Retrieved Successfully!
     }
 
     /**
@@ -124,10 +124,14 @@ class OnlineTransactionsController extends BaseController
             'needy' => 'required|max:255',
             'amount' => 'required|numeric|min:1',
         ], [
-            'required' => 'This field is required',
-            'min' => 'Invalid size, min size is :min',
-            'max' => 'Invalid size, max size is :max',
-            'numeric' => 'Invalid type, only numbers are supported'
+            ///'required' => 'This field is required',
+            ///'min' => 'Invalid size, min size is :min',
+            ///'max' => 'Invalid size, max size is :max',
+            ///'numeric' => 'Invalid type, only numbers are supported'
+            'required' => 'هذا الحقل مطلوب',
+            'min' => 'قيمة خاطئة، أقل قيمة هي :min',
+            'max' => 'قيمة خاطئة أعلي قيمة هي :max',
+            'numeric' => 'قيمة خاطئة، يمكن قبول الأرقام فقط',
         ]);
     }
 }

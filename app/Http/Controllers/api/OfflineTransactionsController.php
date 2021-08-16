@@ -21,9 +21,9 @@ class OfflineTransactionsController extends BaseController
     {
         $user = User::find(request()->input('userId'));
         if (!$user) {
-            return $this->sendError('User Not Found');
+            return $this->sendError('المستخدم غير موجود');  ///User Not Found
         }
-        return $this->sendResponse($user->offlineTransactions, 'Transactions retrieved successfully.');
+        return $this->sendResponse($user->offlineTransactions, 'تم إسترجاع البيانات بنجاح'); ///Transactions retrieved successfully.
     }
 
     /**
@@ -37,21 +37,21 @@ class OfflineTransactionsController extends BaseController
         // return $this->toString(['Finding Living','Upgrade Standard of Living','Bride Preparation','Debt','Cure']);
         $validated = $this->validateTransaction($request, 'store');
         if ($validated->fails())
-            return $this->sendError('Invalid data', $validated->messages(), 400);
+            return $this->sendError('خطأ في البيانات', $validated->messages(), 400);   ///Invalid data
         $needy = Needy::find(request()->input('needy'));
         if (!$needy) {
-            return $this->sendError('Case Not Found');
+            return $this->sendError('الحالة غير موجودة');  ///Case Not Found
         }
         if (!$needy->approved) {
-            return $this->sendError('Kindly wait until Case is approved so you can donate.', [], 403);
+            return $this->sendError('من فضلك أنتظر لحين تأكيد الحالة', [], 403);  ///Kindly wait until Case is approved so you can donate.
         }
         if ($needy->satisfied) {
-            return $this->sendError('Case already satisfied, Kindly check another one', [], 403);
+            return $this->sendError('تم جمع اللازم لهذة الحالة، من فضلك تفقد حالة أخري', [], 403);   ///Case already satisfied, Kindly check another one
         }
         if (request()->input('giver') != null) {
             $user = User::find(request()->input('giver'));
             if (!$user) {
-                return $this->sendError('User Not Found');
+                return $this->sendError('المستخدم غير موجود');  ///User Not Found
             }
             $user->offlineTransactions()->create([
                 'needy' => $needy->id,
@@ -63,7 +63,7 @@ class OfflineTransactionsController extends BaseController
                 'phoneNumber' => $request['phoneNumber'],
                 'collected' => 0,
             ]);
-        }else{
+        } else {
             OfflineTransaction::create([
                 'needy' => $needy->id,
                 'amount' => $request['amount'],
@@ -76,7 +76,7 @@ class OfflineTransactionsController extends BaseController
             ]);
         }
 
-        return $this->sendResponse([], 'Thank You For Your Contribution, We will contact you soon!');
+        return $this->sendResponse([], 'شكراً لمساهتمك القيمة، سوف يتم التواصل معك قريباً');   ///Thank You For Your Contribution, We will contact you soon!
     }
 
     /**
@@ -91,21 +91,21 @@ class OfflineTransactionsController extends BaseController
         //Check transaction exists
         $transaction = OfflineTransaction::find($id);
         if ($transaction == null) {
-            return $this->sendError('Transaction Not Found');
+            return $this->sendError('هذا التعامل غير موجود');   ///Transaction Not Found
         }
 
         //Check user who is updating exists
         $user = User::find($request['userId']);
         if ($user == null) {
-            return $this->sendError('User Not Found');
+            return $this->sendError('المستخدم غير موجود');  ///User Not Found
         }
 
         //Check if current user can show transaction
         if (!$user->can('view', $transaction)) {
-            return $this->sendForbidden('You aren\'t authorized to show this transaction.');
+            return $this->sendForbidden('أنت لا تملك صلاحية عرض هذا التعامل');    ///You aren\'t authorized to show this transaction.
         }
 
-        return $this->sendResponse($transaction, 'Data Retrieved Successfully!');
+        return $this->sendResponse($transaction, 'تم إسترجاع البيانات بنجاح');   ///Data Retrieved Successfully!
     }
 
     /**
@@ -119,17 +119,17 @@ class OfflineTransactionsController extends BaseController
     {
         $transaction = OfflineTransaction::find($id);
         if ($transaction == null) {
-            return $this->sendError('Transaction Not Found');
+            return $this->sendError('هذا التعامل غير موجود');   ///Transaction Not Found
         }
 
         //Check if user who is updating exists
         $user = User::find($request['userId']);
         if ($user == null) {
-            return $this->sendError('User Not Found');
+            return $this->sendError('المستخدم غير موجود');  ///User Not Found
         }
 
         if (!$user->can('update', $transaction)) {
-            return $this->sendForbidden('You aren\'t authorized to update this transaction');
+            return $this->sendForbidden('أنت لا تملك صلاحية تعديل هذا التعامل');   ///You aren\'t authorized to update this transaction
         }
 
         $validated = $this->validateTransaction($request, 'update');
@@ -138,13 +138,13 @@ class OfflineTransactionsController extends BaseController
 
         $needy = Needy::find(request()->input('needy'));
         if (!$needy) {
-            return $this->sendError('Case Not Found');
+            return $this->sendError('الحالة غير موجودة');  ///Case Not Found
         }
         if (!$needy->approved) {
-            return $this->sendError('Kindly wait until Case is approved so you can donate.', [], 403);
+            return $this->sendError('من فضلك أنتظر لحين تأكيد الحالة', [], 403);  ///Kindly wait until Case is approved so you can donate.
         }
         if ($needy->satisfied) {
-            return $this->sendError('Case already satisfied, Kindly check another one', [], 403);
+            return $this->sendError('تم جمع اللازم لهذة الحالة، من فضلك تفقد حالة أخري', [], 403);   ///Case already satisfied, Kindly check another one
         }
 
         $transaction->update([
@@ -152,10 +152,11 @@ class OfflineTransactionsController extends BaseController
             'amount' => $request['amount'],
             'preferredSection' => $request['preferredSection'],
             'address' => $request['address'],
+            'phoneNumber' => $request['phoneNumber'],
             'startCollectDate' => $request['startCollectDate'],
             'endCollectDate' => $request['endCollectDate'],
         ]);
-        return $this->sendResponse([], 'Transaction Updated Successfully');
+        return $this->sendResponse([], 'تم التعديل بنجاح'); ///Transaction Updated Successfully
     }
 
     /**
@@ -170,21 +171,21 @@ class OfflineTransactionsController extends BaseController
         //Check transaction exists
         $transaction = OfflineTransaction::find($id);
         if ($transaction == null) {
-            return $this->sendError('Transaction Not Found');
+            return $this->sendError('هذا التعامل غير موجود');   ///Transaction Not Found
         }
 
         //Check user who is updating exists
         $user = User::find($request['userId']);
         if ($user == null) {
-            return $this->sendError('User Not Found');
+            return $this->sendError('المستخدم غير موجود');  ///User Not Found
         }
 
         //Check if current user can show transaction
         if (!$user->can('delete', $transaction)) {
-            return $this->sendForbidden('You aren\'t authorized to delete this transaction.');
+            return $this->sendForbidden('أنت لا تملك صلاحية مسح هذا التعامل');  ///You aren\'t authorized to delete this transaction.
         }
         $transaction->delete();
-        return $this->sendResponse([], 'Transaction Deleted Successfully!');
+        return $this->sendResponse([], 'تم المسح بنجاح');    ///Transaction Deleted Successfully!
     }
 
     public function validateTransaction(Request $request, string $related)
@@ -198,6 +199,7 @@ class OfflineTransactionsController extends BaseController
                     'amount' => 'required|numeric|min:1',
                     'preferredSection' => 'required|in:' . $caseType->toString(),
                     'address' => 'required',
+                    'phoneNumber' => 'required',
                     'startCollectDate' => 'required|date|before:endCollectDate',
                     'endCollectDate' => 'required|date|after:startCollectDate',
                 ];
@@ -208,18 +210,27 @@ class OfflineTransactionsController extends BaseController
                     'amount' => 'required|numeric|min:1',
                     'preferredSection' => 'required|in:' . $caseType->toString(),
                     'address' => 'required',
+                    'phoneNumber' => 'required',
                     'startCollectDate' => 'required|date|before:endCollectDate',
                     'endCollectDate' => 'required|date|after:startCollectDate',
                 ];
                 break;
         }
         return Validator::make($request->all(), $rules, [
-            'required' => 'This field is required',
-            'min' => 'Invalid size, min size is :min',
-            'max' => 'Invalid size, max size is :max',
-            'numeric' => 'Invalid type, only numbers are supported',
-            'in' => 'Invalid type, support values are :values',
-            'date' => 'Invalid date',
+            // 'required' => 'This field is required',
+            // 'min' => 'Invalid size, min size is :min',
+            // 'max' => 'Invalid size, max size is :max',
+            // 'numeric' => 'Invalid type, only numbers are supported',
+            // 'in' => 'Invalid type, support values are :values',
+            // 'date' => 'Invalid date',
+            // 'before' => 'The :attribute must be before :date',
+            // 'after' => 'The :attribute must be after :date'
+            'required' => 'هذا الحقل مطلوب',
+            'min' => 'قيمة خاطئة، أقل قيمة هي :min',
+            'max' => 'قيمة خاطئة أعلي قيمة هي :max',
+            'numeric' => 'قيمة خاطئة، يمكن قبول الأرقام فقط',
+            'in' => 'قيمة خاطئة، القيم المتاحة هي :values',
+            'date' => 'تاريخ خاطئ',
             'before' => 'The :attribute must be before :date',
             'after' => 'The :attribute must be after :date'
         ]);

@@ -34,7 +34,7 @@ class NeediesController extends BaseController
                 $needy['createdBy']['image'] = $profile->image;
             }
         }
-        return $this->sendResponse($needies->setCollection($updatedNeedies), 'Cases retrieved successfully.');
+        return $this->sendResponse($needies->setCollection($updatedNeedies), 'تم إسترجاع البيانات بنجاح');  ///Cases retrieved successfully.
     }
 
     /**
@@ -57,7 +57,7 @@ class NeediesController extends BaseController
                 $needy['createdBy']['image'] = $profile->image;
             }
         }
-        return $this->sendResponse($needies->setCollection($updatedNeedies), 'Cases retrieved successfully.');
+        return $this->sendResponse($needies->setCollection($updatedNeedies), 'تم إسترجاع البيانات بنجاح');  ///Cases retrieved successfully.
     }
     public function allNeedies()
     {
@@ -67,7 +67,7 @@ class NeediesController extends BaseController
         foreach ($needies as $needy) {
             array_push($allNeedies, $needy);
         }
-        return $this->sendResponse($needies, 'Cases retrieved successfully.');
+        return $this->sendResponse($needies, 'تم إسترجاع البيانات بنجاح');  ///Cases retrieved successfully.
     }
     /**
      * Display a listing of the resource.
@@ -84,7 +84,7 @@ class NeediesController extends BaseController
             $needy['createdBy'] = $needy->createdBy()->get()->first();
             $needy['createdBy']['image'] = $profile->image;
         }
-        return $this->sendResponse($needies, 'Cases retrieved successfully.');
+        return $this->sendResponse($needies, 'تم إسترجاع البيانات بنجاح');  ///Cases retrieved successfully.
     }
     /**
      * Store a newly created resource in storage.
@@ -97,12 +97,12 @@ class NeediesController extends BaseController
         //Validate Request
         $validated = $this->validateNeedy($request, 'store');
         if ($validated->fails()) {
-            return $this->sendError('Invalid data', $validated->messages(), 400);
+            return $this->sendError('خطأ في البيانات', $validated->messages(), 400);   ///Invalid data
         }
 
         $user = User::find(request()->input('createdBy'));
         if (!$user) {
-            return $this->sendError('User Not Found');
+            return $this->sendError('المستخدم غير موجود');  ///User Not Found
         }
         $images = $request['images'];
         $imagePaths = array();
@@ -127,7 +127,7 @@ class NeediesController extends BaseController
                 'path' => $imagePath,
             ]);
         }
-        return $this->sendResponse([], 'Thank You For Your Contribution!');
+        return $this->sendResponse([], 'شكراً لمساهمتك القيمة'); ///Thank You For Your Contribution!
     }
 
     /**
@@ -140,12 +140,12 @@ class NeediesController extends BaseController
     {
         $needy = Needy::with('mediasBefore:id,path,needy')->with('mediasAfter:id,path,needy')->find($id);
         if ($needy == null) {
-            return $this->sendError('Not Found');
+            return $this->sendError('الحالة غير موجودة');   ///Case Not Found
         }
         $profile = Profile::findOrFail($needy->createdBy()->get('profile'))->first();
         $needy['createdBy'] = $needy->createdBy()->get()->first();
         $needy['createdBy']['image'] = $profile->image;
-        return $this->sendResponse($needy, 'Data Retrieved Successfully!');
+        return $this->sendResponse($needy, 'تم إسترجاع البيانات بنجاح'); ///Data Retrieved Successfully!
     }
 
     /**
@@ -160,23 +160,23 @@ class NeediesController extends BaseController
         //Check needy exists
         $needy = Needy::find($id);
         if ($needy == null) {
-            return $this->sendError('Needy Not Found');
+            return $this->sendError('الحالة غير موجودة'); ///Case Not Found
         }
 
         //Check user who is updating exists
         $user = User::find($request['userId']);
         if ($user == null) {
-            return $this->sendError('User Not Found');
+            return $this->sendError('المستخدم غير موجود');  ///User Not Found
         }
 
         //Check if current user can update
         if (!$user->can('update', $needy)) {
-            return $this->sendForbidden('You aren\'t authorized to edit this needy.');
+            return $this->sendForbidden('أنت لا تملك صلاحية تعديل الحالة');  ///You aren\'t authorized to edit this needy.
         }
         //Validate Request
         $validated = $this->validateNeedy($request, 'update');
         if ($validated->fails()) {
-            return $this->sendError('Invalid data', $validated->messages(), 400);
+            return $this->sendError('خطأ في البيانات', $validated->messages(), 400);   ///Invalid data
         }
 
         //Update
@@ -189,7 +189,7 @@ class NeediesController extends BaseController
             'need' => $request['need'],
             'address' => $request['address'],
         ]);
-        return $this->sendResponse([], 'Needy Updated Successfully!');
+        return $this->sendResponse([], 'تم تعديل الحالة بنجاح');  ///Needy Updated Successfully!
     }
     /**
      * Update the specified resource in storage.
@@ -203,23 +203,23 @@ class NeediesController extends BaseController
         //Check needy exists
         $needy = Needy::find($id);
         if ($needy == null) {
-            return $this->sendError('Needy Not Found');
+            return $this->sendError('الحالة غير موجودة'); ///Case Not Found
         }
 
         //Check user who is updating exists
         $user = User::find($request['userId']);
         if ($user == null) {
-            return $this->sendError('User Not Found');
+            return $this->sendError('المستخدم غير موجود');  ///User Not Found
         }
 
         //Check if current user can update
         if (!$user->can('update', $needy)) {
-            return $this->sendForbidden('You aren\'t authorized to edit this needy.');
+            return $this->sendForbidden('أنت لا تملك صلاحية تعديل الحالة');  ///You aren\'t authorized to edit this needy.
         }
         //Validate Request
         $validated = $this->validateNeedy($request, 'addImage');
         if ($validated->fails()) {
-            return $this->sendError('Invalid data', $validated->messages(), 400);
+            return $this->sendError('خطأ في البيانات', $validated->messages(), 400);   ///Invalid data
         }
 
         $images = $request['images'];
@@ -234,7 +234,7 @@ class NeediesController extends BaseController
                 'before' => $request['before'],
             ]);
         }
-        return $this->sendResponse([], 'Images Added successfully!');
+        return $this->sendResponse([], 'تمت إضافة الوسائط بنجاح');   ///Images Added successfully!
     }
     /**
      * Update the specified resource in storage.
@@ -248,27 +248,27 @@ class NeediesController extends BaseController
         //Check needy exists
         $needy = Needy::find($id);
         if ($needy == null) {
-            return $this->sendError('Needy Not Found');
+            return $this->sendError('الحالة غير موجودة'); ///Case Not Found
         }
 
         //Check user who is updating exists
         $user = User::find($request['userId']);
         if ($user == null) {
-            return $this->sendError('User Not Found');
+            return $this->sendError('المستخدم غير موجود');  ///User Not Found
         }
 
         //Check if current user can update
         if (!$user->can('update', $needy)) {
-            return $this->sendForbidden('You aren\'t authorized to edit this needy.');
+            return $this->sendForbidden('أنت لا تملك صلاحية تعديل الحالة');  ///You aren\'t authorized to edit this needy.
         }
         //Check needy media exists
         $needyMedia = NeedyMedia::find($request['imageId']);
         if ($needyMedia == null) {
-            return $this->sendError('Needy Media Not Found');
+            return $this->sendError('لم يتم العثور علي هذة الوسائط');   ///Needy Media Not Found
         }
         Storage::delete('public/' . substr($needyMedia->path, 9));
         $needyMedia->delete();
-        return $this->sendResponse([], 'Image Deleted successfully!');
+        return $this->sendResponse([], 'تم مسح الوسائط بنجاح');  ///Image Deleted successfully!
     }
     /**
      * Remove the specified resource from storage.
@@ -281,25 +281,25 @@ class NeediesController extends BaseController
     {
         $needy = Needy::find($id);
         if ($needy == null) {
-            return $this->sendError('Not Found');
+            return $this->sendError('الحالة غير موجودة');   ///Case Not Found
         }
 
         //Check user who is updating exists
         $user = User::find($request['userId']);
         if ($user == null) {
-            return $this->sendError('User Not Found');
+            return $this->sendError('المستخدم غير موجود');  ///User Not Found
         }
 
         //Check if current user can update
         if (!$user->can('delete', $needy)) {
-            return $this->sendForbidden('You aren\'t authorized to edit this needy.');
+            return $this->sendForbidden('أنت لا تملك صلاحية مسح الحالة');  ///You aren\'t authorized to delete this needy.
         }
         //Remove images from disk before deleting to save storage
         foreach ($needy->medias as $media) {
             Storage::delete('public/' . $media->path);
         }
         $needy->delete();
-        return $this->sendResponse([], 'Needy Deleted successfully!');
+        return $this->sendResponse([], 'تم مسح الحالة بنجاح');  ///Needy Deleted successfully!
     }
 
     public function validateNeedy(Request $request, string $related)
@@ -318,7 +318,7 @@ class NeediesController extends BaseController
                     'need' => 'required|numeric|min:1',
                     'address' => 'required',
                     'images' => 'required',
-                    'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048e',
+                    'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
                 ];
                 break;
             case 'update':
@@ -336,20 +336,29 @@ class NeediesController extends BaseController
             case 'addImage':
                 $rules = [
                     'images' => 'required',
-                    'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048e',
+                    'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
                     'before' => 'required|boolean',
                 ];
                 break;
         }
+
         return Validator::make($request->all(), $rules, [
-            'required' => 'This field is required',
-            'min' => 'Invalid size, min size is :min',
-            'max' => 'Invalid size, max size is :max',
-            'integer' => 'Invalid type, only numbers are supported',
-            'in' => 'Invalid type, support values are :values',
-            'image' => 'Invalid type, only images are accepted',
-            'mimes' => 'Invalid type, supported types are :values',
-            'numeric' => 'Invalid type, only numbers are supported',
+            // 'required' => 'This field is required',
+            // 'min' => 'Invalid size, min size is :min',
+            // 'max' => 'Invalid size, max size is :max',
+            // 'integer' => 'Invalid type, only numbers are supported',
+            // 'in' => 'Invalid type, support values are :values',
+            // 'image' => 'Invalid type, only images are accepted',
+            // 'mimes' => 'Invalid type, supported types are :values',
+            // 'numeric' => 'Invalid type, only numbers are supported',
+            'required' => 'هذا الحقل مطلوب',
+            'min' => 'قيمة خاطئة، أقل قيمة هي :min',
+            'max' => 'قيمة خاطئة أعلي قيمة هي :max',
+            'integer' => 'قيمة خاطئة، فقط يمكن قبول الأرقام فقط',
+            'in' => 'قيمة خاطئة، القيم المتاحة هي :values',
+            'image' => 'قيمة خاطئة، يمكن قبول الصور فقط',
+            'mimes' => 'يوجد خطأ في النوع، الأنواع المتاحة هي :values',
+            'numeric' => 'قيمة خاطئة، يمكن قبول الأرقام فقط',
         ]);
     }
 }

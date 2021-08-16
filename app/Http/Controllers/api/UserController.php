@@ -38,7 +38,7 @@ class UserController extends BaseController
             $this->content['profile'] = $profile;
             return $this->sendResponse($this->content, 'Data Retrieved Successfully');
         } else {
-            return $this->sendError('Unauthorized');
+            return $this->sendError('The email or password is incorrect.');
         }
     }
 
@@ -70,7 +70,7 @@ class UserController extends BaseController
             'phone_number' => request('phone_number'),
             'profile' => $profile->id
         ]);
-        return response()->json([], 200);
+        return $this->sendResponse('','User Created Successfully');
     }
     public function validateUser(Request $request)
     {
