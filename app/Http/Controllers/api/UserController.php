@@ -156,11 +156,14 @@ class UserController extends BaseController
             return $this->sendError('Invalid data', $validated->messages(), 400);
 
         $profile = Profile::find($user->profile);
-        $imagePath = $request['image']->store('uploads', 'public');
-        $profile->update([
-            'image' => '/storage/'.$imagePath
-        ]);
-        return $this->sendResponse([], 'تم إضافة الصورة بنجاح');    ///Image Updated Successfully!
+        if ($profile->image == null) {
+            $imagePath = $request['image']->store('users', 'public');
+            $profile->image = "/storage/" . $imagePath;
+            $profile->save();
+        } else {
+            $imagePath = $request['image']->storeAs('public/users', last(explode('/', $profile->image)));
+        }
+        return $this->sendResponse($profile->image, 'تم إضافة الصورة بنجاح');    ///Image Updated Successfully!
 
     }
 
