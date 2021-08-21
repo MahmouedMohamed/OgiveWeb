@@ -191,6 +191,24 @@ class UserController extends BaseController
         return $this->sendResponse($profile->cover, 'تم إضافة الصورة بنجاح');    ///Image Updated Successfully!
 
     }
+    public function updateinformation(Request $request, $id)
+    {
+        $user = User::find($id);
+        if ($user == null) {
+            return $this->sendError('المستخدم غير موجود'); ///Case Not Found
+        }
+        if ($request['userId'] != $id)
+            return $this->sendForbidden('أنت لا تملك صلاحية تعديل هذا الملف الشخصي');  ///You aren\'t authorized to delete this transaction.
+
+        $profile = Profile::find($user->profile);
+        $profile->bio = $request['bio'];
+        $user->phone_number = $request['phoneNumber'];
+        $user->address = $request['address'];
+        $profile->save();
+        $user->save();
+        return $this->sendResponse([], 'تم تغيير بياناتك بنجاح');    ///Image Updated Successfully!
+
+    }
     public function validateImage(Request $request)
     {
         $rules = [
