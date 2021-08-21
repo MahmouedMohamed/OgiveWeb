@@ -167,6 +167,30 @@ class UserController extends BaseController
 
     }
 
+    public function updateCoverPicture(Request $request, $id)
+    {
+        $user = User::find($id);
+        if ($user == null) {
+            return $this->sendError('المستخدم غير موجود'); ///Case Not Found
+        }
+        if ($request['userId'] != $id)
+            return $this->sendForbidden('أنت لا تملك صلاحية تعديل هذا الملف الشخصي');  ///You aren\'t authorized to delete this transaction.
+
+        $validated = $this->validateImage($request);
+        if ($validated->fails())
+            return $this->sendError('Invalid data', $validated->messages(), 400);
+
+        $profile = Profile::find($user->profile);
+        if ($profile->cover == null) {
+            $imagePath = $request['image']->store('users', 'public');
+            $profile->cover = "/storage/" . $imagePath;
+            $profile->save();
+        } else {
+            $imagePath = $request['image']->storeAs('public/users', last(explode('/', $profile->cover)));
+        }
+        return $this->sendResponse($profile->cover, 'تم إضافة الصورة بنجاح');    ///Image Updated Successfully!
+
+    }
     public function validateImage(Request $request)
     {
         $rules = [

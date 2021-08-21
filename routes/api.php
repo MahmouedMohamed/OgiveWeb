@@ -71,7 +71,8 @@ Route::get('clinics', [PlaceController::class, 'clinics']);
 Route::get('filterPlacesByType', [PlaceController::class, 'filterByType']);
 
 // Route::group(['middleware' => 'auth:api'], function () {
-Route::put('/profile/{id}', [UserController::class,'updateProfilePicture']);
+Route::put('/profile/{id}/picture', [UserController::class,'updateProfilePicture']);
+Route::put('/profile/{id}/cover', [UserController::class,'updateCoverPicture']);
 Route::apiResource('/ahed/needies', NeediesController::class);
 Route::get('/ahed/urgentneedies', [NeediesController::class,'urgentIndex']);
 Route::get('/ahed/allNeedies', [NeediesController::class,'allNeedies']);
