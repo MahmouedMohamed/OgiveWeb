@@ -18,7 +18,16 @@ class FoodSharingMarkersController extends BaseController
      */
     public function index()
     {
-        //
+        return $this->sendResponse(FoodSharingMarker::select(
+            'id',
+            'latitude',
+            'longitude',
+            'type',
+            'description',
+            'quantity',
+            'priority'
+        )
+            ->where('collected', '=', 0)->get(), '');
     }
 
     /**
