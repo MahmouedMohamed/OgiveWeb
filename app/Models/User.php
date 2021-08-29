@@ -54,9 +54,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(Profile::class);
     }
-    public function markers()
+    public function foodSharingMarkers()
     {
-        return $this->hasMany(Marker::class)->orderBy('id','DESC');
+        return $this->hasMany(FoodSharingMarker::class)->orderBy('id','DESC');
     }
     public function memories()
     {
