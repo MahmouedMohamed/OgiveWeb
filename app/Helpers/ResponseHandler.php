@@ -21,13 +21,22 @@ class ResponseHandler
                 return [
                     'WrongData' => 'خطأ في البيانات',
                     'UserNotFound' => 'المستخدم غير موجود',
-                    'MarkerCreationSuccessMessage' => 'شكراً لمساهمتك المميزة',
+                    'FoodSharingMarkerCreationSuccessMessage' => 'شكراً لمساهمتك المميزة',
+                    'FoodSharingMarkerNotFound' => 'هذا العنصر غير موجود',
+                    'FoodSharingMarkerSuccessCollectExist' => 'شكراً لجعلك من العالم مكاناً أفضل',
+                    'FoodSharingMarkerSuccessCollectNoExist' => 'نأسف لتضييع وقتك، لكن أعتبر أنه ذهب لمكانه الصحيح',
+                    'FoodSharingMarkerAlreadyCollected' => 'هذا العنصر تم جمعه بالفعل'
                 ];
-            case 'En':
+                //Default is English
+            default:
                 return [
                     'WrongData' => 'Wrong Data',
                     'UserNotFound' => 'User Cannot be found',
-                    'MarkerCreationSuccessMessage' => 'Thank you for your valuable contribution',
+                    'FoodSharingMarkerCreationSuccessMessage' => 'Thank you for your valuable contribution',
+                    'FoodSharingMarkerNotFound' => 'Food Sharing Marker Not Found',
+                    'FoodSharingMarkerSuccessCollectExist' => 'Thank you for making the world a better place',
+                    'FoodSharingMarkerSuccessCollectNoExist' => 'Sorry for wasting your time, but consider that it has gone to it\'s place',
+                    'FoodSharingMarkerAlreadyCollected'=> 'This Food Sharing Marker has been collected already',
                 ];
         }
     }

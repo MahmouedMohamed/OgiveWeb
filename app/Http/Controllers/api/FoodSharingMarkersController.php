@@ -50,7 +50,61 @@ class FoodSharingMarkersController extends BaseController
             'priority' => $request['priority'],
             'collected' => 0,
         ]);
-        return $this->sendResponse([], $responseHandler->words['MarkerCreationSuccessMessage']);
+        return $this->sendResponse([], $responseHandler->words['FoodSharingMarkerCreationSuccessMessage']);
+    }
+
+    /**
+     * Collect Food Sharing Marker.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function collect(Request $request, $id)
+    {
+        $responseHandler = new ResponseHandler($request['language']);
+
+        //Check if Marker exists
+        $foodSharingMarker = FoodSharingMarker::find($id);
+        if ($foodSharingMarker == null) {
+            return $this->sendError($responseHandler->words['FoodSharingMarkerNotFound']);
+        }
+
+        //Check if it has been collected to prevent fake collection
+        if ($foodSharingMarker->collected == 1) {
+            return $this->sendError($responseHandler->words['FoodSharingMarkerAlreadyCollected']);
+        }
+
+        //Check user exists
+        $user = User::find($request['userId']);
+        if ($user == null) {
+            return $this->sendError($responseHandler->words['UserNotFound']);
+        }
+
+        //Validate Existing value
+        $foodSharingMarkerExists = $request['exists'];
+        if ($foodSharingMarkerExists == null || ($foodSharingMarkerExists != 1 && $foodSharingMarkerExists != 0))
+            return $this->sendError($responseHandler->words['WrongData'], '', 400);
+
+        if ($foodSharingMarkerExists == 0) {
+            //ToDo: if marker doesn't exists for 100 times for the same user
+            //->
+            //Ban this marker publisher for publishing again
+            //ToDo: Count
+        }
+
+        //Check if current user is the marker creator
+        if ($user->id == $foodSharingMarker->user_id) {
+            //No Achievement for em
+        } else {
+            //Achievement for em
+        }
+
+        $foodSharingMarker->collect($foodSharingMarkerExists);
+
+        if ($foodSharingMarkerExists == 1)
+            return $this->sendResponse([], $responseHandler->words['FoodSharingMarkerSuccessCollectExist']);
+        return $this->sendResponse([], $responseHandler->words['FoodSharingMarkerSuccessCollectNoExist']);
     }
 
     /**
@@ -61,7 +115,7 @@ class FoodSharingMarkersController extends BaseController
      */
     public function show(FoodSharingMarker $foodSharingMarker)
     {
-        //
+        return $this->sendError('Not Implemented');
     }
 
     /**
@@ -73,7 +127,7 @@ class FoodSharingMarkersController extends BaseController
      */
     public function update(Request $request, FoodSharingMarker $foodSharingMarker)
     {
-        //
+        return $this->sendError('Not Implemented');
     }
 
     /**
@@ -84,7 +138,7 @@ class FoodSharingMarkersController extends BaseController
      */
     public function destroy(FoodSharingMarker $foodSharingMarker)
     {
-        //
+        return $this->sendError('Not Implemented');
     }
 
     public function validateMarker(Request $request)

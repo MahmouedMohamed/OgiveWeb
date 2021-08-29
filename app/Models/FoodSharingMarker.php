@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class FoodSharingMarker extends Model
 {
@@ -11,11 +12,18 @@ class FoodSharingMarker extends Model
 
     protected $table = 'food_sharing_markers';
     protected $fillable = [
-        'latitude', 'longitude', 'type', 'description', 'quantity', 'priority', 'collected'
+        'latitude', 'longitude', 'type', 'description', 'quantity', 'priority', 'collected','existed', 'collected_at'
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    public function collect(bool $existed)
+    {
+        $this->collected = true;
+        $this->existed = $existed;
+        $this->collected_at = Carbon::now();
+        $this->save();
     }
 }
