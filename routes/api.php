@@ -5,7 +5,6 @@ use App\Http\Controllers\api\AdoptionRequestController;
 use App\Http\Controllers\api\ConsultationCommentController;
 use App\Http\Controllers\api\ConsultationController;
 use App\Http\Controllers\api\LikesController;
-use App\Http\Controllers\api\MarkersController;
 use App\Http\Controllers\api\MemoryController;
 use App\Http\Controllers\api\NeediesController;
 use App\Http\Controllers\api\OfflineTransactionsController;
@@ -15,7 +14,6 @@ use App\Http\Controllers\api\PetsArticleController;
 use App\Http\Controllers\api\PlaceController;
 use App\Http\Controllers\api\UserController;
 use App\Models\Pet;
-use Illuminate\Http\Request;
 // use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Route;
 
@@ -30,17 +28,23 @@ use Illuminate\Support\Facades\Route;
 |
  */
 
+//**      User Controllers      **//
 Route::post('/login', [UserController::class, 'login']);
 Route::post('/register', [UserController::class, 'register']);
-Route::group(['middleware' => 'auth:api'], function () {
-    Route::get('/marker', [MarkersController::class, 'getAll']);
-    Route::post('/marker', [MarkersController::class, 'create']);
-    Route::delete('/marker', [MarkersController::class, 'delete']);
+Route::put('/profile/{id}/picture', [UserController::class,'updateProfilePicture']);
+Route::put('/profile/{id}/cover', [UserController::class,'updateCoverPicture']);
+Route::put('/profile/{id}/information', [UserController::class,'updateinformation']);
+
+
+//**      Ataa Controllers      **//
+
+
+// Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/memory', [MemoryController::class, 'getAll']);
     Route::post('/memory', [MemoryController::class, 'create']);
     Route::delete('/memory', [MemoryController::class, 'delete']);
     Route::post('/like', [LikesController::class, 'likeUnlike']);
-});
+// });
 
 //ToDo: Add This APIs to be auth by 2oauth token
 // Route::get('/pet',[PetController::class, 'index']);
@@ -70,10 +74,10 @@ Route::get('sales', [PlaceController::class, 'sales']);
 Route::get('clinics', [PlaceController::class, 'clinics']);
 Route::get('filterPlacesByType', [PlaceController::class, 'filterByType']);
 
+
+//**      Ahed Controllers      **//
+
 // Route::group(['middleware' => 'auth:api'], function () {
-Route::put('/profile/{id}/picture', [UserController::class,'updateProfilePicture']);
-Route::put('/profile/{id}/cover', [UserController::class,'updateCoverPicture']);
-Route::put('/profile/{id}/information', [UserController::class,'updateinformation']);
 Route::apiResource('/ahed/needies', NeediesController::class);
 Route::get('/ahed/urgentneedies', [NeediesController::class,'urgentIndex']);
 Route::get('/ahed/allNeedies', [NeediesController::class,'allNeedies']);
@@ -86,5 +90,9 @@ Route::get('/ahed/ahedachievement/{id}', [UserController::class, 'getAhedAchieve
 Route::post('/ahed/admin/approve/{id}', [AdminController::class,'approve']);
 Route::post('/ahed/admin/disapprove/{id}', [AdminController::class,'disapprove']);
 Route::post('/ahed/admin/collect', [AdminController::class,'collectOfflineTransaction']);
-Route::get('/admin', [AdminController::class,'generalAdminDashboard']);
 // });
+
+
+
+//**      Admin Controllers      **//
+Route::get('/admin', [AdminController::class,'generalAdminDashboard']);
