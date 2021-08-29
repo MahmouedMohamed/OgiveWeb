@@ -5,6 +5,7 @@ use App\Http\Controllers\api\AdoptionRequestController;
 use App\Http\Controllers\api\ConsultationCommentController;
 use App\Http\Controllers\api\ConsultationController;
 use App\Http\Controllers\api\LikesController;
+use App\Http\Controllers\api\FoodSharingMarkersController;
 use App\Http\Controllers\api\MemoryController;
 use App\Http\Controllers\api\NeediesController;
 use App\Http\Controllers\api\OfflineTransactionsController;
@@ -37,6 +38,7 @@ Route::put('/profile/{id}/information', [UserController::class,'updateinformatio
 
 
 //**      Ataa Controllers      **//
+Route::apiResource('/ataa/markers', FoodSharingMarkersController::class);
 
 
 // Route::group(['middleware' => 'auth:api'], function () {
