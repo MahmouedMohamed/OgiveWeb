@@ -94,6 +94,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(OfflineTransaction::class,'giver');
     }
+    public function ataaAchievement()
+    {
+        return $this->hasOne(AtaaAchievement::class);
+    }
     //To Be Done using roles or just a column
     public function isAdmin(){
         return false;
