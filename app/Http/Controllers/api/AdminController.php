@@ -14,7 +14,7 @@ class AdminController extends BaseController
 {
 
     /**
-     * Approve the specified resource in storage.
+     * Dashboard.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -36,16 +36,16 @@ class AdminController extends BaseController
         $numberOfTransactions = OnlineTransaction::all()->count() + OfflineTransaction::all()->where('collected', '=', true)->count();
         $givesCollected = OnlineTransaction::all()->sum('amount') + OfflineTransaction::all()->where('collected', '=', true)->sum('amount');
         $numberOfPets = Pet::all()->count();
-        array_push($generalData,[
+        array_push($generalData, [
             'NumberOfActiveUsers' => $numberOfUsers,
         ]);
-        array_push($ahedData,[
+        array_push($ahedData, [
             'NumberOfNeedies' => $numberOfNeedies,
             'NumberOfNeediesSatisfied' => $numberOfNeediesSatisfied,
             'NumberOfTransactions' => $numberOfTransactions,
             'NumberOfGives' => $givesCollected,
         ]);
-        array_push($breedmeData,[
+        array_push($breedmeData, [
             'NumberOfPets' => $numberOfPets
         ]);
         array_push($data, [
@@ -56,7 +56,7 @@ class AdminController extends BaseController
         return $this->sendResponse($data, 'Data Retrieved Successfully!');
     }
     /**
-     * Approve the specified resource in storage.
+     * Approve Case.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -84,7 +84,7 @@ class AdminController extends BaseController
         return $this->sendResponse([], 'Needy Approved Successfully!');
     }
     /**
-     * Disapprove the specified resource in storage.
+     * Disapprove Case.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -112,7 +112,7 @@ class AdminController extends BaseController
         return $this->sendResponse([], 'Needy Disapprove Successfully!');
     }
     /**
-     * Approve the specified resource in storage.
+     * Collect offline transaction.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -137,5 +137,73 @@ class AdminController extends BaseController
         }
         $offlinetransaction->collect();
         return $this->sendResponse([], 'Transaction Collected Successfully!');
+    }
+
+    /**
+     * Freeze Ataa Achievment for a user.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function freezeUserAtaaAchievments(Request $request)
+    {
+        //Check User exists
+        $user = User::find($request['userId']);
+        if ($user == null) {
+            return $this->sendError('User Not Found');
+        }
+
+        //Check user "Admin" who is updating exists
+        $admin = User::find($request['adminId']);
+        if ($admin == null) {
+            return $this->sendError('Admin User Not Found');
+        }
+
+        //Check if current user can freeze
+        if (!$admin->can('freeze', $user->ataaAchievement)) {
+            return $this->sendForbidden('You aren\'t authorized to freeze this user acheivement.');
+        }
+
+        //Check if user has achievment
+        if (!$user->ataaAchievement) {
+            return $this->sendError('User Achievement doesn\'t exist');
+        }
+
+        $user->ataaAchievement->freeze();
+        return $this->sendResponse([], 'User Acheivement Freezed Successfully!');
+    }
+
+    /**
+     * Defreeze Ataa Achievment for a user.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function defreezeUserAtaaAchievments(Request $request)
+    {
+        //Check User exists
+        $user = User::find($request['userId']);
+        if ($user == null) {
+            return $this->sendError('User Not Found');
+        }
+
+        //Check user "Admin" who is updating exists
+        $admin = User::find($request['adminId']);
+        if ($admin == null) {
+            return $this->sendError('Admin User Not Found');
+        }
+
+        //Check if current user can freeze
+        if (!$admin->can('defreeze', $user->ataaAchievement)) {
+            return $this->sendForbidden('You aren\'t authorized to defreeze this user acheivement.');
+        }
+
+        //Check if user has achievment
+        if (!$user->ataaAchievement) {
+            return $this->sendError('User Achievement doesn\'t exist');
+        }
+
+        $user->ataaAchievement->defreeze();
+        return $this->sendResponse([], 'User Acheivement Defreezed Successfully!');
     }
 }

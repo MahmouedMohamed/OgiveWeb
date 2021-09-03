@@ -14,6 +14,7 @@ use App\Http\Controllers\api\PetController;
 use App\Http\Controllers\api\PetsArticleController;
 use App\Http\Controllers\api\PlaceController;
 use App\Http\Controllers\api\UserController;
+use App\Http\Controllers\api\AtaaAchievementController;
 use App\Models\Pet;
 // use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Route;
@@ -32,21 +33,21 @@ use Illuminate\Support\Facades\Route;
 //**      User Controllers      **//
 Route::post('/login', [UserController::class, 'login']);
 Route::post('/register', [UserController::class, 'register']);
-Route::put('/profile/{id}/picture', [UserController::class,'updateProfilePicture']);
-Route::put('/profile/{id}/cover', [UserController::class,'updateCoverPicture']);
-Route::put('/profile/{id}/information', [UserController::class,'updateinformation']);
+Route::put('/profile/{id}/picture', [UserController::class, 'updateProfilePicture']);
+Route::put('/profile/{id}/cover', [UserController::class, 'updateCoverPicture']);
+Route::put('/profile/{id}/information', [UserController::class, 'updateinformation']);
 
 
 //**      Ataa Controllers      **//
 Route::apiResource('/ataa/markers', FoodSharingMarkersController::class);
-Route::put('/ataa/collect/{id}', [FoodSharingMarkersController::class,'collect']);
+Route::put('/ataa/collect/{id}', [FoodSharingMarkersController::class, 'collect']);
 
 
 // Route::group(['middleware' => 'auth:api'], function () {
-    Route::get('/memory', [MemoryController::class, 'getAll']);
-    Route::post('/memory', [MemoryController::class, 'create']);
-    Route::delete('/memory', [MemoryController::class, 'delete']);
-    Route::post('/like', [LikesController::class, 'likeUnlike']);
+Route::get('/memory', [MemoryController::class, 'getAll']);
+Route::post('/memory', [MemoryController::class, 'create']);
+Route::delete('/memory', [MemoryController::class, 'delete']);
+Route::post('/like', [LikesController::class, 'likeUnlike']);
 // });
 
 //ToDo: Add This APIs to be auth by 2oauth token
@@ -82,9 +83,9 @@ Route::get('filterPlacesByType', [PlaceController::class, 'filterByType']);
 
 // Route::group(['middleware' => 'auth:api'], function () {
 Route::apiResource('/ahed/needies', NeediesController::class);
-Route::get('/ahed/urgentneedies', [NeediesController::class,'urgentIndex']);
-Route::get('/ahed/allNeedies', [NeediesController::class,'allNeedies']);
-Route::get('/ahed/neediesWithIDs', [NeediesController::class,'getNeediesWithIDs']);
+Route::get('/ahed/urgentneedies', [NeediesController::class, 'urgentIndex']);
+Route::get('/ahed/allNeedies', [NeediesController::class, 'allNeedies']);
+Route::get('/ahed/neediesWithIDs', [NeediesController::class, 'getNeediesWithIDs']);
 Route::post('/ahed/needies/addImages/{id}', [NeediesController::class, 'addAssociatedImages']);
 Route::post('/ahed/needies/removeImage/{id}', [NeediesController::class, 'removeAssociatedImage']);
 Route::apiResource('/ahed/onlinetransactions', OnlineTransactionsController::class);
@@ -95,7 +96,9 @@ Route::get('/ahed/ahedachievement/{id}', [UserController::class, 'getAhedAchieve
 
 
 //**      Admin Controllers      **//
-Route::get('/admin', [AdminController::class,'generalAdminDashboard']);
-Route::post('/ahed/admin/approve/{id}', [AdminController::class,'approve']);
-Route::post('/ahed/admin/disapprove/{id}', [AdminController::class,'disapprove']);
-Route::post('/ahed/admin/collect', [AdminController::class,'collectOfflineTransaction']);
+Route::get('/admin', [AdminController::class, 'generalAdminDashboard']);
+Route::post('/ahed/admin/approve/{id}', [AdminController::class, 'approve']);
+Route::post('/ahed/admin/disapprove/{id}', [AdminController::class, 'disapprove']);
+Route::post('/ahed/admin/collect', [AdminController::class, 'collectOfflineTransaction']);
+Route::post('/ahed/admin/ataa/freezeachievment', [AdminController::class, 'freezeUserAtaaAchievments']);
+Route::post('/ahed/admin/ataa/defreezeachievment', [AdminController::class, 'defreezeUserAtaaAchievments']);

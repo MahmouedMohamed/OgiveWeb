@@ -17,12 +17,28 @@ class AtaaAchievement extends Model
     }
     public function incrementMarkersPosted()
     {
+        if(!$this->freezed)
+        {
             $this->markers_posted++;
             $this->save();
+        }
     }
     public function incrementMarkersCollected()
     {
+        if(!$this->freezed)
+        {
             $this->markers_collected++;
             $this->save();
+        }
+    }
+    public function freeze()
+    {
+        $this->freezed = true;
+        $this->save();
+    }
+    public function defreeze()
+    {
+        $this->freezed = false;
+        $this->save();
     }
 }
