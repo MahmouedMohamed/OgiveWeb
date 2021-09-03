@@ -15,4 +15,14 @@ class AtaaAchievement extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function incrementMarkersPosted()
+    {
+            $this->markers_posted++;
+            $this->save();
+    }
+    public function incrementMarkersCollected()
+    {
+            $this->markers_collected++;
+            $this->save();
+    }
 }

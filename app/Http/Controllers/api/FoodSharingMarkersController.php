@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Helpers\ResponseHandler;
+use App\Models\AtaaAchievement;
 
 class FoodSharingMarkersController extends BaseController
 {
@@ -18,6 +19,7 @@ class FoodSharingMarkersController extends BaseController
      */
     public function index()
     {
+        //ToDo: Get User Location -> Return Only nearest Markers
         return $this->sendResponse(FoodSharingMarker::select(
             'id',
             'latitude',
@@ -48,6 +50,16 @@ class FoodSharingMarkersController extends BaseController
         $user = User::find(request()->input('createdBy'));
         if (!$user) {
             return $this->sendError($responseHandler->words['UserNotFound']);
+        }
+
+        //No Acheivements Before
+        if (!$user->ataaAchievement) {
+            $user->ataaAchievement()->create([
+                'markers_collected' => 0,
+                'markers_posted' => 1
+            ]);
+        } else {
+            $user->ataaAchievement->incrementMarkersPosted();
         }
 
         $user->foodSharingMarkers()->create([
@@ -106,7 +118,15 @@ class FoodSharingMarkersController extends BaseController
         if ($user->id == $foodSharingMarker->user_id) {
             //No Achievement for em
         } else {
-            //Achievement for em
+            //No Acheivements Before
+            if (!$user->ataaAchievement) {
+                $user->ataaAchievement()->create([
+                    'markers_collected' => 1,
+                    'markers_posted' => 0
+                ]);
+            } else {
+                $user->ataaAchievement->incrementMarkersCollected();
+            }
         }
 
         $foodSharingMarker->collect($foodSharingMarkerExists);
