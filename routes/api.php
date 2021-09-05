@@ -41,6 +41,7 @@ Route::put('/profile/{id}/information', [UserController::class, 'updateinformati
 //**      Ataa Controllers      **//
 Route::apiResource('/ataa/markers', FoodSharingMarkersController::class);
 Route::put('/ataa/collect/{id}', [FoodSharingMarkersController::class, 'collect']);
+Route::get('/ataa/achivement/{id}', [AtaaAchievementController::class, 'show']);
 
 
 // Route::group(['middleware' => 'auth:api'], function () {

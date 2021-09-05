@@ -25,7 +25,9 @@ class ResponseHandler
                     'FoodSharingMarkerNotFound' => 'هذا العنصر غير موجود',
                     'FoodSharingMarkerSuccessCollectExist' => 'شكراً لجعلك من العالم مكاناً أفضل',
                     'FoodSharingMarkerSuccessCollectNoExist' => 'نأسف لتضييع وقتك، لكن أعتبر أنه ذهب لمكانه الصحيح',
-                    'FoodSharingMarkerAlreadyCollected' => 'هذا العنصر تم جمعه بالفعل'
+                    'FoodSharingMarkerAlreadyCollected' => 'هذا العنصر تم جمعه بالفعل',
+                    'ShowAchievementForbidden' => 'أنت لا تملك صلاحية عرض هذا التعامل',
+                    'AchievementNotFound' => 'هذا العنصر غير موجود',
                 ];
                 //Default is English
             default:
@@ -37,6 +39,8 @@ class ResponseHandler
                     'FoodSharingMarkerSuccessCollectExist' => 'Thank you for making the world a better place',
                     'FoodSharingMarkerSuccessCollectNoExist' => 'Sorry for wasting your time, but consider that it has gone to it\'s place',
                     'FoodSharingMarkerAlreadyCollected'=> 'This Food Sharing Marker has been collected already',
+                    'ShowAchievementForbidden' => 'You aren\'t authorized to show this achivement',
+                    'AchievementNotFound' => 'This element can\'t be found',
                 ];
         }
     }
