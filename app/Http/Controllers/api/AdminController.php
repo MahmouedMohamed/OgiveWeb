@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\API\BaseController as BaseController;
+use App\Models\AtaaPrize;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Needy;
 use App\Models\OfflineTransaction;
 use App\Models\OnlineTransaction;
 use App\Models\Pet;
+use Exception;
+use Illuminate\Support\Facades\Validator;
 
 class AdminController extends BaseController
 {
@@ -205,5 +208,79 @@ class AdminController extends BaseController
 
         $user->ataaAchievement->defreeze();
         return $this->sendResponse([], 'User Acheivement Defreezed Successfully!');
+    }
+
+    /**
+     * Add Ataa Prize.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function addAtaaPrize(Request $request)
+    {
+
+        //Check user "Admin" who is updating exists
+        $admin = User::find($request['createdBy']);
+        if ($admin == null) {
+            return $this->sendError('Admin User Not Found');
+        }
+
+        //Check if current user can freeze
+        if (!$admin->can('create', AtaaPrize::class)) {
+            return $this->sendForbidden('You aren\'t authorized to create a Prize.');
+        }
+        $validated = $this->validateAtaaPrize($request);
+        if ($validated->fails()) {
+            return $this->sendError('Invalid data', $validated->messages(), 400);
+        }
+
+        $imagePath = null;
+        if ($request['image']) {
+            $imagePath = $request['image']->store('ataa_prizes', 'public');
+            $imagePath = "/storage/" . $imagePath;
+        }
+        try {
+            AtaaPrize::create([
+                'createdBy' => $request['createdBy'],
+                'name' => $request['name'],
+                'image' => $imagePath,
+                'required_markers_collected' => $request['required_markers_collected'],
+                'required_markers_posted' => $request['required_markers_posted'],
+                'from' => $request['from'],
+                'to' => $request['to'],
+                'level' => $request['level'],
+            ]);
+        } catch (Exception $e) {
+            return $this->sendError('Something went wrong', [], 500);
+        }
+        return $this->sendResponse([], 'Ataa Prize Created Successfully!');
+    }
+    public function validateAtaaPrize(Request $request)
+    {
+
+        $rules = [
+            'createdBy' => 'required',
+            'name' => 'required',
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'required_markers_collected' => 'required|integer|min:0',
+            'required_markers_posted' => 'required|integer|min:0',
+            'from' => 'date',
+            'to' => 'date|after:from',
+            'level' => 'required|integer|min:1',
+        ];
+        $messages = [
+            'required' => 'This field is required',
+            'min' => 'Wrong value, minimum value is :min',
+            'max' => 'Wrong size, maximum size is :max',
+            'integer' => 'Wrong value, supports only real numbers',
+            'in' => 'Wrong value, supported values are :values',
+            'numeric' => 'Wrong value, supports only numeric numbers',
+            'image' => 'Wrong value, supports only images',
+            'mimes' => 'Wrong value, supports only :values',
+            'date' => 'Wrong value, supports only date',
+            'before' => 'The :attribute must be before :date',
+            'after' => 'The :attribute must be after :date'
+        ];
+        return Validator::make($request->all(), $rules, $messages);
     }
 }

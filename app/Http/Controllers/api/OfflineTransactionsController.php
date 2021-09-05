@@ -231,8 +231,8 @@ class OfflineTransactionsController extends BaseController
             'numeric' => 'قيمة خاطئة، يمكن قبول الأرقام فقط',
             'in' => 'قيمة خاطئة، القيم المتاحة هي :values',
             'date' => 'تاريخ خاطئ',
-            'before' => 'The :attribute must be before :date',
-            'after' => 'The :attribute must be after :date'
+            'before' => ':attribute يجب أن يكون قبل :date',
+            'after' => ':attribute يجب أن يكون بعد :date'
         ]);
     }
 }

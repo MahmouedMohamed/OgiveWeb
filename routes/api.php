@@ -103,3 +103,4 @@ Route::post('/ahed/admin/disapprove/{id}', [AdminController::class, 'disapprove'
 Route::post('/ahed/admin/collect', [AdminController::class, 'collectOfflineTransaction']);
 Route::post('/ahed/admin/ataa/freezeachievment', [AdminController::class, 'freezeUserAtaaAchievments']);
 Route::post('/ahed/admin/ataa/defreezeachievment', [AdminController::class, 'defreezeUserAtaaAchievments']);
+Route::post('/ahed/admin/ataa/addprize', [AdminController::class, 'addAtaaPrize']);
