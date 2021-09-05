@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Helpers\ResponseHandler;
 use App\Models\AtaaAchievement;
+use App\Models\AtaaPrize;
+use Illuminate\Support\Facades\DB;
 
 class FoodSharingMarkersController extends BaseController
 {
@@ -127,6 +129,27 @@ class FoodSharingMarkersController extends BaseController
             } else {
                 $user->ataaAchievement->incrementMarkersCollected();
             }
+
+            //Prize Checker
+            //Returns Active Prizes Not Acquired By User "Same Level Checker"
+            $ataaActivePrizes = AtaaPrize::where('active', '=', 1)
+                ->whereNotIn(
+                    'level',
+                    DB::table('ataa_prizes')->leftJoin(
+                        'user_ataa_acquired_prizes',
+                        'ataa_prizes.id',
+                        '=',
+                        'user_ataa_acquired_prizes.prize_id'
+                    )->where('user_id', $user->id)->select('level')->get()->pluck('level')
+                )
+                ->get();
+            // $ataaPrizesAcquiredByUser = ;
+            foreach ($ataaActivePrizes as $prize) {
+            }
+            //first->check if user acquired any new prize
+            // second if->acquired new one->create it
+            // third if he got to the last level
+            //then auto create another level +10 to each marker collected + posted
         }
 
         $foodSharingMarker->collect($foodSharingMarkerExists);

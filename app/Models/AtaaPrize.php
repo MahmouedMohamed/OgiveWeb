@@ -9,8 +9,12 @@ class AtaaPrize extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'name', 'image', 'required_markers_collected',
+        'createdBy','name', 'image', 'required_markers_collected',
         'required_markers_posted', 'from', 'to',
         'level', 'active'
     ];
+    public function winners()
+    {
+        return $this->belongsToMany(User::class,'user_ataa_acquired_prizes','user_id','prize_id');
+    }
 }
