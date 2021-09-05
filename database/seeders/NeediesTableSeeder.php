@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class NeediesTableSeeder extends Seeder
 {
@@ -14,7 +15,7 @@ class NeediesTableSeeder extends Seeder
     public function run()
     {
         //
-        \DB::table('needies')->insert([
+        DB::table('needies')->insert([
             'name' => 'كفالة يتيم',
             'severity' => '1',
             'type' => 'كفالة',

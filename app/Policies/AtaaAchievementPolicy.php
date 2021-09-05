@@ -30,7 +30,7 @@ class AtaaAchievementPolicy
      */
     public function view(User $user, AtaaAchievement $ataaAchievement)
     {
-        $user->isAdmin() || $user->ataaAchievement == $ataaAchievement;
+        return $user->isAdmin() || $user == $ataaAchievement->user;
     }
 
     /**

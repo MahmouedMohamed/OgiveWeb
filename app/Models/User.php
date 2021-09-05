@@ -56,11 +56,11 @@ class User extends Authenticatable
     }
     public function foodSharingMarkers()
     {
-        return $this->hasMany(FoodSharingMarker::class)->orderBy('id','DESC');
+        return $this->hasMany(FoodSharingMarker::class)->orderBy('id', 'DESC');
     }
     public function memories()
     {
-        return $this->hasMany(Memory::class)->orderBy('id','DESC');
+        return $this->hasMany(Memory::class)->orderBy('id', 'DESC');
     }
     public function likes()
     {
@@ -84,22 +84,23 @@ class User extends Authenticatable
     }
     public function createdNeedies()
     {
-        return $this->hasMany(Needy::class,'createdBy');
+        return $this->hasMany(Needy::class, 'createdBy');
     }
     public function onlinetransactions()
     {
-        return $this->hasMany(OnlineTransaction::class,'giver');
+        return $this->hasMany(OnlineTransaction::class, 'giver');
     }
     public function offlinetransactions()
     {
-        return $this->hasMany(OfflineTransaction::class,'giver');
+        return $this->hasMany(OfflineTransaction::class, 'giver');
     }
     public function ataaAchievement()
     {
         return $this->hasOne(AtaaAchievement::class);
     }
     //To Be Done using roles or just a column
-    public function isAdmin(){
-        return false;
+    public function isAdmin()
+    {
+        return true;
     }
 }
