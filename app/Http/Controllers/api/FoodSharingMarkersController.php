@@ -94,7 +94,7 @@ class FoodSharingMarkersController extends BaseController
 
         //If Empty -> no previous prizes || user acquired all -> Auto Create new one with higher value
         if ($ataaActivePrizes->isEmpty()) {
-            $highestAtaaPrize = AtaaPrize::orderBy('id', 'DESC')->where('active', '=', 1)->get()->first();
+            $highestAtaaPrize = AtaaPrize::orderBy('level', 'DESC')->where('active', '=', 1)->get()->first();
 
             //There is previous prize then create one with higher level
             if ($highestAtaaPrize) {
@@ -113,7 +113,7 @@ class FoodSharingMarkersController extends BaseController
             else {
                 AtaaPrize::create([
                     'createdBy' => null,
-                    'name' =>  "Level 1" . " Prize",
+                    'name' =>  "Level 1 Prize",
                     'image' => null,
                     'required_markers_collected' => 0,
                     'required_markers_posted' => 5,
@@ -231,7 +231,7 @@ class FoodSharingMarkersController extends BaseController
                 else {
                     AtaaPrize::create([
                         'createdBy' => null,
-                        'name' =>  "Level 1"." Prize",
+                        'name' =>  "Level 1 Prize",
                         'image' => null,
                         'required_markers_collected' => 5,
                         'required_markers_posted' => 0,
