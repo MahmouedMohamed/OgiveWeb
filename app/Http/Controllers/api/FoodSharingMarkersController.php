@@ -11,6 +11,8 @@ use App\Helpers\ResponseHandler;
 use App\Models\AtaaAchievement;
 use App\Models\AtaaPrize;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
+
 
 class FoodSharingMarkersController extends BaseController
 {
@@ -54,14 +56,15 @@ class FoodSharingMarkersController extends BaseController
             return $this->sendError($responseHandler->words['UserNotFound']);
         }
 
+        $userAchievement = $user->ataaAchievement;
         //No Acheivements Before
-        if (!$user->ataaAchievement) {
-            $user->ataaAchievement()->create([
+        if (!$userAchievement) {
+            $userAchievement = $user->ataaAchievement()->create([
                 'markers_collected' => 0,
                 'markers_posted' => 1
             ]);
         } else {
-            $user->ataaAchievement->incrementMarkersPosted();
+            $userAchievement->incrementMarkersPosted();
         }
 
         $user->foodSharingMarkers()->create([
@@ -73,6 +76,66 @@ class FoodSharingMarkersController extends BaseController
             'priority' => $request['priority'],
             'collected' => 0,
         ]);
+
+        ///Prize Checker
+
+        //Returns Active Prizes Not Acquired By User "Same Level Checker"
+        $ataaActivePrizes = AtaaPrize::where('active', '=', 1)
+            ->whereNotIn(
+                'level',
+                DB::table('ataa_prizes')->leftJoin(
+                    'user_ataa_acquired_prizes',
+                    'ataa_prizes.id',
+                    '=',
+                    'user_ataa_acquired_prizes.prize_id'
+                )->where('user_id', $user->id)->select('level')->get()->pluck('level')
+            )
+            ->get();
+
+        //If Empty -> no previous prizes || user acquired all -> Auto Create new one with higher value
+        if ($ataaActivePrizes->isEmpty()) {
+            $highestAtaaPrize = AtaaPrize::orderBy('id', 'DESC')->where('active', '=', 1)->get()->first();
+
+            //There is previous prize then create one with higher level
+            if ($highestAtaaPrize) {
+                AtaaPrize::create([
+                    'createdBy' => null,
+                    'name' =>  "Level " . $highestAtaaPrize['level'] + 1 . " Prize",
+                    'image' => null,
+                    'required_markers_collected' => $highestAtaaPrize['required_markers_collected'] + 10,
+                    'required_markers_posted' => $highestAtaaPrize['required_markers_posted'] + 10,
+                    'from' => Carbon::now(),
+                    'to' => Carbon::now()->add(10, 'day'),
+                    'level' => $highestAtaaPrize['level'] + 1,
+                ]);
+            }
+            //There is no previous prize
+            else {
+                AtaaPrize::create([
+                    'createdBy' => null,
+                    'name' =>  "Level 1" . " Prize",
+                    'image' => null,
+                    'required_markers_collected' => 0,
+                    'required_markers_posted' => 5,
+                    'from' => Carbon::now(),
+                    'to' => Carbon::now()->add(10, 'day'),
+                    'level' => 1,
+                ]);
+            }
+        }
+        //There is prizes exists & Not acquired By User
+        else {
+            foreach ($ataaActivePrizes as $prize) {
+                if ($prize['required_markers_collected'] <= $userAchievement['markers_collected'] && $prize['required_markers_posted'] <= $userAchievement['markers_posted']) {
+                    $prize->winners()->attach(
+                        $user->id
+                    );
+                } else {
+                    //ToDo: Maybe show the user what's left for his next milestone
+                }
+            }
+        }
+
         return $this->sendResponse([], $responseHandler->words['FoodSharingMarkerCreationSuccessMessage']);
     }
 
@@ -116,19 +179,23 @@ class FoodSharingMarkersController extends BaseController
             //ToDo: Count
         }
 
+        $foodSharingMarker->collect($foodSharingMarkerExists);
+
         //Check if current user is the marker creator
         if ($user->id == $foodSharingMarker->user_id) {
             //No Achievement for em
         } else {
+            $userAchievement = $user->ataaAchievement;
             //No Acheivements Before
-            if (!$user->ataaAchievement) {
-                $user->ataaAchievement()->create([
+            if (!$userAchievement) {
+                $userAchievement = $user->ataaAchievement()->create([
                     'markers_collected' => 1,
                     'markers_posted' => 0
                 ]);
             } else {
-                $user->ataaAchievement->incrementMarkersCollected();
+                $userAchievement->incrementMarkersCollected();
             }
+
 
             //Prize Checker
             //Returns Active Prizes Not Acquired By User "Same Level Checker"
@@ -143,16 +210,50 @@ class FoodSharingMarkersController extends BaseController
                     )->where('user_id', $user->id)->select('level')->get()->pluck('level')
                 )
                 ->get();
-            // $ataaPrizesAcquiredByUser = ;
-            foreach ($ataaActivePrizes as $prize) {
-            }
-            //first->check if user acquired any new prize
-            // second if->acquired new one->create it
-            // third if he got to the last level
-            //then auto create another level +10 to each marker collected + posted
-        }
 
-        $foodSharingMarker->collect($foodSharingMarkerExists);
+            //If Empty -> no previous prizes || user acquired all -> Auto Create new one with higher value
+            if ($ataaActivePrizes->isEmpty()) {
+                $highestAtaaPrize = AtaaPrize::orderBy('id', 'DESC')->where('active', '=', 1)->get()->first();
+                //There is previous prize then create one with higher level
+                if ($highestAtaaPrize) {
+                    AtaaPrize::create([
+                        'createdBy' => null,
+                        'name' =>  "Level " . $highestAtaaPrize['level'] + 1 . " Prize",
+                        'image' => null,
+                        'required_markers_collected' => $highestAtaaPrize['required_markers_collected'] + 10,
+                        'required_markers_posted' => $highestAtaaPrize['required_markers_posted'] + 10,
+                        'from' => Carbon::now(),
+                        'to' => Carbon::now()->add(10, 'day'),
+                        'level' => $highestAtaaPrize['level'] + 1,
+                    ]);
+                }
+                //There is no previous prize
+                else {
+                    AtaaPrize::create([
+                        'createdBy' => null,
+                        'name' =>  "Level " . $request['level'] . " Prize",
+                        'image' => null,
+                        'required_markers_collected' => 5,
+                        'required_markers_posted' => 0,
+                        'from' => Carbon::now(),
+                        'to' => Carbon::now()->add(10, 'day'),
+                        'level' => 1,
+                    ]);
+                }
+            }
+            //There is prizes exists & Not acquired By User
+            else {
+                foreach ($ataaActivePrizes as $prize) {
+                    if ($prize['required_markers_collected'] <= $userAchievement['markers_collected'] && $prize['required_markers_posted'] <= $userAchievement['markers_posted']) {
+                        $prize->winners()->attach(
+                            $user->id
+                        );
+                    } else {
+                        //ToDo: Maybe show the user what's left for his next milestone
+                    }
+                }
+            }
+        }
 
         if ($foodSharingMarkerExists == 1)
             return $this->sendResponse([], $responseHandler->words['FoodSharingMarkerSuccessCollectExist']);
