@@ -9,7 +9,7 @@ class AtaaPrize extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'createdBy','name', 'image', 'required_markers_collected',
+        'createdBy', 'name', 'image', 'required_markers_collected',
         'required_markers_posted', 'from', 'to',
         'level', 'active'
     ];
