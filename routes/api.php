@@ -98,9 +98,9 @@ Route::get('/ahed/ahedachievement/{id}', [UserController::class, 'getAhedAchieve
 
 //**      Admin Controllers      **//
 Route::get('/admin', [AdminController::class, 'generalAdminDashboard']);
-Route::post('/ahed/admin/approve/{id}', [AdminController::class, 'approve']);
-Route::post('/ahed/admin/disapprove/{id}', [AdminController::class, 'disapprove']);
-Route::post('/ahed/admin/collect', [AdminController::class, 'collectOfflineTransaction']);
-Route::post('/ahed/admin/ataa/freezeachievment', [AdminController::class, 'freezeUserAtaaAchievments']);
-Route::post('/ahed/admin/ataa/defreezeachievment', [AdminController::class, 'defreezeUserAtaaAchievments']);
-Route::post('/ahed/admin/ataa/addprize', [AdminController::class, 'addAtaaPrize']);
+Route::post('/admin/ahed/approve/{id}', [AdminController::class, 'approve']);
+Route::post('/admin/ahed/disapprove/{id}', [AdminController::class, 'disapprove']);
+Route::post('/admin/ahed/collect', [AdminController::class, 'collectOfflineTransaction']);
+Route::post('/admin/ataa/freezeachievment', [AdminController::class, 'freezeUserAtaaAchievments']);
+Route::post('/admin/ataa/defreezeachievment', [AdminController::class, 'defreezeUserAtaaAchievments']);
+Route::post('/admin/ataa/addprize', [AdminController::class, 'addAtaaPrize']);
