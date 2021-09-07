@@ -231,7 +231,7 @@ class FoodSharingMarkersController extends BaseController
                 else {
                     AtaaPrize::create([
                         'createdBy' => null,
-                        'name' =>  "Level " . $request['level'] . " Prize",
+                        'name' =>  "Level 1"." Prize",
                         'image' => null,
                         'required_markers_collected' => 5,
                         'required_markers_posted' => 0,
