@@ -10,6 +10,7 @@ use App\Models\Needy;
 use App\Models\OfflineTransaction;
 use App\Models\OnlineTransaction;
 use App\Models\Pet;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Validator;
 
@@ -225,7 +226,7 @@ class AdminController extends BaseController
             return $this->sendError('Admin User Not Found');
         }
 
-        //Check if current user can freeze
+        //Check if current user can create
         if (!$admin->can('create', AtaaPrize::class)) {
             return $this->sendForbidden('You aren\'t authorized to create a Prize.');
         }
@@ -234,22 +235,79 @@ class AdminController extends BaseController
             return $this->sendError('Invalid data', $validated->messages(), 400);
         }
 
-        $imagePath = null;
-        if ($request['image']) {
-            $imagePath = $request['image']->store('ataa_prizes', 'public');
-            $imagePath = "/storage/" . $imagePath;
-        }
         try {
-            AtaaPrize::create([
-                'createdBy' => $request['createdBy'],
-                'name' => $request['name'],
-                'image' => $imagePath,
-                'required_markers_collected' => $request['required_markers_collected'],
-                'required_markers_posted' => $request['required_markers_posted'],
-                'from' => $request['from'],
-                'to' => $request['to'],
-                'level' => $request['level'],
-            ]);
+            $sameLevelPrize = AtaaPrize::where('active', '=', 1)->where('level', '=', $request['level'])->get()->first();
+            if ($sameLevelPrize) {
+
+                //Check if admin want to replace or shift
+                $adminChosenAction = $request['action'];
+                if ($adminChosenAction == null || ($adminChosenAction != 'replace' && $adminChosenAction != 'shift'))
+                    return $this->sendError('Invalid value for action', $validated->messages(), 400);
+
+
+                //replace => deactivate the old prize, create the new
+                if ($adminChosenAction == 'replace') {
+                    $sameLevelPrize->deactivate();
+
+                    $imagePath = null;
+                    if ($request['image']) {
+                        $imagePath = $request['image']->store('ataa_prizes', 'public');
+                        $imagePath = "/storage/" . $imagePath;
+                    }
+                    AtaaPrize::create([
+                        'createdBy' => $request['createdBy'],
+                        'name' => $request['name'],
+                        'image' => $imagePath,
+                        'required_markers_collected' => $request['required_markers_collected'],
+                        'required_markers_posted' => $request['required_markers_posted'],
+                        'from' => $request['from'] ?? Carbon::now(),
+                        'to' => $request['to'],
+                        'level' => $request['level'],
+                    ]);
+                } else {
+                    //shift the others where level is bigger
+                    $biggerLevelPrizes = AtaaPrize::where('active', '=', 1)->where('level', '>=', $sameLevelPrize['level'])->get();
+                    foreach ($biggerLevelPrizes as $prize) {
+                        //update their level
+                        $prize->increaseLevel();
+                        //update their name if they are auto filled
+                        if (str_contains($prize['name'], 'Level'))
+                            $prize->updateName();
+                    }
+                    //create New
+                    $imagePath = null;
+                    if ($request['image']) {
+                        $imagePath = $request['image']->store('ataa_prizes', 'public');
+                        $imagePath = "/storage/" . $imagePath;
+                    }
+                    AtaaPrize::create([
+                        'createdBy' => $request['createdBy'],
+                        'name' => $request['name'],
+                        'image' => $imagePath,
+                        'required_markers_collected' => $request['required_markers_collected'],
+                        'required_markers_posted' => $request['required_markers_posted'],
+                        'from' => $request['from'] ?? Carbon::now(),
+                        'to' => $request['to'],
+                        'level' => $request['level'],
+                    ]);
+                }
+            } else {
+                $imagePath = null;
+                if ($request['image']) {
+                    $imagePath = $request['image']->store('ataa_prizes', 'public');
+                    $imagePath = "/storage/" . $imagePath;
+                }
+                AtaaPrize::create([
+                    'createdBy' => $request['createdBy'],
+                    'name' => $request['name'],
+                    'image' => $imagePath,
+                    'required_markers_collected' => $request['required_markers_collected'],
+                    'required_markers_posted' => $request['required_markers_posted'],
+                    'from' => $request['from'] ?? Carbon::now(),
+                    'to' => $request['to'],
+                    'level' => $request['level'],
+                ]);
+            }
         } catch (Exception $e) {
             return $this->sendError('Something went wrong', [], 500);
         }
