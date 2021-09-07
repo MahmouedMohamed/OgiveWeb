@@ -46,7 +46,7 @@ class FoodSharingMarkersController extends BaseController
         //Validate Request
         $validated = $this->validateMarker($request);
         if ($validated->fails()) {
-            return $this->sendError($responseHandler->words['WrongData'], $validated->messages(), 400);
+            return $this->sendError($responseHandler->words['InvalidData'], $validated->messages(), 400);
         }
 
         $user = User::find(request()->input('createdBy'));
@@ -107,7 +107,7 @@ class FoodSharingMarkersController extends BaseController
         //Validate Existing value
         $foodSharingMarkerExists = $request['exists'];
         if ($foodSharingMarkerExists == null || ($foodSharingMarkerExists != 1 && $foodSharingMarkerExists != 0))
-            return $this->sendError($responseHandler->words['WrongData'], '', 400);
+            return $this->sendError($responseHandler->words['InvalidData'], '', 400);
 
         if ($foodSharingMarkerExists == 0) {
             //ToDo: if marker doesn't exists for 100 times for the same user

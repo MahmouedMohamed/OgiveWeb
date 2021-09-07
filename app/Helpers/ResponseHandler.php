@@ -19,7 +19,7 @@ class ResponseHandler
         switch ($language) {
             case 'Ar':
                 return [
-                    'WrongData' => 'خطأ في البيانات',
+                    'InvalidData' => 'خطأ في البيانات',
                     'UserNotFound' => 'المستخدم غير موجود',
                     'FoodSharingMarkerCreationSuccessMessage' => 'شكراً لمساهمتك المميزة',
                     'FoodSharingMarkerNotFound' => 'هذا العنصر غير موجود',
@@ -32,7 +32,7 @@ class ResponseHandler
                 //Default is English
             default:
                 return [
-                    'WrongData' => 'Wrong Data',
+                    'InvalidData' => 'Invalid Data',
                     'UserNotFound' => 'User Cannot be found',
                     'FoodSharingMarkerCreationSuccessMessage' => 'Thank you for your valuable contribution',
                     'FoodSharingMarkerNotFound' => 'Food Sharing Marker Not Found',
