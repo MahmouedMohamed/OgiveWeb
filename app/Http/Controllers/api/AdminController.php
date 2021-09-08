@@ -14,6 +14,7 @@ use App\Models\UserBan;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Validator;
+use App\Models\BanType;
 
 class AdminController extends BaseController
 {
@@ -399,6 +400,51 @@ class AdminController extends BaseController
 
         return $this->sendResponse('', 'User Ban Deactivated Successfully');
     }
+
+    /**
+     * Add User Ban.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function addUserBan(Request $request)
+    {
+        //Check admin exists
+        $admin = User::find($request['userId']);
+        if ($admin == null) {
+            return $this->sendError('Admin Not Found');
+        }
+
+        //Check banned User exists
+        $bannedUser = User::find($request['banned_user']);
+        if ($bannedUser == null) {
+            return $this->sendError('User Not Found');
+        }
+
+        //Check if current user can Deactivate User Ban
+        if (!$admin->can('create', [UserBan::class, $bannedUser])) {
+            return $this->sendForbidden('You aren\'t authorized to create the ban.');
+        }
+
+
+        $validated = $this->validateUserBan($request);
+        if ($validated->fails()) {
+            return $this->sendError('Invalid data', $validated->messages(), 400);
+        }
+
+        //ToDo: Extend Ban if already exists & Active?
+
+        $admin->createdBans()->create([
+            'banned_user' => $bannedUser->id,
+            'tag' => $request['tag'],
+            'active' => $request['startAt'] != null ? ($request['startAt'] <= Carbon::now() ? 1 : 0) : 1,
+            'start_at' => $request['startAt'] ?? Carbon::now(),
+            'end_at' => $request['endAt'] ?? null
+        ]);
+
+        return $this->sendResponse('', 'User Ban Created Successfully');
+    }
+
     public function validateAtaaPrize(Request $request)
     {
 
@@ -423,6 +469,21 @@ class AdminController extends BaseController
             'mimes' => 'Wrong value, supports only :values',
             'date' => 'Wrong value, supports only date',
             'before' => 'The :attribute must be before :date',
+            'after' => 'The :attribute must be after :date'
+        ];
+        return Validator::make($request->all(), $rules, $messages);
+    }
+    public function validateUserBan(Request $request)
+    {
+        $banType = new BanType();
+        $rules = [
+            'tag' => 'required|in:' . $banType->toString(),
+            'start_at' => 'date',
+            'end_at' => 'date|after:from'
+        ];
+        $messages = [
+            'required' => 'This field is required',
+            'date' => 'Wrong value, supports only date',
             'after' => 'The :attribute must be after :date'
         ];
         return Validator::make($request->all(), $rules, $messages);
