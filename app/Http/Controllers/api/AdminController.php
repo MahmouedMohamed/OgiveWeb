@@ -10,6 +10,7 @@ use App\Models\Needy;
 use App\Models\OfflineTransaction;
 use App\Models\OnlineTransaction;
 use App\Models\Pet;
+use App\Models\UserBan;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Validator;
@@ -59,6 +60,7 @@ class AdminController extends BaseController
         ]);
         return $this->sendResponse($data, 'Data Retrieved Successfully!');
     }
+
     /**
      * Approve Case.
      *
@@ -87,6 +89,7 @@ class AdminController extends BaseController
         $needy->approve();
         return $this->sendResponse([], 'Needy Approved Successfully!');
     }
+
     /**
      * Disapprove Case.
      *
@@ -115,6 +118,7 @@ class AdminController extends BaseController
         $needy->disapprove();
         return $this->sendResponse([], 'Needy Disapprove Successfully!');
     }
+
     /**
      * Collect offline transaction.
      *
@@ -312,6 +316,28 @@ class AdminController extends BaseController
             return $this->sendError('Something went wrong', [], 500);
         }
         return $this->sendResponse([], 'Ataa Prize Created Successfully!');
+    }
+
+    /**
+     * Get User Bans.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getUserBans(Request $request)
+    {
+        //Check user exists
+        $admin = User::find($request['userId']);
+        if ($admin == null) {
+            return $this->sendError('User Not Found');
+        }
+
+        //Check if current user can get List of User Bans
+        if (!$admin->can('viewAny', UserBan::class)) {
+            return $this->sendForbidden('You aren\'t authorized to see these resources.');
+        }
+
+        return $this->sendResponse(UserBan::all(), 'User Bans Retrieved Successfully');
     }
     public function validateAtaaPrize(Request $request)
     {

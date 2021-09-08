@@ -16,7 +16,6 @@ use App\Http\Controllers\api\PlaceController;
 use App\Http\Controllers\api\UserController;
 use App\Http\Controllers\api\AtaaAchievementController;
 use App\Models\Pet;
-// use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -104,3 +103,4 @@ Route::post('/admin/ahed/collect', [AdminController::class, 'collectOfflineTrans
 Route::post('/admin/ataa/freezeachievment', [AdminController::class, 'freezeUserAtaaAchievments']);
 Route::post('/admin/ataa/defreezeachievment', [AdminController::class, 'defreezeUserAtaaAchievments']);
 Route::post('/admin/ataa/addprize', [AdminController::class, 'addAtaaPrize']);
+Route::get('/admin/ban', [AdminController::class, 'getUserBans']);
