@@ -105,6 +105,5 @@ Route::post('/admin/ataa/defreezeachievment', [AdminController::class, 'defreeze
 Route::post('/admin/ataa/addprize', [AdminController::class, 'addAtaaPrize']);
 Route::get('/admin/ban', [AdminController::class, 'getUserBans']);
 Route::post('/admin/ban', [AdminController::class, 'addUserBan']);
-Route::patch('/admin/ban/{id}', [AdminController::class, 'updateUserBan']);
 Route::patch('/admin/ban/activate/{id}', [AdminController::class, 'activateBan']);
 Route::patch('/admin/ban/deactivate/{id}', [AdminController::class, 'deactivateBan']);
