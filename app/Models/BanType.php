@@ -4,8 +4,7 @@ namespace App\Models;
 class BanType
 {
     public $types = [
-        "LoginBan" => "login_ban",
-        "AddNeediesBan" => "add_needies_ban",
+        "Login" => "login_ban",
         "AddFoodSharingMarker" => "add_food_sharing_marker_ban",
         "CollectFoodSharingMarker" => "collect_food_sharing_marker_ban",
         //ToDo: Add All Functionalities

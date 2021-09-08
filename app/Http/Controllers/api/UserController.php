@@ -30,7 +30,7 @@ class UserController extends BaseController
     {
         if (Auth::attempt(['email' => request('email'), 'password' => request('password')])) {
             $user = Auth::user();
-            $loginBan = $user->bans()->where('active', '=', 1)->where('tag', '=', $this->banType->types['LoginBan'])->get()->first();
+            $loginBan = $user->bans()->where('active', '=', 1)->where('tag', '=', $this->banType->types['Login'])->get()->first();
             if ($loginBan) {
                 return $this->sendForbidden('Sorry, but is seems you are banned from login until ' . ($loginBan['end_at'] ?? 'infinite period of time.'));
             }
