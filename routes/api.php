@@ -33,14 +33,14 @@ use Illuminate\Support\Facades\Route;
 //**      User Controllers      **//
 Route::post('/login', [UserController::class, 'login']);
 Route::post('/register', [UserController::class, 'register']);
-Route::put('/profile/{id}/picture', [UserController::class, 'updateProfilePicture']);
-Route::put('/profile/{id}/cover', [UserController::class, 'updateCoverPicture']);
-Route::put('/profile/{id}/information', [UserController::class, 'updateinformation']);
+Route::patch('/profile/{id}/picture', [UserController::class, 'updateProfilePicture']);
+Route::patch('/profile/{id}/cover', [UserController::class, 'updateCoverPicture']);
+Route::patch('/profile/{id}/information', [UserController::class, 'updateinformation']);
 
 
 //**      Ataa Controllers      **//
 Route::apiResource('/ataa/markers', FoodSharingMarkersController::class);
-Route::put('/ataa/collect/{id}', [FoodSharingMarkersController::class, 'collect']);
+Route::patch('/ataa/collect/{id}', [FoodSharingMarkersController::class, 'collect']);
 Route::get('/ataa/achivement/{id}', [AtaaAchievementController::class, 'show']);
 
 
@@ -61,7 +61,7 @@ Route::post('/like', [LikesController::class, 'likeUnlike']);
 Route::apiResource('pets', PetController::class);
 Route::get('/filterByType', [PetController::class, 'filterByType']);
 
-Route::put('/pet/{pet}', function (Pet $pet) {
+Route::patch('/pet/{pet}', function (Pet $pet) {
     // The current user may update the post...
 })->middleware('can:update,pet');
 
