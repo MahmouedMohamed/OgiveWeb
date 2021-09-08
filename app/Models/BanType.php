@@ -8,7 +8,13 @@ class BanType
         "AddFoodSharingMarker" => "add_food_sharing_marker_ban",
         "CollectFoodSharingMarker" => "collect_food_sharing_marker_ban",
         //ToDo: Add All Functionalities
+        "CreateNeedy" => "create_needy_ban",
+        "UpdateNeedy" => "update_needy_ban",
+        "DeleteNeedy" => "delete_needy_ban",
         //ToDo: Add Admin Functionalities
+        "ApproveNeedy" => "approve_needy_ban",
+        "DisapproveNeedy" => "disapprove_needy_ban",
+
     ];
     public function toString()
     {

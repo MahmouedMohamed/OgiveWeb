@@ -104,6 +104,9 @@ class NeediesController extends BaseController
         if (!$user) {
             return $this->sendError('المستخدم غير موجود');  ///User Not Found
         }
+        if(!$user->can('create',Needy::class)){
+            return $this->sendForbidden('يبدو أنك محظور من إنشاء أي حالة');
+        }
         $images = $request['images'];
         $imagePaths = array();
         foreach ($images as $image) {
