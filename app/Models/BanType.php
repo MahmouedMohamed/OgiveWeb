@@ -11,6 +11,9 @@ class BanType
         "CreateNeedy" => "create_needy_ban",
         "UpdateNeedy" => "update_needy_ban",
         "DeleteNeedy" => "delete_needy_ban",
+        "ViewFoodSharingMarker" => "view_food_sharing_marker",
+        "CreateFoodSharingMarker" => "create_food_sharing_marker",
+        "CollectFoodSharingMarker" => "collect_food_sharing_marker",
         //ToDo: Add Admin Functionalities
         "ApproveNeedy" => "approve_needy_ban",
         "DisapproveNeedy" => "disapprove_needy_ban",

@@ -24,6 +24,8 @@ class FoodSharingMarkersController extends BaseController
     public function index()
     {
         //ToDo: Get User Location -> Return Only nearest Markers
+
+        //ToDo: CHECK IF USER IS BANNED FROM VIEWING MARKERS!!!
         return $this->sendResponse(FoodSharingMarker::select(
             'id',
             'latitude',
