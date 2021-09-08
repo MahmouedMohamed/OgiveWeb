@@ -339,6 +339,66 @@ class AdminController extends BaseController
 
         return $this->sendResponse(UserBan::all(), 'User Bans Retrieved Successfully');
     }
+
+    /**
+     * activate User Bans.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function activateBan(Request $request, int $id)
+    { //Check UserBan exists
+        $userBan = UserBan::find($id);
+        if ($userBan == null) {
+            return $this->sendError('User Ban doesn\'t exist');
+        }
+        //Check admin exists
+        $admin = User::find($request['userId']);
+        if ($admin == null) {
+            return $this->sendError('User Not Found');
+        }
+
+        //Check if current user can Activate User Ban
+        if (!$admin->can('activate', $userBan)) {
+            return $this->sendForbidden('You aren\'t authorized to activate the ban.');
+        }
+
+        $userBan->activate();
+
+        return $this->sendResponse('', 'User Ban Activated Successfully');
+    }
+
+    /**
+     * deactivate User Bans.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function deactivateBan(Request $request, int $id)
+    {
+        //Check UserBan exists
+        $userBan = UserBan::find($id);
+        if ($userBan == null) {
+            return $this->sendError('User Ban doesn\'t exist');
+        }
+
+        //Check admin exists
+        $admin = User::find($request['userId']);
+        if ($admin == null) {
+            return $this->sendError('User Not Found');
+        }
+
+        //Check if current user can Deactivate User Ban
+        if (!$admin->can('deactivate', $userBan)) {
+            return $this->sendForbidden('You aren\'t authorized to deactivate the ban.');
+        }
+
+        $userBan->deactivate();
+
+        return $this->sendResponse('', 'User Ban Deactivated Successfully');
+    }
     public function validateAtaaPrize(Request $request)
     {
 
