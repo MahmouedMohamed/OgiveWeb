@@ -98,6 +98,15 @@ class User extends Authenticatable
     {
         return $this->hasOne(AtaaAchievement::class);
     }
+    public function bans()
+    {
+        return $this->hasMany(UserBan::class,'banned_user');
+    }
+
+    public function createdBans()
+    {
+        return $this->hasMany(UserBan::class,'created_by');
+    }
     //To Be Done using roles or just a column
     public function isAdmin()
     {
