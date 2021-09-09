@@ -96,6 +96,7 @@ Route::get('/ahed/ahedachievement/{id}', [UserController::class, 'getAhedAchieve
 
 
 //**      Admin Controllers      **//
+Route::group(['middleware' => 'api_auth'], function () {
 Route::get('/admin', [AdminController::class, 'generalAdminDashboard']);
 Route::post('/admin/ahed/approve/{id}', [AdminController::class, 'approve']);
 Route::post('/admin/ahed/disapprove/{id}', [AdminController::class, 'disapprove']);
@@ -107,3 +108,4 @@ Route::get('/admin/ban', [AdminController::class, 'getUserBans']);
 Route::post('/admin/ban', [AdminController::class, 'addUserBan']);
 Route::patch('/admin/ban/activate/{id}', [AdminController::class, 'activateBan']);
 Route::patch('/admin/ban/deactivate/{id}', [AdminController::class, 'deactivateBan']);
+});
