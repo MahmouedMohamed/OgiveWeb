@@ -268,6 +268,8 @@ class AdminController extends BaseController
                         'from' => $request['from'] ?? Carbon::now(),
                         'to' => $request['to'],
                         'level' => $request['level'],
+                        //Has From? then compare -> lessthan then active, o.w wait for sql event to activate it || active
+                        'active' => $request['from']? ($request['from'] <= Carbon::now()? 1 : 0) : 1,
                     ]);
                 } else {
                     //shift the others where level is bigger
@@ -294,6 +296,8 @@ class AdminController extends BaseController
                         'from' => $request['from'] ?? Carbon::now(),
                         'to' => $request['to'],
                         'level' => $request['level'],
+                        //Has From? then compare -> lessthan then active, o.w wait for sql event to activate it || active
+                        'active' => $request['from']? ($request['from'] <= Carbon::now()? 1 : 0) : 1,
                     ]);
                 }
             } else {
@@ -311,6 +315,8 @@ class AdminController extends BaseController
                     'from' => $request['from'] ?? Carbon::now(),
                     'to' => $request['to'],
                     'level' => $request['level'],
+                    //Has From? then compare -> lessthan then active, o.w wait for sql event to activate it || active
+                    'active' => $request['from']? ($request['from'] <= Carbon::now()? 1 : 0) : 1,
                 ]);
             }
         } catch (Exception $e) {
