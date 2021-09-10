@@ -23,7 +23,7 @@ class FoodSharingMarker extends Model
     {
         $this->collected = true;
         $this->existed = $existed;
-        $this->collected_at = Carbon::now();
+        $this->collected_at = Carbon::now('GMT+2');
         $this->save();
     }
 }

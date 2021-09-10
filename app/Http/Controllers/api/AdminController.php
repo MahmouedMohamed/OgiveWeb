@@ -265,11 +265,11 @@ class AdminController extends BaseController
                         'image' => $imagePath,
                         'required_markers_collected' => $request['required_markers_collected'],
                         'required_markers_posted' => $request['required_markers_posted'],
-                        'from' => $request['from'] ?? Carbon::now(),
+                        'from' => $request['from'] ?? Carbon::now('GMT+2'),
                         'to' => $request['to'],
                         'level' => $request['level'],
                         //Has From? then compare -> lessthan then active, o.w wait for sql event to activate it || active
-                        'active' => $request['from']? ($request['from'] <= Carbon::now()? 1 : 0) : 1,
+                        'active' => $request['from']? ($request['from'] <= Carbon::now('GMT+2')? 1 : 0) : 1,
                     ]);
                 } else {
                     //shift the others where level is bigger
@@ -293,11 +293,11 @@ class AdminController extends BaseController
                         'image' => $imagePath,
                         'required_markers_collected' => $request['required_markers_collected'],
                         'required_markers_posted' => $request['required_markers_posted'],
-                        'from' => $request['from'] ?? Carbon::now(),
+                        'from' => $request['from'] ?? Carbon::now('GMT+2'),
                         'to' => $request['to'],
                         'level' => $request['level'],
                         //Has From? then compare -> lessthan then active, o.w wait for sql event to activate it || active
-                        'active' => $request['from']? ($request['from'] <= Carbon::now()? 1 : 0) : 1,
+                        'active' => $request['from']? ($request['from'] <= Carbon::now('GMT+2')? 1 : 0) : 1,
                     ]);
                 }
             } else {
@@ -312,11 +312,11 @@ class AdminController extends BaseController
                     'image' => $imagePath,
                     'required_markers_collected' => $request['required_markers_collected'],
                     'required_markers_posted' => $request['required_markers_posted'],
-                    'from' => $request['from'] ?? Carbon::now(),
+                    'from' => $request['from'] ?? Carbon::now('GMT+2'),
                     'to' => $request['to'],
                     'level' => $request['level'],
                     //Has From? then compare -> lessthan then active, o.w wait for sql event to activate it || active
-                    'active' => $request['from']? ($request['from'] <= Carbon::now()? 1 : 0) : 1,
+                    'active' => $request['from']? ($request['from'] <= Carbon::now('GMT+2')? 1 : 0) : 1,
                 ]);
             }
         } catch (Exception $e) {
@@ -422,7 +422,7 @@ class AdminController extends BaseController
         }
 
         //Check banned User exists
-        $bannedUser = User::find($request['banned_user']);
+        $bannedUser = User::find($request['bannedUser']);
         if ($bannedUser == null) {
             return $this->sendError('User Not Found');
         }
@@ -443,8 +443,8 @@ class AdminController extends BaseController
         $admin->createdBans()->create([
             'banned_user' => $bannedUser->id,
             'tag' => $request['tag'],
-            'active' => $request['startAt'] != null ? ($request['startAt'] <= Carbon::now() ? 1 : 0) : 1,
-            'start_at' => $request['startAt'] ?? Carbon::now(),
+            'active' => $request['startAt'] != null ? ($request['startAt'] <= Carbon::now('GMT+2') ? 1 : 0) : 1,
+            'start_at' => $request['startAt'] ?? Carbon::now('GMT+2'),
             'end_at' => $request['endAt'] ?? null
         ]);
 
