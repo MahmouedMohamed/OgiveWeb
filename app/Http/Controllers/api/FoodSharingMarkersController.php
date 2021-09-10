@@ -102,7 +102,7 @@ class FoodSharingMarkersController extends BaseController
             if ($highestAtaaPrize) {
                 AtaaPrize::create([
                     'createdBy' => null,
-                    'name' =>  "Level " . $highestAtaaPrize['level'] + 1 . " Prize",
+                    'name' =>  "Level " . (((int) $highestAtaaPrize['level'] )+ 1) . " Prize",
                     'image' => null,
                     'required_markers_collected' => $highestAtaaPrize['required_markers_collected'] + 10,
                     'required_markers_posted' => $highestAtaaPrize['required_markers_posted'] + 10,
@@ -220,7 +220,7 @@ class FoodSharingMarkersController extends BaseController
                 if ($highestAtaaPrize) {
                     AtaaPrize::create([
                         'createdBy' => null,
-                        'name' =>  "Level " . $highestAtaaPrize['level'] + 1 . " Prize",
+                        'name' =>  "Level " . (((int) $highestAtaaPrize['level'] )+ 1) . " Prize",
                         'image' => null,
                         'required_markers_collected' => $highestAtaaPrize['required_markers_collected'] + 10,
                         'required_markers_posted' => $highestAtaaPrize['required_markers_posted'] + 10,
