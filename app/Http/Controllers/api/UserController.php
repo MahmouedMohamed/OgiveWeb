@@ -34,12 +34,7 @@ class UserController extends BaseController
             if ($loginBan) {
                 return $this->sendForbidden('Sorry, but is seems you are banned from login until ' . ($loginBan['end_at'] ?? 'infinite period of time.'));
             }
-            $token = $user->accessTokens->where('revoked', 0)->where('expires_at', '>', Carbon::now('GMT+2'));
-            if (!$token->isEmpty()) {
-                $token[0]->delete();
-            }
             $this->content['token'] =
-                $user->createToken($user->getAuthIdentifier())->accessToken;
 
             $this->content['user'] = Auth::user();
             $profile = Profile::findOrFail(Auth::user()->profile);
