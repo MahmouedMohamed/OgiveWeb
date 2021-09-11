@@ -6,11 +6,13 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Passport\HasApiTokens;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -49,6 +51,25 @@ class User extends Authenticatable
     public function accessTokens()
     {
         return $this->hasMany(OauthAccessToken::class);
+    }
+    public function createAccessToken()
+    {
+        $this->deleteRelatedAccessTokens();
+        //Hash::make() -> saves only 60 chars to database
+        //ToDo: Solve & extend to 255 chars
+        $accessToken = Str::random(60);
+        $this->accessTokens()->create([
+            'access_token' => Hash::make($accessToken),
+            'scopes' => '[]',
+            'active' => 1,
+            'expires_at' => Carbon::now('GMT+2')->addMinute(),
+
+        ]);
+        return $accessToken;
+    }
+    public function deleteRelatedAccessTokens()
+    {
+        $this->accessTokens()->delete();
     }
     public function profile()
     {

@@ -2,8 +2,10 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\OauthAccessToken;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class AccessTokenIsValid
 {
@@ -17,6 +19,10 @@ class AccessTokenIsValid
 
         return response()->json($response, 403);
     }
+    public function isValidAccessToken($accessToken)
+    {
+        return OauthAccessToken::where('active', '=', 1)->first() != null;
+    }
     /**
      * Handle an incoming request.
      *
@@ -26,8 +32,13 @@ class AccessTokenIsValid
      */
     public function handle(Request $request, Closure $next)
     {
-        // dd($request->bearerToken());
-        // return $this->sendForbidden('Invalid Accesstoken');
-        return $next($request);
+        $activeOauthAccessTokens = OauthAccessToken::where('active', '=', 1)
+            ->get();
+        foreach ($activeOauthAccessTokens as $accessToken) {
+            if (Hash::check($request->bearerToken(), $accessToken->access_token)) {
+                return $next($request);
+            }
+        }
+        return $this->sendForbidden('Invalid Accesstoken');
     }
 }
