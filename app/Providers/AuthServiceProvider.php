@@ -13,10 +13,7 @@ class AuthServiceProvider extends ServiceProvider
      *
      * @var array
      */
-    protected $policies = [
-        'App\Models\Pet' => 'App\Policies\PetPostPolicy',
-        Needy::class => NeedyPolicy::class
-    ];
+    protected $policies = [];
 
     /**
      * Register any authentication / authorization services.
