@@ -131,6 +131,6 @@ class User extends Authenticatable
     //To Be Done using roles or just a column
     public function isAdmin()
     {
-        return true;
+        return false;
     }
 }

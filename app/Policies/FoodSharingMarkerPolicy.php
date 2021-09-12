@@ -84,7 +84,7 @@ class FoodSharingMarkerPolicy
      */
     public function update(User $user, FoodSharingMarker $foodSharingMarker)
     {
-        //
+        return $user->isAdmin() || $user == $foodSharingMarker->user;
     }
 
     /**
@@ -96,7 +96,7 @@ class FoodSharingMarkerPolicy
      */
     public function delete(User $user, FoodSharingMarker $foodSharingMarker)
     {
-        //
+        return $user->isAdmin() || $user == $foodSharingMarker->user;
     }
 
     /**

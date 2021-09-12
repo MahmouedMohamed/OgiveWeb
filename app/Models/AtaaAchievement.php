@@ -23,6 +23,11 @@ class AtaaAchievement extends Model
             $this->save();
         }
     }
+    public function decreaseMarkersPosted()
+    {
+            $this->markers_posted--;
+            $this->save();
+    }
     public function incrementMarkersCollected()
     {
         if(!$this->freezed)

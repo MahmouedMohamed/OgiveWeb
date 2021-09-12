@@ -5,7 +5,6 @@ class BanType
 {
     public $types = [
         "Login" => "login_ban",
-        "AddFoodSharingMarker" => "add_food_sharing_marker_ban",
         "CollectFoodSharingMarker" => "collect_food_sharing_marker_ban",
         //ToDo: Add All Functionalities
         "CreateNeedy" => "create_needy_ban",

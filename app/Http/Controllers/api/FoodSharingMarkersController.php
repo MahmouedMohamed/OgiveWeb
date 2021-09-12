@@ -48,7 +48,7 @@ class FoodSharingMarkersController extends BaseController
     {
         $responseHandler = new ResponseHandler($request['language']);
         //Validate Request
-        $validated = $this->validateMarker($request);
+        $validated = $this->validateMarker($request, 'store');
         if ($validated->fails()) {
             return $this->sendError($responseHandler->words['InvalidData'], $validated->messages(), 400);
         }
@@ -58,6 +58,9 @@ class FoodSharingMarkersController extends BaseController
             return $this->sendError($responseHandler->words['UserNotFound']);
         }
 
+        if (!$user->can('create', FoodSharingMarker::class)) {
+            return $this->sendForbidden($responseHandler->words['FoodSharingMarkerCreationBannedMessage']);
+        }
         $userAchievement = $user->ataaAchievement;
         //No Acheivements Before
         if (!$userAchievement) {
@@ -102,7 +105,7 @@ class FoodSharingMarkersController extends BaseController
             if ($highestAtaaPrize) {
                 AtaaPrize::create([
                     'createdBy' => null,
-                    'name' =>  "Level " . (((int) $highestAtaaPrize['level'] )+ 1) . " Prize",
+                    'name' =>  "Level " . (((int) $highestAtaaPrize['level']) + 1) . " Prize",
                     'image' => null,
                     'required_markers_collected' => $highestAtaaPrize['required_markers_collected'] + 10,
                     'required_markers_posted' => $highestAtaaPrize['required_markers_posted'] + 10,
@@ -220,7 +223,7 @@ class FoodSharingMarkersController extends BaseController
                 if ($highestAtaaPrize) {
                     AtaaPrize::create([
                         'createdBy' => null,
-                        'name' =>  "Level " . (((int) $highestAtaaPrize['level'] )+ 1) . " Prize",
+                        'name' =>  "Level " . (((int) $highestAtaaPrize['level']) + 1) . " Prize",
                         'image' => null,
                         'required_markers_collected' => $highestAtaaPrize['required_markers_collected'] + 10,
                         'required_markers_posted' => $highestAtaaPrize['required_markers_posted'] + 10,
@@ -277,36 +280,108 @@ class FoodSharingMarkersController extends BaseController
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\FoodSharingMarker  $foodSharingMarker
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, FoodSharingMarker $foodSharingMarker)
+    public function update(Request $request, int $id)
     {
-        return $this->sendError('Not Implemented');
+        $responseHandler = new ResponseHandler($request['language']);
+        //Validate Request
+        $validated = $this->validateMarker($request, 'update');
+        if ($validated->fails()) {
+            return $this->sendError($responseHandler->words['InvalidData'], $validated->messages(), 400);
+        }
+
+        $foodSharingMarker = FoodSharingMarker::find($id);
+        if (!$foodSharingMarker) {
+            return $this->sendError($responseHandler->words['FoodSharingMarkerNotFound']);
+        }
+
+        $user = User::find(request()->input('userId'));
+        if (!$user) {
+            return $this->sendError($responseHandler->words['UserNotFound']);
+        }
+
+        if (!$user->can('update', $foodSharingMarker)) {
+            return $this->sendForbidden($responseHandler->words['FoodSharingMarkerCreationForbiddenMessage']);
+        }
+
+        $foodSharingMarker->update([
+            'latitude' => $request['latitude'],
+            'longitude' => $request['longitude'],
+            'type' => $request['type'],
+            'description' => $request['description'],
+            'quantity' => $request['quantity'],
+            'priority' => $request['priority'],
+            'collected' => 0,
+        ]);
+
+        return $this->sendResponse([], $responseHandler->words['FoodSharingMarkerUpdateSuccessMessage']);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\FoodSharingMarker  $foodSharingMarker
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(FoodSharingMarker $foodSharingMarker)
+    public function destroy(Request $request, int $id)
     {
-        return $this->sendError('Not Implemented');
+        $responseHandler = new ResponseHandler($request['language']);
+
+        $foodSharingMarker = FoodSharingMarker::find($id);
+        if (!$foodSharingMarker) {
+            return $this->sendError($responseHandler->words['FoodSharingMarkerNotFound']);
+        }
+
+        $user = User::find($request['userId']);
+
+        if (!$user) {
+            return $this->sendError($responseHandler->words['UserNotFound']);
+        }
+
+        if (!$user->can('delete', $foodSharingMarker)) {
+            return $this->sendForbidden($responseHandler->words['FoodSharingMarkerCreationForbiddenMessage']);
+        }
+
+        $foodSharingMarker->delete();
+        $userAchievement = $user->ataaAchievement;
+        $userAchievement->decreaseMarkersPosted();
+        //ToDo: Prize calculations
+        //1-Get Latest won prize by user
+        //calculate if he still got it
+        //if not delete it
+
+        return $this->sendResponse([], $responseHandler->words['FoodSharingMarkerDeleteSuccessMessage']);  ///Needy Updated Successfully!
     }
 
-    public function validateMarker(Request $request)
+    public function validateMarker(Request $request, String $related)
     {
-        $rules = [
-            'createdBy' => 'required',
-            'latitude' => 'required|numeric|min:0',
-            'longitude' => 'required|numeric|min:0',
-            'type' => 'required|in:Food,Drink,Both of them',
-            'description' => 'required|max:1024',
-            'quantity' => 'required|integer|min:1|max:10',
-            'priority' => 'required|integer|min:1|max:10'
-        ];
+        $rules = null;
+        switch ($related) {
+            case 'store':
+                $rules = [
+                    'createdBy' => 'required',
+                    'latitude' => 'required|numeric|min:0',
+                    'longitude' => 'required|numeric|min:0',
+                    'type' => 'required|in:Food,Drink,Both of them',
+                    'description' => 'required|max:1024',
+                    'quantity' => 'required|integer|min:1|max:10',
+                    'priority' => 'required|integer|min:1|max:10'
+                ];
+                break;
+            case 'update':
+                $rules = [
+                    'latitude' => 'required|numeric|min:0',
+                    'longitude' => 'required|numeric|min:0',
+                    'type' => 'required|in:Food,Drink,Both of them',
+                    'description' => 'required|max:1024',
+                    'quantity' => 'required|integer|min:1|max:10',
+                    'priority' => 'required|integer|min:1|max:10'
+                ];
+                break;
+        }
         $messages = [];
         if ($request['language'] != null)
             $messages = $this->getValidatorMessagesBasedOnLanguage($request['language']);
