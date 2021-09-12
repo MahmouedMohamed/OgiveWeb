@@ -1,0 +1,5 @@
+CREATE DEFINER=`root`@`localhost` EVENT `Auto Access Tokens Deactivator` ON SCHEDULE EVERY '0:1' MINUTE_SECOND STARTS '2021-09-11 19:58:28' ON COMPLETION NOT PRESERVE ENABLE DO UPDATE `oauth_access_tokens` SET `active`= 0 WHERE `expires_at` <= NOW()
+
+CREATE DEFINER=`root`@`localhost` EVENT `Auto Ataa Prize Deactivator` ON SCHEDULE EVERY '0:1' MINUTE_SECOND STARTS '2021-09-10 15:15:57' ON COMPLETION NOT PRESERVE ENABLE DO UPDATE `ataa_prizes` SET `active`= 0 WHERE `to` <= NOW() AND `active` = 1
+
+CREATE DEFINER=`root`@`localhost` EVENT `Auto User Ban Deactivator` ON SCHEDULE EVERY '0:1' MINUTE_SECOND STARTS '2021-09-10 15:30:07' ON COMPLETION NOT PRESERVE ENABLE DO UPDATE `user_bans` SET `active` = 0 WHERE `end_at` <= NOW() AND `active` = 1
