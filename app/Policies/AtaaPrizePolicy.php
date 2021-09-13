@@ -41,7 +41,7 @@ class AtaaPrizePolicy
      */
     public function create(User $user)
     {
-        //ToDo: Make sure that the admin has the privilage to create a prize
+        //TODO: Make sure that the admin has the privilage to create a prize
         return $user->isAdmin();
     }
 

@@ -51,7 +51,7 @@ Route::delete('/memory', [MemoryController::class, 'delete']);
 Route::post('/like', [LikesController::class, 'likeUnlike']);
 // });
 
-//ToDo: Add This APIs to be auth by 2oauth token
+//TODO: Add This APIs to be auth by 2oauth token
 // Route::get('/pet',[PetController::class, 'index']);
 // Route::get('/pet/{id}',[PetController::class, 'show']);
 // Route::post('/pet',[PetController::class, 'store']);

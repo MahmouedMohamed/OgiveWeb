@@ -56,7 +56,7 @@ class User extends Authenticatable
     {
         $this->deleteRelatedAccessTokens();
         //Hash::make() -> saves only 60 chars to database
-        //ToDo: Solve & extend to 255 chars
+        //TODO: Solve & extend to 255 chars
         $accessToken = Str::random(60);
         $this->accessTokens()->create([
             'access_token' => Hash::make($accessToken),
@@ -121,7 +121,7 @@ class User extends Authenticatable
     }
     public function bans()
     {
-        return $this->hasMany(UserBan::class,'banned_user');
+        return $this->hasMany(UserBan::class, 'banned_user');
     }
 
     public function createdBans()

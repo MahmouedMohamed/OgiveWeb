@@ -23,9 +23,9 @@ class FoodSharingMarkersController extends BaseController
      */
     public function index()
     {
-        //ToDo: Get User Location -> Return Only nearest Markers
+        //TODO: Get User Location -> Return Only nearest Markers
 
-        //ToDo: CHECK IF USER IS BANNED FROM VIEWING MARKERS!!!
+        //TODO: CHECK IF USER IS BANNED FROM VIEWING MARKERS!!!
         return $this->sendResponse(FoodSharingMarker::select(
             'id',
             'latitude',
@@ -136,7 +136,7 @@ class FoodSharingMarkersController extends BaseController
                         $user->id
                     );
                 } else {
-                    //ToDo: Maybe show the user what's left for his next milestone
+                    //TODO: Maybe show the user what's left for his next milestone
                 }
             }
         }
@@ -178,10 +178,10 @@ class FoodSharingMarkersController extends BaseController
             return $this->sendError($responseHandler->words['InvalidData'], '', 400);
 
         if ($foodSharingMarkerExists == 0) {
-            //ToDo: if marker doesn't exists for 100 times for the same user
+            //TODO: if marker doesn't exists for 100 times for the same user
             //->
             //Ban this marker publisher for publishing again
-            //ToDo: Count
+            //TODO: Count
         }
 
         $foodSharingMarker->collect($foodSharingMarkerExists);
@@ -254,7 +254,7 @@ class FoodSharingMarkersController extends BaseController
                             $user->id
                         );
                     } else {
-                        //ToDo: Maybe show the user what's left for his next milestone
+                        //TODO: Maybe show the user what's left for his next milestone
                     }
                 }
             }

@@ -31,7 +31,7 @@ class AdminController extends BaseController
         if ($user == null) {
             return $this->sendError('User Not Found');
         }
-        //ToDo: Check privilige
+        //TODO: Check privilige
         $data = array();
         $generalData = array();
         $ahedData = array();
@@ -438,7 +438,7 @@ class AdminController extends BaseController
             return $this->sendError('Invalid data', $validated->messages(), 400);
         }
 
-        //ToDo: Extend Ban if already exists & Active?
+        //TODO: Extend Ban if already exists & Active?
 
         $admin->createdBans()->create([
             'banned_user' => $bannedUser->id,
@@ -479,6 +479,7 @@ class AdminController extends BaseController
         ];
         return Validator::make($request->all(), $rules, $messages);
     }
+
     public function validateUserBan(Request $request)
     {
         $banType = new BanType();

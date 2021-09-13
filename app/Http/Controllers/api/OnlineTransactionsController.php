@@ -34,7 +34,7 @@ class OnlineTransactionsController extends BaseController
      */
     public function store(Request $request)
     {
-        //ToDo: Recevie Payment information "Card number, amount, expirydate, cvv, etc"
+        //TODO: Recevie Payment information "Card number, amount, expirydate, cvv, etc"
         //Make payment request /Success continue
         //Validate Request
         $validated = $this->validateTransaction($request);
@@ -59,7 +59,7 @@ class OnlineTransactionsController extends BaseController
             'amount' => $request['amount'],
             'remaining' => $request['amount']
         ]);
-        //ToDo: if failed remove transaction
+        //TODO: if failed remove transaction
         $transaction->transferAmount($request['amount']);
         return $this->sendResponse([], 'شكراً لمساهمتك القيمة'); ///Thank You For Your Contribution!
     }
