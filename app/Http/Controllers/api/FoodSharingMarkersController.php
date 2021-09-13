@@ -346,12 +346,19 @@ class FoodSharingMarkersController extends BaseController
         }
 
         $foodSharingMarker->delete();
+
         $userAchievement = $user->ataaAchievement;
         $userAchievement->decreaseMarkersPosted();
-        //ToDo: Prize calculations
-        //1-Get Latest won prize by user
-        //calculate if he still got it
-        //if not delete it
+
+        //Get won prize by user where required is bigger than achieved after modification
+        //then delete them
+        DB::table('user_ataa_acquired_prizes')->leftJoin(
+            'ataa_prizes',
+            'ataa_prizes.id',
+            '=',
+            'user_ataa_acquired_prizes.prize_id'
+        )->where('required_markers_posted', '>', $userAchievement->markers_posted)
+            ->delete();
 
         return $this->sendResponse([], $responseHandler->words['FoodSharingMarkerDeleteSuccessMessage']);  ///Needy Updated Successfully!
     }
