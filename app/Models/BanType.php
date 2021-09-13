@@ -3,6 +3,7 @@
 namespace App\Models;
 class BanType
 {
+    //ToDo: MAKE IT LIKE AVAILABLE ABILITIES!
     public $types = [
         "Login" => "login_ban",
         "CollectFoodSharingMarker" => "collect_food_sharing_marker_ban",
@@ -20,9 +21,9 @@ class BanType
         "DeleteAtaaPrize" => "delete_ataa_prize_ban",
         "ActivateAtaaPrize" => "activate_ataa_prize_ban",
         "DeactivateAtaaPrize" => "deactivate_ataa_prize_ban",
-        "FreezeAtaaAtchievement" => "freeze_ataa_achievement_ban",
-        "DefreezeAtaaAtchievement" => "defreeze_ataa_achievement_ban",
-        "ViewAtaaAtchievement" => "view_ataa_achievement_ban",
+        "FreezeAtaaAchievement" => "freeze_ataa_achievement_ban",
+        "DefreezeAtaaAchievement" => "defreeze_ataa_achievement_ban",
+        "ViewAtaaAchievement" => "view_ataa_achievement_ban",
         "UpdateFoodSharingMarker" => "update_food_sharing_marker_ban",
         "DeleteFoodSharingMarker" => "delete_food_sharing_marker_ban",
         "ViewAtaaReports" => "view_ataa_reports_ban",
@@ -37,10 +38,10 @@ class BanType
         "DeleteUser" => "delete_user_ban",
         "ViewUserProfile" => "view_user_profile_ban",
         "UpdateUserProfile" => "update_user_profile_ban",
-        "ViewUser" => "view_user_ban_ban",
-        "CreateUser" => "create_user_ban_ban",
-        "UpdateUser" => "update_user_ban_ban",
-        "DeleteUser" => "delete_user_ban_ban",
+        "ViewUserBan" => "view_user_ban_ban",
+        "CreateUserBan" => "create_user_ban_ban",
+        "UpdateUserBan" => "update_user_ban_ban",
+        "DeleteUserBan" => "delete_user_ban_ban",
         "ActivateUser" => "activate_user_ban_ban",
         "DeactivateUser" => "deactivate_user_ban_ban",
         "ViewGeneralDashboard" => "view_general_dashboard_ban",

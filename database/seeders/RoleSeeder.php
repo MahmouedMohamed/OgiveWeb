@@ -25,7 +25,7 @@ class RoleSeeder extends Seeder
             'view_ataa_reports'
         ];
         $ahedAbilities = [
-            'update_needy', 'delete_needy', 'approve_needy', 'disapprove_needy', 'collect_offline_transaction','view_ahed_reports'
+            'update_needy', 'delete_needy', 'approve_needy', 'disapprove_needy', 'collect_offline_transaction', 'view_ahed_reports'
         ];
         $moderatorAbilities = [
             'view_user', 'update_user', 'delete_user',
