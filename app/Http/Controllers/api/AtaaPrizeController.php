@@ -1,20 +1,30 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\api;
 
 use App\Models\AtaaPrize;
 use Illuminate\Http\Request;
+use App\Models\User;
 
-class AtaaPrizeController extends Controller
+class AtaaPrizeController extends BaseController
 {
     /**
      * Display a listing of the resource.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $admin = User::find($request['userId']);
+        if ($admin == null) {
+            return $this->sendError('Admin User Not Found');
+        }
+        //Check if current user can view Ataa Prizes
+        if (!$admin->can('viewAny', AtaaPrize::class)) {
+            return $this->sendForbidden('You aren\'t authorized to view these Prizes.');
+        }
+        return AtaaPrize::get();
     }
 
     /**

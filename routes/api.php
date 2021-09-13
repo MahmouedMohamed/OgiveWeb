@@ -16,6 +16,7 @@ use App\Http\Controllers\api\PlaceController;
 use App\Http\Controllers\api\UserController;
 use App\Http\Controllers\api\AtaaAchievementController;
 use App\Http\Controllers\api\TokensController;
+use App\Http\Controllers\api\AtaaPrizeController;
 use App\Models\Pet;
 use Illuminate\Support\Facades\Route;
 
@@ -109,6 +110,7 @@ Route::get('/admin/ban', [AdminController::class, 'getUserBans']);
 Route::post('/admin/ban', [AdminController::class, 'addUserBan']);
 Route::patch('/admin/ban/activate/{id}', [AdminController::class, 'activateBan']);
 Route::patch('/admin/ban/deactivate/{id}', [AdminController::class, 'deactivateBan']);
+Route::apiResource('/ataa/prize',AtaaPrizeController::class);
 });
 
 
