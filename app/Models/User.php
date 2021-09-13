@@ -126,11 +126,22 @@ class User extends Authenticatable
 
     public function createdBans()
     {
-        return $this->hasMany(UserBan::class,'created_by');
+        return $this->hasMany(UserBan::class, 'created_by');
     }
-    //To Be Done using roles or just a column
-    public function isAdmin()
+    public function roles()
     {
-        return false;
+        return $this->belongsToMany(Role::class)->withTimeStamps();
+    }
+    public function assignRole($role)
+    {
+        $this->roles()->sync($role);  //save if not there, replace if there // can pass argument(x,false) //false will let us add without dropping anything
+    }
+    public function abilities()
+    {
+        return $this->roles->map->abilities->flatten()->pluck('name')->unique();
+    }
+    public function hasAbility(String $ability)
+    {
+        return $this->abilities($ability);
     }
 }
