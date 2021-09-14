@@ -106,6 +106,8 @@ Route::post('/admin/ahed/collect', [AdminController::class, 'collectOfflineTrans
 Route::post('/admin/ataa/freezeachievment', [AdminController::class, 'freezeUserAtaaAchievments']);
 Route::post('/admin/ataa/defreezeachievment', [AdminController::class, 'defreezeUserAtaaAchievments']);
 Route::post('/admin/ataa/addprize', [AdminController::class, 'addAtaaPrize']);
+Route::post('/admin/ataa/prize/{id}/activate', [AdminController::class, 'activateAtaaPrize']);
+Route::post('/admin/ataa/prize/{id}/deactivate', [AdminController::class, 'deactivateAtaaPrize']);
 Route::get('/admin/ban', [AdminController::class, 'getUserBans']);
 Route::post('/admin/ban', [AdminController::class, 'addUserBan']);
 Route::patch('/admin/ban/activate/{id}', [AdminController::class, 'activateBan']);

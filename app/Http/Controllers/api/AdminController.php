@@ -269,7 +269,7 @@ class AdminController extends BaseController
                         'to' => $request['to'],
                         'level' => $request['level'],
                         //Has From? then compare -> lessthan then active, o.w wait for sql event to activate it || active
-                        'active' => $request['from']? ($request['from'] <= Carbon::now('GMT+2')? 1 : 0) : 1,
+                        'active' => $request['from'] ? ($request['from'] <= Carbon::now('GMT+2') ? 1 : 0) : 1,
                     ]);
                 } else {
                     //shift the others where level is bigger
@@ -297,7 +297,7 @@ class AdminController extends BaseController
                         'to' => $request['to'],
                         'level' => $request['level'],
                         //Has From? then compare -> lessthan then active, o.w wait for sql event to activate it || active
-                        'active' => $request['from']? ($request['from'] <= Carbon::now('GMT+2')? 1 : 0) : 1,
+                        'active' => $request['from'] ? ($request['from'] <= Carbon::now('GMT+2') ? 1 : 0) : 1,
                     ]);
                 }
             } else {
@@ -316,7 +316,7 @@ class AdminController extends BaseController
                     'to' => $request['to'],
                     'level' => $request['level'],
                     //Has From? then compare -> lessthan then active, o.w wait for sql event to activate it || active
-                    'active' => $request['from']? ($request['from'] <= Carbon::now('GMT+2')? 1 : 0) : 1,
+                    'active' => $request['from'] ? ($request['from'] <= Carbon::now('GMT+2') ? 1 : 0) : 1,
                 ]);
             }
         } catch (Exception $e) {
@@ -324,7 +324,62 @@ class AdminController extends BaseController
         }
         return $this->sendResponse([], 'Ataa Prize Created Successfully!');
     }
+    /**
+     * Activate Prize.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function activateAtaaPrize(Request $request, $id)
+    {
+        //Check needy exists
+        $prize = AtaaPrize::find($id);
+        if ($prize == null) {
+            return $this->sendError('Prize Not Found');
+        }
 
+        //Check user who is updating exists
+        $user = User::find($request['userId']);
+        if ($user == null) {
+            return $this->sendError('User Not Found');
+        }
+
+        //Check if current user can activate
+        if (!$user->can('activate', $prize)) {
+            return $this->sendForbidden('You aren\'t authorized to activate this prize.');
+        }
+        $prize->activate();
+        return $this->sendResponse([], 'Prize Activated Successfully!');
+    }
+    /**
+     * Deactivate Prize.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function deactivateAtaaPrize(Request $request, $id)
+    {
+        //Check needy exists
+        $prize = AtaaPrize::find($id);
+        if ($prize == null) {
+            return $this->sendError('Prize Not Found');
+        }
+
+        //Check user who is updating exists
+        $user = User::find($request['userId']);
+        if ($user == null) {
+            return $this->sendError('User Not Found');
+        }
+
+        //Check if current user can deactivate
+        if (!$user->can('deactivate', $prize)) {
+            return $this->sendForbidden('You aren\'t authorized to deactivate this prize.');
+        }
+        $prize->deactivate();
+        return $this->sendResponse([], 'Prize Deactivated Successfully!');
+    }
     /**
      * Get User Bans.
      *
