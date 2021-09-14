@@ -16,29 +16,33 @@ use Illuminate\Support\Facades\Hash;
 
 use Illuminate\Http\Request;
 
+use App\Models\BanType;
+
 class UserController extends BaseController
 {
+    private $banType;
     public function __construct()
     {
         $this->content = array();
+        $this->banType = new BanType();
     }
     public function login()
     {
         if (Auth::attempt(['email' => request('email'), 'password' => request('password')])) {
             $user = Auth::user();
-            $token = $user->accessTokens->where('revoked', 0)->where('expires_at', '>', Carbon::now());
-            if (!$token->isEmpty()) {
-                $token[0]->delete();
+            $loginBan = $user->bans()->where('active', '=', 1)->where('tag', '=', $this->banType->types['Login'])->get()->first();
+            if ($loginBan) {
+                return $this->sendForbidden('Sorry, but is seems you are banned from login until ' . ($loginBan['end_at'] ?? 'infinite period of time.'));
             }
             $this->content['token'] =
-                $user->createToken($user->getAuthIdentifier())->accessToken;
+                $user->createAccessToken();
 
             $this->content['user'] = Auth::user();
             $profile = Profile::findOrFail(Auth::user()->profile);
             $this->content['profile'] = $profile;
             return $this->sendResponse($this->content, 'Data Retrieved Successfully');
         } else {
-            return $this->sendError('Unauthorized');
+            return $this->sendError('The email or password is incorrect.');
         }
     }
 
@@ -50,7 +54,10 @@ class UserController extends BaseController
     public function register(Request $request)
     {
         $data = request()->all();
-        $this->validateUser($request);
+        $validated = $this->validateUser($request);
+        if ($validated->fails()) {
+            return $this->sendError('Invalid data', $validated->messages(), 400);
+        }
         $profile = Profile::create([]);
         $image = $request['image'];
         if ($image != null) {
@@ -65,13 +72,14 @@ class UserController extends BaseController
             'gender' => request('gender'),
             'password' => Hash::make(request('password')),
             'phone_number' => request('phone_number'),
+            'address' => request('address'),
             'profile' => $profile->id
         ]);
-        return response()->json([], 200);
+        return $this->sendResponse('', 'User Created Successfully');
     }
     public function validateUser(Request $request)
     {
-        return $request->validate([
+        return Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'user_name' => 'required|string|max:255|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
@@ -81,6 +89,15 @@ class UserController extends BaseController
             'phone_number' => 'required',
             'address' => 'string|max:1024',
             'image' => 'image',
+        ], [
+            'required' => 'This field is required',
+            'min' => 'Invalid size, min size is :min',
+            'max' => 'Invalid size, max size is :max',
+            'integer' => 'Invalid type, only numbers are supported',
+            'in' => 'Invalid type, support values are :values',
+            'image' => 'Invalid type, only images are accepted',
+            'mimes' => 'Invalid type, supported types are :values',
+            'numeric' => 'Invalid type, only numbers are supported',
         ]);
     }
     public function getAhedAchievementRecords($id)
@@ -88,18 +105,18 @@ class UserController extends BaseController
         $user = User::find($id);
 
         if ($user) {
-        ///Get Number of needies that user helped
-        $neediesApprovedForUser = Needy::where('createdBy', '=', $user->id)->where('approved', '=', '1')->get()->pluck('id')->unique()->toArray();
-        $neediesDonatedOfflineFor = OfflineTransaction::where('giver', '=', $user->id)->where('collected', '=', '1')->get()->pluck('needy')->unique()->toArray();
-        $neediesDonatedOnlineFor = OnlineTransaction::where('giver', '=', $user->id)->get()->pluck('needy')->unique()->toArray();
-        $neediesHelped = collect(array_merge($neediesApprovedForUser, $neediesDonatedOfflineFor, $neediesDonatedOnlineFor));
-        $this->content['NumberOfNeediesUserHelped'] = $neediesHelped->unique()->count();
+            ///Get Number of needies that user helped
+            $neediesApprovedForUser = Needy::where('createdBy', '=', $user->id)->where('approved', '=', '1')->get()->pluck('id')->unique()->toArray();
+            $neediesDonatedOfflineFor = OfflineTransaction::where('giver', '=', $user->id)->where('collected', '=', '1')->get()->pluck('needy')->unique()->toArray();
+            $neediesDonatedOnlineFor = OnlineTransaction::where('giver', '=', $user->id)->get()->pluck('needy')->unique()->toArray();
+            $neediesHelped = collect(array_merge($neediesApprovedForUser, $neediesDonatedOfflineFor, $neediesDonatedOnlineFor));
+            $this->content['NumberOfNeediesUserHelped'] = $neediesHelped->unique()->count();
 
-        ///Get Value of all transactions
-        $valueOfOfflineDonation = OfflineTransaction::where('giver', '=', $user->id)->where('collected', '=', '1')->get()->pluck('amount')->toArray();
-        $valueOfOnlineDonation = OnlineTransaction::where('giver', '=', $user->id)->get()->pluck('amount')->toArray();
-        $valueOfDontaion = collect(array_merge($valueOfOfflineDonation, $valueOfOnlineDonation));
-        $this->content['ValueOfDonation'] = $valueOfDontaion->sum();
+            ///Get Value of all transactions
+            $valueOfOfflineDonation = OfflineTransaction::where('giver', '=', $user->id)->where('collected', '=', '1')->get()->pluck('amount')->toArray();
+            $valueOfOnlineDonation = OnlineTransaction::where('giver', '=', $user->id)->get()->pluck('amount')->toArray();
+            $valueOfDontaion = collect(array_merge($valueOfOfflineDonation, $valueOfOnlineDonation));
+            $this->content['ValueOfDonation'] = $valueOfDontaion->sum();
         }
         ///All Needies satisfied
         $neediesSatisfied = Needy::where('satisfied', '=', '1')->get()->pluck('id')->unique()->count();
@@ -126,6 +143,83 @@ class UserController extends BaseController
         ///neediesNotSatisfied
         $neediesNotSatisfied = Needy::where('satisfied', '=', '0')->get()->pluck('id')->unique()->count();
         $this->content['NeediesNotSatisfied'] = $neediesNotSatisfied;
-        return $this->sendResponse($this->content,'Achievement Records Returned Successfully');
+        return $this->sendResponse($this->content, 'Achievement Records Returned Successfully');
+    }
+
+    public function updateProfilePicture(Request $request, $id)
+    {
+        $user = User::find($id);
+        if ($user == null) {
+            return $this->sendError('المستخدم غير موجود'); ///Case Not Found
+        }
+        if ($request['userId'] != $id)
+            return $this->sendForbidden('أنت لا تملك صلاحية تعديل هذا الملف الشخصي');  ///You aren\'t authorized to delete this transaction.
+
+        $validated = $this->validateImage($request);
+        if ($validated->fails())
+            return $this->sendError('Invalid data', $validated->messages(), 400);
+
+        $profile = Profile::find($user->profile);
+        if ($profile->image == null) {
+            $imagePath = $request['image']->store('users', 'public');
+            $profile->image = "/storage/" . $imagePath;
+            $profile->save();
+        } else {
+            $imagePath = $request['image']->storeAs('public/users', last(explode('/', $profile->image)));
+        }
+        return $this->sendResponse($profile->image, 'تم إضافة الصورة بنجاح');    ///Image Updated Successfully!
+
+    }
+
+    public function updateCoverPicture(Request $request, $id)
+    {
+        $user = User::find($id);
+        if ($user == null) {
+            return $this->sendError('المستخدم غير موجود'); ///Case Not Found
+        }
+        if ($request['userId'] != $id)
+            return $this->sendForbidden('أنت لا تملك صلاحية تعديل هذا الملف الشخصي');  ///You aren\'t authorized to delete this transaction.
+
+        $validated = $this->validateImage($request);
+        if ($validated->fails())
+            return $this->sendError('Invalid data', $validated->messages(), 400);
+
+        $profile = Profile::find($user->profile);
+        if ($profile->cover == null) {
+            $imagePath = $request['image']->store('users', 'public');
+            $profile->cover = "/storage/" . $imagePath;
+            $profile->save();
+        } else {
+            $imagePath = $request['image']->storeAs('public/users', last(explode('/', $profile->cover)));
+        }
+        return $this->sendResponse($profile->cover, 'تم إضافة الصورة بنجاح');    ///Image Updated Successfully!
+
+    }
+    public function updateinformation(Request $request, $id)
+    {
+        $user = User::find($id);
+        if ($user == null) {
+            return $this->sendError('المستخدم غير موجود'); ///Case Not Found
+        }
+        if ($request['userId'] != $id)
+            return $this->sendForbidden('أنت لا تملك صلاحية تعديل هذا الملف الشخصي');  ///You aren\'t authorized to delete this transaction.
+
+        $profile = Profile::find($user->profile);
+        $profile->bio = $request['bio'];
+        $user->phone_number = $request['phoneNumber'];
+        $user->address = $request['address'];
+        $profile->save();
+        $user->save();
+        return $this->sendResponse([], 'تم تغيير بياناتك بنجاح');    ///Image Updated Successfully!
+
+    }
+    public function validateImage(Request $request)
+    {
+        $rules = [
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ];
+        return Validator::make($request->all(), $rules, [
+            'image' => 'قيمة خاطئة، يمكن قبول الصور فقط',
+        ]);
     }
 }

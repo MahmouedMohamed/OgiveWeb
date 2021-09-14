@@ -13,7 +13,6 @@ import {
 import { Row, Col, Card, Nav } from "react-bootstrap";
 import Tab from 'react-bootstrap/Tab';
 import Carousel from 'react-bootstrap/Carousel';
-import Footer from './Footer';
 import Select from 'react-select';
 const options = [
     { value: 'chocolate', label: 'Chocolate' },
@@ -141,7 +140,7 @@ class DonationForm extends React.Component {
                                                     <div class="col-sm-4">
                                                         <div class="form-group mb-4">
                                                             <label data-toggle="tooltip" title="Three-digits code on the back of your card">CVV
-                                                            <i class="fa fa-question-circle"></i>
+                                                                <i class="fa fa-question-circle"></i>
                                                             </label>
                                                             <input type="text" required class="form-control" />
                                                         </div>
@@ -149,7 +148,7 @@ class DonationForm extends React.Component {
                                                 </div>
                                                 <Button variant="primary" type="submit">
                                                     إتمام
-                                            </Button>
+                                                </Button>
                                             </Form>
                                         </Container>
                                     </Card>
@@ -162,7 +161,7 @@ class DonationForm extends React.Component {
                                             </Card.Title>
                                             <Card.Header className="text-center font-weight-bold user-info">
                                                 البيانات الحالة
-                                                </Card.Header>
+                                            </Card.Header>
                                             <Form.Group controlId="formBasicEmail">
                                                 <Form.Label className="text-right start">الحالة </Form.Label>
                                                 <Select options={renderNeedies()} />
@@ -173,7 +172,7 @@ class DonationForm extends React.Component {
                                             </Form.Group>
                                             <Card.Header className="text-center font-weight-bold user-info">
                                                 البيانات الشخصية
-                                                </Card.Header>
+                                            </Card.Header>
                                             <Card.Text>
                                                 سجل بياناتك و هيوصلك مندوبنا
                                             </Card.Text>
@@ -192,7 +191,7 @@ class DonationForm extends React.Component {
                                                 </Form.Group>
                                                 <Button variant="primary" type="submit">
                                                     إتمام
-                                            </Button>
+                                                </Button>
                                             </Form>
                                         </Container>
                                     </Card>
@@ -202,7 +201,7 @@ class DonationForm extends React.Component {
                         </Col>
                     </Row>
                 </Tab.Container>
-                <Footer />
+
 
             </div >
         );

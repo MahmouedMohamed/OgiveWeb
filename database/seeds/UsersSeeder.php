@@ -15,14 +15,14 @@ class UsersSeeder extends Seeder
     public function run()
     {
         //
-        DB::table('users')->insert([
-            'name' => 'Shrouk',
-            'user_name' => 'Shrouk Sobhy',
-            'email' => 'a@a.com',
-            'gender' => 'female',
-            'phone_number' => '012',
-            'address' => '1',
-            'password' => "23",
-        ]);
+        // DB::table('users')->insert([
+        //     'name' => 'Shrouk',
+        //     'user_name' => 'Shrouk Sobhy',
+        //     'email' => 'a@a.com',
+        //     'gender' => 'female',
+        //     'phone_number' => '012',
+        //     'address' => '1',
+        //     'password' => "23",
+        // ]);
     }
 }

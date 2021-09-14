@@ -6,11 +6,13 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Passport\HasApiTokens;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -50,17 +52,36 @@ class User extends Authenticatable
     {
         return $this->hasMany(OauthAccessToken::class);
     }
+    public function createAccessToken()
+    {
+        $this->deleteRelatedAccessTokens();
+        //Hash::make() -> saves only 60 chars to database
+        //TODO: Solve & extend to 255 chars
+        $accessToken = Str::random(60);
+        $this->accessTokens()->create([
+            'access_token' => Hash::make($accessToken),
+            'scopes' => '[]',
+            'active' => 1,
+            'expires_at' => Carbon::now('GMT+2')->addMinute(),
+
+        ]);
+        return $accessToken;
+    }
+    public function deleteRelatedAccessTokens()
+    {
+        $this->accessTokens()->delete();
+    }
     public function profile()
     {
         return $this->hasOne(Profile::class);
     }
-    public function markers()
+    public function foodSharingMarkers()
     {
-        return $this->hasMany(Marker::class)->orderBy('id','DESC');
+        return $this->hasMany(FoodSharingMarker::class)->orderBy('id', 'DESC');
     }
     public function memories()
     {
-        return $this->hasMany(Memory::class)->orderBy('id','DESC');
+        return $this->hasMany(Memory::class)->orderBy('id', 'DESC');
     }
     public function likes()
     {
@@ -84,18 +105,43 @@ class User extends Authenticatable
     }
     public function createdNeedies()
     {
-        return $this->hasMany(Needy::class,'createdBy');
+        return $this->hasMany(Needy::class, 'createdBy');
     }
     public function onlinetransactions()
     {
-        return $this->hasMany(OnlineTransaction::class,'giver');
+        return $this->hasMany(OnlineTransaction::class, 'giver');
     }
     public function offlinetransactions()
     {
-        return $this->hasMany(OfflineTransaction::class,'giver');
+        return $this->hasMany(OfflineTransaction::class, 'giver');
     }
-    //To Be Done using roles or just a column
-    public function isAdmin(){
-        return false;
+    public function ataaAchievement()
+    {
+        return $this->hasOne(AtaaAchievement::class);
+    }
+    public function bans()
+    {
+        return $this->hasMany(UserBan::class, 'banned_user');
+    }
+
+    public function createdBans()
+    {
+        return $this->hasMany(UserBan::class, 'created_by');
+    }
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class)->withTimeStamps();
+    }
+    public function assignRole($role)
+    {
+        $this->roles()->sync($role);  //save if not there, replace if there // can pass argument(x,false) //false will let us add without dropping anything
+    }
+    public function abilities()
+    {
+        return $this->roles->map->abilities->flatten()->pluck('name')->unique();
+    }
+    public function hasAbility(String $ability)
+    {
+        return $this->abilities($ability);
     }
 }
