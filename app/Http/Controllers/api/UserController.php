@@ -34,8 +34,11 @@ class UserController extends BaseController
             if ($loginBan) {
                 return $this->sendForbidden('Sorry, but is seems you are banned from login until ' . ($loginBan['end_at'] ?? 'infinite period of time.'));
             }
+            $tokenDetails = $user->createAccessToken();
             $this->content['token'] =
-                $user->createAccessToken();
+                $tokenDetails['accessToken'];
+            $this->content['expiryDate'] =
+                $tokenDetails['expiryDate'];
 
             $this->content['user'] = Auth::user();
             $profile = Profile::findOrFail(Auth::user()->profile);
