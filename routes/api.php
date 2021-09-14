@@ -43,6 +43,9 @@ Route::patch('/profile/{id}/information', [UserController::class, 'updateinforma
 Route::apiResource('/ataa/markers', FoodSharingMarkersController::class);
 Route::patch('/ataa/collect/{id}', [FoodSharingMarkersController::class, 'collect']);
 Route::get('/ataa/achivement/{id}', [AtaaAchievementController::class, 'show']);
+Route::apiResource('/ataa/prize',AtaaPrizeController::class);
+Route::post('/ataa/prize/{id}/activate', [AtaaPrizeController::class, 'activate']);
+Route::post('/ataa/prize/{id}/deactivate', [AtaaPrizeController::class, 'deactivate']);
 
 
 // Route::group(['middleware' => 'auth:api'], function () {
@@ -53,11 +56,6 @@ Route::post('/like', [LikesController::class, 'likeUnlike']);
 // });
 
 //TODO: Add This APIs to be auth by 2oauth token
-// Route::get('/pet',[PetController::class, 'index']);
-// Route::get('/pet/{id}',[PetController::class, 'show']);
-// Route::post('/pet',[PetController::class, 'store']);
-// Route::patch('/pet/{id}',[PetController::class, 'update']);
-// Route::delete('/pet/{id}',[PetController::class, 'destroy']);
 
 Route::apiResource('pets', PetController::class);
 Route::get('/filterByType', [PetController::class, 'filterByType']);
@@ -105,14 +103,10 @@ Route::post('/admin/ahed/disapprove/{id}', [AdminController::class, 'disapprove'
 Route::post('/admin/ahed/collect', [AdminController::class, 'collectOfflineTransaction']);
 Route::post('/admin/ataa/freezeachievment', [AdminController::class, 'freezeUserAtaaAchievments']);
 Route::post('/admin/ataa/defreezeachievment', [AdminController::class, 'defreezeUserAtaaAchievments']);
-Route::post('/admin/ataa/addprize', [AdminController::class, 'addAtaaPrize']);
-Route::post('/admin/ataa/prize/{id}/activate', [AdminController::class, 'activateAtaaPrize']);
-Route::post('/admin/ataa/prize/{id}/deactivate', [AdminController::class, 'deactivateAtaaPrize']);
 Route::get('/admin/ban', [AdminController::class, 'getUserBans']);
 Route::post('/admin/ban', [AdminController::class, 'addUserBan']);
 Route::patch('/admin/ban/activate/{id}', [AdminController::class, 'activateBan']);
 Route::patch('/admin/ban/deactivate/{id}', [AdminController::class, 'deactivateBan']);
-Route::apiResource('/ataa/prize',AtaaPrizeController::class);
 });
 
 
