@@ -3,11 +3,12 @@ import './Login.css';
 // import Login from './Login.module.scss';
 import Navbar from '../Includes/Navbar';
 import Footer from '../Includes/Footer';
-
+function handleSubmit(){
+   return alert("sss");
+}
 function Login() {
     return (
         <>
-
             <Navbar />
             <div className="login">
                 <React.Fragment>
@@ -22,7 +23,7 @@ function Login() {
                             </div> */}
                             </div>
                             <div className="card-body">
-                                <form>
+                                <form onSubmit={handleSubmit()}>
                                     <div class="input-group form-group">
                                         <div className="input-group-prepend">
                                             <span className="input-group-text"><i className="fas fa-user"></i></span>

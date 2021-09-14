@@ -14,6 +14,7 @@ import CharitiesForm from './JoinUs/CharitiesForm';
 import DonationForm from './DonationForm';
 import Nav from 'react-bootstrap/Nav';
 import './Includes/style.css';
+import OneCaseDonationForm from './OneCaseDonationForm';
 
 function Ahed() {
     return (
@@ -59,6 +60,9 @@ function Ahed() {
                 </Route>
                 <Route exact path="/ahed/donate">
                     <DonationForm />
+                </Route>
+                <Route exact path="/ahed/donate/:id">
+                <OneCaseDonationForm />
                 </Route>
                 {/* </Content> */}
             </Switch>

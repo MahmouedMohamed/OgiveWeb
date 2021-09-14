@@ -16,8 +16,7 @@ import Button from 'react-bootstrap/Button';
 import Pagination from "react-js-pagination";
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import Slider from 'react-slick';
-import 'slick-carousel/slick/slick-theme.css';
-import 'slick-carousel/slick/slick.css';
+
 const theme = createTheme({
     typography: {
         subtitle1: {
@@ -52,7 +51,7 @@ class Cases extends Component {
         this.setState({ current_page: pageNumber }, () => { this.loadNeedies(); });
     }
     loadNeedies() {
-        let url = `http://192.168.1.175:8000/api/ahed/needies?page=${this.state.current_page}`;
+        let url = `http://127.0.0.1:8000/api/ahed/needies?page=${this.state.current_page}`;
         axios.get(url)
             .then((response) => {
                 console.log(response.data.data.data)
@@ -68,7 +67,7 @@ class Cases extends Component {
             })
     }
     loadUrgentNeedies() {
-        let url = `http://192.168.1.175:8000/api/ahed/urgentneedies`;
+        let url = `http://127.0.0.1:8000/api/ahed/urgentneedies`;
         axios.get(url)
             .then((response) => {
                 console.log(response.data.data.data)
@@ -130,7 +129,7 @@ class Cases extends Component {
                         {this.state.urgentNeedies && this.state.urgentNeedies.map((needie, index) => (
                             <div>
                                 <Card style={{ width: '18rem' }} spacing={2} elevation={1} height={40} >
-                                    
+
                                     <img
                                         src="https://mdbootstrap.com/img/new/standard/city/062.jpg"
                                         className="card-img-top"
@@ -166,7 +165,7 @@ class Cases extends Component {
                                         </Box>
                                         <Box className="center">
 
-                                            <Link to={`/donate/${needie.id}`} className="btn btn-primary">
+                                            <Link to={`/ahed/donate/${needie.id}`} className="btn btn-primary">
                                                 <Button variant="outlined" color="primary">
                                                     تبرع
                                                 </Button>
@@ -183,70 +182,72 @@ class Cases extends Component {
                         <Typography variant="h4">حالات عادية</Typography>
                         {this.state.needies && this.state.needies.map((needie, index) => (
                             <Col key={index}>
-                                <Card style={{ width: '18rem' }} spacing={2} elevation={1} height={40} >
-                                    <img
-                                        src="https://mdbootstrap.com/img/new/standard/city/062.jpg"
-                                        className="card-img-top"
-                                        alt="..."
-                                    />
-                                    <Box
-                                        bgcolor="primary.main"
-                                        color="primary.contrastText"
-                                        p={1}
-                                        px={5}
-                                        borderRadius={8}
-                                        mx={5}
-                                        textAlign="center"
-                                    >
-                                        {needie.type}
-                                    </Box>
-                                    <CardContent>
-                                        {/* <Badge variant="dot">{needie.type} </Badge> */}
-                                        {/* <Card.Title >
+                                <Box mb={3}>
+                                    <Card style={{ width: '18rem' }} spacing={2} elevation={1} height={40} className="needieCard">
+                                        <img
+                                            src="https://mdbootstrap.com/img/new/standard/city/062.jpg"
+                                            className="card-img-top"
+                                            alt="..."
+                                        />
+                                        <Box
+                                            bgcolor="primary.main"
+                                            color="primary.contrastText"
+                                            p={1}
+                                            px={5}
+                                            borderRadius={8}
+                                            mx={5}
+                                            textAlign="center"
+                                        >
+                                            {needie.type}
+                                        </Box>
+                                        <CardContent>
+                                            {/* <Badge variant="dot">{needie.type} </Badge> */}
+                                            {/* <Card.Title >
                                             <Link to={`/ahed/needie/${needie.id}`}>
                                                 <Typography variant="h6" className="link">
                                                     {needie.name}
                                                 </Typography>
                                             </Link>
                                         </Card.Title> */}
-                                        {/* <Card.Text>
+                                            {/* <Card.Text>
                                             {needie.address}
                                         </Card.Text> */}
-                                        <Typography color="textSecondary" component="p" style={{ height: "100%" }}>
-                                            <Link to={`/ahed/needie/${needie.id}`}>
-                                                <Typography variant="h6" className="link">
-                                                    {needie.name}
-                                                </Typography>
-                                            </Link>
-                                        </Typography>
-                                        <CardActions>
-                                            <Typography>هدفنا: {needie.need} ج.م</Typography>
-                                        </CardActions>
-                                        <Box pb={2}>
-                                            <ProgressBar variant="primary"
-                                                now={(needie.collected / needie.need) * 100}
-                                                label={`${(needie.collected / needie.need) * 100}%`}
-                                                className="progressbartext"
-                                            />
-                                        </Box>
-                                        {/* <Card.Subtitle className="mt-2 text-muted small text-right">{needie.collected}ج.م</Card.Subtitle> */}
-                                        <Grid container>
-                                            <Grid item xs={4}>
-                                                <Link to={`/donate/${needie.id}`} className="btn btn-primary">
-                                                    <Button variant="outlined" color="primary">
-                                                        تبرع
-                                                    </Button>
+                                            <Typography color="textSecondary" component="p" style={{ height: "100%" }}>
+                                                <Link to={`/ahed/needie/${needie.id}`}>
+                                                    <Typography variant="h6" className="link">
+                                                        {needie.name}
+                                                    </Typography>
                                                 </Link>
+                                            </Typography>
+                                            <CardActions>
+                                                <Typography>هدفنا: {needie.need} ج.م</Typography>
+                                            </CardActions>
+                                            <Box pb={2}>
+                                                <ProgressBar variant="primary"
+                                                    now={(needie.collected / needie.need) * 100}
+                                                    label={`${(needie.collected / needie.need) * 100}%`}
+                                                    className="progressbartext"
+                                                />
+                                            </Box>
+                                            {/* <Card.Subtitle className="mt-2 text-muted small text-right">{needie.collected}ج.م</Card.Subtitle> */}
+                                            <Grid container>
+                                                <Grid item xs={4}>
+                                                    <Link to={`/ahed/donate/${needie.id}`} className="btn btn-primary">
+                                                        <Button  variant="outlined" color="primary">
+                                                            تبرع
+                                                        </Button>
+                                                    </Link>
+                                                </Grid>
                                             </Grid>
-                                        </Grid>
-                                    </CardContent>
-                                </Card>
+                                        </CardContent>
+                                    </Card>
+                                </Box>
                             </Col>
                         )
                         )
                         }
                     </Row>
-                 
+                    <br />
                     <Pagination
                         activePage={this.state.current_page}
                         itemsCountPerPage={this.state.per_page}

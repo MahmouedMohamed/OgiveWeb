@@ -103,3 +103,6 @@ input:focus {
     transform: translate(-50%, -50%);
     color: white;
 }
+.needieCard{
+    margin-bottom: 10px;
+}

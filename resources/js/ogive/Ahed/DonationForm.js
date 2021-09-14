@@ -10,10 +10,12 @@ import { Row, Col, Card, Nav } from "react-bootstrap";
 import Tab from 'react-bootstrap/Tab';
 import Carousel from 'react-bootstrap/Carousel';
 import Select from 'react-select';
-const options = [
-    { value: 'chocolate', label: 'Chocolate' },
-    { value: 'strawberry', label: 'Strawberry' },
-    { value: 'vanilla', label: 'Vanilla' },
+const typesOfNeedie = [
+    { value: 'إيجاد مسكن مناسب', label: 'إيجاد مسكن مناسب' },
+    { value: 'تحسين مستوي المعيشة', label: 'تحسين مستوي المعيشة' },
+    { value: 'تجهيز لفرحة', label: 'تجهيز لفرحة' },
+    { value: 'سداد الديون', label: 'سداد الديون' },
+    { value: 'إيجاد علاج', label: 'إيجاد علاج' },
 ];
 class DonationForm extends React.Component {
 
@@ -21,6 +23,7 @@ class DonationForm extends React.Component {
         super(props);
         this.state = {
             needies: [],
+            caseType: ""
         };
     }
 
@@ -40,6 +43,10 @@ class DonationForm extends React.Component {
     }
     componentDidMount() {
         this.loadNeedies();
+    }
+    change(event){
+       alert(event.target)
+      
     }
     render() {
         // Old way to render in option 
@@ -79,6 +86,11 @@ class DonationForm extends React.Component {
                                                 <Card.Header className="text-center font-weight-bold user-info">
                                                     البيانات الحالة
                                                 </Card.Header>
+                                                <Form.Group controlId="formBasicEmail">
+                                                    <Form.Label className="text-right start">نوع التبرع
+                                                    </Form.Label>
+                                                    <Select options={typesOfNeedie}  />
+                                                </Form.Group>
                                                 <Form.Group controlId="formBasicEmail">
                                                     <Form.Label className="text-right start">الحالة </Form.Label>
                                                     <Select options={renderNeedies()} />
