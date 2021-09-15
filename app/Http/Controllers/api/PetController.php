@@ -6,6 +6,7 @@ use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\Pet;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class PetController extends BaseController
 {
@@ -33,6 +34,8 @@ class PetController extends BaseController
     {
         $validated = $this->validatePet($request);
         // $data=request()->all();
+        if ($validated->fails())
+            return $this->sendError('خطأ في البيانات', $validated->messages(), 400);   ///Invalid data.
         $user = User::find(request()->input('user_id'));
         if (!$user) {
             return $this->sendError('User Not Found');
@@ -120,7 +123,7 @@ class PetController extends BaseController
     }
     public function validatePet(Request $request)
     {
-        return $request->validate([
+        $rules = [
             'user_id' => 'required',
             'name' => 'required|max:255',
             'age' => 'required|integer|max:100',
@@ -129,6 +132,12 @@ class PetController extends BaseController
             'notes' => 'max:1024',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048e',
 
+        ];
+        return Validator::make($request->all(), $rules, [
+            'required' => 'هذا الحقل مطلوب',
+            'min' => 'قيمة خاطئة، أقل قيمة هي :min',
+            'max' => 'قيمة خاطئة أعلي قيمة هي :max',
+            'numeric' => 'قيمة خاطئة، يمكن قبول الأرقام فقط',
         ]);
     }
     // public function filterByType()
