@@ -19,13 +19,22 @@ class FoodSharingMarkersController extends BaseController
     /**
      * Display a listing of the resource.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $responseHandler = new ResponseHandler($request['language']);
         //TODO: Get User Location -> Return Only nearest Markers
 
         //TODO: CHECK IF USER IS BANNED FROM VIEWING MARKERS!!!
+        $user = User::find(request(['userId']));
+        if (!$user) {
+            return $this->sendError($responseHandler->words['UserNotFound']);
+        }
+        if (!$user->can('viewAny', FoodSharingMarker::class)) {
+            return $this->sendForbidden($responseHandler->words['FoodSharingMarkerViewingBannedMessage']);
+        }
         return $this->sendResponse(FoodSharingMarker::select(
             'id',
             'latitude',
