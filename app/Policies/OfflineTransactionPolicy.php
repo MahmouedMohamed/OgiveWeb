@@ -5,10 +5,13 @@ namespace App\Policies;
 use App\Models\OfflineTransaction;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use App\Models\AvailableAbilities;
+use App\Traits\HasNoBan;
+use App\Traits\HasAbility;
 
 class OfflineTransactionPolicy
 {
-    use HandlesAuthorization;
+    use HandlesAuthorization, HasNoBan, HasAbility;
 
     /**
      * Determine whether the user can collect transaction.
@@ -18,7 +21,7 @@ class OfflineTransactionPolicy
      */
     public function collect(User $user)
     {
-        return $user->isAdmin();
+        return $this->hasAbility($user, AvailableAbilities::CollectOfflineTransaction) && $this->hasNoBan($user, 'CollectOfflineTransaction');
     }
     /**
      * Determine whether the user can view any models.
@@ -40,6 +43,7 @@ class OfflineTransactionPolicy
      */
     public function view(User $user, OfflineTransaction $offlineTransaction)
     {
+        //ToDo: isAdmin() -> Change
         return $user->id == $offlineTransaction->giver || $user->isAdmin();
     }
 
@@ -63,9 +67,10 @@ class OfflineTransactionPolicy
      */
     public function update(User $user, OfflineTransaction $offlineTransaction)
     {
+        //ToDo: isAdmin() -> Change
         return ($user->id == $offlineTransaction->giver || $user->isAdmin()) &&
-         $offlineTransaction->selectedDate == null &&
-          !($offlineTransaction->collected);
+            $offlineTransaction->selectedDate == null &&
+            !($offlineTransaction->collected);
     }
 
     /**
@@ -77,9 +82,10 @@ class OfflineTransactionPolicy
      */
     public function delete(User $user, OfflineTransaction $offlineTransaction)
     {
+        //ToDo: isAdmin() -> Change
         return ($user->id == $offlineTransaction->giver || $user->isAdmin()) &&
-        $offlineTransaction->selectedDate == null &&
-         !($offlineTransaction->collected);
+            $offlineTransaction->selectedDate == null &&
+            !($offlineTransaction->collected);
     }
 
     /**

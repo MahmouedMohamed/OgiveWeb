@@ -5,10 +5,13 @@ namespace App\Policies;
 use App\Models\User;
 use App\Models\UserBan;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use App\Models\AvailableAbilities;
+use App\Traits\HasNoBan;
+use App\Traits\HasAbility;
 
 class UserBanPolicy
 {
-    use HandlesAuthorization;
+    use HandlesAuthorization, HasNoBan, HasAbility;
 
     /**
      * Determine whether the user can view any models.
@@ -18,7 +21,8 @@ class UserBanPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->isAdmin();
+
+        return $this->hasAbility($user, AvailableAbilities::ViewUserBan) && $this->hasNoBan($user, 'ViewUserBan');
     }
 
     /**
@@ -39,9 +43,11 @@ class UserBanPolicy
      * @param  \App\Models\User  $user
      * @return mixed
      */
-    public function create(User $user,User $bannedUser)
+    public function create(User $user, User $bannedUser)
     {
-        return $user != $bannedUser && $user->isAdmin();
+        return $user != $bannedUser &&
+            $this->hasAbility($user, AvailableAbilities::CreateUserBan) &&
+            $this->hasNoBan($user, 'CreateUserBan');
     }
 
     /**
@@ -53,7 +59,8 @@ class UserBanPolicy
      */
     public function update(User $user, UserBan $userBan)
     {
-        //
+        return $this->hasAbility($user, AvailableAbilities::CreateUserBan) &&
+            $this->hasNoBan($user, 'CreateUserBan');
     }
 
     /**
@@ -65,7 +72,8 @@ class UserBanPolicy
      */
     public function activate(User $user, UserBan $userBan)
     {
-        return $user->isAdmin();
+        return $this->hasAbility($user, AvailableAbilities::ActivateUser) &&
+            $this->hasNoBan($user, 'ActivateUser');
     }
 
     /**
@@ -77,7 +85,8 @@ class UserBanPolicy
      */
     public function deactivate(User $user, UserBan $userBan)
     {
-        return $user->isAdmin();
+        return $this->hasAbility($user, AvailableAbilities::DeactivateUser) &&
+            $this->hasNoBan($user, 'DeactivateUser');
     }
 
     /**
@@ -89,7 +98,8 @@ class UserBanPolicy
      */
     public function delete(User $user, UserBan $userBan)
     {
-        //
+        return $this->hasAbility($user, AvailableAbilities::DeleteUserBan) &&
+            $this->hasNoBan($user, 'DeleteUserBan');
     }
 
     /**
