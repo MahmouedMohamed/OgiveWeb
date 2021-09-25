@@ -346,9 +346,8 @@ class AdminController extends BaseController
 
     public function validateUserBan(Request $request)
     {
-        $banType = new BanType();
         $rules = [
-            'tag' => 'required|in:' . $banType->toString(),
+            'tag' => 'required',
             'start_at' => 'date',
             'end_at' => 'date|after:from'
         ];

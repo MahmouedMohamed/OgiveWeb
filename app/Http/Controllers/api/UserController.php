@@ -16,21 +16,19 @@ use Illuminate\Support\Facades\Hash;
 
 use Illuminate\Http\Request;
 
-use App\Models\BanType;
+use App\Models\BanTypes;
 
 class UserController extends BaseController
 {
-    private $banType;
     public function __construct()
     {
         $this->content = array();
-        $this->banType = new BanType();
     }
     public function login()
     {
         if (Auth::attempt(['email' => request('email'), 'password' => request('password')])) {
             $user = Auth::user();
-            $loginBan = $user->bans()->where('active', '=', 1)->where('tag', '=', $this->banType->types['Login'])->get()->first();
+            $loginBan = $user->bans()->where('active', '=', 1)->where('tag', '=', BanTypes::Login)->get()->first();
             if ($loginBan) {
                 return $this->sendForbidden('Sorry, but is seems you are banned from login until ' . ($loginBan['end_at'] ?? 'infinite period of time.'));
             }

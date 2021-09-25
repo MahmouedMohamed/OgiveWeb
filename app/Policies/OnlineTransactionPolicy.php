@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\OnlineTransaction;
 use App\Models\User;
+use App\Models\BanTypes;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class OnlineTransactionPolicy
@@ -30,6 +31,7 @@ class OnlineTransactionPolicy
      */
     public function view(User $user, OnlineTransaction $transaction)
     {
+        //ToDo: isAdmin() -> Change
         return $user->id == $transaction->giver || $user->isAdmin();
     }
 
