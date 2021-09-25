@@ -42,4 +42,11 @@ abstract class AvailableAbilities
     const BanModerator = "ban_moderator";
     const BanAtaaAdmin = "ban_ataa_admin";
     const BanAhedAdmin = "ban_ahed_admin";
+    const ViewAtaaBadge = "view_ataa_badge";                             //Implemented
+    const CreateAtaaBadge = "create_ataa_badge";                             //Implemented
+    const UpdateAtaaBadge = "update_ataa_badge";                             //Implemented
+    const DeleteAtaaBadge = "delete_ataa_badge";                             //Implemented
+    const ActivateAtaaBadge = "activate_ataa_badge";                             //Implemented
+    const DeactivateAtaaBadge = "deactivate_ataa_badge";                             //Implemented
+
 }
