@@ -17,6 +17,7 @@ use App\Http\Controllers\api\UserController;
 use App\Http\Controllers\api\AtaaAchievementController;
 use App\Http\Controllers\api\TokensController;
 use App\Http\Controllers\api\AtaaPrizeController;
+use App\Http\Controllers\api\AtaaBadgeController;
 use App\Models\Pet;
 use Illuminate\Support\Facades\Route;
 
@@ -46,6 +47,10 @@ Route::get('/ataa/achivement/{id}', [AtaaAchievementController::class, 'show']);
 Route::apiResource('/ataa/prize',AtaaPrizeController::class);
 Route::post('/ataa/prize/{id}/activate', [AtaaPrizeController::class, 'activate']);
 Route::post('/ataa/prize/{id}/deactivate', [AtaaPrizeController::class, 'deactivate']);
+Route::apiResource('/ataa/badge',AtaaBadgeController::class);
+Route::post('/ataa/badge/{id}/activate', [AtaaBadgeController::class, 'activate']);
+Route::post('/ataa/badge/{id}/deactivate', [AtaaBadgeController::class, 'deactivate']);
+
 
 
 // Route::group(['middleware' => 'auth:api'], function () {
