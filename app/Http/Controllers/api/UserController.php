@@ -105,40 +105,50 @@ class UserController extends BaseController
     {
         $user = User::find($id);
 
+        //ToDo: Optimize Queries
         if ($user) {
             ///Get Number of needies that user helped
             $neediesApprovedForUser = Needy::where('createdBy', '=', $user->id)->where('approved', '=', '1')->get()->pluck('id')->unique()->toArray();
-            $neediesDonatedOfflineFor = OfflineTransaction::where('giver', '=', $user->id)->where('collected', '=', '1')->get()->pluck('needy')->unique()->toArray();
-            $neediesDonatedOnlineFor = OnlineTransaction::where('giver', '=', $user->id)->get()->pluck('needy')->unique()->toArray();
+            $offlineDonationsForUser = OfflineTransaction::where('giver', '=', $user->id)->where('collected', '=', '1')->get();
+            $onlineDonationsForUser = OnlineTransaction::where('giver', '=', $user->id)->get();
+
+            $neediesDonatedOfflineFor =
+                $offlineDonationsForUser->pluck('needy')->unique()->toArray();
+            $neediesDonatedOnlineFor =
+                $onlineDonationsForUser->pluck('needy')->unique()->toArray();
             $neediesHelped = collect(array_merge($neediesApprovedForUser, $neediesDonatedOfflineFor, $neediesDonatedOnlineFor));
             $this->content['NumberOfNeediesUserHelped'] = $neediesHelped->unique()->count();
 
             ///Get Value of all transactions
-            $valueOfOfflineDonation = OfflineTransaction::where('giver', '=', $user->id)->where('collected', '=', '1')->get()->pluck('amount')->toArray();
-            $valueOfOnlineDonation = OnlineTransaction::where('giver', '=', $user->id)->get()->pluck('amount')->toArray();
+            $valueOfOfflineDonation = $offlineDonationsForUser
+                ->pluck('amount')->toArray();
+            $valueOfOnlineDonation = $onlineDonationsForUser
+                ->pluck('amount')->toArray();
             $valueOfDontaion = collect(array_merge($valueOfOfflineDonation, $valueOfOnlineDonation));
             $this->content['ValueOfDonation'] = $valueOfDontaion->sum();
         }
-        ///All Needies satisfied
-        $neediesSatisfied = Needy::where('satisfied', '=', '1')->get()->pluck('id')->unique()->count();
-        $this->content['NeediesSatisfied'] = $neediesSatisfied;
 
+        $activeNeedies = Needy::where('approved', '=', '1')->get();
+
+        ///All Needies satisfied
+        $neediesSatisfied = $activeNeedies->where('satisfied', '=', '1')->pluck('id')->unique()->count();
+        $this->content['NeediesSatisfied'] = $neediesSatisfied;
 
         $caseType = new CaseType();
         ///All Needies safisfied with إيجاد مسكن مناسب
-        $neediesFoundTheirNewHome = Needy::where('satisfied', '=', '1')->where('type', '=', $caseType->types[0])->get()->pluck('id')->unique()->count();
+        $neediesFoundTheirNewHome = $activeNeedies->where('satisfied', '=', '1')->where('type', '=', $caseType->types[0])->pluck('id')->unique()->count();
         $this->content['NeediesFoundTheirNewHome'] = $neediesFoundTheirNewHome;
         ///All Needies safisfied with تحسين مستوي المعيشة
-        $neediesUpgradedTheirStandardOfLiving = Needy::where('satisfied', '=', '1')->where('type', '=', $caseType->types[1])->get()->pluck('id')->unique()->count();
+        $neediesUpgradedTheirStandardOfLiving = $activeNeedies->where('satisfied', '=', '1')->where('type', '=', $caseType->types[1])->pluck('id')->unique()->count();
         $this->content['NeediesUpgradedTheirStandardOfLiving'] = $neediesUpgradedTheirStandardOfLiving;
         ///All Needies safisfied with تجهيز عرائس
-        $neediesHelpedToPrepareForPride = Needy::where('satisfied', '=', '1')->where('type', '=', $caseType->types[2])->get()->pluck('id')->unique()->count();
+        $neediesHelpedToPrepareForPride = $activeNeedies->where('satisfied', '=', '1')->where('type', '=', $caseType->types[2])->pluck('id')->unique()->count();
         $this->content['NeediesHelpedToPrepareForPride'] = $neediesHelpedToPrepareForPride;
         ///All Needies safisfied with ديون
-        $neediesHelpedToPayDept = Needy::where('satisfied', '=', '1')->where('type', '=', $caseType->types[3])->get()->pluck('id')->unique()->count();
+        $neediesHelpedToPayDept = $activeNeedies->where('satisfied', '=', '1')->where('type', '=', $caseType->types[3])->pluck('id')->unique()->count();
         $this->content['NeediesHelpedToPayDept'] = $neediesHelpedToPayDept;
         ///All Needies safisfied with علاج
-        $neediesHelpedToCure = Needy::where('satisfied', '=', '1')->where('type', '=', $caseType->types[4])->get()->pluck('id')->unique()->count();
+        $neediesHelpedToCure = $activeNeedies->where('satisfied', '=', '1')->where('type', '=', $caseType->types[4])->pluck('id')->unique()->count();
         $this->content['NeediesHelpedToCure'] = $neediesHelpedToCure;
 
         ///neediesNotSatisfied

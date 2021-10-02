@@ -36,9 +36,9 @@ class AdminController extends BaseController
         $generalData = array();
         $ahedData = array();
         $breedmeData = array();
-        $numberOfUsers = User::all()->count();
-        $numberOfNeedies = Needy::all()->count();
-        $numberOfNeediesSatisfied = Needy::all()->where('satisfied', '=', true)->count();
+        $numberOfUsers = User::count();
+        $numberOfNeedies = Needy::count();
+        $numberOfNeediesSatisfied = Needy::where('satisfied', '=', true)->count();
         $numberOfTransactions = OnlineTransaction::all()->count() + OfflineTransaction::all()->where('collected', '=', true)->count();
         $givesCollected = OnlineTransaction::all()->sum('amount') + OfflineTransaction::all()->where('collected', '=', true)->sum('amount');
         $numberOfPets = Pet::all()->count();
