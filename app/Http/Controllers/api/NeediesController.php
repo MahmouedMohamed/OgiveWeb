@@ -9,6 +9,7 @@ use App\Models\NeedyMedia;
 use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -21,26 +22,26 @@ class NeediesController extends BaseController
      */
     public function index()
     {
-        $needies = Needy::with('mediasBefore:id,path,needy')
-            ->with('mediasAfter:id,path,needy')
-            ->where('approved', '=', 1)
+        $currentPage = request()->get('page', 1);
         return $this->sendResponse(
-            Needy::join('users', 'users.id', 'needies.createdBy')
-                ->join('profiles', 'users.profile', 'profiles.id')
-                ->select(
-                    'needies.*',
-                    'users.id as userId',
-                    'users.name as userName',
-                    'users.email_verified_at as userEmailVerifiedAt',
-                    'profiles.image as userImage'
-                )
-                ->latest('needies.created_at')
-                ->with('mediasBefore:id,path,needy')
-                ->with('mediasAfter:id,path,needy')
-                ->where('approved', '=', 1)
-                ->where('severity', '<', '7')
-                ->paginate(8)
-            ,
+            Cache::remember('needies-' . $currentPage, 60 * 60 * 24, function () {
+                return
+                    Needy::join('users', 'users.id', 'needies.createdBy')
+                    ->join('profiles', 'users.profile', 'profiles.id')
+                    ->select(
+                        'needies.*',
+                        'users.id as userId',
+                        'users.name as userName',
+                        'users.email_verified_at as userEmailVerifiedAt',
+                        'profiles.image as userImage'
+                    )
+                    ->latest('needies.created_at')
+                    ->with('mediasBefore:id,path,needy')
+                    ->with('mediasAfter:id,path,needy')
+                    ->where('approved', '=', 1)
+                    ->where('severity', '<', '7')
+                    ->paginate(8);
+            }),
             'تم إسترجاع البيانات بنجاح'
         );  ///Cases retrieved successfully.
     }
@@ -52,23 +53,26 @@ class NeediesController extends BaseController
      */
     public function urgentIndex()
     {
+        $currentPage = request()->get('page', 1);
         return $this->sendResponse(
-            Needy::join('users', 'users.id', 'needies.createdBy')
-                ->join('profiles', 'users.profile', 'profiles.id')
-                ->select(
-                    'needies.*',
-                    'users.id as userId',
-                    'users.name as userName',
-                    'users.email_verified_at as userEmailVerifiedAt',
-                    'profiles.image as userImage'
-                )
-                ->latest('needies.created_at')
-                ->with('mediasBefore:id,path,needy')
-                ->with('mediasAfter:id,path,needy')
-                ->where('approved', '=', 1)
-                ->where('severity', '>=', '7')
-                ->paginate(8)
-            ,
+            Cache::remember('urgentNeedies-' . $currentPage, 60 * 60 * 24, function () {
+                return
+                    Needy::join('users', 'users.id', 'needies.createdBy')
+                    ->join('profiles', 'users.profile', 'profiles.id')
+                    ->select(
+                        'needies.*',
+                        'users.id as userId',
+                        'users.name as userName',
+                        'users.email_verified_at as userEmailVerifiedAt',
+                        'profiles.image as userImage'
+                    )
+                    ->latest('needies.created_at')
+                    ->with('mediasBefore:id,path,needy')
+                    ->with('mediasAfter:id,path,needy')
+                    ->where('approved', '=', 1)
+                    ->where('severity', '>=', '7')
+                    ->paginate(8);
+            }),
             'تم إسترجاع البيانات بنجاح'
         );  ///Cases retrieved successfully.
     }
