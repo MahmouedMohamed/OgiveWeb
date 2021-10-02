@@ -12,7 +12,7 @@ use App\Models\AtaaAchievement;
 use App\Models\AtaaPrize;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
-
+use Illuminate\Support\Facades\Cache;
 
 class FoodSharingMarkersController extends BaseController
 {
@@ -27,7 +27,7 @@ class FoodSharingMarkersController extends BaseController
         //TODO: Get User Location -> Return Only nearest Markers
         $responseHandler = new ResponseHandler($request['language']);
 
-        $user = User::find(request(['userId']));
+        $user = User::find($request['userId']);
         if (!$user) {
             return $this->sendError($responseHandler->words['UserNotFound']);
         }
@@ -36,16 +36,22 @@ class FoodSharingMarkersController extends BaseController
             return $this->sendForbidden($responseHandler->words['FoodSharingMarkerViewingBannedMessage']);
         }
 
-        return $this->sendResponse(FoodSharingMarker::select(
-            'id',
-            'latitude',
-            'longitude',
-            'type',
-            'description',
-            'quantity',
-            'priority'
-        )
-            ->where('collected', '=', 0)->get(), '');
+        return $this->sendResponse(
+            Cache::remember('foodsharingmarkers', 60 * 60 * 24, function () {
+                return
+                    FoodSharingMarker::select(
+                        'id',
+                        'latitude',
+                        'longitude',
+                        'type',
+                        'description',
+                        'quantity',
+                        'priority'
+                    )
+                    ->where('collected', '=', 0)->get();
+            }),
+            ''
+        );
     }
 
     /**

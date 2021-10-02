@@ -4,7 +4,10 @@ namespace App\Providers;
 
 use App\Models\Needy;
 use App\Observers\NeediesObserver;
+use App\Models\FoodSharingMarker;
+use App\Observers\FoodSharingMarkersObserver;
 use Illuminate\Support\ServiceProvider;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -28,7 +31,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
         Needy::observe(NeediesObserver::class);
+        FoodSharingMarker::observe(FoodSharingMarkersObserver::class);
     }
 }
