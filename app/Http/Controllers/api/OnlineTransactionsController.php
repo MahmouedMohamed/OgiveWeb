@@ -9,9 +9,12 @@ use App\Models\OnlineTransaction;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Exceptions\UserNotFound;
+use App\Traits\UserChecker;
 
 class OnlineTransactionsController extends BaseController
 {
+    use UserChecker;
     /**
      * Display a listing of the resource.
      *
@@ -19,8 +22,9 @@ class OnlineTransactionsController extends BaseController
      */
     public function index()
     {
-        $user = User::find(request()->input('userId'));
-        if (!$user) {
+        try {
+            $user = $this->userExists(request()->input('userId'));
+        } catch (UserNotFound $e) {
             return $this->sendError('المستخدم غير موجود');  ///User Not Found
         }
         return $this->sendResponse($user->onlinetransactions, 'تم إسترجاع البيانات بنجاح'); ///Transactions retrieved successfully.
