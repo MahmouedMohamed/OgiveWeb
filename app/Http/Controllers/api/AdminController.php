@@ -179,7 +179,7 @@ class AdminController extends BaseController
         }
 
         $user->ataaAchievement->freeze();
-        return $this->sendResponse([], 'User Acheivement Freezed Successfully!');
+        return $this->sendResponse([], 'User Achievement Freezed Successfully!');
     }
 
     /**
@@ -204,7 +204,6 @@ class AdminController extends BaseController
 
         //Check if current user can freeze
         if (!$admin->can('defreeze', $user->ataaAchievement)) {
-            return $this->sendForbidden('You aren\'t authorized to defreeze this user acheivement.');
             return $this->sendForbidden('You aren\'t authorized to defreeze this user achievements.');
         }
 

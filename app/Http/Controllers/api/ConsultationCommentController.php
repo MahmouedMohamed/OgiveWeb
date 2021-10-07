@@ -18,7 +18,7 @@ class ConsultationCommentController extends BaseController
     public function index()
     {
         $comments = ConsultationsComment::all();
-        return $this->sendResponse($comments, "Comments are retireved Successfully");
+        return $this->sendResponse($comments, "Comments are retrieved Successfully");
     }
 
     /**

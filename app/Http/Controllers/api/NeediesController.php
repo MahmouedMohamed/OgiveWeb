@@ -156,7 +156,7 @@ class NeediesController extends BaseController
                 'path' => $imagePath,
             ]);
         }
-        return $this->sendResponse([], 'شكراً لمساهمتك القيمة'); ///Thank You For Your Contribution!
+        return $this->sendResponse([], 'شكراً لمساهتمك القيمة'); ///Thank You For Your Contribution!
     }
 
     /**
