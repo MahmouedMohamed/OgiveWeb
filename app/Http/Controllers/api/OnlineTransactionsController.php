@@ -38,7 +38,7 @@ class OnlineTransactionsController extends BaseController
      */
     public function store(Request $request)
     {
-        //TODO: Recevie Payment information "Card number, amount, expirydate, cvv, etc"
+        //TODO: Receive Payment information "Card number, amount, expirydate, cvv, etc"
         //Make payment request /Success continue
         //Validate Request
         $validated = $this->validateTransaction($request);

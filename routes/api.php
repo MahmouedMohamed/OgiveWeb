@@ -43,7 +43,7 @@ Route::patch('/profile/{id}/information', [UserController::class, 'updateinforma
 //**      Ataa Controllers      **//
 Route::apiResource('/ataa/markers', FoodSharingMarkersController::class);
 Route::patch('/ataa/collect/{id}', [FoodSharingMarkersController::class, 'collect']);
-Route::get('/ataa/achivement/{id}', [AtaaAchievementController::class, 'show']);
+Route::get('/ataa/achievement/{id}', [AtaaAchievementController::class, 'show']);
 Route::apiResource('/ataa/prize',AtaaPrizeController::class);
 Route::post('/ataa/prize/{id}/activate', [AtaaPrizeController::class, 'activate']);
 Route::post('/ataa/prize/{id}/deactivate', [AtaaPrizeController::class, 'deactivate']);
@@ -106,8 +106,8 @@ Route::get('/admin', [AdminController::class, 'generalAdminDashboard']);
 Route::post('/admin/ahed/approve/{id}', [AdminController::class, 'approve']);
 Route::post('/admin/ahed/disapprove/{id}', [AdminController::class, 'disapprove']);
 Route::post('/admin/ahed/collect', [AdminController::class, 'collectOfflineTransaction']);
-Route::post('/admin/ataa/freezeachievment', [AdminController::class, 'freezeUserAtaaAchievments']);
-Route::post('/admin/ataa/defreezeachievment', [AdminController::class, 'defreezeUserAtaaAchievments']);
+Route::post('/admin/ataa/freezeachievment', [AdminController::class, 'freezeUserAtaaAchievements']);
+Route::post('/admin/ataa/defreezeachievment', [AdminController::class, 'defreezeUserAtaaAchievements']);
 Route::get('/admin/ban', [AdminController::class, 'getUserBans']);
 Route::post('/admin/ban', [AdminController::class, 'addUserBan']);
 Route::patch('/admin/ban/activate/{id}', [AdminController::class, 'activateBan']);

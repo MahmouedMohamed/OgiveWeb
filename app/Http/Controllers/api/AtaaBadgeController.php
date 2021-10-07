@@ -123,7 +123,7 @@ class AtaaBadgeController extends BaseController
 
         //Check if current user can deactivate
         if (!$user->can('deactivate', $badge)) {
-            return $this->sendForbidden('You aren\'t authorized to deactivate this لاadge.');
+            return $this->sendForbidden('You aren\'t authorized to deactivate this Badge.');
         }
         $badge->deactivate();
         return $this->sendResponse([], 'Badge Deactivated Successfully!');

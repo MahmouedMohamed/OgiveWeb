@@ -154,7 +154,7 @@ class AdminController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function freezeUserAtaaAchievments(Request $request)
+    public function freezeUserAtaaAchievements(Request $request)
     {
         //Check User exists
         $user = User::find($request['userId']);
@@ -170,10 +170,10 @@ class AdminController extends BaseController
 
         //Check if current user can freeze
         if (!$admin->can('freeze', $user->ataaAchievement)) {
-            return $this->sendForbidden('You aren\'t authorized to freeze this user acheivement.');
+            return $this->sendForbidden('You aren\'t authorized to freeze this user achievement.');
         }
 
-        //Check if user has achievment
+        //Check if user has achievement
         if (!$user->ataaAchievement) {
             return $this->sendError('User Achievement doesn\'t exist');
         }
@@ -183,12 +183,12 @@ class AdminController extends BaseController
     }
 
     /**
-     * Defreeze Ataa Achievment for a user.
+     * Defreeze Ataa Achievement for a user.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function defreezeUserAtaaAchievments(Request $request)
+    public function defreezeUserAtaaAchievements(Request $request)
     {
         //Check User exists
         $user = User::find($request['userId']);
@@ -205,15 +205,16 @@ class AdminController extends BaseController
         //Check if current user can freeze
         if (!$admin->can('defreeze', $user->ataaAchievement)) {
             return $this->sendForbidden('You aren\'t authorized to defreeze this user acheivement.');
+            return $this->sendForbidden('You aren\'t authorized to defreeze this user achievements.');
         }
 
-        //Check if user has achievment
+        //Check if user has achievement
         if (!$user->ataaAchievement) {
             return $this->sendError('User Achievement doesn\'t exist');
         }
 
         $user->ataaAchievement->defreeze();
-        return $this->sendResponse([], 'User Acheivement Defreezed Successfully!');
+        return $this->sendResponse([], 'User Achievements Defreezed Successfully!');
     }
 
     /**

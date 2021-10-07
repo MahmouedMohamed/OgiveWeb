@@ -78,7 +78,7 @@ class FoodSharingMarkersController extends BaseController
             return $this->sendForbidden($responseHandler->words['FoodSharingMarkerCreationBannedMessage']);
         }
         $userAchievement = $user->ataaAchievement;
-        //No Acheivements Before
+        //No Achievements Before
         if (!$userAchievement) {
             $userAchievement = $user->ataaAchievement()->create([
                 'markers_collected' => 0,
@@ -207,7 +207,7 @@ class FoodSharingMarkersController extends BaseController
             //No Achievement for em
         } else {
             $userAchievement = $user->ataaAchievement;
-            //No Acheivements Before
+            //No Achievements Before
             if (!$userAchievement) {
                 $userAchievement = $user->ataaAchievement()->create([
                     'markers_collected' => 1,
