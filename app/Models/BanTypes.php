@@ -41,6 +41,7 @@ abstract class BanTypes
     const ViewGeneralDashboard = "view_general_dashboard_ban";
     const AssignRoles = "assign_roles_ban";
     const AllowAbilities = "allow_abilities_ban";
+    const ViewOnlineTransaction = "view_online_transaction_ban";                             //Implemented
     //TODO: ban_admin to be reviewed
     const BanAdmin = "ban_admin_ban";
     const BanModerator = "ban_moderator_ban";

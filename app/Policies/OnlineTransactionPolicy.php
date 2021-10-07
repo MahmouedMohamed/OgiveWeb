@@ -5,11 +5,14 @@ namespace App\Policies;
 use App\Models\OnlineTransaction;
 use App\Models\User;
 use App\Models\BanTypes;
+use App\Models\AvailableAbilities;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use App\Traits\HasAbility;
+use App\Traits\HasNoBan;
 
 class OnlineTransactionPolicy
 {
-    use HandlesAuthorization;
+    use HandlesAuthorization, HasNoBan, HasAbility;
 
     /**
      * Determine whether the user can view any models.
@@ -31,8 +34,9 @@ class OnlineTransactionPolicy
      */
     public function view(User $user, OnlineTransaction $transaction)
     {
-        //ToDo: isAdmin() -> Change
-        return $user->id == $transaction->giver || $user->isAdmin();
+        return ($this->hasAbility($user, AvailableAbilities::ViewOnlineTransaction)
+            || $user->id == $transaction->giver)
+            && $this->hasNoBan($user, BanTypes::ViewOnlineTransaction);
     }
 
     /**

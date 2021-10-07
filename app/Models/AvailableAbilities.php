@@ -37,6 +37,7 @@ abstract class AvailableAbilities
     const ViewGeneralDashboard = "view_general_dashboard";
     const AssignRoles = "assign_roles";
     const AllowAbilities = "allow_abilities";
+    const ViewOnlineTransaction = "view_online_transaction";                             //Implemented
     //TODO: ban_admin to be reviewed
     const BanAdmin = "ban_admin";
     const BanModerator = "ban_moderator";
