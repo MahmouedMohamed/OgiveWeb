@@ -38,6 +38,9 @@ abstract class AvailableAbilities
     const AssignRoles = "assign_roles";
     const AllowAbilities = "allow_abilities";
     const ViewOnlineTransaction = "view_online_transaction";                             //Implemented
+    const ViewOfflineTransaction = "view_offline_transaction";                             //Implemented
+    const UpdateOfflineTransaction = "update_offline_transaction";                             //Implemented
+    const DeleteOfflineTransaction = "delete_offline_transaction";                             //Implemented
     //TODO: ban_admin to be reviewed
     const BanAdmin = "ban_admin";
     const BanModerator = "ban_moderator";

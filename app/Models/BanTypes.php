@@ -42,6 +42,9 @@ abstract class BanTypes
     const AssignRoles = "assign_roles_ban";
     const AllowAbilities = "allow_abilities_ban";
     const ViewOnlineTransaction = "view_online_transaction_ban";                             //Implemented
+    const ViewOfflineTransaction = "view_offline_transaction_ban";                             //Implemented
+    const UpdateOfflineTransaction = "update_offline_transaction_ban";                             //Implemented
+    const DeleteOfflineTransaction = "delete_offline_transaction_ban";                             //Implemented
     //TODO: ban_admin to be reviewed
     const BanAdmin = "ban_admin_ban";
     const BanModerator = "ban_moderator_ban";
