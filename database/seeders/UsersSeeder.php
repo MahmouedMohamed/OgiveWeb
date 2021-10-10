@@ -17,16 +17,6 @@ class UsersSeeder extends Seeder
     public function run()
     {
         // User::factory(19)->create();
-        FoodSharingMarker::factory(10000)->create();
-        //
-        // DB::table('users')->insert([
-        //     'name' => 'Shrouk',
-        //     'user_name' => 'Shrouk Sobhy',
-        //     'email' => 'a@a.com',
-        //     'gender' => 'female',
-        //     'phone_number' => '012',
-        //     'address' => '1',
-        //     'password' => "23",
-        // ]);
+        // FoodSharingMarker::factory(10)->create();
     }
 }
