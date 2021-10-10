@@ -54,7 +54,7 @@ function Ahed() {
                     <JoinUs />
                 </Route>
                 <Route path="/ahed/join-us/charities">
-                    <CharitiesForm/>
+                    <CharitiesForm />
                 </Route>
                 <Route path="/ahed/needie/:id" component={Needie}>
                 </Route>
@@ -62,7 +62,8 @@ function Ahed() {
                     <DonationForm />
                 </Route>
                 <Route exact path="/ahed/donate/:id">
-                <OneCaseDonationForm />
+                    {/* <OneCaseDonationForm /> */}
+                    <DonationForm />
                 </Route>
                 {/* </Content> */}
             </Switch>

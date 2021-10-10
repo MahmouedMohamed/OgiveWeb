@@ -10,6 +10,7 @@ import { Row, Col, Card, Nav } from "react-bootstrap";
 import Tab from 'react-bootstrap/Tab';
 import Carousel from 'react-bootstrap/Carousel';
 import Select from 'react-select';
+import { withRouter } from "react-router";
 const typesOfNeedie = [
     { value: 'إيجاد مسكن مناسب', label: 'إيجاد مسكن مناسب' },
     { value: 'تحسين مستوي المعيشة', label: 'تحسين مستوي المعيشة' },
@@ -28,7 +29,7 @@ class DonationForm extends React.Component {
     }
 
     loadNeedies() {
-        let url = "http://127.0.0.1:8000/api/ahed/allNeedies";
+        let url = "/api/ahed/allNeedies";
         console.log(url);
         axios
             .get(url)
@@ -42,11 +43,20 @@ class DonationForm extends React.Component {
             });
     }
     componentDidMount() {
-        this.loadNeedies();
+        // If there's a needie is selected
+        if (this.props.match.params.id) {
+            const selectedNeedie = this.props.match.params.id;
+            alert(`Iam Needie Number${selectedNeedie}`)
+            this.setState({
+                needies: [id => selectedNeedie, name => "test"]
+            })
+        }
+
+        // this.loadNeedies();
     }
-    change(event){
-       alert(event.target)
-      
+    change(event) {
+        alert(event.target)
+
     }
     render() {
         // Old way to render in option 
@@ -89,7 +99,7 @@ class DonationForm extends React.Component {
                                                 <Form.Group controlId="formBasicEmail">
                                                     <Form.Label className="text-right start">نوع التبرع
                                                     </Form.Label>
-                                                    <Select options={typesOfNeedie}  />
+                                                    <Select options={typesOfNeedie} />
                                                 </Form.Group>
                                                 <Form.Group controlId="formBasicEmail">
                                                     <Form.Label className="text-right start">الحالة </Form.Label>
@@ -234,5 +244,4 @@ class DonationForm extends React.Component {
 
 
 }
-
-export default DonationForm;
+export default withRouter(DonationForm);
