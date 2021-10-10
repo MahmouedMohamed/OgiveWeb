@@ -9,6 +9,8 @@ import Register from './components/Register';
 
 import PetDetails from './pets/PetDetails';
 import Ahed from './Ahed/Ahed';
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 function NoMatch() {
     return (
         <div>
