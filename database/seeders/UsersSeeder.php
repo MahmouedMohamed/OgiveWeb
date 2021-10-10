@@ -16,7 +16,7 @@ class UsersSeeder extends Seeder
      */
     public function run()
     {
-        // User::factory(19)->create();
+        User::factory(20)->create();
         FoodSharingMarker::factory(10000)->create();
         //
         // DB::table('users')->insert([

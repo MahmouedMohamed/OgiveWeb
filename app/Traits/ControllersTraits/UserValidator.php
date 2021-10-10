@@ -15,7 +15,7 @@ trait UserValidator
      * @param String $id
      * @return mixed
      */
-    public function userExists(String $id)
+    public function userExists($id)
     {
         $user = User::find($id);
         if (!$user)
