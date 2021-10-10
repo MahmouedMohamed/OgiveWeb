@@ -34,9 +34,12 @@ class AtaaAchievementPolicy
      */
     public function view(User $user, AtaaAchievement $ataaAchievement)
     {
-        return $this->hasAbility($user, AvailableAbilities::ViewAtaaAchievement)
-            && $this->hasNoBan($user, BanTypes::ViewAtaaAchievement)
-            || $user == $ataaAchievement->user;
+        // dd($ataaAchievement->user -> id);
+        // dd($user -> id);
+        // if ($ataaAchievement)
+            return (($user->id == $ataaAchievement->user->id) || ($this->hasAbility($user, AvailableAbilities::ViewAtaaAchievement)
+                && $this->hasNoBan($user, BanTypes::ViewAtaaAchievement)));
+        // return true;
     }
 
     /**
