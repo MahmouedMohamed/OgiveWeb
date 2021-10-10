@@ -9,6 +9,7 @@ use App\Models\NeedyMedia;
 use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -21,20 +22,28 @@ class NeediesController extends BaseController
      */
     public function index()
     {
-        $needies = Needy::with('mediasBefore:id,path,needy')
-            ->with('mediasAfter:id,path,needy')
-            ->where('approved', '=', 1)
-            ->where('severity', '<', '7')->latest()
-            ->paginate(8);
-        $updatedNeedies = $needies->getCollection();
-        foreach ($updatedNeedies as $needy) {
-            $profile = Profile::find($needy->createdBy()->get('profile'))->first();
-            if ($profile) {
-                $needy['createdBy'] = $needy->createdBy()->get()->first();
-                $needy['createdBy']['image'] = $profile->image;
-            }
-        }
-        return $this->sendResponse($needies->setCollection($updatedNeedies), 'تم إسترجاع البيانات بنجاح');  ///Cases retrieved successfully.
+        $currentPage = request()->get('page', 1);
+        return $this->sendResponse(
+            Cache::remember('needies-' . $currentPage, 60 * 60 * 24, function () {
+                return
+                    Needy::join('users', 'users.id', 'needies.createdBy')
+                    ->join('profiles', 'users.profile', 'profiles.id')
+                    ->select(
+                        'needies.*',
+                        'users.id as userId',
+                        'users.name as userName',
+                        'users.email_verified_at as userEmailVerifiedAt',
+                        'profiles.image as userImage'
+                    )
+                    ->latest('needies.created_at')
+                    ->with('mediasBefore:id,path,needy')
+                    ->with('mediasAfter:id,path,needy')
+                    ->where('approved', '=', 1)
+                    ->where('severity', '<', '7')
+                    ->paginate(8);
+            }),
+            'تم إسترجاع البيانات بنجاح'
+        );  ///Cases retrieved successfully.
     }
 
     /**
@@ -44,20 +53,28 @@ class NeediesController extends BaseController
      */
     public function urgentIndex()
     {
-        $needies = Needy::with('mediasBefore:id,path,needy')
-            ->with('mediasAfter:id,path,needy')
-            ->where('approved', '=', 1)
-            ->where('severity', '>=', '7')->latest()
-            ->paginate(8);
-        $updatedNeedies = $needies->getCollection();
-        foreach ($updatedNeedies as $needy) {
-            $profile = Profile::find($needy->createdBy()->get('profile'))->first();
-            if ($profile) {
-                $needy['createdBy'] = $needy->createdBy()->get()->first();
-                $needy['createdBy']['image'] = $profile->image;
-            }
-        }
-        return $this->sendResponse($needies->setCollection($updatedNeedies), 'تم إسترجاع البيانات بنجاح');  ///Cases retrieved successfully.
+        $currentPage = request()->get('page', 1);
+        return $this->sendResponse(
+            Cache::remember('urgentNeedies-' . $currentPage, 60 * 60 * 24, function () {
+                return
+                    Needy::join('users', 'users.id', 'needies.createdBy')
+                    ->join('profiles', 'users.profile', 'profiles.id')
+                    ->select(
+                        'needies.*',
+                        'users.id as userId',
+                        'users.name as userName',
+                        'users.email_verified_at as userEmailVerifiedAt',
+                        'profiles.image as userImage'
+                    )
+                    ->latest('needies.created_at')
+                    ->with('mediasBefore:id,path,needy')
+                    ->with('mediasAfter:id,path,needy')
+                    ->where('approved', '=', 1)
+                    ->where('severity', '>=', '7')
+                    ->paginate(8);
+            }),
+            'تم إسترجاع البيانات بنجاح'
+        );  ///Cases retrieved successfully.
     }
     public function allNeedies()
     {
@@ -76,15 +93,24 @@ class NeediesController extends BaseController
      */
     public function getNeediesWithIDs(Request $request)
     {
-        $needies = Needy::with('mediasBefore:id,path,needy')
-            ->with('mediasAfter:id,path,needy')
-            ->where('approved', '=', 1)->whereIn('id', $request['ids'])->latest()->get();
-        foreach ($needies as $needy) {
-            $profile = Profile::findOrFail($needy->createdBy()->get('profile'))->first();
-            $needy['createdBy'] = $needy->createdBy()->get()->first();
-            $needy['createdBy']['image'] = $profile->image;
-        }
-        return $this->sendResponse($needies, 'تم إسترجاع البيانات بنجاح');  ///Cases retrieved successfully.
+        return $this->sendResponse(
+            Needy::join('users', 'users.id', 'needies.createdBy')
+                ->join('profiles', 'users.profile', 'profiles.id')
+                ->select(
+                    'needies.*',
+                    'users.id as userId',
+                    'users.name as userName',
+                    'users.email_verified_at as userEmailVerifiedAt',
+                    'profiles.image as userImage'
+                )
+                ->latest('needies.created_at')
+                ->with('mediasBefore:id,path,needy')
+                ->with('mediasAfter:id,path,needy')
+                ->where('approved', '=', 1)
+                ->whereIn('id', $request['ids'])
+                ->get(),
+            'تم إسترجاع البيانات بنجاح'
+        );  ///Cases retrieved successfully.
     }
     /**
      * Store a newly created resource in storage.
@@ -104,7 +130,7 @@ class NeediesController extends BaseController
         if (!$user) {
             return $this->sendError('المستخدم غير موجود');  ///User Not Found
         }
-        if(!$user->can('create',Needy::class)){
+        if (!$user->can('create', Needy::class)) {
             return $this->sendForbidden('يبدو أنك محظور من إنشاء أي حالة');
         }
         $images = $request['images'];
@@ -130,7 +156,7 @@ class NeediesController extends BaseController
                 'path' => $imagePath,
             ]);
         }
-        return $this->sendResponse([], 'شكراً لمساهمتك القيمة'); ///Thank You For Your Contribution!
+        return $this->sendResponse([], 'شكراً لمساهتمك القيمة'); ///Thank You For Your Contribution!
     }
 
     /**

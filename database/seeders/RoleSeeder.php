@@ -22,7 +22,7 @@ class RoleSeeder extends Seeder
             'view_ataa_prize', 'create_ataa_prize', 'update_ataa_prize', 'delete_ataa_prize', 'activate_ataa_prize', 'deactivate_ataa_prize',
             'freeze_ataa_achievement', 'defreeze_ataa_achievement', 'view_ataa_achievement',
             'update_food_sharing_marker', 'delete_food_sharing_marker',
-            'view_ataa_reports'
+            'view_ataa_reports','view_ataa_badge', 'create_ataa_badge', 'update_ataa_badge', 'delete_ataa_badge', 'activate_ataa_badge', 'deactivate_ataa_badge',
         ];
         $ahedAbilities = [
             'update_needy', 'delete_needy', 'approve_needy', 'disapprove_needy', 'collect_offline_transaction', 'view_ahed_reports'

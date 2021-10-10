@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\FoodSharingMarker;
 use App\Models\User;
+use App\Models\BanTypes;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use App\Models\AvailableAbilities;
 use App\Traits\HasNoBan;
@@ -21,7 +22,7 @@ class FoodSharingMarkerPolicy
      */
     public function viewAny(User $user)
     {
-        return $this->hasNoBan($user, 'ViewFoodSharingMarker');
+        return $this->hasNoBan($user, BanTypes::ViewFoodSharingMarker);
     }
 
     /**
@@ -44,7 +45,7 @@ class FoodSharingMarkerPolicy
      */
     public function create(User $user)
     {
-        return $this->hasNoBan($user, 'CreateFoodSharingMarker');
+        return $this->hasNoBan($user, BanTypes::CreateFoodSharingMarker);
     }
 
     /**
@@ -55,7 +56,7 @@ class FoodSharingMarkerPolicy
      */
     public function collect(User $user)
     {
-        return $this->hasNoBan($user, 'CollectFoodSharingMarker');
+        return $this->hasNoBan($user, BanTypes::CollectFoodSharingMarker);
     }
 
     /**
@@ -69,7 +70,7 @@ class FoodSharingMarkerPolicy
     {
         return ($this->hasAbility($user, AvailableAbilities::UpdateFoodSharingMarker)
             || $user == $foodSharingMarker->user)
-            && $this->hasNoBan($user, 'UpdateFoodSharingMarker');
+            && $this->hasNoBan($user, BanTypes::UpdateFoodSharingMarker);
     }
 
     /**
@@ -83,7 +84,7 @@ class FoodSharingMarkerPolicy
     {
         return ($this->hasAbility($user, AvailableAbilities::DeleteFoodSharingMarker)
             || $user == $foodSharingMarker->user)
-            && $this->hasNoBan($user, 'DeleteFoodSharingMarker');
+            && $this->hasNoBan($user, BanTypes::DeleteFoodSharingMarker);
     }
 
     /**

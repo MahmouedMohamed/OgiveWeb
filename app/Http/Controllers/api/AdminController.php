@@ -36,9 +36,9 @@ class AdminController extends BaseController
         $generalData = array();
         $ahedData = array();
         $breedmeData = array();
-        $numberOfUsers = User::all()->count();
-        $numberOfNeedies = Needy::all()->count();
-        $numberOfNeediesSatisfied = Needy::all()->where('satisfied', '=', true)->count();
+        $numberOfUsers = User::count();
+        $numberOfNeedies = Needy::count();
+        $numberOfNeediesSatisfied = Needy::where('satisfied', '=', true)->count();
         $numberOfTransactions = OnlineTransaction::all()->count() + OfflineTransaction::all()->where('collected', '=', true)->count();
         $givesCollected = OnlineTransaction::all()->sum('amount') + OfflineTransaction::all()->where('collected', '=', true)->sum('amount');
         $numberOfPets = Pet::all()->count();
@@ -154,7 +154,7 @@ class AdminController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function freezeUserAtaaAchievments(Request $request)
+    public function freezeUserAtaaAchievements(Request $request)
     {
         //Check User exists
         $user = User::find($request['userId']);
@@ -170,25 +170,25 @@ class AdminController extends BaseController
 
         //Check if current user can freeze
         if (!$admin->can('freeze', $user->ataaAchievement)) {
-            return $this->sendForbidden('You aren\'t authorized to freeze this user acheivement.');
+            return $this->sendForbidden('You aren\'t authorized to freeze this user achievement.');
         }
 
-        //Check if user has achievment
+        //Check if user has achievement
         if (!$user->ataaAchievement) {
             return $this->sendError('User Achievement doesn\'t exist');
         }
 
         $user->ataaAchievement->freeze();
-        return $this->sendResponse([], 'User Acheivement Freezed Successfully!');
+        return $this->sendResponse([], 'User Achievement Freezed Successfully!');
     }
 
     /**
-     * Defreeze Ataa Achievment for a user.
+     * Defreeze Ataa Achievement for a user.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function defreezeUserAtaaAchievments(Request $request)
+    public function defreezeUserAtaaAchievements(Request $request)
     {
         //Check User exists
         $user = User::find($request['userId']);
@@ -204,16 +204,16 @@ class AdminController extends BaseController
 
         //Check if current user can freeze
         if (!$admin->can('defreeze', $user->ataaAchievement)) {
-            return $this->sendForbidden('You aren\'t authorized to defreeze this user acheivement.');
+            return $this->sendForbidden('You aren\'t authorized to defreeze this user achievements.');
         }
 
-        //Check if user has achievment
+        //Check if user has achievement
         if (!$user->ataaAchievement) {
             return $this->sendError('User Achievement doesn\'t exist');
         }
 
         $user->ataaAchievement->defreeze();
-        return $this->sendResponse([], 'User Acheivement Defreezed Successfully!');
+        return $this->sendResponse([], 'User Achievements Defreezed Successfully!');
     }
 
     /**
@@ -346,9 +346,8 @@ class AdminController extends BaseController
 
     public function validateUserBan(Request $request)
     {
-        $banType = new BanType();
         $rules = [
-            'tag' => 'required|in:' . $banType->toString(),
+            'tag' => 'required',
             'start_at' => 'date',
             'end_at' => 'date|after:from'
         ];

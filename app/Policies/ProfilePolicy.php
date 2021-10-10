@@ -6,6 +6,7 @@ use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use App\Models\AvailableAbilities;
+use App\Models\BanTypes;
 use App\Traits\HasNoBan;
 use App\Traits\HasAbility;
 
@@ -35,7 +36,7 @@ class ProfilePolicy
     {
         return ($user->profile == $profile->id ||
         $this->hasAbility($user, AvailableAbilities::ViewUserProfile))
-            && $this->hasNoBan($user, 'ViewUserProfile');
+            && $this->hasNoBan($user, BanTypes::ViewUserProfile);
     }
 
     /**
@@ -60,7 +61,7 @@ class ProfilePolicy
     {
         return ($user->profile == $profile->id ||
         $this->hasAbility($user, AvailableAbilities::UpdateUserProfile))
-            && $this->hasNoBan($user, 'UpdateUserProfile');
+            && $this->hasNoBan($user, BanTypes::UpdateUserProfile);
     }
 
     /**

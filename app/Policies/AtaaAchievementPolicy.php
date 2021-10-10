@@ -6,6 +6,7 @@ use App\Models\AtaaAchievement;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use App\Models\AvailableAbilities;
+use App\Models\BanTypes;
 use App\Traits\HasAbility;
 use App\Traits\HasNoBan;
 
@@ -33,8 +34,12 @@ class AtaaAchievementPolicy
      */
     public function view(User $user, AtaaAchievement $ataaAchievement)
     {
-        return $this->hasAbility($user, AvailableAbilities::ViewAtaaAchievement) && $this->hasNoBan($user, 'ViewAtaaAchievement')
-            || $user == $ataaAchievement->user;
+        // dd($ataaAchievement->user -> id);
+        // dd($user -> id);
+        // if ($ataaAchievement)
+            return (($user->id == $ataaAchievement->user->id) || ($this->hasAbility($user, AvailableAbilities::ViewAtaaAchievement)
+                && $this->hasNoBan($user, BanTypes::ViewAtaaAchievement)));
+        // return true;
     }
 
     /**
@@ -69,7 +74,8 @@ class AtaaAchievementPolicy
      */
     public function freeze(User $user, AtaaAchievement $ataaAchievement)
     {
-        return $this->hasAbility($user, AvailableAbilities::FreezeAtaaAchievement) && $this->hasNoBan($user, 'FreezeAtaaAchievement');
+        return $this->hasAbility($user, AvailableAbilities::FreezeAtaaAchievement)
+            && $this->hasNoBan($user, BanTypes::FreezeAtaaAchievement);
     }
 
     /**
@@ -81,7 +87,8 @@ class AtaaAchievementPolicy
      */
     public function defreeze(User $user, AtaaAchievement $ataaAchievement)
     {
-        return $this->hasAbility($user, AvailableAbilities::FreezeAtaaAchievement) && $this->hasNoBan($user, 'FreezeAtaaAchievement');
+        return $this->hasAbility($user, AvailableAbilities::DefreezeAtaaAchievement)
+            && $this->hasNoBan($user, BanTypes::DefreezeAtaaAchievement);
     }
 
     /**

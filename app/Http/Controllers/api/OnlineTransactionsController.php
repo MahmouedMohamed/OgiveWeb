@@ -3,15 +3,24 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Exceptions\NeedyIsSatisfied;
+use App\Exceptions\NeedyNotApproved;
+use App\Exceptions\NeedyNotFound;
+use App\Exceptions\OnlineTransactionNotFound;
+use App\Exceptions\UserNotAuthorized;
 use App\Http\Controllers\API\BaseController as BaseController;
-use App\Models\Needy;
 use App\Models\OnlineTransaction;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Exceptions\UserNotFound;
+use App\Traits\ControllersTraits\UserValidator;
+use App\Traits\ControllersTraits\NeedyValidator;
+use App\Traits\ControllersTraits\OnlineTransactionValidator;
 
 class OnlineTransactionsController extends BaseController
 {
+    use UserValidator, NeedyValidator, OnlineTransactionValidator;
     /**
      * Display a listing of the resource.
      *
@@ -19,11 +28,12 @@ class OnlineTransactionsController extends BaseController
      */
     public function index()
     {
-        $user = User::find(request()->input('userId'));
-        if (!$user) {
+        try {
+            $user = $this->userExists(request()->input('userId'));
+            return $this->sendResponse($user->onlinetransactions, 'تم إسترجاع البيانات بنجاح'); ///Transactions retrieved successfully.
+        } catch (UserNotFound $e) {
             return $this->sendError('المستخدم غير موجود');  ///User Not Found
         }
-        return $this->sendResponse($user->onlinetransactions, 'تم إسترجاع البيانات بنجاح'); ///Transactions retrieved successfully.
     }
 
     /**
@@ -34,34 +44,34 @@ class OnlineTransactionsController extends BaseController
      */
     public function store(Request $request)
     {
-        //TODO: Recevie Payment information "Card number, amount, expirydate, cvv, etc"
+        //TODO: Receive Payment information "Card number, amount, expirydate, cvv, etc"
         //Make payment request /Success continue
         //Validate Request
         $validated = $this->validateTransaction($request);
         if ($validated->fails())
             return $this->sendError('خطأ في البيانات', $validated->messages(), 400);   ///Invalid data.
-        $user = User::find(request()->input('giver'));
-        if (!$user) {
+        try {
+            $user = $this->userExists(request()->input('giver'));
+            $needy = $this->needyExists(request()->input('needy'));
+            $this->needyApproved($needy);
+            $this->needyIsSatisfied($needy);
+            $transaction = $user->onlinetransactions()->create([
+                'needy' => $needy->id,
+                'amount' => $request['amount'],
+                'remaining' => $request['amount']
+            ]);
+            //TODO: if failed remove transaction
+            $transaction->transferAmount($request['amount']);
+            return $this->sendResponse([], 'شكراً لمساهمتك القيمة'); ///Thank You For Your Contribution!
+        } catch (UserNotFound $e) {
             return $this->sendError('المستخدم غير موجود');  ///User Not Found
-        }
-        $needy = Needy::find(request()->input('needy'));
-        if (!$needy) {
+        } catch (NeedyNotFound $e) {
             return $this->sendError('الحالة غير موجودة');  ///Case Not Found
-        }
-        if (!$needy->approved) {
+        } catch (NeedyNotApproved $e) {
             return $this->sendError('من فضلك أنتظر لحين تأكيد الحالة', [], 403);    ///Kindly wait until Case is approved so you can donate.
-        }
-        if ($needy->satisfied) {
+        } catch (NeedyIsSatisfied $e) {
             return $this->sendError('تم جمع اللازم لهذة الحالة، من فضلك تفقد حالة أخري', [], 403); ///Case already satisfied, Kindly check another one
         }
-        $transaction = $user->onlinetransactions()->create([
-            'needy' => $needy->id,
-            'amount' => $request['amount'],
-            'remaining' => $request['amount']
-        ]);
-        //TODO: if failed remove transaction
-        $transaction->transferAmount($request['amount']);
-        return $this->sendResponse([], 'شكراً لمساهمتك القيمة'); ///Thank You For Your Contribution!
     }
 
     /**
@@ -73,24 +83,22 @@ class OnlineTransactionsController extends BaseController
      */
     public function show(Request $request, $id)
     {
-        //Check transaction exists
-        $transaction = OnlineTransaction::find($id);
-        if ($transaction == null) {
+        try {
+            //Check transaction exists
+            $transaction = $this->onlineTransactionExists($id);
+            //Check user who is updating exists
+            $user = $this->userExists($request['userId']);
+            //Check if current user can show transaction
+            $this->userIsAuthorized($user, 'view', $transaction);
+            return $this->sendResponse($transaction, 'تم إسترجاع البيانات بنجاح');   ///Data Retrieved Successfully!
+        } catch (OnlineTransactionNotFound $e) {
             return $this->sendError('هذا التعامل غير موجود');   ///Transaction Not Found
-        }
-
-        //Check user who is updating exists
-        $user = User::find($request['userId']);
-        if ($user == null) {
+        } catch (UserNotFound $e) {
             return $this->sendError('المستخدم غير موجود');  ///User Not Found
-        }
-
-        //Check if current user can show transaction
-        if (!$user->can('view', $transaction)) {
+        } catch (UserNotAuthorized $e) {
+            $e->report($user, 'UserAccessOnlineTransaction', $transaction);
             return $this->sendForbidden('أنت لا تملك صلاحية عرض هذا التعامل');    ///You aren\'t authorized to show this transaction.
         }
-
-        return $this->sendResponse($transaction, 'تم إسترجاع البيانات بنجاح');   ///Data Retrieved Successfully!
     }
 
     /**

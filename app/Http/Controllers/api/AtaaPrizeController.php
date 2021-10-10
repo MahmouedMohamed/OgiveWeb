@@ -81,7 +81,7 @@ class AtaaPrizeController extends BaseController
                         'from' => $request['from'] ?? Carbon::now('GMT+2'),
                         'to' => $request['to'],
                         'level' => $request['level'],
-                        //Has From? then compare -> lessthan then active, o.w wait for sql event to activate it || active
+                        //Has From? then compare -> less than then active, o.w wait for sql event to activate it || active
                         'active' => $request['from'] ? ($request['from'] <= Carbon::now('GMT+2') ? 1 : 0) : 1,
                     ]);
                 } else {
@@ -109,7 +109,7 @@ class AtaaPrizeController extends BaseController
                         'from' => $request['from'] ?? Carbon::now('GMT+2'),
                         'to' => $request['to'],
                         'level' => $request['level'],
-                        //Has From? then compare -> lessthan then active, o.w wait for sql event to activate it || active
+                        //Has From? then compare -> less than then active, o.w wait for sql event to activate it || active
                         'active' => $request['from'] ? ($request['from'] <= Carbon::now('GMT+2') ? 1 : 0) : 1,
                     ]);
                 }
@@ -128,7 +128,7 @@ class AtaaPrizeController extends BaseController
                     'from' => $request['from'] ?? Carbon::now('GMT+2'),
                     'to' => $request['to'],
                     'level' => $request['level'],
-                    //Has From? then compare -> lessthan then active, o.w wait for sql event to activate it || active
+                    //Has From? then compare -> less than then active, o.w wait for sql event to activate it || active
                     'active' => $request['from'] ? ($request['from'] <= Carbon::now('GMT+2') ? 1 : 0) : 1,
                 ]);
             }

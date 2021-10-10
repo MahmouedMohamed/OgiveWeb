@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\OfflineTransaction;
 use App\Models\User;
+use App\Models\BanTypes;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use App\Models\AvailableAbilities;
 use App\Traits\HasNoBan;
@@ -21,7 +22,8 @@ class OfflineTransactionPolicy
      */
     public function collect(User $user)
     {
-        return $this->hasAbility($user, AvailableAbilities::CollectOfflineTransaction) && $this->hasNoBan($user, 'CollectOfflineTransaction');
+        return $this->hasAbility($user, AvailableAbilities::CollectOfflineTransaction)
+            && $this->hasNoBan($user, BanTypes::CollectOfflineTransaction);
     }
     /**
      * Determine whether the user can view any models.
@@ -43,8 +45,9 @@ class OfflineTransactionPolicy
      */
     public function view(User $user, OfflineTransaction $offlineTransaction)
     {
-        //ToDo: isAdmin() -> Change
-        return $user->id == $offlineTransaction->giver || $user->isAdmin();
+        return ($this->hasAbility($user, AvailableAbilities::ViewOfflineTransaction)
+            || $user->id == $offlineTransaction->giver)
+            && $this->hasNoBan($user, BanTypes::ViewOfflineTransaction);
     }
 
     /**
@@ -67,8 +70,9 @@ class OfflineTransactionPolicy
      */
     public function update(User $user, OfflineTransaction $offlineTransaction)
     {
-        //ToDo: isAdmin() -> Change
-        return ($user->id == $offlineTransaction->giver || $user->isAdmin()) &&
+        return ($this->hasAbility($user, AvailableAbilities::UpdateOfflineTransaction)
+            || $user->id == $offlineTransaction->giver)
+            && $this->hasNoBan($user, BanTypes::UpdateOfflineTransaction) &&
             $offlineTransaction->selectedDate == null &&
             !($offlineTransaction->collected);
     }
@@ -82,8 +86,9 @@ class OfflineTransactionPolicy
      */
     public function delete(User $user, OfflineTransaction $offlineTransaction)
     {
-        //ToDo: isAdmin() -> Change
-        return ($user->id == $offlineTransaction->giver || $user->isAdmin()) &&
+        return ($this->hasAbility($user, AvailableAbilities::DeleteOfflineTransaction)
+            || $user->id == $offlineTransaction->giver)
+            && $this->hasNoBan($user, BanTypes::DeleteOfflineTransaction) &&
             $offlineTransaction->selectedDate == null &&
             !($offlineTransaction->collected);
     }

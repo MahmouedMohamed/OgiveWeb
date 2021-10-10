@@ -1,11 +1,11 @@
 <?php
 
 namespace App\Traits;
-use App\Models\User;
-use App\Models\BanType;
-use App\Models\AvailableAbilities;
 
-trait HasAbility {
+use App\Models\User;
+
+trait HasAbility
+{
 
     /**
      * Returns If User has that kind of ability or not.
@@ -18,5 +18,4 @@ trait HasAbility {
     {
         return $user->abilities()->contains($ability);
     }
-
 }

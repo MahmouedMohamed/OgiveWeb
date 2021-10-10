@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Memory;
-use App\User;
+use App\Models\User;
+use App\Models\Memory;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class MemoryPolicy

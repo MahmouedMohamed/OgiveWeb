@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\Needy;
 use App\Models\User;
+use App\Models\BanTypes;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use App\Models\AvailableAbilities;
 use App\Traits\HasNoBan;
@@ -21,7 +22,8 @@ class NeedyPolicy
      */
     public function approve(User $user)
     {
-        return $this->hasAbility($user, AvailableAbilities::ApproveNeedy) && $this->hasNoBan($user, 'ApproveNeedy');
+        return $this->hasAbility($user, AvailableAbilities::ApproveNeedy)
+            && $this->hasNoBan($user, BanTypes::ApproveNeedy);
     }
     /**
      * Determine whether the user can disapprove.
@@ -31,7 +33,8 @@ class NeedyPolicy
      */
     public function disapprove(User $user)
     {
-        return $this->hasAbility($user, AvailableAbilities::DisapproveNeedy) && $this->hasNoBan($user, 'DisapproveNeedy');
+        return $this->hasAbility($user, AvailableAbilities::DisapproveNeedy)
+            && $this->hasNoBan($user, BanTypes::DisapproveNeedy);
     }
     /**
      * Determine whether the user can view any models.
@@ -64,7 +67,7 @@ class NeedyPolicy
      */
     public function create(User $user)
     {
-        return $this->hasNoBan($user, 'CreateNeedy');
+        return $this->hasNoBan($user, BanTypes::CreateNeedy);
     }
 
     /**
@@ -76,8 +79,9 @@ class NeedyPolicy
      */
     public function update(User $user, Needy $needy)
     {
-        return ($user->id == $needy->createdBy || $this->hasAbility($user, AvailableAbilities::UpdateNeedy)) &&
-            $this->hasNoBan($user, 'UpdateNeedy');
+        return ($user->id == $needy->createdBy ||
+            $this->hasAbility($user, AvailableAbilities::UpdateNeedy)) &&
+            $this->hasNoBan($user, BanTypes::UpdateNeedy);
     }
 
     /**
@@ -89,8 +93,9 @@ class NeedyPolicy
      */
     public function delete(User $user, Needy $needy)
     {
-        return ($user->id == $needy->createdBy || $this->hasAbility($user, AvailableAbilities::DeleteNeedy)) &&
-            $this->hasNoBan($user, 'DeleteNeedy');
+        return ($user->id == $needy->createdBy ||
+            $this->hasAbility($user, AvailableAbilities::DeleteNeedy)) &&
+            $this->hasNoBan($user, BanTypes::DeleteNeedy);
     }
 
     /**

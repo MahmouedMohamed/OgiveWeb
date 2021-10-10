@@ -37,9 +37,20 @@ abstract class AvailableAbilities
     const ViewGeneralDashboard = "view_general_dashboard";
     const AssignRoles = "assign_roles";
     const AllowAbilities = "allow_abilities";
+    const ViewOnlineTransaction = "view_online_transaction";                             //Implemented
+    const ViewOfflineTransaction = "view_offline_transaction";                             //Implemented
+    const UpdateOfflineTransaction = "update_offline_transaction";                             //Implemented
+    const DeleteOfflineTransaction = "delete_offline_transaction";                             //Implemented
     //TODO: ban_admin to be reviewed
     const BanAdmin = "ban_admin";
     const BanModerator = "ban_moderator";
     const BanAtaaAdmin = "ban_ataa_admin";
     const BanAhedAdmin = "ban_ahed_admin";
+    const ViewAtaaBadge = "view_ataa_badge";                             //Implemented
+    const CreateAtaaBadge = "create_ataa_badge";                             //Implemented
+    const UpdateAtaaBadge = "update_ataa_badge";                             //Implemented
+    const DeleteAtaaBadge = "delete_ataa_badge";                             //Implemented
+    const ActivateAtaaBadge = "activate_ataa_badge";                             //Implemented
+    const DeactivateAtaaBadge = "deactivate_ataa_badge";                             //Implemented
+
 }
