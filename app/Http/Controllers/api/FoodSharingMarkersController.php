@@ -48,19 +48,38 @@ class FoodSharingMarkersController extends BaseController
                 // Cache::remember('foodsharingmarkers', 60 * 60 * 24, function () use($userLatitude,$userLongitude){
                 // return
                 FoodSharingMarker::select(
-                    'id',
-                    'latitude',
-                    'longitude',
-                    'type',
-                    'description',
-                    'quantity',
-                    'priority'
+                    [
+                        'id',
+                        'latitude',
+                        'longitude',
+                        'type',
+                        'description',
+                        'quantity',
+                        'priority',
+                        'collected',
+                        DB::raw(
+                            $distance . ' AS distance'
+                        )
+                    ]
                 )
                     ->where('collected', '=', 0)
-                    ->selectRaw("{$distance} AS distance")
-                    ->whereRaw("{$distance} < ?", [10])
+                    ->havingRaw('distance < 10')
                     ->take(100)
                     ->get()
+                // FoodSharingMarker::select(
+                //     'id',
+                //     'latitude',
+                //     'longitude',
+                //     'type',
+                //     'description',
+                //     'quantity',
+                //     'priority'
+                // )
+                //     ->where('collected', '=', 0)
+                //     ->selectRaw("{$distance} AS distance")
+                //     ->whereRaw("{$distance} < ?", [10])
+                //     ->take(100)
+                //     ->get()
                 // ;
                 // })
                 ,
