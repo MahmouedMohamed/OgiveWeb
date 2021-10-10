@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\FoodSharingMarker;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -14,6 +16,8 @@ class UsersSeeder extends Seeder
      */
     public function run()
     {
+        // User::factory(19)->create();
+        FoodSharingMarker::factory(10000)->create();
         //
         // DB::table('users')->insert([
         //     'name' => 'Shrouk',
