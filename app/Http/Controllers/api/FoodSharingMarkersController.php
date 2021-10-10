@@ -35,21 +35,35 @@ class FoodSharingMarkersController extends BaseController
             //TODO: Get User Location -> Return Only nearest Markers
             $responseHandler = new ResponseHandler($request['language']);
             $user = $this->userExists($request['userId']);
+            $userLatitude = $request['latitude'] ?? 29.9832678;
+            $userLongitude = $request['longitude'] ?? 31.2282846;
             $this->userIsAuthorized($user, 'viewAny', FoodSharingMarker::class);
+            $distance = "(6371 * acos(cos(radians($userLatitude))
+                     * cos(radians(latitude))
+                     * cos(radians(longitude)
+                     - radians($userLongitude))
+                     + sin(radians($userLatitude))
+                     * sin(radians(latitude))))";
             return $this->sendResponse(
-                Cache::remember('foodsharingmarkers', 60 * 60 * 24, function () {
-                    return
-                        FoodSharingMarker::select(
-                            'id',
-                            'latitude',
-                            'longitude',
-                            'type',
-                            'description',
-                            'quantity',
-                            'priority'
-                        )
-                        ->where('collected', '=', 0)->get();
-                }),
+                // Cache::remember('foodsharingmarkers', 60 * 60 * 24, function () use($userLatitude,$userLongitude){
+                // return
+                FoodSharingMarker::select(
+                    'id',
+                    'latitude',
+                    'longitude',
+                    'type',
+                    'description',
+                    'quantity',
+                    'priority'
+                )
+                    ->where('collected', '=', 0)
+                    ->selectRaw("{$distance} AS distance")
+                    ->whereRaw("{$distance} < ?", [10])
+                    ->take(100)
+                    ->get()
+                // ;
+                // })
+                ,
                 ''
             );
         } catch (UserNotFound $e) {
