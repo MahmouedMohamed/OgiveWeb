@@ -12,13 +12,11 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Helpers\ResponseHandler;
-use App\Models\AtaaAchievement;
 use App\Models\AtaaPrize;
 use App\Traits\ControllersTraits\FoodSharingMarkerValidator;
 use App\Traits\ControllersTraits\UserValidator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Cache;
 
 class FoodSharingMarkersController extends BaseController
 {
@@ -63,7 +61,8 @@ class FoodSharingMarkersController extends BaseController
                     ]
                 )
                     ->where('collected', '=', 0)
-                    ->havingRaw('distance < 10')
+                    ->where('nationality', '=', $user->nationality)
+                    ->havingRaw('distance < 100')
                     ->take(100)
                     ->get()
                 // FoodSharingMarker::select(
@@ -128,6 +127,7 @@ class FoodSharingMarkersController extends BaseController
                 'quantity' => $request['quantity'],
                 'priority' => $request['priority'],
                 'collected' => 0,
+                'nationality' => $user->nationality
             ]);
 
             ///Prize Checker
@@ -350,6 +350,7 @@ class FoodSharingMarkersController extends BaseController
                 'quantity' => $request['quantity'],
                 'priority' => $request['priority'],
                 'collected' => 0,
+                'nationality' => $user->nationality
             ]);
             return $this->sendResponse([], $responseHandler->words['FoodSharingMarkerUpdateSuccessMessage']);
         } catch (FoodSharingMarkerNotFound $e) {

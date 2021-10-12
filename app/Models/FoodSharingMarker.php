@@ -12,7 +12,8 @@ class FoodSharingMarker extends Model
 
     protected $table = 'food_sharing_markers';
     protected $fillable = [
-        'latitude', 'longitude', 'type', 'description', 'quantity', 'priority', 'collected','existed', 'collected_at'
+        'latitude', 'longitude', 'type', 'description', 'quantity', 'priority', 'collected',
+        'nationality','existed', 'collected_at'
     ];
 
     public function user()

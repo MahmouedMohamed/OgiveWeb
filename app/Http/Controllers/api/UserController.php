@@ -74,6 +74,7 @@ class UserController extends BaseController
             'password' => Hash::make(request('password')),
             'phone_number' => request('phone_number'),
             'address' => request('address'),
+            'nationality' => request('nationality'),
             'profile' => $profile->id
         ]);
         return $this->sendResponse('', 'User Created Successfully');
@@ -90,6 +91,7 @@ class UserController extends BaseController
             'phone_number' => 'required',
             'address' => 'string|max:1024',
             'image' => 'image',
+            'nationality' => 'required|string'
         ], [
             'required' => 'This field is required',
             'min' => 'Invalid size, min size is :min',
@@ -219,6 +221,7 @@ class UserController extends BaseController
         $profile->bio = $request['bio'];
         $user->phone_number = $request['phoneNumber'];
         $user->address = $request['address'];
+        $user->nationality = $request['nationality'];
         $profile->save();
         $user->save();
         return $this->sendResponse([], 'تم تغيير بياناتك بنجاح');    ///Image Updated Successfully!
