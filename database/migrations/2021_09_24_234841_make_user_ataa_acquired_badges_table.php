@@ -17,6 +17,7 @@ class MakeUserAtaaAcquiredBadgesTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('badge_id');
+            $table->timestamps();
             $table->unique(['user_id', 'badge_id']);
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('badge_id')->references('id')->on('ataa_badges')->onDelete('cascade');

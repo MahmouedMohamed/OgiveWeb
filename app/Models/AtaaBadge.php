@@ -13,7 +13,7 @@ class AtaaBadge extends Model
     ];
     public function winners()
     {
-        return $this->belongsToMany(User::class, 'user_ataa_acquired_badges', 'badge_id', 'user_id');
+        return $this->belongsToMany(User::class, 'user_ataa_acquired_badges', 'badge_id', 'user_id')->withTimestamps();
     }
     public function activate()
     {
