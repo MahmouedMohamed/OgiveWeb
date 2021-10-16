@@ -8,7 +8,7 @@ use App\Exceptions\UserNotFound;
 use App\Exceptions\UserNotAuthorized;
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\FoodSharingMarker;
-use App\Models\User;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Helpers\ResponseHandler;
@@ -43,45 +43,29 @@ class FoodSharingMarkersController extends BaseController
                      + sin(radians($userLatitude))
                      * sin(radians(latitude))))";
             return $this->sendResponse(
-                // Cache::remember('foodsharingmarkers', 60 * 60 * 24, function () use($userLatitude,$userLongitude){
-                // return
-                FoodSharingMarker::select(
-                    [
-                        'id',
-                        'latitude',
-                        'longitude',
-                        'type',
-                        'description',
-                        'quantity',
-                        'priority',
-                        'collected',
-                        DB::raw(
-                            $distance . ' AS distance'
+                Cache::remember('foodsharingmarkers - ' . $user->nationality, 60 * 60 * 24, function () use ($distance, $user) {
+                    return
+                        FoodSharingMarker::select(
+                            [
+                                'id',
+                                'latitude',
+                                'longitude',
+                                'type',
+                                'description',
+                                'quantity',
+                                'priority',
+                                'collected',
+                                DB::raw(
+                                    $distance . ' AS distance'
+                                )
+                            ]
                         )
-                    ]
-                )
-                    ->where('collected', '=', 0)
-                    ->where('nationality', '=', $user->nationality)
-                    ->havingRaw('distance < 100')
-                    ->take(100)
-                    ->get()
-                // FoodSharingMarker::select(
-                //     'id',
-                //     'latitude',
-                //     'longitude',
-                //     'type',
-                //     'description',
-                //     'quantity',
-                //     'priority'
-                // )
-                //     ->where('collected', '=', 0)
-                //     ->selectRaw("{$distance} AS distance")
-                //     ->whereRaw("{$distance} < ?", [10])
-                //     ->take(100)
-                //     ->get()
-                // ;
-                // })
-                ,
+                        ->where('collected', '=', 0)
+                        ->where('nationality', '=', $user->nationality)
+                        ->havingRaw('distance < 100')
+                        ->take(100)
+                        ->get();
+                }),
                 ''
             );
         } catch (UserNotFound $e) {
