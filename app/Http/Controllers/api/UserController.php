@@ -32,6 +32,14 @@ class UserController extends BaseController
             if ($loginBan) {
                 return $this->sendForbidden('Sorry, but is seems you are banned from login until ' . ($loginBan['end_at'] ?? 'infinite period of time.'));
             }
+            if (request('app') == 'TimeCatcher'){
+                if(request('fcmToken'))
+                    $user->fcmTokens()->create([
+                        'token' => request('fcmToken')
+                    ]);
+                else
+                    return $this->sendError('FCM Token isn\'t specified, Please Try Again Later','',400);
+            }
             $tokenDetails = $user->createAccessToken();
             $this->content['token'] =
                 $tokenDetails['accessToken'];

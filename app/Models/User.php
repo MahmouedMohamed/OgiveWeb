@@ -146,4 +146,8 @@ class User extends Authenticatable
     {
         return $this->abilities($ability);
     }
+    public function fcmTokens()
+    {
+        return $this->hasOne(FCMToken::class);
+    }
 }
