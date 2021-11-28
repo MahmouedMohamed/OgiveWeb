@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\api;
-use App\Http\Controllers\Controller;
+namespace App\Http\Controllers\api\BreedMe;
+
+use App\Http\Controllers\api\BaseController;
 
 use App\Models\Place;
 use Illuminate\Http\Request;

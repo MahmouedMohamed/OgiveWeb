@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\Controllers\api\BreedMe;
 
-use App\Http\Controllers\API\BaseController as BaseController;
+use App\Http\Controllers\api\BaseController;
 use App\Models\Pet;
 use App\Models\User;
 use Illuminate\Http\Request;

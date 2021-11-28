@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\Controllers\api\Ataa;
 
+use App\Http\Controllers\api\BaseController;
 use App\Exceptions\FoodSharingMarkerIsCollected;
 use App\Exceptions\FoodSharingMarkerNotFound;
 use App\Exceptions\UserNotFound;
 use App\Exceptions\UserNotAuthorized;
-use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\FoodSharingMarker;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;

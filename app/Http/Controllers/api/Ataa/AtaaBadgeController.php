@@ -1,8 +1,9 @@
 <?php
 
 
-namespace App\Http\Controllers\api;
+namespace App\Http\Controllers\api\Ataa;
 
+use App\Http\Controllers\api\BaseController;
 use App\Models\AtaaBadge;
 use Illuminate\Http\Request;
 use App\Models\User;

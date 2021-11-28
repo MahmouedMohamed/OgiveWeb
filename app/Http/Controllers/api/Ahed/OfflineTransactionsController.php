@@ -1,17 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\Controllers\api\Ahed;
 
+use App\Http\Controllers\api\BaseController;
 use App\Exceptions\NeedyIsSatisfied;
 use App\Exceptions\NeedyNotApproved;
 use App\Exceptions\NeedyNotFound;
 use App\Exceptions\OfflineTransactionNotFound;
 use App\Exceptions\UserNotAuthorized;
 use App\Exceptions\UserNotFound;
-use App\Http\Controllers\API\BaseController as BaseController;
 use Illuminate\Http\Request;
-use App\Models\User;
-use App\Models\Needy;
 use App\Models\CaseType;
 use App\Models\OfflineTransaction;
 use App\Traits\ControllersTraits\NeedyValidator;
@@ -45,7 +43,6 @@ class OfflineTransactionsController extends BaseController
      */
     public function store(Request $request)
     {
-        // return $this->toString(['Finding Living','Upgrade Standard of Living','Bride Preparation','Debt','Cure']);
         $validated = $this->validateTransaction($request, 'store');
         if ($validated->fails())
             return $this->sendError('خطأ في البيانات', $validated->messages(), 400);   ///Invalid data

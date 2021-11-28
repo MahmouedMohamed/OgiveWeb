@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\api;
-use App\Http\Controllers\Controller;
+namespace App\Http\Controllers\api\MemoryWall;
+
+use App\Http\Controllers\api\BaseController;
 
 use App\Models\Memory;
 use App\Models\User;
@@ -9,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 
-class MemoryController extends Controller
+class MemoryController extends BaseController
 {
     public function __construct(){
         $this->content = array();

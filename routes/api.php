@@ -1,25 +1,33 @@
 <?php
 
-use App\Http\Controllers\api\AdminController;
-use App\Http\Controllers\api\AdoptionRequestController;
-use App\Http\Controllers\api\ConsultationCommentController;
-use App\Http\Controllers\api\ConsultationController;
-use App\Http\Controllers\api\LikesController;
-use App\Http\Controllers\api\FoodSharingMarkersController;
-use App\Http\Controllers\api\MemoryController;
-use App\Http\Controllers\api\NeediesController;
-use App\Http\Controllers\api\OfflineTransactionsController;
-use App\Http\Controllers\api\OnlineTransactionsController;
-use App\Http\Controllers\api\PetController;
-use App\Http\Controllers\api\PetsArticleController;
-use App\Http\Controllers\api\PlaceController;
-use App\Http\Controllers\api\UserController;
-use App\Http\Controllers\api\AtaaAchievementController;
-use App\Http\Controllers\api\TokensController;
-use App\Http\Controllers\api\AtaaPrizeController;
-use App\Http\Controllers\api\AtaaBadgeController;
-use App\Models\Pet;
 use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\api\AdminController;
+use App\Http\Controllers\api\UserController;
+use App\Http\Controllers\api\TokensController;
+
+/* Breed Me */
+use App\Http\Controllers\api\BreedMe\AdoptionRequestController;
+use App\Http\Controllers\api\BreedMe\ConsultationCommentController;
+use App\Http\Controllers\api\BreedMe\ConsultationController;
+use App\Http\Controllers\api\BreedMe\PetController;
+use App\Http\Controllers\api\BreedMe\PetsArticleController;
+use App\Http\Controllers\api\BreedMe\PlaceController;
+
+/* Memory Wall */
+use App\Http\Controllers\api\MemoryWall\MemoryController;
+use App\Http\Controllers\api\MemoryWall\LikesController;
+
+/* Ataa */
+use App\Http\Controllers\api\Ataa\FoodSharingMarkersController;
+use App\Http\Controllers\api\Ataa\AtaaAchievementController;
+use App\Http\Controllers\api\Ataa\AtaaPrizeController;
+use App\Http\Controllers\api\Ataa\AtaaBadgeController;
+
+/* Ahed */
+use App\Http\Controllers\api\Ahed\NeediesController;
+use App\Http\Controllers\api\Ahed\OfflineTransactionsController;
+use App\Http\Controllers\api\Ahed\OnlineTransactionsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,10 +52,10 @@ Route::patch('/profile/{id}/information', [UserController::class, 'updateinforma
 Route::apiResource('/ataa/markers', FoodSharingMarkersController::class);
 Route::patch('/ataa/collect/{id}', [FoodSharingMarkersController::class, 'collect']);
 Route::get('/ataa/achievement/{id}', [AtaaAchievementController::class, 'show']);
-Route::apiResource('/ataa/prize',AtaaPrizeController::class);
+Route::apiResource('/ataa/prize', AtaaPrizeController::class);
 Route::post('/ataa/prize/{id}/activate', [AtaaPrizeController::class, 'activate']);
 Route::post('/ataa/prize/{id}/deactivate', [AtaaPrizeController::class, 'deactivate']);
-Route::apiResource('/ataa/badge',AtaaBadgeController::class);
+Route::apiResource('/ataa/badge', AtaaBadgeController::class);
 Route::post('/ataa/badge/{id}/activate', [AtaaBadgeController::class, 'activate']);
 Route::post('/ataa/badge/{id}/deactivate', [AtaaBadgeController::class, 'deactivate']);
 
@@ -64,10 +72,6 @@ Route::post('/like', [LikesController::class, 'likeUnlike']);
 
 Route::apiResource('pets', PetController::class);
 Route::get('/filterByType', [PetController::class, 'filterByType']);
-
-Route::patch('/pet/{pet}', function (Pet $pet) {
-    // The current user may update the post...
-})->middleware('can:update,pet');
 
 Route::apiResource('consultations', ConsultationController::class);
 Route::apiResource('comments', ConsultationCommentController::class);
@@ -89,7 +93,7 @@ Route::get('filterPlacesByType', [PlaceController::class, 'filterByType']);
 // Route::group(['middleware' => 'auth:api'], function () {
 Route::apiResource('/ahed/needies', NeediesController::class);
 Route::get('/ahed/urgentneedies', [NeediesController::class, 'urgentIndex']);
-Route::get('/ahed/allNeedies', [NeediesController::class, 'allNeedies']);
+Route::get('/ahed/allNeedies', [NeediesController::class, 'getAllNeedies']);
 Route::get('/ahed/neediesWithIDs', [NeediesController::class, 'getNeediesWithIDs']);
 Route::post('/ahed/needies/addImages/{id}', [NeediesController::class, 'addAssociatedImages']);
 Route::post('/ahed/needies/removeImage/{id}', [NeediesController::class, 'removeAssociatedImage']);
@@ -102,17 +106,17 @@ Route::get('/ahed/ahedachievement/{id}', [UserController::class, 'getAhedAchieve
 
 //**      Admin Controllers      **//
 Route::group(['middleware' => 'api_auth'], function () {
-Route::get('/admin', [AdminController::class, 'generalAdminDashboard']);
-Route::post('/admin/ahed/approve/{id}', [AdminController::class, 'approve']);
-Route::post('/admin/ahed/disapprove/{id}', [AdminController::class, 'disapprove']);
-Route::post('/admin/ahed/collect', [AdminController::class, 'collectOfflineTransaction']);
-Route::post('/admin/ataa/freezeachievment', [AdminController::class, 'freezeUserAtaaAchievements']);
-Route::post('/admin/ataa/defreezeachievment', [AdminController::class, 'defreezeUserAtaaAchievements']);
-Route::get('/admin/ban', [AdminController::class, 'getUserBans']);
-Route::post('/admin/ban', [AdminController::class, 'addUserBan']);
-Route::patch('/admin/ban/activate/{id}', [AdminController::class, 'activateBan']);
-Route::patch('/admin/ban/deactivate/{id}', [AdminController::class, 'deactivateBan']);
+    Route::get('/admin', [AdminController::class, 'generalAdminDashboard']);
+    Route::post('/admin/ahed/approve/{id}', [AdminController::class, 'approve']);
+    Route::post('/admin/ahed/disapprove/{id}', [AdminController::class, 'disapprove']);
+    Route::post('/admin/ahed/collect', [AdminController::class, 'collectOfflineTransaction']);
+    Route::post('/admin/ataa/freezeachievment', [AdminController::class, 'freezeUserAtaaAchievements']);
+    Route::post('/admin/ataa/defreezeachievment', [AdminController::class, 'defreezeUserAtaaAchievements']);
+    Route::get('/admin/ban', [AdminController::class, 'getUserBans']);
+    Route::post('/admin/ban', [AdminController::class, 'addUserBan']);
+    Route::patch('/admin/ban/activate/{id}', [AdminController::class, 'activateBan']);
+    Route::patch('/admin/ban/deactivate/{id}', [AdminController::class, 'deactivateBan']);
 });
 
 
-Route::post('/token/refresh',[TokensController::class,'refresh']);
+Route::post('/token/refresh', [TokensController::class, 'refresh']);

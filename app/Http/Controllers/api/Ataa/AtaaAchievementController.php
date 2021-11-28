@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\Controllers\api\Ataa;
 
+use App\Http\Controllers\api\BaseController;
 use App\Exceptions\AtaaAchievementNotFound;
 use App\Exceptions\UserNotAuthorized;
 use App\Exceptions\UserNotFound;
-use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\AtaaAchievement;
 use App\Models\AtaaPrize;
 use App\Models\User;

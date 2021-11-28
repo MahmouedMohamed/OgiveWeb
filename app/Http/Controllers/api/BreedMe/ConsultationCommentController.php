@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\Controllers\api\BreedMe;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\api\BaseController;
 
 use App\Models\ConsultationComment;
 use App\Models\ConsultationsComment;

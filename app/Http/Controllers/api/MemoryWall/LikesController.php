@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\api;
-use App\Http\Controllers\Controller;
+namespace App\Http\Controllers\api\MemoryWall;
+
+use App\Http\Controllers\api\BaseController;
 
 use App\Models\Like;
 use App\Models\Memory;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-class LikesController extends Controller
+class LikesController extends BaseController
 {
     public function likeUnlike(Request $request){
         $like = Like::where('user_id', '=', request()->input('user_id'))
