@@ -32,7 +32,6 @@ class OfflineTransactionsController extends BaseController
             return $this->sendResponse($user->offlineTransactions, 'تم إسترجاع البيانات بنجاح'); ///Transactions retrieved successfully.
         } catch (UserNotFound $e) {
             return $this->sendError('المستخدم غير موجود');  ///User Not Found
-
         }
     }
     /**
@@ -183,58 +182,9 @@ class OfflineTransactionsController extends BaseController
             return $this->sendError('هذا التعامل غير موجود');   ///Transaction Not Found
         } catch (UserNotFound $e) {
             return $this->sendError('المستخدم غير موجود');  ///User Not Found
-
         } catch (UserNotAuthorized $e) {
             $e->report($user, 'UserDeleteOfflineTransaction', $transaction);
             return $this->sendForbidden('أنت لا تملك صلاحية إزالة هذا التعامل');  ///You aren\'t authorized to delete this transaction.
         }
-    }
-
-    public function validateTransaction(Request $request, string $related)
-    {
-        $rules = null;
-        $caseType = new CaseType();
-        switch ($related) {
-            case 'store':
-                $rules = [
-                    'needy' => 'required|max:255',
-                    'amount' => 'required|numeric|min:1',
-                    'preferredSection' => 'required|in:' . $caseType->toString(),
-                    'address' => 'required',
-                    'phoneNumber' => 'required',
-                    'startCollectDate' => 'required|date|before:endCollectDate',
-                    'endCollectDate' => 'required|date|after:startCollectDate',
-                ];
-                break;
-            case 'update':
-                $rules = [
-                    'needy' => 'required|max:255',
-                    'amount' => 'required|numeric|min:1',
-                    'preferredSection' => 'required|in:' . $caseType->toString(),
-                    'address' => 'required',
-                    'phoneNumber' => 'required',
-                    'startCollectDate' => 'required|date|before:endCollectDate',
-                    'endCollectDate' => 'required|date|after:startCollectDate',
-                ];
-                break;
-        }
-        return Validator::make($request->all(), $rules, [
-            // 'required' => 'This field is required',
-            // 'min' => 'Invalid size, min size is :min',
-            // 'max' => 'Invalid size, max size is :max',
-            // 'numeric' => 'Invalid type, only numbers are supported',
-            // 'in' => 'Invalid type, support values are :values',
-            // 'date' => 'Invalid date',
-            // 'before' => 'The :attribute must be before :date',
-            // 'after' => 'The :attribute must be after :date'
-            'required' => 'هذا الحقل مطلوب',
-            'min' => 'قيمة خاطئة، أقل قيمة هي :min',
-            'max' => 'قيمة خاطئة أعلي قيمة هي :max',
-            'numeric' => 'قيمة خاطئة، يمكن قبول الأرقام فقط',
-            'in' => 'قيمة خاطئة، القيم المتاحة هي :values',
-            'date' => 'تاريخ خاطئ',
-            'before' => ':attribute يجب أن يكون قبل :date',
-            'after' => ':attribute يجب أن يكون بعد :date'
-        ]);
     }
 }
