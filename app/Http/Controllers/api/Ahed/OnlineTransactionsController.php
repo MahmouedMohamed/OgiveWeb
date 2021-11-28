@@ -124,21 +124,4 @@ class OnlineTransactionsController extends BaseController
         //Money guarantee back must be done before deletion
         //IF money already
     }
-    public function validateTransaction(Request $request)
-    {
-        return Validator::make($request->all(), [
-            'giver' => 'required',
-            'needy' => 'required|max:255',
-            'amount' => 'required|numeric|min:1',
-        ], [
-            ///'required' => 'This field is required',
-            ///'min' => 'Invalid size, min size is :min',
-            ///'max' => 'Invalid size, max size is :max',
-            ///'numeric' => 'Invalid type, only numbers are supported'
-            'required' => 'هذا الحقل مطلوب',
-            'min' => 'قيمة خاطئة، أقل قيمة هي :min',
-            'max' => 'قيمة خاطئة أعلي قيمة هي :max',
-            'numeric' => 'قيمة خاطئة، يمكن قبول الأرقام فقط',
-        ]);
-    }
 }
