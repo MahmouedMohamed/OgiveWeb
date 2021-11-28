@@ -11,15 +11,8 @@ import PetDetails from './pets/PetDetails';
 import Ahed from './Ahed/Ahed';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-function NoMatch() {
-    return (
-        <div>
-            <h3>
-                No match for to this Link
-            </h3>
-        </div>
-    );
-}
+import Page404 from '../components/Page404';
+
 function App() {
     return (
         <div>
@@ -60,7 +53,7 @@ function App() {
                     {/* Move them inside /Pets but didnt work(try later) */}
                     <Route path="/pets/pet/:id" component={PetDetails} />
                     <Route path="*">
-                        <NoMatch />
+                        <Page404 />
                     </Route>
                 </Switch>
 
