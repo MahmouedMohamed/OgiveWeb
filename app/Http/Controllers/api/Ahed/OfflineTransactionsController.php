@@ -10,12 +10,10 @@ use App\Exceptions\OfflineTransactionNotFound;
 use App\Exceptions\UserNotAuthorized;
 use App\Exceptions\UserNotFound;
 use Illuminate\Http\Request;
-use App\Models\CaseType;
 use App\Models\OfflineTransaction;
 use App\Traits\ControllersTraits\NeedyValidator;
 use App\Traits\ControllersTraits\OfflineTransactionValidator;
 use App\Traits\ControllersTraits\UserValidator;
-use Illuminate\Support\Facades\Validator;
 
 class OfflineTransactionsController extends BaseController
 {

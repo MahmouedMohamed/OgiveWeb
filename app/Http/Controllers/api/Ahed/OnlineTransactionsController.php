@@ -8,10 +8,7 @@ use App\Exceptions\NeedyNotApproved;
 use App\Exceptions\NeedyNotFound;
 use App\Exceptions\OnlineTransactionNotFound;
 use App\Exceptions\UserNotAuthorized;
-use App\Models\OnlineTransaction;
-use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use App\Exceptions\UserNotFound;
 use App\Traits\ControllersTraits\UserValidator;
 use App\Traits\ControllersTraits\NeedyValidator;
@@ -110,6 +107,7 @@ class OnlineTransactionsController extends BaseController
     public function update(Request $request, $id)
     {
         //Can't be done, money already transferred, transaction can only be deleted "cancelled"
+        return $this->sendError('Not Implemented', '', 404);
     }
 
     /**
