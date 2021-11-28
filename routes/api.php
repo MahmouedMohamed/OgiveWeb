@@ -117,6 +117,7 @@ Route::middleware(['api_auth'])->prefix('admin')->group(function () {
     Route::post('/ban', [AdminController::class, 'addUserBan']);
     Route::patch('/ban/activate/{id}', [AdminController::class, 'activateBan']);
     Route::patch('/ban/deactivate/{id}', [AdminController::class, 'deactivateBan']);
+    Route::post('/importCSV',[AdminController::class,'importCSV']);
 });
 
 

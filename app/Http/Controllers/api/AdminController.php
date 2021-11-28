@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Exceptions\NeedyNotFound;
+use App\Exceptions\NotSupportedType;
+use App\Exceptions\UserNotFound;
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\AtaaPrize;
 use Illuminate\Http\Request;
@@ -15,9 +18,13 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Validator;
 use App\Models\BanType;
+use App\Traits\ControllersTraits\NeedyValidator;
+use App\Traits\ControllersTraits\UserValidator;
+use Illuminate\Support\Str;
 
 class AdminController extends BaseController
 {
+    use UserValidator, NeedyValidator;
 
     /**
      * Dashboard.
@@ -357,5 +364,55 @@ class AdminController extends BaseController
             'after' => 'The :attribute must be after :date'
         ];
         return Validator::make($request->all(), $rules, $messages);
+    }
+
+    public function importCSV(Request $request)
+    {
+        $validated = Validator::make($request->all(), [
+            'file' => 'required|mimes:csv,txt',
+        ]);
+        if ($validated->fails()) {
+            return $this->sendError('Invalid data', $validated->messages(), 400);
+        }
+        $now = Carbon::now()->toDateTimeString();
+        try {
+            switch ($request['type']) {
+                case 'OfflineTransaction':
+                    $file = fopen($request->file->getRealPath(), 'r');
+                    $onlineTransactions = [];
+                    $users = collect([]);
+                    $needies = collect([]);
+                    while ($csvLine = fgetcsv($file)) {
+                        if(!($users->pluck('id')->has($csvLine[0]))){
+                            $user = $this->userExists($csvLine[0]);
+                            $users->push($user);
+                        }
+                        if(!($needies->pluck('id')->has($csvLine[1]))){
+                            $needy = $this->userExists($csvLine[1]);
+                            $needies->push($needy);
+                        }
+                        $onlineTransactions[] = [
+                            'giver' => $csvLine[0],
+                            'needy' => $csvLine[1],
+                            'amount' => $csvLine[2],
+                            'remaining' => $csvLine[3],
+                            'created_at' => $now,
+                            'updated_at' => $now
+                        ];
+                    }
+                    // dd($needies);
+                    OnlineTransaction::insert($onlineTransactions);
+                    break;
+                default:
+                    throw new NotSupportedType();
+            }
+            return $this->sendResponse('','CSV Imported Successfully');
+        } catch (NotSupportedType $e) {
+            return $this->sendError('This type isn\'t supported');
+        } catch(UserNotFound $e){
+            return $this->sendError('User Not Found');
+        } catch(NeedyNotFound $e){
+            return $this->sendError('Needy Not Found');
+        }
     }
 }
