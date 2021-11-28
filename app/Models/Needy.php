@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
+use Illuminate\Support\Facades\Storage;
 
 class Needy extends Model
 {
@@ -56,5 +57,26 @@ class Needy extends Model
     {
         $this->approved = false;
         $this->save();
+    }
+    public function updateUrl()
+    {
+        $this->update([
+            'url' => url('/') . '/ahed/needies/' . $this->id
+        ]);
+    }
+    public function addImages($imagePaths, $before = 1)
+    {
+        foreach ($imagePaths as $imagePath) {
+            $this->medias()->create([
+                'path' => $imagePath,
+                'before' => $before
+            ]);
+        }
+    }
+    public function removeMedia()
+    {
+        foreach ($this->medias as $media) {
+            Storage::delete('public/' . $media->path);
+        }
     }
 }
