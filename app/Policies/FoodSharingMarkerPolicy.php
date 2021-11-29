@@ -82,8 +82,7 @@ class FoodSharingMarkerPolicy
      */
     public function delete(User $user, FoodSharingMarker $foodSharingMarker)
     {
-        return ($this->hasAbility($user, AvailableAbilities::DeleteFoodSharingMarker)
-            || $user == $foodSharingMarker->user)
+        return $user == $foodSharingMarker->user || $this->hasAbility($user, AvailableAbilities::DeleteFoodSharingMarker)
             && $this->hasNoBan($user, BanTypes::DeleteFoodSharingMarker);
     }
 

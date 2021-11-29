@@ -98,4 +98,17 @@ class AtaaPrize extends Model
                 break;
         }
     }
+    public static function prizesReview(User $user)
+    {
+        //Get won prize by user where required is bigger than achieved after modification
+        //then delete them
+        return
+            DB::table('user_ataa_acquired_prizes')->leftJoin(
+                'ataa_prizes',
+                'ataa_prizes.id',
+                '=',
+                'user_ataa_acquired_prizes.prize_id'
+            )->where('required_markers_posted', '>', $user->ataaAchievement->markers_posted)
+            ->delete();
+    }
 }

@@ -101,7 +101,7 @@ class FoodSharingMarkersController extends BaseController
                 'collected' => 0,
                 'nationality' => $user->nationality
             ]);
-            $this->handleMarkerCreated($user,$foodSharingMarker);
+            $this->handleMarkerCreated($user, $foodSharingMarker);
             return $this->sendResponse([], $responseHandler->words['FoodSharingMarkerCreationSuccessMessage']);
         } catch (UserNotFound $e) {
             return $this->sendError($responseHandler->words['UserNotFound']);
@@ -132,7 +132,7 @@ class FoodSharingMarkersController extends BaseController
             if ($foodSharingMarkerExists == null || ($foodSharingMarkerExists != 1 && $foodSharingMarkerExists != 0))
                 return $this->sendError($responseHandler->words['InvalidData'], '', 400);
             $foodSharingMarker->collect($foodSharingMarkerExists);
-            $this->handleMarkerExistingAction($foodSharingMarker,$foodSharingMarkerExists);
+            $this->handleMarkerExistingAction($foodSharingMarker, $foodSharingMarkerExists);
             $this->handleMarkerCollected($user, $foodSharingMarker);
             if ($foodSharingMarkerExists == 1)
                 return $this->sendResponse([], $responseHandler->words['FoodSharingMarkerSuccessCollectExist']);
@@ -207,23 +207,11 @@ class FoodSharingMarkersController extends BaseController
     {
         try {
             $responseHandler = new ResponseHandler($request['language']);
-
             $foodSharingMarker = $this->foodSharingMarkerExists($id);
             $user = $this->userExists($request['userId']);
             $this->userIsAuthorized($user, 'delete', $foodSharingMarker);
             $foodSharingMarker->delete();
-            $userAchievement = $user->ataaAchievement;
-            $userAchievement->decreaseMarkersPosted();
-            //Get won prize by user where required is bigger than achieved after modification
-            //then delete them
-            DB::table('user_ataa_acquired_prizes')->leftJoin(
-                'ataa_prizes',
-                'ataa_prizes.id',
-                '=',
-                'user_ataa_acquired_prizes.prize_id'
-            )->where('required_markers_posted', '>', $userAchievement->markers_posted)
-                ->delete();
-
+            $this->handleMarkerDeleted($user);
             return $this->sendResponse([], $responseHandler->words['FoodSharingMarkerDeleteSuccessMessage']);  ///Needy Updated Successfully!
         } catch (FoodSharingMarkerNotFound $e) {
             return $this->sendError($responseHandler->words['FoodSharingMarkerNotFound']);

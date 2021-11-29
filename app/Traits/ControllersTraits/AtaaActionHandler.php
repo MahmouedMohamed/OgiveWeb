@@ -3,6 +3,7 @@
 namespace App\Traits\ControllersTraits;
 
 use App\Jobs\AtaaAchievementCalculator;
+use App\Models\AtaaPrize;
 use App\Models\FoodSharingMarker;
 use App\Models\User;
 
@@ -27,5 +28,10 @@ trait AtaaActionHandler
         //->
         //Ban this marker publisher for publishing again
         //TODO: Count
+    }
+    public function handleMarkerDeleted($user)
+    {
+        $user->ataaAchievement->decreaseMarkersPosted();
+        AtaaPrize::prizesReview($user);
     }
 }
