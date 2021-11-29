@@ -49,7 +49,7 @@ Route::patch('/profile/{id}/information', [UserController::class, 'updateinforma
 
 
 //**      Ataa Controllers      **//
-// Route::middleware(['api_auth'])->prefix('ataa')->group(function () {
+Route::middleware(['api_auth'])->prefix('ataa')->group(function () {
 Route::apiResource('/markers', FoodSharingMarkersController::class);
 Route::patch('/collect/{id}', [FoodSharingMarkersController::class, 'collect']);
 Route::get('/achievement/{id}', [AtaaAchievementController::class, 'show']);
@@ -59,7 +59,7 @@ Route::post('/prize/{id}/deactivate', [AtaaPrizeController::class, 'deactivate']
 Route::apiResource('/badge', AtaaBadgeController::class);
 Route::post('/badge/{id}/activate', [AtaaBadgeController::class, 'activate']);
 Route::post('/badge/{id}/deactivate', [AtaaBadgeController::class, 'deactivate']);
-// });
+});
 
 
 // Route::group(['middleware' => 'auth:api'], function () {
