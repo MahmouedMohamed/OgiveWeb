@@ -369,6 +369,7 @@ class AdminController extends BaseController
     public function importCSV(Request $request)
     {
         $validated = Validator::make($request->all(), [
+            'type' => 'required',
             'file' => 'required|mimes:csv,txt',
         ]);
         if ($validated->fails()) {
@@ -377,17 +378,17 @@ class AdminController extends BaseController
         $now = Carbon::now()->toDateTimeString();
         try {
             switch ($request['type']) {
-                case 'OfflineTransaction':
+                case 'OnlineTransaction':
                     $file = fopen($request->file->getRealPath(), 'r');
                     $onlineTransactions = [];
                     $users = collect([]);
                     $needies = collect([]);
                     while ($csvLine = fgetcsv($file)) {
-                        if(!($users->pluck('id')->has($csvLine[0]))){
+                        if (!($users->pluck('id')->has($csvLine[0]))) {
                             $user = $this->userExists($csvLine[0]);
                             $users->push($user);
                         }
-                        if(!($needies->pluck('id')->has($csvLine[1]))){
+                        if (!($needies->pluck('id')->has($csvLine[1]))) {
                             $needy = $this->userExists($csvLine[1]);
                             $needies->push($needy);
                         }
@@ -406,13 +407,15 @@ class AdminController extends BaseController
                 default:
                     throw new NotSupportedType();
             }
-            return $this->sendResponse('','CSV Imported Successfully');
+            return $this->sendResponse('', 'CSV Imported Successfully');
         } catch (NotSupportedType $e) {
             return $this->sendError('This type isn\'t supported');
-        } catch(UserNotFound $e){
+        } catch (UserNotFound $e) {
             return $this->sendError('User Not Found');
-        } catch(NeedyNotFound $e){
+        } catch (NeedyNotFound $e) {
             return $this->sendError('Needy Not Found');
+        } catch (Exception $e) {
+            return $this->sendError('Something went wrong', [], 400);
         }
     }
 }

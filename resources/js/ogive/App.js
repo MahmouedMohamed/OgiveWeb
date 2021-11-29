@@ -12,6 +12,7 @@ import Ahed from './Ahed/Ahed';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Page404 from '../components/Page404';
+import AdminIndex from './Admin';
 
 function App() {
     return (
@@ -21,6 +22,9 @@ function App() {
                 <Switch>
                     <Route exact path="/">
                         <OgiveMainPage />
+                    </Route>
+                    <Route exact path="/admin">
+                        <AdminIndex />
                     </Route>
                     <Route exact path="/login">
                         <Login />
