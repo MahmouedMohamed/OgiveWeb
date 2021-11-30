@@ -28,7 +28,6 @@ class FoodSharingMarkersController extends BaseController
     public function index(Request $request)
     {
         try {
-            //TODO: Get User Location -> Return Only nearest Markers
             $responseHandler = new ResponseHandler($request['language']);
             $user = $this->userExists($request['userId']);
             $userLatitude = $request['latitude'] ?? 29.9832678;
@@ -41,29 +40,26 @@ class FoodSharingMarkersController extends BaseController
                      + sin(radians($userLatitude))
                      * sin(radians(latitude))))";
             return $this->sendResponse(
-                Cache::remember('foodsharingmarkers - ' . $user->nationality, 60 * 60 * 24, function () use ($distance, $user) {
-                    return
-                        FoodSharingMarker::select(
-                            [
-                                'id',
-                                'latitude',
-                                'longitude',
-                                'type',
-                                'description',
-                                'quantity',
-                                'priority',
-                                'collected',
-                                DB::raw(
-                                    $distance . ' AS distance'
-                                )
-                            ]
+                FoodSharingMarker::select(
+                    [
+                        'id',
+                        'latitude',
+                        'longitude',
+                        'type',
+                        'description',
+                        'quantity',
+                        'priority',
+                        'collected',
+                        DB::raw(
+                            $distance . ' AS distance'
                         )
-                        ->where('collected', '=', 0)
-                        ->where('nationality', '=', $user->nationality)
-                        ->havingRaw('distance < 100')
-                        ->take(100)
-                        ->get();
-                }),
+                    ]
+                )
+                    ->where('collected', '=', 0)
+                    ->where('nationality', '=', $user->nationality)
+                    ->havingRaw('distance < 100')
+                    ->take(100)
+                    ->get(),
                 ''
             );
         } catch (UserNotFound $e) {
