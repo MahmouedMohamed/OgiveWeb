@@ -7,8 +7,6 @@ use App\Exceptions\AtaaAchievementNotFound;
 use App\Exceptions\UserNotAuthorized;
 use App\Exceptions\UserNotFound;
 use App\Models\AtaaAchievement;
-use App\Models\AtaaPrize;
-use App\Models\User;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseHandler;
 use App\Traits\ControllersTraits\AtaaAchievementValidator;

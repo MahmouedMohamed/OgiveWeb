@@ -17,8 +17,6 @@ class PetController extends BaseController
      */
     public function index()
     {
-        // return Pet::all();
-        // return PetResource::collection(Pet::all());
         $pets = Pet::with('user')->get();
         return $this->sendResponse($pets, 'Pets retrieved successfully.');
     }
