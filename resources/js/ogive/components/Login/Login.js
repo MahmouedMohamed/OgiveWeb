@@ -1,12 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Login.css';
 // import Login from './Login.module.scss';
 import Navbar from '../Includes/Navbar';
 import Footer from '../Includes/Footer';
-function handleSubmit(){
-   return alert("sss");
-}
+
 function Login() {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const user = {
+            email: email,
+            password: password
+        };
+        axios.post(`/api/login`, user)
+            .then(res => {
+                console.log(res.data);
+            })
+    }
     return (
         <>
             <Navbar />
@@ -14,43 +25,38 @@ function Login() {
                 <React.Fragment>
                     <div className="d-flex justify-content-center h-100">
                         <div className="card" id="loginForm">
-                            <div class="card-header">
-                                <h3>Login</h3>
-                                {/* <div class="d-flex justify-content-end social_icon">
-                                <span><i className="fab fa-facebook-square"></i></span>
-                                <span><i className="fab fa-google-plus-square"></i></span>
-                                <span><i className="fab fa-twitter-square"></i></span>
-                            </div> */}
+                            <div className="card-header">
+                                <h3>تسجيل الدخول</h3>
                             </div>
                             <div className="card-body">
-                                <form onSubmit={handleSubmit()}>
-                                    <div class="input-group form-group">
+                                <form onSubmit={handleSubmit}>
+                                    <div className="input-group form-group">
                                         <div className="input-group-prepend">
                                             <span className="input-group-text"><i className="fas fa-user"></i></span>
                                         </div>
-                                        <input type="text" className="form-control" placeholder="username" />
+                                        <input type="text" onChange={e => setEmail(e.target.value)} className="form-control" placeholder="البريد الالكتروني" />
 
                                     </div>
-                                    <div class="input-group form-group">
+                                    <div className="input-group form-group">
                                         <div className="input-group-prepend">
                                             <span className="input-group-text"><i className="fas fa-key"></i></span>
                                         </div>
-                                        <input type="password" className="form-control" placeholder="password" />
+                                        <input type="password" onChange={e => setPassword(e.target.value)} className="form-control" placeholder="كلمة المرور" />
                                     </div>
                                     <div className="row align-items-center remember">
-                                        <input type="checkbox" />Remember Me
+                                        <input type="checkbox" />تذكرني
                                     </div>
                                     <div className="form-group">
-                                        <input type="submit" value="Login" className="btn float-right login_btn" />
+                                        <input type="submit" value="تسجبل" className="btn float-right login_btn" />
                                     </div>
                                 </form>
                             </div>
-                            <div class="card-footer">
+                            <div className="card-footer">
                                 <div className="d-flex justify-content-center links">
-                                    Don't have an account?<a href="#">Sign Up</a>
+                                    لا تمتلك حساب لدينا?<a href="#">انشئ حساب </a>
                                 </div>
                                 <div className="d-flex justify-content-center">
-                                    <a href="#">Forgot your password?</a>
+                                    <a href="#">نسيت كلمة المرور?</a>
                                 </div>
                             </div>
                         </div>

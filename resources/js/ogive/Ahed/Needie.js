@@ -19,7 +19,7 @@ class Needie extends React.Component {
     }
     loadNeedie() {
         let id = this.state.id;
-        let url = 'http://127.0.0.1:8000/api/ahed/needies/' + id;
+        let url = '/api/ahed/needies/' + id;
         axios.get(url)
             .then((response) => {
                 this.setState({

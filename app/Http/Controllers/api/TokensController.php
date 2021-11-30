@@ -21,7 +21,7 @@ class TokensController extends BaseController
         $activeOauthAccessTokens = OauthAccessToken::get();
         foreach ($activeOauthAccessTokens as $accessToken) {
             if (Hash::check($request['oauthAccessToken'], $accessToken->access_token)) {
-                return $this->sendResponse('Access Token Refreshed Successfully',$accessToken->refresh());
+                return $this->sendResponse($accessToken->refresh(),'Access Token Refreshed Successfully');
             }
         }
         return $this->sendError('This access token can\'t be found');

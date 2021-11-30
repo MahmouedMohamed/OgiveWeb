@@ -25,6 +25,7 @@ class CreateFoodSharingMarkerTable extends Migration
             $table->boolean('collected')->default(0);
             $table->boolean('existed')->nullable();
             $table->dateTime('collected_at')->nullable();
+            $table->string('nationality');
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });

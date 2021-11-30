@@ -16,7 +16,7 @@
 
                     {{ __('You are logged in!') }}
                     <br>
-                    <a href="{{url('/')}}">breadMe</a>
+                    <a href="{{url('/')}}">breedMe</a>
                 </div>
             </div>
         </div>

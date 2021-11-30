@@ -27,6 +27,7 @@ class User extends Authenticatable
         'gender',
         'phone_number',
         'address',
+        'nationality',
         'profile'
     ];
 
@@ -58,14 +59,15 @@ class User extends Authenticatable
         //Hash::make() -> saves only 60 chars to database
         //TODO: Solve & extend to 255 chars
         $accessToken = Str::random(60);
+        $expiryDate = Carbon::now('GMT+2')->addMonth();
         $this->accessTokens()->create([
             'access_token' => Hash::make($accessToken),
             'scopes' => '[]',
             'active' => 1,
-            'expires_at' => Carbon::now('GMT+2')->addMinute(),
+            'expires_at' => $expiryDate,
 
         ]);
-        return $accessToken;
+        return ['accessToken' => $accessToken, 'expiryDate' => $expiryDate];
     }
     public function deleteRelatedAccessTokens()
     {
@@ -143,5 +145,9 @@ class User extends Authenticatable
     public function hasAbility(String $ability)
     {
         return $this->abilities($ability);
+    }
+    public function fcmTokens()
+    {
+        return $this->hasOne(FCMToken::class);
     }
 }

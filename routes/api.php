@@ -1,24 +1,33 @@
 <?php
 
-use App\Http\Controllers\api\AdminController;
-use App\Http\Controllers\api\AdoptionRequestController;
-use App\Http\Controllers\api\ConsultationCommentController;
-use App\Http\Controllers\api\ConsultationController;
-use App\Http\Controllers\api\LikesController;
-use App\Http\Controllers\api\FoodSharingMarkersController;
-use App\Http\Controllers\api\MemoryController;
-use App\Http\Controllers\api\NeediesController;
-use App\Http\Controllers\api\OfflineTransactionsController;
-use App\Http\Controllers\api\OnlineTransactionsController;
-use App\Http\Controllers\api\PetController;
-use App\Http\Controllers\api\PetsArticleController;
-use App\Http\Controllers\api\PlaceController;
-use App\Http\Controllers\api\UserController;
-use App\Http\Controllers\api\AtaaAchievementController;
-use App\Http\Controllers\api\TokensController;
-use App\Http\Controllers\api\AtaaPrizeController;
-use App\Models\Pet;
 use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\api\AdminController;
+use App\Http\Controllers\api\UserController;
+use App\Http\Controllers\api\TokensController;
+
+/* Breed Me */
+use App\Http\Controllers\api\BreedMe\AdoptionRequestController;
+use App\Http\Controllers\api\BreedMe\ConsultationCommentController;
+use App\Http\Controllers\api\BreedMe\ConsultationController;
+use App\Http\Controllers\api\BreedMe\PetController;
+use App\Http\Controllers\api\BreedMe\PetsArticleController;
+use App\Http\Controllers\api\BreedMe\PlaceController;
+
+/* Memory Wall */
+use App\Http\Controllers\api\MemoryWall\MemoryController;
+use App\Http\Controllers\api\MemoryWall\LikesController;
+
+/* Ataa */
+use App\Http\Controllers\api\Ataa\FoodSharingMarkersController;
+use App\Http\Controllers\api\Ataa\AtaaAchievementController;
+use App\Http\Controllers\api\Ataa\AtaaPrizeController;
+use App\Http\Controllers\api\Ataa\AtaaBadgeController;
+
+/* Ahed */
+use App\Http\Controllers\api\Ahed\NeediesController;
+use App\Http\Controllers\api\Ahed\OfflineTransactionsController;
+use App\Http\Controllers\api\Ahed\OnlineTransactionsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,9 +49,17 @@ Route::patch('/profile/{id}/information', [UserController::class, 'updateinforma
 
 
 //**      Ataa Controllers      **//
-Route::apiResource('/ataa/markers', FoodSharingMarkersController::class);
-Route::patch('/ataa/collect/{id}', [FoodSharingMarkersController::class, 'collect']);
-Route::get('/ataa/achivement/{id}', [AtaaAchievementController::class, 'show']);
+Route::middleware(['api_auth'])->prefix('ataa')->group(function () {
+Route::apiResource('/markers', FoodSharingMarkersController::class);
+Route::patch('/collect/{id}', [FoodSharingMarkersController::class, 'collect']);
+Route::get('/achievement/{id}', [AtaaAchievementController::class, 'show']);
+Route::apiResource('/prize', AtaaPrizeController::class);
+Route::post('/prize/{id}/activate', [AtaaPrizeController::class, 'activate']);
+Route::post('/prize/{id}/deactivate', [AtaaPrizeController::class, 'deactivate']);
+Route::apiResource('/badge', AtaaBadgeController::class);
+Route::post('/badge/{id}/activate', [AtaaBadgeController::class, 'activate']);
+Route::post('/badge/{id}/deactivate', [AtaaBadgeController::class, 'deactivate']);
+});
 
 
 // Route::group(['middleware' => 'auth:api'], function () {
@@ -53,18 +70,9 @@ Route::post('/like', [LikesController::class, 'likeUnlike']);
 // });
 
 //TODO: Add This APIs to be auth by 2oauth token
-// Route::get('/pet',[PetController::class, 'index']);
-// Route::get('/pet/{id}',[PetController::class, 'show']);
-// Route::post('/pet',[PetController::class, 'store']);
-// Route::patch('/pet/{id}',[PetController::class, 'update']);
-// Route::delete('/pet/{id}',[PetController::class, 'destroy']);
 
 Route::apiResource('pets', PetController::class);
 Route::get('/filterByType', [PetController::class, 'filterByType']);
-
-Route::patch('/pet/{pet}', function (Pet $pet) {
-    // The current user may update the post...
-})->middleware('can:update,pet');
 
 Route::apiResource('consultations', ConsultationController::class);
 Route::apiResource('comments', ConsultationCommentController::class);
@@ -83,35 +91,34 @@ Route::get('filterPlacesByType', [PlaceController::class, 'filterByType']);
 
 //**      Ahed Controllers      **//
 
-// Route::group(['middleware' => 'auth:api'], function () {
-Route::apiResource('/ahed/needies', NeediesController::class);
-Route::get('/ahed/urgentneedies', [NeediesController::class, 'urgentIndex']);
-Route::get('/ahed/allNeedies', [NeediesController::class, 'allNeedies']);
-Route::get('/ahed/neediesWithIDs', [NeediesController::class, 'getNeediesWithIDs']);
-Route::post('/ahed/needies/addImages/{id}', [NeediesController::class, 'addAssociatedImages']);
-Route::post('/ahed/needies/removeImage/{id}', [NeediesController::class, 'removeAssociatedImage']);
-Route::apiResource('/ahed/onlinetransactions', OnlineTransactionsController::class);
-Route::apiResource('/ahed/offlinetransactions', OfflineTransactionsController::class);
-Route::get('/ahed/ahedachievement/{id}', [UserController::class, 'getAhedAchievementRecords']);
-// });
+Route::middleware(['api_auth'])->prefix('ahed')->group(function () {
+Route::apiResource('/needies', NeediesController::class);
+Route::get('/urgentneedies', [NeediesController::class, 'urgentIndex']);
+Route::get('/allNeedies', [NeediesController::class, 'getAllNeedies']);
+Route::get('/neediesWithIDs', [NeediesController::class, 'getNeediesWithIDs']);
+Route::post('/needies/addImages/{id}', [NeediesController::class, 'addAssociatedImages']);
+Route::post('/needies/removeImage/{id}', [NeediesController::class, 'removeAssociatedImage']);
+Route::apiResource('/onlinetransactions', OnlineTransactionsController::class);
+Route::apiResource('/offlinetransactions', OfflineTransactionsController::class);
+Route::get('/ahedachievement/{id}', [UserController::class, 'getAhedAchievementRecords']);
+});
 
 
 
 //**      Admin Controllers      **//
-Route::group(['middleware' => 'api_auth'], function () {
-Route::get('/admin', [AdminController::class, 'generalAdminDashboard']);
-Route::post('/admin/ahed/approve/{id}', [AdminController::class, 'approve']);
-Route::post('/admin/ahed/disapprove/{id}', [AdminController::class, 'disapprove']);
-Route::post('/admin/ahed/collect', [AdminController::class, 'collectOfflineTransaction']);
-Route::post('/admin/ataa/freezeachievment', [AdminController::class, 'freezeUserAtaaAchievments']);
-Route::post('/admin/ataa/defreezeachievment', [AdminController::class, 'defreezeUserAtaaAchievments']);
-Route::post('/admin/ataa/addprize', [AdminController::class, 'addAtaaPrize']);
-Route::get('/admin/ban', [AdminController::class, 'getUserBans']);
-Route::post('/admin/ban', [AdminController::class, 'addUserBan']);
-Route::patch('/admin/ban/activate/{id}', [AdminController::class, 'activateBan']);
-Route::patch('/admin/ban/deactivate/{id}', [AdminController::class, 'deactivateBan']);
-Route::apiResource('/ataa/prize',AtaaPrizeController::class);
+Route::middleware(['api_auth'])->prefix('admin')->group(function () {
+    Route::get('/', [AdminController::class, 'generalAdminDashboard']);
+    Route::post('/ahed/approve/{id}', [AdminController::class, 'approve']);
+    Route::post('/ahed/disapprove/{id}', [AdminController::class, 'disapprove']);
+    Route::post('/ahed/collect', [AdminController::class, 'collectOfflineTransaction']);
+    Route::post('/ataa/freezeachievment', [AdminController::class, 'freezeUserAtaaAchievements']);
+    Route::post('/ataa/defreezeachievment', [AdminController::class, 'defreezeUserAtaaAchievements']);
+    Route::get('/ban', [AdminController::class, 'getUserBans']);
+    Route::post('/ban', [AdminController::class, 'addUserBan']);
+    Route::patch('/ban/activate/{id}', [AdminController::class, 'activateBan']);
+    Route::patch('/ban/deactivate/{id}', [AdminController::class, 'deactivateBan']);
+    Route::post('/importCSV',[AdminController::class,'importCSV']);
 });
 
 
-Route::post('/token/refresh',[TokensController::class,'refresh']);
+Route::post('/token/refresh', [TokensController::class, 'refresh']);

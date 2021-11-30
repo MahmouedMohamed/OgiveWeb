@@ -21,6 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('gender')->default('female');
             $table->string('phone_number')->nullable();
             $table->string('address')->nullable();
+            $table->string('nationality');
             $table->unsignedBigInteger('profile')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

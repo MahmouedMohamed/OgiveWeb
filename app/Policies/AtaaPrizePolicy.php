@@ -5,31 +5,15 @@ namespace App\Policies;
 use App\Models\AtaaPrize;
 use App\Models\AvailableAbilities;
 use App\Models\User;
+use App\Models\BanTypes;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use App\Models\BanType;
+use App\Traits\HasNoBan;
+use App\Traits\HasAbility;
 
 class AtaaPrizePolicy
 {
-    use HandlesAuthorization;
+    use HandlesAuthorization, HasNoBan, HasAbility;
 
-    private $banType;
-
-    public function __construct()
-    {
-        $this->banType = new BanType();
-    }
-
-    /**
-     * Returns If User has that kind of ban or not.
-     *
-     * @param  \App\Models\User  $user
-     * @param  String  $banType
-     * @return mixed
-     */
-    public function hasNoBan(User $user, String $banType)
-    {
-        return $user->bans()->where('active', '=', 1)->where('tag', '=', $this->banType->types[$banType])->get()->first() == null;
-    }
     /**
      * Determine whether the user can view any models.
      *
@@ -38,7 +22,8 @@ class AtaaPrizePolicy
      */
     public function viewAny(User $user)
     {
-        return $user->abilities()->contains(AvailableAbilities::ViewAtaaPrize) && $this->hasNoBan($user, 'ViewAtaaPrize');
+        return $this->hasAbility($user, AvailableAbilities::ViewAtaaPrize)
+            && $this->hasNoBan($user, BanTypes::ViewAtaaPrize);
     }
 
     /**
@@ -61,7 +46,8 @@ class AtaaPrizePolicy
      */
     public function create(User $user)
     {
-        return $user->abilities()->contains(AvailableAbilities::CreateAtaaPrize) && $this->hasNoBan($user, 'CreateAtaaPrize');
+        return $this->hasAbility($user, AvailableAbilities::CreateAtaaPrize)
+            && $this->hasNoBan($user, BanTypes::CreateAtaaPrize);
     }
 
     /**
@@ -73,7 +59,34 @@ class AtaaPrizePolicy
      */
     public function update(User $user, AtaaPrize $ataaPrize)
     {
-        return $user->abilities()->contains(AvailableAbilities::UpdateAtaaPrize) && $this->hasNoBan($user, 'UpdateAtaaPrize');
+        return $this->hasAbility($user, AvailableAbilities::UpdateAtaaPrize)
+            && $this->hasNoBan($user, BanTypes::UpdateAtaaPrize);
+    }
+
+    /**
+     * Determine whether the user can activate the model.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\AtaaPrize  $ataaPrize
+     * @return mixed
+     */
+    public function activate(User $user, AtaaPrize $ataaPrize)
+    {
+        return $this->hasAbility($user, AvailableAbilities::ActivateAtaaPrize)
+            && $this->hasNoBan($user, BanTypes::ActivateAtaaPrize);
+    }
+
+    /**
+     * Determine whether the user can activate the model.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\AtaaPrize  $ataaPrize
+     * @return mixed
+     */
+    public function deactivate(User $user, AtaaPrize $ataaPrize)
+    {
+        return $this->hasAbility($user, AvailableAbilities::DeactivateAtaaPrize)
+            && $this->hasNoBan($user, BanTypes::DeactivateAtaaPrize);
     }
 
     /**
@@ -85,7 +98,8 @@ class AtaaPrizePolicy
      */
     public function delete(User $user, AtaaPrize $ataaPrize)
     {
-        return $user->abilities()->contains(AvailableAbilities::DeleteAtaaPrize) && $this->hasNoBan($user, 'DeleteAtaaPrize');
+        return $this->hasAbility($user, AvailableAbilities::DeleteAtaaPrize)
+            && $this->hasNoBan($user, BanTypes::DeleteAtaaPrize);
     }
 
     /**

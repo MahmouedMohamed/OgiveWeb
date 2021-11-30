@@ -5,10 +5,14 @@ namespace App\Policies;
 use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use App\Models\AvailableAbilities;
+use App\Models\BanTypes;
+use App\Traits\HasNoBan;
+use App\Traits\HasAbility;
 
 class ProfilePolicy
 {
-    use HandlesAuthorization;
+    use HandlesAuthorization, HasNoBan, HasAbility;
 
     /**
      * Determine whether the user can view any models.
@@ -30,7 +34,9 @@ class ProfilePolicy
      */
     public function view(User $user, Profile $profile)
     {
-        return $user->profile == $profile->id || $user->isAdmin();
+        return ($user->profile == $profile->id ||
+        $this->hasAbility($user, AvailableAbilities::ViewUserProfile))
+            && $this->hasNoBan($user, BanTypes::ViewUserProfile);
     }
 
     /**
@@ -53,7 +59,9 @@ class ProfilePolicy
      */
     public function update(User $user, Profile $profile)
     {
-        //
+        return ($user->profile == $profile->id ||
+        $this->hasAbility($user, AvailableAbilities::UpdateUserProfile))
+            && $this->hasNoBan($user, BanTypes::UpdateUserProfile);
     }
 
     /**

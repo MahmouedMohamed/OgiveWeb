@@ -51,7 +51,7 @@ class Cases extends Component {
         this.setState({ current_page: pageNumber }, () => { this.loadNeedies(); });
     }
     loadNeedies() {
-        let url = `http://127.0.0.1:8000/api/ahed/needies?page=${this.state.current_page}`;
+        let url = `/api/ahed/needies?page=${this.state.current_page}`;
         axios.get(url)
             .then((response) => {
                 console.log(response.data.data.data)
@@ -67,7 +67,7 @@ class Cases extends Component {
             })
     }
     loadUrgentNeedies() {
-        let url = `http://127.0.0.1:8000/api/ahed/urgentneedies`;
+        let url = `/api/ahed/urgentneedies`;
         axios.get(url)
             .then((response) => {
                 console.log(response.data.data.data)

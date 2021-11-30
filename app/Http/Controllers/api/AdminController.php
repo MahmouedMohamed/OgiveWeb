@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Exceptions\NeedyNotFound;
+use App\Exceptions\NotSupportedType;
+use App\Exceptions\UserNotFound;
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\AtaaPrize;
 use Illuminate\Http\Request;
@@ -15,9 +18,13 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Validator;
 use App\Models\BanType;
+use App\Traits\ControllersTraits\NeedyValidator;
+use App\Traits\ControllersTraits\UserValidator;
+use Illuminate\Support\Str;
 
 class AdminController extends BaseController
 {
+    use UserValidator, NeedyValidator;
 
     /**
      * Dashboard.
@@ -36,9 +43,9 @@ class AdminController extends BaseController
         $generalData = array();
         $ahedData = array();
         $breedmeData = array();
-        $numberOfUsers = User::all()->count();
-        $numberOfNeedies = Needy::all()->count();
-        $numberOfNeediesSatisfied = Needy::all()->where('satisfied', '=', true)->count();
+        $numberOfUsers = User::count();
+        $numberOfNeedies = Needy::count();
+        $numberOfNeediesSatisfied = Needy::where('satisfied', '=', true)->count();
         $numberOfTransactions = OnlineTransaction::all()->count() + OfflineTransaction::all()->where('collected', '=', true)->count();
         $givesCollected = OnlineTransaction::all()->sum('amount') + OfflineTransaction::all()->where('collected', '=', true)->sum('amount');
         $numberOfPets = Pet::all()->count();
@@ -154,7 +161,7 @@ class AdminController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function freezeUserAtaaAchievments(Request $request)
+    public function freezeUserAtaaAchievements(Request $request)
     {
         //Check User exists
         $user = User::find($request['userId']);
@@ -170,25 +177,25 @@ class AdminController extends BaseController
 
         //Check if current user can freeze
         if (!$admin->can('freeze', $user->ataaAchievement)) {
-            return $this->sendForbidden('You aren\'t authorized to freeze this user acheivement.');
+            return $this->sendForbidden('You aren\'t authorized to freeze this user achievement.');
         }
 
-        //Check if user has achievment
+        //Check if user has achievement
         if (!$user->ataaAchievement) {
             return $this->sendError('User Achievement doesn\'t exist');
         }
 
         $user->ataaAchievement->freeze();
-        return $this->sendResponse([], 'User Acheivement Freezed Successfully!');
+        return $this->sendResponse([], 'User Achievement Freezed Successfully!');
     }
 
     /**
-     * Defreeze Ataa Achievment for a user.
+     * Defreeze Ataa Achievement for a user.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function defreezeUserAtaaAchievments(Request $request)
+    public function defreezeUserAtaaAchievements(Request $request)
     {
         //Check User exists
         $user = User::find($request['userId']);
@@ -204,125 +211,16 @@ class AdminController extends BaseController
 
         //Check if current user can freeze
         if (!$admin->can('defreeze', $user->ataaAchievement)) {
-            return $this->sendForbidden('You aren\'t authorized to defreeze this user acheivement.');
+            return $this->sendForbidden('You aren\'t authorized to defreeze this user achievements.');
         }
 
-        //Check if user has achievment
+        //Check if user has achievement
         if (!$user->ataaAchievement) {
             return $this->sendError('User Achievement doesn\'t exist');
         }
 
         $user->ataaAchievement->defreeze();
-        return $this->sendResponse([], 'User Acheivement Defreezed Successfully!');
-    }
-
-    /**
-     * Add Ataa Prize.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function addAtaaPrize(Request $request)
-    {
-
-        //Check user "Admin" who is updating exists
-        $admin = User::find($request['createdBy']);
-        if ($admin == null) {
-            return $this->sendError('Admin User Not Found');
-        }
-
-        //Check if current user can create
-        if (!$admin->can('create', AtaaPrize::class)) {
-            return $this->sendForbidden('You aren\'t authorized to create a Prize.');
-        }
-        $validated = $this->validateAtaaPrize($request);
-        if ($validated->fails()) {
-            return $this->sendError('Invalid data', $validated->messages(), 400);
-        }
-
-        try {
-            $sameLevelPrize = AtaaPrize::where('active', '=', 1)->where('level', '=', $request['level'])->get()->first();
-            if ($sameLevelPrize) {
-
-                //Check if admin want to replace or shift
-                $adminChosenAction = $request['action'];
-                if ($adminChosenAction == null || ($adminChosenAction != 'replace' && $adminChosenAction != 'shift'))
-                    return $this->sendError('Invalid value for action', $validated->messages(), 400);
-
-
-                //replace => deactivate the old prize, create the new
-                if ($adminChosenAction == 'replace') {
-                    $sameLevelPrize->deactivate();
-
-                    $imagePath = null;
-                    if ($request['image']) {
-                        $imagePath = $request['image']->store('ataa_prizes', 'public');
-                        $imagePath = "/storage/" . $imagePath;
-                    }
-                    AtaaPrize::create([
-                        'createdBy' => $request['createdBy'],
-                        'name' => $request['name'],
-                        'image' => $imagePath,
-                        'required_markers_collected' => $request['required_markers_collected'],
-                        'required_markers_posted' => $request['required_markers_posted'],
-                        'from' => $request['from'] ?? Carbon::now('GMT+2'),
-                        'to' => $request['to'],
-                        'level' => $request['level'],
-                        //Has From? then compare -> lessthan then active, o.w wait for sql event to activate it || active
-                        'active' => $request['from']? ($request['from'] <= Carbon::now('GMT+2')? 1 : 0) : 1,
-                    ]);
-                } else {
-                    //shift the others where level is bigger
-                    $biggerLevelPrizes = AtaaPrize::where('active', '=', 1)->where('level', '>=', $sameLevelPrize['level'])->get();
-                    foreach ($biggerLevelPrizes as $prize) {
-                        //update their level
-                        $prize->increaseLevel();
-                        //update their name if they are auto filled
-                        if (str_contains($prize['name'], 'Level'))
-                            $prize->updateName();
-                    }
-                    //create New
-                    $imagePath = null;
-                    if ($request['image']) {
-                        $imagePath = $request['image']->store('ataa_prizes', 'public');
-                        $imagePath = "/storage/" . $imagePath;
-                    }
-                    AtaaPrize::create([
-                        'createdBy' => $request['createdBy'],
-                        'name' => $request['name'],
-                        'image' => $imagePath,
-                        'required_markers_collected' => $request['required_markers_collected'],
-                        'required_markers_posted' => $request['required_markers_posted'],
-                        'from' => $request['from'] ?? Carbon::now('GMT+2'),
-                        'to' => $request['to'],
-                        'level' => $request['level'],
-                        //Has From? then compare -> lessthan then active, o.w wait for sql event to activate it || active
-                        'active' => $request['from']? ($request['from'] <= Carbon::now('GMT+2')? 1 : 0) : 1,
-                    ]);
-                }
-            } else {
-                $imagePath = null;
-                if ($request['image']) {
-                    $imagePath = $request['image']->store('ataa_prizes', 'public');
-                    $imagePath = "/storage/" . $imagePath;
-                }
-                AtaaPrize::create([
-                    'createdBy' => $request['createdBy'],
-                    'name' => $request['name'],
-                    'image' => $imagePath,
-                    'required_markers_collected' => $request['required_markers_collected'],
-                    'required_markers_posted' => $request['required_markers_posted'],
-                    'from' => $request['from'] ?? Carbon::now('GMT+2'),
-                    'to' => $request['to'],
-                    'level' => $request['level'],
-                    //Has From? then compare -> lessthan then active, o.w wait for sql event to activate it || active
-                    'active' => $request['from']? ($request['from'] <= Carbon::now('GMT+2')? 1 : 0) : 1,
-                ]);
-            }
-        } catch (Exception $e) {
-            return $this->sendError('Something went wrong', [], 500);
-        }
-        return $this->sendResponse([], 'Ataa Prize Created Successfully!');
+        return $this->sendResponse([], 'User Achievements Defreezed Successfully!');
     }
 
     /**
@@ -451,40 +349,12 @@ class AdminController extends BaseController
         return $this->sendResponse('', 'User Ban Created Successfully');
     }
 
-    public function validateAtaaPrize(Request $request)
-    {
 
-        $rules = [
-            'createdBy' => 'required',
-            'name' => 'required',
-            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'required_markers_collected' => 'required|integer|min:0',
-            'required_markers_posted' => 'required|integer|min:0',
-            'from' => 'date',
-            'to' => 'date|after:from',
-            'level' => 'required|integer|min:1',
-        ];
-        $messages = [
-            'required' => 'This field is required',
-            'min' => 'Wrong value, minimum value is :min',
-            'max' => 'Wrong size, maximum size is :max',
-            'integer' => 'Wrong value, supports only real numbers',
-            'in' => 'Wrong value, supported values are :values',
-            'numeric' => 'Wrong value, supports only numeric numbers',
-            'image' => 'Wrong value, supports only images',
-            'mimes' => 'Wrong value, supports only :values',
-            'date' => 'Wrong value, supports only date',
-            'before' => 'The :attribute must be before :date',
-            'after' => 'The :attribute must be after :date'
-        ];
-        return Validator::make($request->all(), $rules, $messages);
-    }
 
     public function validateUserBan(Request $request)
     {
-        $banType = new BanType();
         $rules = [
-            'tag' => 'required|in:' . $banType->toString(),
+            'tag' => 'required',
             'start_at' => 'date',
             'end_at' => 'date|after:from'
         ];
@@ -494,5 +364,58 @@ class AdminController extends BaseController
             'after' => 'The :attribute must be after :date'
         ];
         return Validator::make($request->all(), $rules, $messages);
+    }
+
+    public function importCSV(Request $request)
+    {
+        $validated = Validator::make($request->all(), [
+            'type' => 'required',
+            'file' => 'required|mimes:csv,txt',
+        ]);
+        if ($validated->fails()) {
+            return $this->sendError('Invalid data', $validated->messages(), 400);
+        }
+        $now = Carbon::now()->toDateTimeString();
+        try {
+            switch ($request['type']) {
+                case 'OnlineTransaction':
+                    $file = fopen($request->file->getRealPath(), 'r');
+                    $onlineTransactions = [];
+                    $users = collect([]);
+                    $needies = collect([]);
+                    while ($csvLine = fgetcsv($file)) {
+                        if (!($users->pluck('id')->has($csvLine[0]))) {
+                            $user = $this->userExists($csvLine[0]);
+                            $users->push($user);
+                        }
+                        if (!($needies->pluck('id')->has($csvLine[1]))) {
+                            $needy = $this->userExists($csvLine[1]);
+                            $needies->push($needy);
+                        }
+                        $onlineTransactions[] = [
+                            'giver' => $csvLine[0],
+                            'needy' => $csvLine[1],
+                            'amount' => $csvLine[2],
+                            'remaining' => $csvLine[3],
+                            'created_at' => $now,
+                            'updated_at' => $now
+                        ];
+                    }
+                    // dd($needies);
+                    OnlineTransaction::insert($onlineTransactions);
+                    break;
+                default:
+                    throw new NotSupportedType();
+            }
+            return $this->sendResponse('', 'CSV Imported Successfully');
+        } catch (NotSupportedType $e) {
+            return $this->sendError('This type isn\'t supported');
+        } catch (UserNotFound $e) {
+            return $this->sendError('User Not Found');
+        } catch (NeedyNotFound $e) {
+            return $this->sendError('Needy Not Found');
+        } catch (Exception $e) {
+            return $this->sendError('Something went wrong', [], 400);
+        }
     }
 }

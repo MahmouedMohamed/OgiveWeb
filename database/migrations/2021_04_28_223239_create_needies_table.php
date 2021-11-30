@@ -27,6 +27,8 @@ class CreateNeediesTable extends Migration
             $table->boolean('approved')->default(0);
             $table->unsignedBigInteger('createdBy');
             $table->string('url')->nullable();
+            //ToDo:Introduce Nationality to Ahed
+            // $table->string('nationality');
             $table->timestamps();
             $table->foreign('createdBy')->references('id')->on('users')->onDelete('cascade');
         });
