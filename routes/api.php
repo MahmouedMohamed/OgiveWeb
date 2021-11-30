@@ -49,7 +49,7 @@ Route::patch('/profile/{id}/information', [UserController::class, 'updateinforma
 
 
 //**      Ataa Controllers      **//
-    //* * Optimized * */
+//* * Optimized * */
 Route::middleware(['api_auth'])->prefix('ataa')->group(function () {
     Route::apiResource('/markers', FoodSharingMarkersController::class);
     Route::patch('/collect/{id}', [FoodSharingMarkersController::class, 'collect']);
@@ -57,12 +57,10 @@ Route::middleware(['api_auth'])->prefix('ataa')->group(function () {
 });
 
 
-// Route::group(['middleware' => 'auth:api'], function () {
-Route::get('/memory', [MemoryController::class, 'getAll']);
-Route::post('/memory', [MemoryController::class, 'create']);
-Route::delete('/memory', [MemoryController::class, 'delete']);
-Route::post('/like', [LikesController::class, 'likeUnlike']);
-// });
+Route::middleware(['api_auth'])->prefix('memorywall')->group(function () {
+Route::apiResource('/memories', MemoryController::class);
+Route::apiResource('/likes', LikesController::class);
+});
 
 //TODO: Add This APIs to be auth by 2oauth token
 
@@ -85,7 +83,7 @@ Route::get('filterPlacesByType', [PlaceController::class, 'filterByType']);
 
 
 //**      Ahed Controllers      **//
-    //* * Optimized * */
+//* * Optimized * */
 Route::middleware(['api_auth'])->prefix('ahed')->group(function () {
     Route::apiResource('/needies', NeediesController::class);
     Route::get('/urgentneedies', [NeediesController::class, 'urgentIndex']);

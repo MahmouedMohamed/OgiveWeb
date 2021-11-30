@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Memory extends Model
 {
-    protected $guarded=['user_id'];
-    public function user()
+    protected $guarded=['createdBy'];
+    public function author()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class,'createdBy');
     }
     public function likes()
     {

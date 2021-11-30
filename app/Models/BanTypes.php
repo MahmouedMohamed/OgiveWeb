@@ -56,4 +56,5 @@ abstract class BanTypes
     const DeleteAtaaBadge = "delete_ataa_badge_ban";                             //Implemented
     const ActivateAtaaBadge = "activate_ataa_badge_ban";                             //Implemented
     const DeactivateAtaaBadge = "deactivate_ataa_badge_ban";                             //Implemented
+    const ViewMemory = 'view_memory';
 }

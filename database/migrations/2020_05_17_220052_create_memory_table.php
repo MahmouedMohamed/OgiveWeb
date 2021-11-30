@@ -15,14 +15,15 @@ class CreateMemoryTable extends Migration
     {
         Schema::create('memories', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('user_id');
-            $table->string('person_name');
-            $table->dateTime('birth');
-            $table->dateTime('death');
-            $table->text('life_story');
+            $table->unsignedBigInteger('createdBy');
+            $table->string('personName');
+            $table->dateTime('birthDate');
+            $table->dateTime('deathDate');
+            $table->text('lifeStory');
             $table->string('image');
+            $table->string('nationality');
             $table->timestamps();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('createdBy')->references('id')->on('users')->onDelete('cascade');
 
         });
     }

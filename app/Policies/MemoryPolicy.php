@@ -2,13 +2,16 @@
 
 namespace App\Policies;
 
+use App\Models\BanTypes;
 use App\Models\User;
 use App\Models\Memory;
+use App\Traits\HasAbility;
+use App\Traits\HasNoBan;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class MemoryPolicy
 {
-    use HandlesAuthorization;
+    use HandlesAuthorization, HasNoBan, HasAbility;
 
     /**
      * Determine whether the user can view any memories.
@@ -18,7 +21,7 @@ class MemoryPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return $this->hasNoBan($user, BanTypes::ViewMemory);
     }
 
     /**
