@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\AvailableAbilities;
 use App\Models\BanTypes;
 use App\Models\User;
 use App\Models\Memory;
@@ -33,7 +34,7 @@ class MemoryPolicy
      */
     public function view(User $user, Memory $memory)
     {
-        //
+        return $this->hasNoBan($user, BanTypes::ViewMemory);
     }
 
     /**
@@ -44,7 +45,7 @@ class MemoryPolicy
      */
     public function create(User $user)
     {
-        //
+        return $this->hasNoBan($user, BanTypes::CreateMemory);
     }
 
     /**
@@ -56,7 +57,9 @@ class MemoryPolicy
      */
     public function update(User $user, Memory $memory)
     {
-        return $user->id == $memory->user_id;
+        return ($user->id == $memory->createdBy ||
+            $this->hasAbility($user, AvailableAbilities::UpdateMemory)) &&
+            $this->hasNoBan($user, BanTypes::UpdateMemory);
     }
 
     /**
@@ -68,7 +71,9 @@ class MemoryPolicy
      */
     public function delete(User $user, Memory $memory)
     {
-        //
+        return ($user->id == $memory->createdBy ||
+            $this->hasAbility($user, AvailableAbilities::DeleteMemory)) &&
+            $this->hasNoBan($user, BanTypes::DeleteMemory);
     }
 
     /**

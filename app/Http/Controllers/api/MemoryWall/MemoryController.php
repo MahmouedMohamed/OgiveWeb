@@ -7,13 +7,15 @@ use App\Exceptions\UserNotAuthorized;
 use App\Exceptions\UserNotFound;
 use App\Helpers\ResponseHandler;
 use App\Models\Memory;
+use App\Traits\ControllersTraits\MemoryValidator;
 use App\Traits\ControllersTraits\UserValidator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class MemoryController extends BaseController
 {
-    use UserValidator;
+    use UserValidator, MemoryValidator;
     /**
      * Display a listing of the resource.
      *
@@ -23,26 +25,24 @@ class MemoryController extends BaseController
     public function index(Request $request)
     {
         try {
+            //ToDo: return wether the memory was liked or not
             $responseHandler = new ResponseHandler($request['language']);
             $user = $this->userExists($request['userId']);
-            $currentPage = request()->get('page', 1);
             $this->userIsAuthorized($user, 'viewAny', Memory::class);
             return $this->sendResponse(
-                Cache::remember('memories - ' . $currentPage, 60 * 60 * 24, function () use ($user) {
-                    return
-                        Memory::select(
-                            [
-                                'id',
-                                'personName',
-                                'birthDate',
-                                'deathDate',
-                                'lifeStory',
-                                'image'
-                            ]
-                        )
-                        ->where('nationality', '=', $user->nationality)
-                        ->paginate(8);
-                }),
+                Memory::select(
+                    [
+                        'id',
+                        'personName',
+                        'birthDate',
+                        'deathDate',
+                        'lifeStory',
+                        'image',
+                        DB::raw('DATEDIFF(deathDate,birthDate) / 365 as age')
+                    ]
+                )
+                    ->where('nationality', '=', $user->nationality)
+                    ->paginate(8),
                 ''
             );
         } catch (UserNotFound $e) {
@@ -62,20 +62,21 @@ class MemoryController extends BaseController
     {
         try {
             $responseHandler = new ResponseHandler($request['language']);
+            $user = $this->userExists($request['createdBy']);
             //Validate Request
             $validated = $this->validateMemory($request, 'store');
             if ($validated->fails()) {
                 return $this->sendError($responseHandler->words['InvalidData'], $validated->messages(), 400);   ///Invalid data
             }
-            $user = $this->userExists($request['createdBy']);
             $this->userIsAuthorized($user, 'create', Memory::class);
             $imagePath = $request['image']->store('memories', 'public');
             $user->memories()->create([
-                'person_name' => $request['personName'],
-                'birth' => $request['birthDate'],
-                'death' => $request['deathDate'],
-                'life_story' => $request['lifeStory'],
+                'personName' => $request['personName'],
+                'birthDate' => $request['birthDate'],
+                'deathDate' => $request['deathDate'],
+                'lifeStory' => $request['lifeStory'],
                 'image' => "/storage/" . $imagePath,
+                'nationality' => $user->nationality,
             ]);
             return $this->sendResponse([], $responseHandler->words['MemoryCreationSuccessMessage']); ///Thank You For Your Contribution!
         } catch (UserNotFound $e) {

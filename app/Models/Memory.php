@@ -13,6 +13,6 @@ class Memory extends Model
     }
     public function likes()
     {
-        return $this->hasMany(Like::class)->orderBy('memory_id','DESC');
+        return $this->hasMany(Like::class)->orderBy('memoryId','DESC');
     }
 }

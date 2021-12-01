@@ -52,5 +52,7 @@ abstract class AvailableAbilities
     const DeleteAtaaBadge = "delete_ataa_badge";                             //Implemented
     const ActivateAtaaBadge = "activate_ataa_badge";                             //Implemented
     const DeactivateAtaaBadge = "deactivate_ataa_badge";                             //Implemented
-
+    const ViewMemoryWallReports = "view_memory_wall_reports";
+    const UpdateMemory = "update_memory";                             //Implemented
+    const DeleteMemory = "delete_memory";                             //Implemented
 }

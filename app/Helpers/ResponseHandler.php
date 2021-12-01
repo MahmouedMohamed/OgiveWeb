@@ -35,6 +35,16 @@ class ResponseHandler
                     'FoodSharingMarkerAlreadyCollected' => 'هذا العنصر تم جمعه بالفعل',
                     'ShowAchievementForbidden' => 'أنت لا تملك صلاحية عرض هذا العنصر',
                     'AchievementNotFound' => 'هذا العنصر غير موجود',
+
+                    'MemoryCreationSuccessMessage' => 'الذكريات لا تموت معنا',
+                    'MemoryUpdateSuccessMessage' => 'تم تعديل العنصر بنجاح',
+                    'MemoryDeleteSuccessMessage' => 'تم إزالة العنصر بنجاح',
+                    'MemoryCreationBannedMessage' => 'نأسف لكن يبدو أنك ممنوع من إنشاء ذكريات جديدة',
+                    'MemoryViewingBannedMessage' => 'نأسف لكن يبدو أنك ممنوع من مشاهدة الذكريات',
+                    'MemoryCreationForbiddenMessage' => 'أنت لا تملك صلاحية إنشاء هذا العنصر',
+                    'MemoryUpdateForbiddenMessage' => 'أنت لا تملك صلاحية تعديل هذا العنصر',
+                    'MemoryDeletionForbiddenMessage' => 'أنت لا تملك صلاحية إزالة هذا العنصر',
+                    'MemoryNotFound' => 'هذا العنصر غير موجود',
                 ];
                 //Default is English
             default:
@@ -55,6 +65,16 @@ class ResponseHandler
                     'FoodSharingMarkerAlreadyCollected' => 'This Food Sharing Marker has been collected already',
                     'ShowAchievementForbidden' => 'You aren\'t authorized to show this achievement',
                     'AchievementNotFound' => 'This element can\'t be found',
+
+                    'MemoryCreationCreationSuccessMessage' => 'Memories don\'t die with us',
+                    'MemoryCreationUpdateSuccessMessage' => 'Memory updated Successfully',
+                    'MemoryDeleteSuccessMessage' => 'Memory deleted Successfully',
+                    'MemoryCreationBannedMessage' => 'Sorry, but it seems that you are banned from creating any new memories',
+                    'MemoryViewingBannedMessage' => 'Sorry, but it seems that you are banned from viewing memories',
+                    'MemoryCreationForbiddenMessage' => 'You aren\'t authorized to create this memory',
+                    'MemoryUpdateForbiddenMessage' => 'You aren\'t authorized to update this memory',
+                    'MemoryDeletionForbiddenMessage' => 'You aren\'t authorized to delete this memory',
+                    'MemoryNotFound' => 'Memory Not Found',
                 ];
         }
     }

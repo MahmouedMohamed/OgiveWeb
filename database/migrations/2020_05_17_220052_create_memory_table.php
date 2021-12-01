@@ -17,8 +17,8 @@ class CreateMemoryTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('createdBy');
             $table->string('personName');
-            $table->dateTime('birthDate');
-            $table->dateTime('deathDate');
+            $table->date('birthDate');
+            $table->date('deathDate');
             $table->text('lifeStory');
             $table->string('image');
             $table->string('nationality');

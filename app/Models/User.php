@@ -83,7 +83,7 @@ class User extends Authenticatable
     }
     public function memories()
     {
-        return $this->hasMany(Memory::class)->orderBy('id', 'DESC');
+        return $this->hasMany(Memory::class,'createdBy')->orderBy('id', 'DESC');
     }
     public function likes()
     {
