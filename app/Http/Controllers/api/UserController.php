@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Exceptions\LoginParametersNotFound;
+use App\Exceptions\UserNotAuthorized;
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\Needy;
 use App\Models\OfflineTransaction;
 use App\Models\OnlineTransaction;
 use App\Models\Profile;
 use App\Models\CaseType;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
@@ -16,42 +17,43 @@ use Illuminate\Support\Facades\Hash;
 
 use Illuminate\Http\Request;
 
-use App\Models\BanTypes;
+use App\Traits\ControllersTraits\LoginValidator;
 
 class UserController extends BaseController
 {
+    use LoginValidator;
     public function __construct()
     {
         $this->content = array();
     }
-    public function login()
+    public function login(Request $request)
     {
-        if (Auth::attempt(['email' => request('email'), 'password' => request('password')])) {
-            $user = Auth::user();
-            $loginBan = $user->bans()->where('active', '=', 1)->where('tag', '=', BanTypes::Login)->get()->first();
-            if ($loginBan) {
-                return $this->sendForbidden('Sorry, but is seems you are banned from login until ' . ($loginBan['end_at'] ?? 'infinite period of time.'));
-            }
-            if (request('app') == 'TimeCatcher'){
-                if(request('fcmToken'))
+        try {
+            $this->validateLoginParameters($request);
+            if (Auth::attempt(['email' => $request['email'], 'password' => $request['password']])) {
+                $user = Auth::user();
+                $this->userBanValidator($user);
+                if ($request['appType'] == "TimeCatcher")
                     $user->fcmTokens()->create([
                         'token' => request('fcmToken')
                     ]);
-                else
-                    return $this->sendError('FCM Token isn\'t specified, Please Try Again Later','',400);
-            }
-            $tokenDetails = $user->createAccessToken();
-            $this->content['token'] =
-                $tokenDetails['accessToken'];
-            $this->content['expiryDate'] =
-                $tokenDetails['expiryDate'];
+                $tokenDetails = $user->createAccessToken($request['accessType'], $request['appType']);
+                $this->content['token'] =
+                    $tokenDetails['accessToken'];
+                $this->content['expiryDate'] =
+                    $tokenDetails['expiryDate'];
 
-            $this->content['user'] = Auth::user();
-            $profile = Profile::findOrFail(Auth::user()->profile);
-            $this->content['profile'] = $profile;
-            return $this->sendResponse($this->content, 'Data Retrieved Successfully');
-        } else {
-            return $this->sendError('The email or password is incorrect.');
+                $this->content['user'] = Auth::user();
+                $profile = Profile::findOrFail(Auth::user()->profile);
+                $this->content['profile'] = $profile;
+                return $this->sendResponse($this->content, 'Data Retrieved Successfully');
+            } else {
+                return $this->sendError('The email or password is incorrect.');
+            }
+        } catch (UserNotAuthorized $e) {
+            return $this->sendForbidden($e->getMessage());
+        } catch (LoginParametersNotFound $e) {
+            return $this->sendError("Parameter " . $e->getMessage() . " Not Specified");
         }
     }
 
@@ -114,8 +116,6 @@ class UserController extends BaseController
     public function getAhedAchievementRecords($id)
     {
         $user = User::find($id);
-
-        //ToDo: Optimize Queries
         if ($user) {
             ///Get Number of needies that user helped
             $neediesApprovedForUser = Needy::where('createdBy', '=', $user->id)->where('approved', '=', '1')->get()->pluck('id')->unique()->toArray();
@@ -134,8 +134,8 @@ class UserController extends BaseController
                 ->pluck('amount')->toArray();
             $valueOfOnlineDonation = $onlineDonationsForUser
                 ->pluck('amount')->toArray();
-            $valueOfDontaion = collect(array_merge($valueOfOfflineDonation, $valueOfOnlineDonation));
-            $this->content['ValueOfDonation'] = $valueOfDontaion->sum();
+            $valueOfDonation = collect(array_merge($valueOfOfflineDonation, $valueOfOnlineDonation));
+            $this->content['ValueOfDonation'] = $valueOfDonation->sum();
         }
 
         $activeNeedies = Needy::where('approved', '=', '1')->get();
