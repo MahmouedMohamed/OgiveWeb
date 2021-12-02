@@ -53,9 +53,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(OauthAccessToken::class);
     }
-    public function createAccessToken()
+    public function createAccessToken($accessType, $appType)
     {
-        $this->deleteRelatedAccessTokens();
+        $this->deleteRelatedAccessTokens($appType);
         //Hash::make() -> saves only 60 chars to database
         //TODO: Solve & extend to 255 chars
         $accessToken = Str::random(60);
@@ -63,15 +63,17 @@ class User extends Authenticatable
         $this->accessTokens()->create([
             'access_token' => Hash::make($accessToken),
             'scopes' => '[]',
+            'appType' => $appType,
+            'accessType' => $accessType,
             'active' => 1,
             'expires_at' => $expiryDate,
 
         ]);
         return ['accessToken' => $accessToken, 'expiryDate' => $expiryDate];
     }
-    public function deleteRelatedAccessTokens()
+    public function deleteRelatedAccessTokens($appType)
     {
-        $this->accessTokens()->delete();
+        $this->accessTokens()->where('appType', '=', $appType)->delete();
     }
     public function profile()
     {
