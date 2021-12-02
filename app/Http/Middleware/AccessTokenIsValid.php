@@ -19,9 +19,10 @@ class AccessTokenIsValid
 
         return response()->json($response, 403);
     }
-    public function isValidAccessToken($accessToken)
+    public function isValidAccessToken($accessToken, $appType)
     {
-        return OauthAccessToken::where('active', '=', 1)->first() != null;
+        //ToDo: Check if accessToken is specified for this appType
+        return $accessToken->active;
     }
     /**
      * Handle an incoming request.
@@ -36,9 +37,10 @@ class AccessTokenIsValid
             ->get();
         foreach ($activeOauthAccessTokens as $accessToken) {
             if (Hash::check($request->bearerToken(), $accessToken->access_token)) {
-                return $next($request);
+                if($this->isValidAccessToken($accessToken,''))
+                    return $next($request);
             }
         }
-        return $this->sendForbidden('Invalid Accesstoken');
+        return $this->sendForbidden('Invalid Access token');
     }
 }

@@ -18,6 +18,8 @@ class CreateAccessTokensTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->text('access_token')->unique();
             $table->text('scopes')->nullable();  //To Support Roles //2x Checks feature
+            $table->string('appType');
+            $table->string('accessType');
             $table->boolean('active')->default(1);
             $table->dateTime('expires_at')->nullable();
             $table->timestamps();

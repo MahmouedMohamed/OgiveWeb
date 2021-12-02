@@ -14,6 +14,8 @@ class OauthAccessToken extends Model
     protected $fillable = [
         'access_token',
         'scopes',
+        'appType',
+        'accessType',
         'active',
         'expires_at'
     ];
