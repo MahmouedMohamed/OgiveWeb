@@ -66,8 +66,8 @@ class ResponseHandler
                     'ShowAchievementForbidden' => 'You aren\'t authorized to show this achievement',
                     'AchievementNotFound' => 'This element can\'t be found',
 
-                    'MemoryCreationCreationSuccessMessage' => 'Memories don\'t die with us',
-                    'MemoryCreationUpdateSuccessMessage' => 'Memory updated Successfully',
+                    'MemoryCreationSuccessMessage' => 'Memories Last Forever',
+                    'MemoryUpdateSuccessMessage' => 'Memory updated Successfully',
                     'MemoryDeleteSuccessMessage' => 'Memory deleted Successfully',
                     'MemoryCreationBannedMessage' => 'Sorry, but it seems that you are banned from creating any new memories',
                     'MemoryViewingBannedMessage' => 'Sorry, but it seems that you are banned from viewing memories',

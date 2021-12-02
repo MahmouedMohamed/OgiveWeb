@@ -18,7 +18,7 @@ trait MemoryValidator
      * @param String $id
      * @return mixed
      */
-    public function MemoryExists(String $id)
+    public function memoryExists(String $id)
     {
         $memory = Memory::find($id);
         if (!$memory)
@@ -42,11 +42,11 @@ trait MemoryValidator
                 break;
             case 'update':
                 $rules = [
-                    'personName' => 'required|string',
-                    'birthDate' => 'required|date|before:deathDate',
-                    'deathDate' => 'required|date|after:birthDate',
-                    'lifeStory' => 'required|text',
-                    'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                    'personName' => 'string',
+                    'birthDate' => 'date|date_format:Y-m-d|before:deathDate',
+                    'deathDate' => 'date|date_format:Y-m-d|after:birthDate',
+                    'lifeStory' => 'string',
+                    'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
                 ];
                 break;
         }

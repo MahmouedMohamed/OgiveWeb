@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api\MemoryWall;
 
+use App\Exceptions\MemoryNotFound;
 use App\Http\Controllers\api\BaseController;
 use App\Exceptions\UserNotAuthorized;
 use App\Exceptions\UserNotFound;
@@ -10,8 +11,8 @@ use App\Models\Memory;
 use App\Traits\ControllersTraits\MemoryValidator;
 use App\Traits\ControllersTraits\UserValidator;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class MemoryController extends BaseController
 {
@@ -38,7 +39,7 @@ class MemoryController extends BaseController
                         'deathDate',
                         'lifeStory',
                         'image',
-                        DB::raw('DATEDIFF(deathDate,birthDate) / 365 as age')
+                        DB::raw('CAST(DATEDIFF(deathDate,birthDate) / 365 AS int) as age')
                     ]
                 )
                     ->where('nationality', '=', $user->nationality)
@@ -89,34 +90,96 @@ class MemoryController extends BaseController
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Memory  $memory
+     * @param  Request  $request
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Memory $memory)
+    public function show(Request $request, $id)
     {
-        //
+        try {
+            $responseHandler = new ResponseHandler($request['language']);
+            $memory = $this->memoryExists($id);
+            return $this->sendResponse(collect([$memory])->map(function ($memory) {
+                return [
+                    'id' => $memory->id,
+                    'personName' => $memory->id,
+                    'birthDate' => $memory->birthDate,
+                    'deathDate' => $memory->deathDate,
+                    'lifeStory' => $memory->lifeStory,
+                    'image' => $memory->image,
+                    'age' => date_diff(date_create($memory->deathDate), date_create($memory->birthDate))->y,
+                ];
+            })->first(), "");
+        } catch (MemoryNotFound $e) {
+            return $this->sendError($responseHandler->words['MemoryNotFound']);
+        }
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Memory  $memory
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Memory $memory)
+    public function update(Request $request, int $id)
     {
-        //
+        try {
+            $responseHandler = new ResponseHandler($request['language']);
+            //Validate Request
+            $validated = $this->validateMemory($request, 'update');
+            if ($validated->fails()) {
+                return $this->sendError($responseHandler->words['InvalidData'], $validated->messages(), 400);
+            }
+            $memory = $this->memoryExists($id);
+            $user = $this->userExists($request['userId']);
+            $this->userIsAuthorized($user, 'update', $memory);
+            if ($request['image']) {
+                Storage::delete('public/' . substr($memory->image, 9));
+                $imagePath = $request['image']->store('memories', 'public');
+            }
+            $memory->update([
+                'personName' => $request['personName'] ?? $memory->personName,
+                'birthDate' => $request['birthDate'] ?? $memory->birthDate,
+                'deathDate' => $request['deathDate'] ?? $memory->deathDate,
+                'lifeStory' => $request['lifeStory'] ?? $memory->lifeStory,
+                'image' => $request['image'] ? "/storage/" . $imagePath : $memory->image,
+                'nationality' => $user->nationality,
+            ]);
+            return $this->sendResponse([], $responseHandler->words['MemoryUpdateSuccessMessage']);
+        } catch (MemoryNotFound $e) {
+            return $this->sendError($responseHandler->words['MemoryNotFound']);
+        } catch (UserNotFound $e) {
+            return $this->sendError($responseHandler->words['UserNotFound']);
+        } catch (UserNotAuthorized $e) {
+            return $this->sendForbidden($responseHandler->words['MemoryUpdateForbiddenMessage']);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Memory  $memory
+     * @param  Request  $request
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Memory $memory)
+    public function destroy(Request $request, int $id)
     {
-        //
+        try {
+            $responseHandler = new ResponseHandler($request['language']);
+            $memory = $this->memoryExists($id);
+            $user = $this->userExists($request['userId']);
+            $this->userIsAuthorized($user, 'delete', $memory);
+            if ($memory->image)
+                Storage::delete('public/' . substr($memory->image, 9));
+            $memory->delete();
+            return $this->sendResponse([], $responseHandler->words['MemoryDeleteSuccessMessage']);  ///Needy Updated Successfully!
+        } catch (MemoryNotFound $e) {
+            return $this->sendError($responseHandler->words['MemoryNotFound']);
+        } catch (UserNotFound $e) {
+            return $this->sendError($responseHandler->words['UserNotFound']);
+        } catch (UserNotAuthorized $e) {
+            return $this->sendForbidden($responseHandler->words['MemoryDeletionForbiddenMessage']);
+        }
     }
 }
