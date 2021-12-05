@@ -18,8 +18,10 @@ class DatabaseSeeder extends Seeder
         //   $this->call(UsersTableSeeder::class);
         //  $this->call(NeediesTableSeeder::class);
         // $this->call(UsersSeeder::class);
-        \App\Models\User::factory(1)->create();
-        \App\Models\FoodSharingMarker::factory(10000)->create();
-        \App\Models\Needy::factory(1)->create();
+        // \App\Models\User::factory(5)->create();
+        \App\Models\Memory::factory(10)->create();
+        \App\Models\Like::factory(10)->create();
+        // \App\Models\FoodSharingMarker::factory(10000)->create();
+        // \App\Models\Needy::factory(1)->create();
     }
 }
