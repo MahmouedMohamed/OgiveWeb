@@ -27,6 +27,8 @@ class MemoryController extends BaseController
     {
         try {
             //ToDo: return wether the memory was liked or not
+            //ToDo: return number of likes
+            //ToDo: Handle if there is no user "Without login"
             $responseHandler = new ResponseHandler($request['language']);
             $user = $this->userExists($request['userId']);
             $this->userIsAuthorized($user, 'viewAny', Memory::class);
