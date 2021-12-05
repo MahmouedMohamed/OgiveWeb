@@ -3,19 +3,26 @@ import './Login.css';
 // import Login from './Login.module.scss';
 import Navbar from '../Includes/Navbar';
 import Footer from '../Includes/Footer';
+import { useHistory } from 'react-router-dom';
 
 function Login() {
+    const history = useHistory();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const handleSubmit = (e) => {
         e.preventDefault();
         const user = {
             email: email,
-            password: password
+            password: password,
+            accessType: "token",
+            appType: "mobile"
         };
         axios.post(`/api/login`, user)
             .then(res => {
-                console.log(res.data);
+                localStorage.setItem('token', JSON.stringify(res.data.data.token));
+                let token = localStorage.getItem('token');
+                token = JSON.parse(token);
+                history.push("/");
             })
     }
     return (
