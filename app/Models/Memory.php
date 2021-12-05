@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Memory extends Model
 {
+    use HasFactory;
+
     protected $guarded=['createdBy'];
     public function author()
     {
@@ -13,6 +16,6 @@ class Memory extends Model
     }
     public function likes()
     {
-        return $this->hasMany(Like::class)->orderBy('memoryId','DESC');
+        return $this->hasMany(Like::class,'memoryId')->orderBy('memoryId','DESC');
     }
 }

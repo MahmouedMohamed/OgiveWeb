@@ -45,6 +45,15 @@ class ResponseHandler
                     'MemoryUpdateForbiddenMessage' => 'أنت لا تملك صلاحية تعديل هذا العنصر',
                     'MemoryDeletionForbiddenMessage' => 'أنت لا تملك صلاحية إزالة هذا العنصر',
                     'MemoryNotFound' => 'هذا العنصر غير موجود',
+
+                    'LikeCreationSuccessMessage' => 'تم إضافة الإعجاب',
+                    'LikeDeleteSuccessMessage' => 'تم إزالة الإعجاب',
+                    'LikeCreationBannedMessage' => 'نأسف لكن يبدو أنك ممنوع من التفاعل',
+                    'LikeViewingBannedMessage' => 'نأسف لكن يبدو أنك ممنوع من متابعة التفاعلات',
+                    'LikeCreationForbiddenMessage' => 'أنت لا تملك صلاحية إنشاء التفاعل',
+                    'LikeDeletionForbiddenMessage' => 'أنت لا تملك صلاحية إزالة هذا التفاعل',
+                    'LikeNotFound' => 'هذا العنصر غير موجود',
+
                 ];
                 //Default is English
             default:
@@ -75,6 +84,14 @@ class ResponseHandler
                     'MemoryUpdateForbiddenMessage' => 'You aren\'t authorized to update this memory',
                     'MemoryDeletionForbiddenMessage' => 'You aren\'t authorized to delete this memory',
                     'MemoryNotFound' => 'Memory Not Found',
+
+                    'LikeCreationSuccessMessage' => 'Like added successfully',
+                    'LikeDeleteSuccessMessage' => 'Like has been removed',
+                    'LikeCreationBannedMessage' => 'Sorry, but it seems that you are banned from creating any new likes',
+                    'LikeViewingBannedMessage' => 'Sorry, but it seems that you are banned from viewing likes',
+                    'LikeCreationForbiddenMessage' => 'You aren\'t authorized to like this',
+                    'LikeDeletionForbiddenMessage' => 'You aren\'t authorized to delete this like',
+                    'LikeNotFound' => 'Like Not Found',
                 ];
         }
     }

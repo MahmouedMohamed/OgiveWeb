@@ -55,4 +55,5 @@ abstract class AvailableAbilities
     const ViewMemoryWallReports = "view_memory_wall_reports";
     const UpdateMemory = "update_memory";                             //Implemented
     const DeleteMemory = "delete_memory";                             //Implemented
+    const DeleteLike = "delete_like";                             //Implemented
 }

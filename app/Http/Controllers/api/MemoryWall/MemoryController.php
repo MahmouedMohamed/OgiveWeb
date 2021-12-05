@@ -26,10 +26,28 @@ class MemoryController extends BaseController
     public function index(Request $request)
     {
         try {
-            //ToDo: return wether the memory was liked or not
             $responseHandler = new ResponseHandler($request['language']);
-            $user = $this->userExists($request['userId']);
-            $this->userIsAuthorized($user, 'viewAny', Memory::class);
+            if ($request['userId']) {
+                $user = $this->userExists($request['userId']);
+                $this->userIsAuthorized($user, 'viewAny', Memory::class);
+                return $this->sendResponse(
+                    Memory::select(
+                        [
+                            'id',
+                            'personName',
+                            'birthDate',
+                            'deathDate',
+                            'lifeStory',
+                            'image',
+                            DB::raw('CAST(DATEDIFF(deathDate,birthDate) / 365 AS int) as age'),
+                            DB::raw('exists(select 1 from `likes` li where li.memoryId = id and li.userId = ' . $user->id . ' limit 1) as liked')
+                        ]
+                    )->withCount('likes')
+                        ->where('nationality', '=', $user->nationality)
+                        ->paginate(8),
+                    ''
+                );
+            }
             return $this->sendResponse(
                 Memory::select(
                     [
@@ -39,10 +57,9 @@ class MemoryController extends BaseController
                         'deathDate',
                         'lifeStory',
                         'image',
-                        DB::raw('CAST(DATEDIFF(deathDate,birthDate) / 365 AS int) as age')
+                        DB::raw('CAST(DATEDIFF(deathDate,birthDate) / 365 AS int) as age'),
                     ]
-                )
-                    ->where('nationality', '=', $user->nationality)
+                )->withCount('likes')
                     ->paginate(8),
                 ''
             );
