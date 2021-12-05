@@ -5,10 +5,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Like extends Model
 {
-    protected $fillable = ['user_id'];
+    protected $fillable = ['userId','memoryId'];
     public function memory()
     {
-        return $this->belongsTo(Memory::class);
+        return $this->belongsTo(Memory::class,'memoryId');
     }
     public function user()
     {

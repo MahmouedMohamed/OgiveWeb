@@ -60,4 +60,8 @@ abstract class BanTypes
     const CreateMemory = "create_memory_ban";                             //Implemented
     const UpdateMemory = "update_memory_ban";                             //Implemented
     const DeleteMemory = "delete_memory_ban";                             //Implemented
+    const ViewLike = 'view_like_ban';                             //Implemented
+    const CreateLike = "create_like_ban";                             //Implemented
+    const UpdateLike = "update_like_ban";                             //Implemented
+    const DeleteLike = "delete_like_ban";                             //Implemented
 }
