@@ -13,6 +13,7 @@ use App\Http\Controllers\API\BaseController as BaseController;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Needy;
+use App\Models\OauthAccessToken;
 use App\Models\OfflineTransaction;
 use App\Models\OnlineTransaction;
 use App\Models\Pet;
@@ -40,11 +41,33 @@ class AdminController extends BaseController
         try {
             $user = User::find($request['userId']);
             //TODO: Check privilige
-            $data = array();
             $generalData = array();
-            $ahedData = array();
-            $breedmeData = array();
             $numberOfUsers = User::count();
+            $oauthAccessToken = OauthAccessToken::select('id', 'appType', 'accessType', 'active')->get();
+            $numberOfWebUsers = $oauthAccessToken->where('accessType', '=', 'Web')->where('active', '=', 1)->count();
+            $numberOfMobileUsers = $oauthAccessToken->where('accessType', '=', 'Mobile')->where('active', '=', 1)->count();
+            $numberOfAhedActiveUsers = $oauthAccessToken->where('appType', '=', 'Ahed')->where('active', '=', 1)->count();
+            $numberOfAtaaActiveUsers = $oauthAccessToken->where('appType', '=', 'Ataa')->where('active', '=', 1)->count();
+            $numberOfTimeCatcherActiveUsers = $oauthAccessToken->where('appType', '=', 'TimeCatcher')->where('active', '=', 1)->count();
+            $numberOfMemoryWallActiveUsers = $oauthAccessToken->where('appType', '=', 'MemoryWall')->where('active', '=', 1)->count();
+            array_push($generalData, [
+                'NumberOfActiveUsers' => $numberOfUsers,
+                'NumberOfWebUsers' => $numberOfWebUsers,
+                'NumberOfMobileUsers' => $numberOfMobileUsers,
+                'NumberOfAhedActiveUsers' => $numberOfAhedActiveUsers,
+                'numberOfAtaaActiveUsers' => $numberOfAtaaActiveUsers,
+                'numberOfTimeCatcherActiveUsers' => $numberOfTimeCatcherActiveUsers,
+                'numberOfMemoryWallActiveUsers' => $numberOfMemoryWallActiveUsers,
+            ]);
+
+            //BreedMe Data
+            $breedmeData = array();
+            $pets = Pet::get();
+            array_push($breedmeData, [
+                'NumberOfPets' => $pets->count()
+            ]);
+            //Ahed Data
+            $ahedData = array();
             $needies = Needy::select('id', 'satisfied')->get();
             $numberOfNeedies = $needies->count();
             $numberOfNeediesSatisfied = $needies->where('satifsied', '=', true)->count();
@@ -52,25 +75,22 @@ class AdminController extends BaseController
             $onlineTransactions = OnlineTransaction::select('id', 'amount')->get();
             $numberOfTransactions = $onlineTransactions->count() + $offlineTransactions->where('collected', '=', true)->count();
             $givesCollected = $onlineTransactions->sum('amount') + $offlineTransactions->where('collected', '=', true)->sum('amount');
-            $numberOfPets = Pet::all()->count();
-            array_push($generalData, [
-                'NumberOfActiveUsers' => $numberOfUsers,
-            ]);
             array_push($ahedData, [
                 'NumberOfNeedies' => $numberOfNeedies,
                 'NumberOfNeediesSatisfied' => $numberOfNeediesSatisfied,
                 'NumberOfTransactions' => $numberOfTransactions,
                 'NumberOfGives' => $givesCollected,
             ]);
-            array_push($breedmeData, [
-                'NumberOfPets' => $numberOfPets
-            ]);
-            array_push($data, [
+
+            //Ataa Data
+
+            $ataaData = array();
+            //Finalize
+            return $this->sendResponse([
                 'General' => $generalData,
                 'Ahed' => $ahedData,
                 'BreedMe' => $breedmeData,
-            ]);
-            return $this->sendResponse($data, 'Data Retrieved Successfully!');
+            ], 'Data Retrieved Successfully!');
         } catch (UserNotFound $e) {
             return $this->sendError('User Not Found');
         }
