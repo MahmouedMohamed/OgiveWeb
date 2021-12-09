@@ -14,7 +14,7 @@ class CreateMemoryTable extends Migration
     public function up()
     {
         Schema::create('memories', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->bigIncrements('id')->index();
             $table->unsignedBigInteger('createdBy');
             $table->string('personName');
             $table->date('birthDate');
