@@ -50,6 +50,13 @@ class AdminController extends BaseController
             ->sortByDesc(function ($item, $key) {
                 return $item;
             });
+            $numberOfUsersGroupedByNationality = $users
+            ->groupBy('nationality')->map->count()
+            //take first 6 only
+            ->take(6)
+            ->sortByDesc(function ($item, $key) {
+                return $item;
+            });;
             $oauthAccessToken = OauthAccessToken::select('id', 'appType', 'accessType', 'active')->get();
             $numberOfWebUsers = $oauthAccessToken->where('accessType', '=', 'Web')->where('active', '=', 1)->count();
             $numberOfMobileUsers = $oauthAccessToken->where('accessType', '=', 'Mobile')->where('active', '=', 1)->count();
@@ -83,6 +90,7 @@ class AdminController extends BaseController
                     'NumberOfTimeCatcherActiveUsers' => $numberOfTimeCatcherActiveUsers,
                     'NumberOfMemoryWallActiveUsers' => $numberOfMemoryWallActiveUsers,
                     'NumberOfJoinedUsersByYear' => $numberOfJoinedUsersByYear,
+                    'NumberOfUsersGroupedByNationality' => $numberOfUsersGroupedByNationality
                 ],
                 'Ahed' => [
                     'NumberOfNeedies' => $numberOfNeedies,
