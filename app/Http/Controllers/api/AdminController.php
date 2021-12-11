@@ -42,28 +42,33 @@ class AdminController extends BaseController
         try {
             $user = User::find($request['userId']);
             //TODO: Check privilige
-            $users = User::select('id', 'nationality', DB::raw('YEAR(created_at) year'))
-                ->get();
+            $numberOfUsers = User::count();
+
             //Get users created in the last 6 years
-            $numberOfJoinedUsersByYear = $users->where('year', '>=', Carbon::now()->subYears(6)->year)
-            ->groupBy('year')->map->count()
-            ->sortByDesc(function ($item, $key) {
-                return $item;
-            });
-            $numberOfUsersGroupedByNationality = $users
-            ->groupBy('nationality')->map->count()
-            //take first 6 only
-            ->take(6)
-            ->sortByDesc(function ($item, $key) {
-                return $item;
-            });;
-            $oauthAccessToken = OauthAccessToken::select('id', 'appType', 'accessType', 'active')->get();
-            $numberOfWebUsers = $oauthAccessToken->where('accessType', '=', 'Web')->where('active', '=', 1)->count();
-            $numberOfMobileUsers = $oauthAccessToken->where('accessType', '=', 'Mobile')->where('active', '=', 1)->count();
-            $numberOfAhedActiveUsers = $oauthAccessToken->where('appType', '=', 'Ahed')->where('active', '=', 1)->count();
-            $numberOfAtaaActiveUsers = $oauthAccessToken->where('appType', '=', 'Ataa')->where('active', '=', 1)->count();
-            $numberOfTimeCatcherActiveUsers = $oauthAccessToken->where('appType', '=', 'TimeCatcher')->where('active', '=', 1)->count();
-            $numberOfMemoryWallActiveUsers = $oauthAccessToken->where('appType', '=', 'MemoryWall')->where('active', '=', 1)->count();
+            $numberOfJoinedUsersByYear = User::selectRaw('count(*) as count, YEAR(created_at) year')
+                ->where('created_at', '>=', Carbon::now()->subYears(6)->year)
+                ->groupBy('year')
+                ->orderBy('year', 'ASC')
+                ->get();
+
+            $numberOfUsersGroupedByNationality = User::selectRaw('count(*) as count, nationality')
+                ->groupBy('nationality')
+                //take first 6 only
+                ->take(6)
+                ->orderBy('count', 'ASC')
+                ->get();
+
+            $numberOfActiveUsersGroupedByAccessType = OauthAccessToken::selectRaw('count(*) as count, accessType')
+                ->groupBy('accessType')
+                ->where('active', '=', 1)
+                ->orderBy('count', 'ASC')
+                ->get();
+
+            $numberOfActiveUsersGroupedByAppType = OauthAccessToken::selectRaw('count(*) as count, appType')
+                ->groupBy('appType')
+                ->where('active', '=', 1)
+                ->orderBy('count', 'ASC')
+                ->get();
 
             //BreedMe Data
             $pets = Pet::get();
@@ -71,7 +76,7 @@ class AdminController extends BaseController
             //Ahed Data
             $needies = Needy::select('id', 'satisfied')->get();
             $numberOfNeedies = $needies->count();
-            $numberOfNeediesSatisfied = $needies->where('satifsied', '=', true)->count();
+            $numberOfNeediesSatisfied = $needies->where('satisfied', '=', true)->count();
             $offlineTransactions = OfflineTransaction::select('id', 'amount', 'collected')->get();
             $onlineTransactions = OnlineTransaction::select('id', 'amount')->get();
             $numberOfTransactions = $onlineTransactions->count() + $offlineTransactions->where('collected', '=', true)->count();
@@ -82,13 +87,9 @@ class AdminController extends BaseController
             //Finalize
             return $this->sendResponse([
                 'General' => [
-                    'NumberOfActiveUsers' => $users->count(),
-                    'NumberOfWebUsers' => $numberOfWebUsers,
-                    'NumberOfMobileUsers' => $numberOfMobileUsers,
-                    'NumberOfAhedActiveUsers' => $numberOfAhedActiveUsers,
-                    'NumberOfAtaaActiveUsers' => $numberOfAtaaActiveUsers,
-                    'NumberOfTimeCatcherActiveUsers' => $numberOfTimeCatcherActiveUsers,
-                    'NumberOfMemoryWallActiveUsers' => $numberOfMemoryWallActiveUsers,
+                    'NumberOfActiveUsers' => $numberOfUsers,
+                    'NumberOfActiveUsersGroupedByAccessType' => $numberOfActiveUsersGroupedByAccessType,
+                    'NumberOfActiveUsersGroupedByAppType' => $numberOfActiveUsersGroupedByAppType,
                     'NumberOfJoinedUsersByYear' => $numberOfJoinedUsersByYear,
                     'NumberOfUsersGroupedByNationality' => $numberOfUsersGroupedByNationality
                 ],
