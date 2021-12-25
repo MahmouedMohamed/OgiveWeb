@@ -39,6 +39,7 @@ class MemoryController extends BaseController
                             'deathDate',
                             'lifeStory',
                             'image',
+                            'created_at',
                             DB::raw('CAST(DATEDIFF(deathDate,birthDate) / 365 AS int) as age'),
                             DB::raw('exists(select 1 from `likes` li where li.memoryId = id and li.userId = ' . $user->id . ' limit 1) as liked')
                         ]
@@ -57,6 +58,7 @@ class MemoryController extends BaseController
                         'deathDate',
                         'lifeStory',
                         'image',
+                        'created_at',
                         DB::raw('CAST(DATEDIFF(deathDate,birthDate) / 365 AS int) as age'),
                     ]
                 )->withCount('likes')
