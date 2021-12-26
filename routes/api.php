@@ -60,6 +60,8 @@ Route::middleware(['api_auth'])->prefix('ataa')->group(function () {
 Route::middleware(['api_auth'])->prefix('memorywall')->group(function () {
 Route::apiResource('/memories', MemoryController::class);
 Route::apiResource('/likes', LikesController::class);
+Route::get('/mostLikelyMemories', [MemoryController::class, 'mostLikelyMemories']);
+
 });
 
 //TODO: Add This APIs to be auth by 2oauth token

@@ -201,4 +201,25 @@ class MemoryController extends BaseController
             return $this->sendForbidden($responseHandler->words['MemoryDeletionForbiddenMessage']);
         }
     }
+    public function mostLikelyMemories(Request $request){
+        $responseHandler = new ResponseHandler($request['language']);
+        return $this->sendResponse(
+            Memory::select(
+                [
+                    'id',
+                    'personName',
+                    'birthDate',
+                    'deathDate',
+                    'lifeStory',
+                    'image',
+                    'created_at',
+                    DB::raw('CAST(DATEDIFF(deathDate,birthDate) / 365 AS int) as age'),
+                ]
+            )->withCount('likes')
+            ->orderBy('likes_count', 'desc')
+                ->take(3)->get(),
+            ''
+        );
+      
+    }
 }
