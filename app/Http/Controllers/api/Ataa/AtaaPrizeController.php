@@ -26,8 +26,8 @@ class AtaaPrizeController extends BaseController
     public function index(Request $request)
     {
         try {
-            $admin = $this->userExists($request['userId']);
-            $this->userIsAuthorized($admin, 'viewAny', AtaaPrize::class);
+            $user = $this->userExists($request['userId']);
+            $this->userIsAuthorized($user, 'viewAny', AtaaPrize::class);
             return $this->sendResponse(AtaaPrize::get(), 'Ataa Prizes Retrieved Successfully');
         } catch (UserNotFound $e) {
             return $this->sendError('User Not Found');
