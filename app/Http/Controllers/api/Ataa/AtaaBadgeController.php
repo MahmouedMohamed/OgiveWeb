@@ -26,8 +26,8 @@ class AtaaBadgeController extends BaseController
     public function index(Request $request)
     {
         try {
-            $admin = $this->userExists($request['userId']);
-            $this->userIsAuthorized($admin, 'viewAny', AtaaBadge::class);
+            $user = $this->userExists($request['userId']);
+            $this->userIsAuthorized($user, 'viewAny', AtaaBadge::class);
             return $this->sendResponse(AtaaBadge::get(), 'Ataa Badges Retrieved Successfully');
         } catch (UserNotFound $e) {
             return $this->sendError('User Not Found');
