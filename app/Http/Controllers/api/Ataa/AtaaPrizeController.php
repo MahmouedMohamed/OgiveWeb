@@ -13,6 +13,7 @@ use App\Traits\ControllersTraits\AtaaPrizeValidator;
 use App\Traits\ControllersTraits\UserValidator;
 use Illuminate\Support\Carbon;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 class AtaaPrizeController extends BaseController
 {
@@ -28,7 +29,22 @@ class AtaaPrizeController extends BaseController
         try {
             $user = $this->userExists($request['userId']);
             $this->userIsAuthorized($user, 'viewAny', AtaaPrize::class);
-            return $this->sendResponse(AtaaPrize::get(), 'Ataa Prizes Retrieved Successfully');
+            return $this->sendResponse(
+                AtaaPrize::select(
+                    'id as ataaPrizeId',
+                    'name',
+                    'image',
+                    'required_markers_collected',
+                    'required_markers_posted',
+                    'from',
+                    'to',
+                    'active',
+                    'level',
+                    DB::raw('exists(select 1 from `user_ataa_acquired_prizes` uaap where uaap.prize_id = ataaPrizeId and uaap.user_id = ' . $user->id . ' limit 1) as acquired')
+                )
+                    ->get(),
+                'Ataa Prizes Retrieved Successfully'
+            );
         } catch (UserNotFound $e) {
             return $this->sendError('User Not Found');
         } catch (UserNotAuthorized $e) {
@@ -92,7 +108,7 @@ class AtaaPrizeController extends BaseController
         try {
             $user = $this->userExists($request['userId']);
             $prize = $this->prizeExists($id);
-            $this->userIsAuthorized($user,'activate',$prize);
+            $this->userIsAuthorized($user, 'activate', $prize);
             $prize->activate();
             return $this->sendResponse([], 'Prize Activated Successfully!');
         } catch (AtaaPrizeNotFound $e) {
@@ -115,7 +131,7 @@ class AtaaPrizeController extends BaseController
         try {
             $user = $this->userExists($request['userId']);
             $prize = $this->prizeExists($id);
-            $this->userIsAuthorized($user,'deactivate',$prize);
+            $this->userIsAuthorized($user, 'deactivate', $prize);
             $prize->deactivate();
             return $this->sendResponse([], 'Prize Deactivated Successfully!');
         } catch (AtaaPrizeNotFound $e) {
