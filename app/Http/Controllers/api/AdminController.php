@@ -364,7 +364,6 @@ class AdminController extends BaseController
                             'updated_at' => $now
                         ];
                     }
-                    // dd($needies);
                     OnlineTransaction::insert($onlineTransactions);
                     break;
                 default:

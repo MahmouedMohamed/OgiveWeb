@@ -22,8 +22,7 @@ class AtaaBadgePolicy
      */
     public function viewAny(User $user)
     {
-        return $this->hasAbility($user, AvailableAbilities::ViewAtaaBadge)
-            && $this->hasNoBan($user, BanTypes::ViewAtaaBadge);
+        return $this->hasNoBan($user, BanTypes::ViewAtaaBadge);
     }
 
     /**

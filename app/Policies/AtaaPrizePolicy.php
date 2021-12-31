@@ -22,8 +22,7 @@ class AtaaPrizePolicy
      */
     public function viewAny(User $user)
     {
-        return $this->hasAbility($user, AvailableAbilities::ViewAtaaPrize)
-            && $this->hasNoBan($user, BanTypes::ViewAtaaPrize);
+        return $this->hasNoBan($user, BanTypes::ViewAtaaPrize);
     }
 
     /**
