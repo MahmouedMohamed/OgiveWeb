@@ -58,9 +58,10 @@ Route::middleware(['api_auth'])->prefix('ataa')->group(function () {
 
 
 Route::prefix('memorywall')->group(function () {
+//**memories middleware in the controller **//
 Route::apiResource('/memories', MemoryController::class);
-Route::apiResource('/likes', LikesController::class);
-Route::get('/mostLikelyMemories', [MemoryController::class, 'mostLikelyMemories']);
+Route::middleware(['api_auth'])->apiResource('/likes', LikesController::class);
+Route::get('/getTopMemories', [MemoryController::class, 'getTopMemories']);
 
 });
 

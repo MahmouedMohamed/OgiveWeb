@@ -23,6 +23,10 @@ class MemoryController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    public function __construct() {
+        $this->middleware('api_auth')->except('index','getTopMemories');
+    }
+    
     public function index(Request $request)
     {
         try {
@@ -201,7 +205,7 @@ class MemoryController extends BaseController
             return $this->sendForbidden($responseHandler->words['MemoryDeletionForbiddenMessage']);
         }
     }
-    public function mostLikelyMemories(Request $request){
+    public function getTopMemories(Request $request){
         $responseHandler = new ResponseHandler($request['language']);
         return $this->sendResponse(
             Memory::select(
