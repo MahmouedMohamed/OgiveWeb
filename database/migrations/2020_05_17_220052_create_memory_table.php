@@ -19,6 +19,7 @@ class CreateMemoryTable extends Migration
             $table->string('personName');
             $table->date('birthDate');
             $table->date('deathDate');
+	    $table->string('brief',300);
             $table->text('lifeStory');
             $table->string('image');
             $table->string('nationality');

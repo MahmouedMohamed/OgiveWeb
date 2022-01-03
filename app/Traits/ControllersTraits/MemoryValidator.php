@@ -36,6 +36,7 @@ trait MemoryValidator
                     'personName' => 'required|string',
                     'birthDate' => 'required|date|date_format:Y-m-d|before:deathDate',
                     'deathDate' => 'required|date|date_format:Y-m-d|after:birthDate',
+                    'brief' => 'required|string|max:300',
                     'lifeStory' => 'required|string',
                     'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
                 ];
@@ -45,6 +46,7 @@ trait MemoryValidator
                     'personName' => 'string',
                     'birthDate' => 'date|date_format:Y-m-d|before:deathDate',
                     'deathDate' => 'date|date_format:Y-m-d|after:birthDate',
+                    'brief' => 'required|string|max:300',
                     'lifeStory' => 'string',
                     'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
                 ];
