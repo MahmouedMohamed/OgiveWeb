@@ -17,16 +17,17 @@ use Illuminate\Support\Facades\Storage;
 class MemoryController extends BaseController
 {
     use UserValidator, MemoryValidator;
+
+    public function __construct() {
+        $this->middleware('api_auth')->except('index','getTopMemories');
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function __construct() {
-        $this->middleware('api_auth')->except('index','getTopMemories');
-    }
-    
     public function index(Request $request)
     {
         try {
@@ -75,7 +76,27 @@ class MemoryController extends BaseController
             return $this->sendForbidden($responseHandler->words['MemoryViewingBannedMessage']);
         }
     }
-
+    
+    public function getTopMemories(Request $request){
+        $responseHandler = new ResponseHandler($request['language']);
+        return $this->sendResponse(
+            Memory::select(
+                [
+                    'id',
+                    'personName',
+                    'birthDate',
+                    'deathDate',
+                    'lifeStory',
+                    'image',
+                    'created_at',
+                    DB::raw('CAST(DATEDIFF(deathDate,birthDate) / 365 AS int) as age'),
+                ]
+            )->withCount('likes')
+            ->orderBy('likes_count', 'desc')
+                ->take(3)->get(),
+            ''
+        );
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -204,26 +225,5 @@ class MemoryController extends BaseController
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden($responseHandler->words['MemoryDeletionForbiddenMessage']);
         }
-    }
-    public function getTopMemories(Request $request){
-        $responseHandler = new ResponseHandler($request['language']);
-        return $this->sendResponse(
-            Memory::select(
-                [
-                    'id',
-                    'personName',
-                    'birthDate',
-                    'deathDate',
-                    'lifeStory',
-                    'image',
-                    'created_at',
-                    DB::raw('CAST(DATEDIFF(deathDate,birthDate) / 365 AS int) as age'),
-                ]
-            )->withCount('likes')
-            ->orderBy('likes_count', 'desc')
-                ->take(3)->get(),
-            ''
-        );
-      
     }
 }
