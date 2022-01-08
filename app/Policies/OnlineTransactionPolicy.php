@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\OnlineTransaction;
+use App\Models\Ahed\OnlineTransaction;
 use App\Models\User;
 use App\Models\BanTypes;
 use App\Models\AvailableAbilities;

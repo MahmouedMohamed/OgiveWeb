@@ -1,19 +1,20 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\TimeCatcher;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ConsultationsComment extends Model
+class FCMToken extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'token'
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
-    }
-    public function consultation()
-    {
-        return $this->belongsTo(Consultation::class);
     }
 }

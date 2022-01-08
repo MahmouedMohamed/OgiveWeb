@@ -1,20 +1,19 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\BreedMe;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class FCMToken extends Model
+class Consultation extends Model
 {
     use HasFactory;
-
-    protected $fillable = [
-        'token'
-    ];
-
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    public function comments()
+    {
+        return $this->hasMany(ConsultationComment::class);
     }
 }

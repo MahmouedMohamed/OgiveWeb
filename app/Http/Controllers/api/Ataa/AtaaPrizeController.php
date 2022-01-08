@@ -7,7 +7,7 @@ use App\Exceptions\AtaaPrizeNotFound;
 use App\Exceptions\UserNotAuthorized;
 use App\Exceptions\UserNotFound;
 use App\Http\Controllers\api\BaseController;
-use App\Models\AtaaPrize;
+use App\Models\Ataa\AtaaPrize;
 use Illuminate\Http\Request;
 use App\Traits\ControllersTraits\AtaaPrizeValidator;
 use App\Traits\ControllersTraits\UserValidator;

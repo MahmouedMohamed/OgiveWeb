@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\AtaaBadge;
+use App\Models\Ataa\AtaaBadge;
 use App\Models\User;
 use App\Models\BanTypes;
 use Illuminate\Auth\Access\HandlesAuthorization;

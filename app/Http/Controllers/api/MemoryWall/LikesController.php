@@ -7,7 +7,7 @@ use App\Http\Controllers\api\BaseController;
 use App\Exceptions\UserNotAuthorized;
 use App\Exceptions\UserNotFound;
 use App\Helpers\ResponseHandler;
-use App\Models\Like;
+use App\Models\MemoryWall\Like;
 use App\Traits\ControllersTraits\MemoryValidator;
 use App\Traits\ControllersTraits\UserValidator;
 use Illuminate\Http\Request;

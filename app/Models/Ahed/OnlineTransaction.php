@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Ahed;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -29,7 +29,7 @@ class OnlineTransaction extends Model
             $this->remaining = $amount;
         }
         else if($needy->need <= $needy->collected + $amount){
-            $this->remaining = $needy->collected + $amount - $needy->need; 
+            $this->remaining = $needy->collected + $amount - $needy->need;
             $needy->collected = $needy->need;
             $needy->satisfied = 1;
         }

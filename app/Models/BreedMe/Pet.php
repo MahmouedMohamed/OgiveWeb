@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\BreedMe;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,8 +15,9 @@ class Pet extends Model
         'sex',
         'type',
         'image',
-        'status',
-        'user_id',
+        'availableForAdoption',
+        'userId',
+        'nationality',
         'notes',
     ];
     public function user()

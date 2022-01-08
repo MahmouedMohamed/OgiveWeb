@@ -5,7 +5,7 @@ namespace App\Policies;
 use App\Models\AvailableAbilities;
 use App\Models\BanTypes;
 use App\Models\User;
-use App\Models\Memory;
+use App\Models\MemoryWall\Memory;
 use App\Traits\HasAbility;
 use App\Traits\HasNoBan;
 use Illuminate\Auth\Access\HandlesAuthorization;

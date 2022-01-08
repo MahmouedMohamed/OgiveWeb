@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Ahed;
 class CaseType
 {
     public $types = ['إيجاد مسكن مناسب', 'تحسين مستوي المعيشة', 'تجهيز لفرحة', 'سداد الديون', 'إيجاد علاج'];

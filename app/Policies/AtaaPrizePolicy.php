@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\AtaaPrize;
+use App\Models\Ataa\AtaaPrize;
 use App\Models\AvailableAbilities;
 use App\Models\User;
 use App\Models\BanTypes;

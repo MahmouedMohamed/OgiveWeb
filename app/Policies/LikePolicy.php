@@ -4,7 +4,7 @@ namespace App\Policies;
 
 use App\Models\AvailableAbilities;
 use App\Models\BanTypes;
-use App\Models\Like;
+use App\Models\MemoryWall\Like;
 use App\Models\User;
 use App\Traits\HasAbility;
 use App\Traits\HasNoBan;

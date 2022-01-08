@@ -6,7 +6,7 @@ use App\Http\Controllers\api\BaseController;
 use App\Exceptions\AtaaAchievementNotFound;
 use App\Exceptions\UserNotAuthorized;
 use App\Exceptions\UserNotFound;
-use App\Models\AtaaAchievement;
+use App\Models\Ataa\AtaaAchievement;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseHandler;
 use App\Traits\ControllersTraits\AtaaAchievementValidator;

@@ -7,7 +7,7 @@ use App\Exceptions\AtaaBadgeNotFound;
 use App\Exceptions\UserNotAuthorized;
 use App\Exceptions\UserNotFound;
 use App\Http\Controllers\api\BaseController;
-use App\Models\AtaaBadge;
+use App\Models\Ataa\AtaaBadge;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Traits\ControllersTraits\AtaaBadgeValidator;

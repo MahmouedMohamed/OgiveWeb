@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\FoodSharingMarker;
+use App\Models\Ataa\FoodSharingMarker;
 use App\Models\User;
 use App\Models\BanTypes;
 use Illuminate\Auth\Access\HandlesAuthorization;

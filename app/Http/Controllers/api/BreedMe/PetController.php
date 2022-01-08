@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\api\BreedMe;
 
 use App\Http\Controllers\api\BaseController;
-use App\Models\Pet;
+use App\Models\BreedMe\Pet;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class PetController extends BaseController
