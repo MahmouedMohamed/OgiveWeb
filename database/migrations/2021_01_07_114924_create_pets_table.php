@@ -15,16 +15,17 @@ class CreatePetsTable extends Migration
     {
         Schema::create('pets', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('userId');
             $table->string('name');
             $table->integer('age');
             $table->string('sex');
             $table->string('type');
             $table->text('notes')->nullable();
             $table->string('image');
-            $table->boolean('status')->default(1);
+            $table->string('nationality');
+            $table->boolean('availableForAdoption')->default(1);
             $table->timestamps();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('userId')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
