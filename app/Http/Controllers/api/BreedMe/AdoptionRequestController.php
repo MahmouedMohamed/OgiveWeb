@@ -4,7 +4,7 @@ namespace App\Http\Controllers\api\BreedMe;
 
 use App\Http\Controllers\api\BaseController;
 
-use App\Models\AdoptionRequest;
+use App\Models\BreedMe\AdoptionRequest;
 use Illuminate\Http\Request;
 
 class AdoptionRequestController extends BaseController

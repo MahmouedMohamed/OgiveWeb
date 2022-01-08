@@ -17,7 +17,7 @@ class MemoryPolicy
     /**
      * Determine whether the user can view any memories.
      *
-     * @param  \App\User  $user
+     * @param  \App\Models\User  $user
      * @return mixed
      */
     public function viewAny(User $user)
@@ -28,7 +28,7 @@ class MemoryPolicy
     /**
      * Determine whether the user can view the memory.
      *
-     * @param  \App\User  $user
+     * @param  \App\Models\User  $user
      * @param  \App\Memory  $memory
      * @return mixed
      */
@@ -40,7 +40,7 @@ class MemoryPolicy
     /**
      * Determine whether the user can create memories.
      *
-     * @param  \App\User  $user
+     * @param  \App\Models\User  $user
      * @return mixed
      */
     public function create(User $user)
@@ -51,7 +51,7 @@ class MemoryPolicy
     /**
      * Determine whether the user can update the memory.
      *
-     * @param  \App\User  $user
+     * @param  \App\Models\User  $user
      * @param  \App\Memory  $memory
      * @return mixed
      */
@@ -65,7 +65,7 @@ class MemoryPolicy
     /**
      * Determine whether the user can delete the memory.
      *
-     * @param  \App\User  $user
+     * @param  \App\Models\User  $user
      * @param  \App\Memory  $memory
      * @return mixed
      */
@@ -79,7 +79,7 @@ class MemoryPolicy
     /**
      * Determine whether the user can restore the memory.
      *
-     * @param  \App\User  $user
+     * @param  \App\Models\User  $user
      * @param  \App\Memory  $memory
      * @return mixed
      */
