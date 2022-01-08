@@ -57,32 +57,35 @@ Route::middleware(['api_auth'])->prefix('ataa')->group(function () {
 });
 
 
+//**      Memory Wall Controllers      **//
 Route::prefix('memorywall')->group(function () {
-//**memories middleware in the controller **//
-Route::apiResource('/memories', MemoryController::class);
-Route::middleware(['api_auth'])->apiResource('/likes', LikesController::class);
-Route::get('/getTopMemories', [MemoryController::class, 'getTopMemories']);
-
+    //**memories middleware in the controller **//
+    Route::apiResource('/memories', MemoryController::class);
+    Route::middleware(['api_auth'])->apiResource('/likes', LikesController::class);
+    Route::get('/getTopMemories', [MemoryController::class, 'getTopMemories']);
 });
 
 //TODO: Add This APIs to be auth by 2oauth token
 
-Route::apiResource('pets', PetController::class);
-Route::get('/filterByType', [PetController::class, 'filterByType']);
+//**      Breed Me Controllers      **//
+Route::middleware(['api_auth'])->prefix('breedme')->group(function () {
+    Route::apiResource('pets', PetController::class);
+    Route::get('/filterByType', [PetController::class, 'filterByType']);
 
-Route::apiResource('consultations', ConsultationController::class);
-Route::apiResource('comments', ConsultationCommentController::class);
-Route::apiResource('requests', AdoptionRequestController::class);
+    Route::apiResource('consultations', ConsultationController::class);
+    Route::apiResource('comments', ConsultationCommentController::class);
+    Route::apiResource('requests', AdoptionRequestController::class);
 
-Route::post('myRequests', [AdoptionRequestController::class, 'getRequests']);
-Route::post('sendRequest', [AdoptionRequestController::class, 'sendRequest']);
+    Route::post('myRequests', [AdoptionRequestController::class, 'getRequests']);
+    Route::post('sendRequest', [AdoptionRequestController::class, 'sendRequest']);
 
-Route::apiResource('articles', PetsArticleController::class);
+    Route::apiResource('articles', PetsArticleController::class);
 
-Route::apiResource('places', PlaceController::class);
-Route::get('sales', [PlaceController::class, 'sales']);
-Route::get('clinics', [PlaceController::class, 'clinics']);
-Route::get('filterPlacesByType', [PlaceController::class, 'filterByType']);
+    Route::apiResource('places', PlaceController::class);
+    Route::get('sales', [PlaceController::class, 'sales']);
+    Route::get('clinics', [PlaceController::class, 'clinics']);
+    Route::get('filterPlacesByType', [PlaceController::class, 'filterByType']);
+});
 
 
 //**      Ahed Controllers      **//
