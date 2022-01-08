@@ -2,9 +2,9 @@
 
 namespace App\Providers;
 
-use App\Models\Needy;
+use App\Models\Ahed\Needy;
 use App\Observers\NeediesObserver;
-use App\Models\FoodSharingMarker;
+use App\Models\Ataa\FoodSharingMarker;
 use App\Observers\FoodSharingMarkersObserver;
 use Illuminate\Support\ServiceProvider;
 
