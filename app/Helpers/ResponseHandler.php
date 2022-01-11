@@ -54,6 +54,15 @@ class ResponseHandler
                     'LikeDeletionForbiddenMessage' => 'أنت لا تملك صلاحية إزالة هذا التفاعل',
                     'LikeNotFound' => 'هذا العنصر غير موجود',
 
+                    'PetCreationSuccessMessage' => 'شكراً لكونك إنسان',
+                    'PetUpdateSuccessMessage' => 'تم تعديل البيانات بنجاح',
+                    'PetDeleteSuccessMessage' => 'تم إزالة الحالة بنجاح',
+                    'PetCreationBannedMessage' => 'نأسف لكن يبدو أنك ممنوع من إنشاء حالة جديدة',
+                    'PetViewingBannedMessage' => 'نأسف لكن يبدو أنك ممنوع من مشاهدة الحالات',
+                    'PetCreationForbiddenMessage' => 'أنت لا تملك صلاحية إنشاء هذة الحالة',
+                    'PetUpdateForbiddenMessage' => 'أنت لا تملك صلاحية تعديل هذة الحالة',
+                    'PetDeletionForbiddenMessage' => 'أنت لا تملك صلاحية إزالة هذة الحالة',
+                    'PetNotFound' => 'هذة الحالة غير موجودة',
                 ];
                 //Default is English
             default:
@@ -92,6 +101,16 @@ class ResponseHandler
                     'LikeCreationForbiddenMessage' => 'You aren\'t authorized to like this',
                     'LikeDeletionForbiddenMessage' => 'You aren\'t authorized to delete this like',
                     'LikeNotFound' => 'Like Not Found',
+
+                    'PetCreationSuccessMessage' => 'Thank you for being a Human',
+                    'PetUpdateSuccessMessage' => 'Information Updated Successfully',
+                    'PetDeleteSuccessMessage' => 'The case has been deleted successfully',
+                    'PetCreationBannedMessage' => 'Sorry, but it seems that you are banned from creating any new cases',
+                    'PetViewingBannedMessage' => 'Sorry, but it seems that you are banned from viewing the cases',
+                    'PetCreationForbiddenMessage' => 'You aren\'t authorized to create the case',
+                    'PetUpdateForbiddenMessage' => 'You aren\'t authorized to update this case',
+                    'PetDeletionForbiddenMessage' => 'You aren\'t authorized to delete this case',
+                    'PetNotFound' => 'This case Can\'t be found',
                 ];
         }
     }
