@@ -105,7 +105,7 @@ class User extends Authenticatable
     }
     public function pets()
     {
-        return $this->hasMany(Pet::class);
+        return $this->hasMany(Pet::class, 'createdBy');
     }
     public function adoptionRequests()
     {

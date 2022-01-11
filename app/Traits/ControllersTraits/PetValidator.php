@@ -33,6 +33,7 @@ trait PetValidator
             case 'store':
                 $rules = [
                     'userId' => 'required',
+                    'createdBy' => 'required',
                     'name' => 'required|max:255',
                     'age' => 'required|integer|max:100',
                     'sex' => 'required|in:male,female',
@@ -44,6 +45,7 @@ trait PetValidator
             case 'update':
                 $rules = [
                     'userId' => 'required',
+                    'createdBy' => 'required',
                     'name' => 'required|max:255',
                     'age' => 'required|integer|max:100',
                     'sex' => 'required|in:male,female',

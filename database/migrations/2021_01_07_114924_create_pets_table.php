@@ -15,7 +15,7 @@ class CreatePetsTable extends Migration
     {
         Schema::create('pets', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('userId');
+            $table->unsignedBigInteger('createdBy');
             $table->string('name');
             $table->integer('age');
             $table->string('sex');
@@ -25,7 +25,7 @@ class CreatePetsTable extends Migration
             $table->string('nationality');
             $table->boolean('availableForAdoption')->default(1);
             $table->timestamps();
-            $table->foreign('userId')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('createdBy')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

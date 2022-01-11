@@ -17,13 +17,13 @@ class Pet extends Model
         'type',
         'image',
         'availableForAdoption',
-        'userId',
+        'createdBy',
         'nationality',
         'notes',
     ];
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'createdBy');
     }
     public function adoptionRequests()
     {
