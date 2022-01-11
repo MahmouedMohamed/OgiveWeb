@@ -61,25 +61,32 @@ class PetController extends BaseController
      */
     public function store(Request $request)
     {
-        $validated = $this->validatePet($request,'store');
-        // $data=request()->all();
-        if ($validated->fails())
-            return $this->sendError('خطأ في البيانات', $validated->messages(), 400);   ///Invalid data.
-        $user = User::find(request()->input('user_id'));
-        if (!$user) {
-            return $this->sendError('User Not Found');
+        try {
+            $responseHandler = new ResponseHandler($request['language']);
+            $user = $this->userExists($request['createdBy']);
+            //Validate Request
+            $validated = $this->validatePet($request, 'store');
+            if ($validated->fails()) {
+                return $this->sendError($responseHandler->words['InvalidData'], $validated->messages(), 400);   ///Invalid data
+            }
+            $this->userIsAuthorized($user, 'create', Pet::class);
+            $imagePath = $request['image']->store('pets', 'public');
+            $user->pets()->create([
+                'name' => $request['name'],
+                'age' => $request['age'],
+                'sex' => $request['sex'],
+                'type' => $request['type'],
+                'notes' => $request['notes'],
+                'image' => "/storage/" . $imagePath,
+                'nationality' => $user->nationality,
+                'status' => true,
+            ]);
+            return $this->sendResponse([], $responseHandler->words['PetCreationSuccessMessage']); ///Thank You For Your Contribution!
+        } catch (UserNotFound $e) {
+            return $this->sendError($responseHandler->words['UserNotFound']);
+        } catch (UserNotAuthorized $e) {
+            return $this->sendForbidden($responseHandler->words['PetCreationBannedMessage']);
         }
-        $imagePath = "/storage/" . $request['image']->store('uploads', 'public');
-        $user->pets()->create([
-            'name' => $request['name'],
-            'age' => $request['age'],
-            'sex' => $request['sex'],
-            'type' => $request['type'],
-            'notes' => $request['notes'],
-            'image' => $imagePath,
-            'status' => true,
-        ]);
-        return $this->sendResponse([], 'Pet is added successfully.');
     }
 
     /**
