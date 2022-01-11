@@ -3,9 +3,11 @@
 namespace App\Providers;
 
 use App\Models\Ahed\Needy;
+use App\Models\Ahed\NeedyMedia;
 use App\Observers\NeediesObserver;
 use App\Models\Ataa\FoodSharingMarker;
 use App\Observers\FoodSharingMarkersObserver;
+use App\Observers\NeediesMediasObserver;
 use Illuminate\Support\ServiceProvider;
 
 
@@ -32,6 +34,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Needy::observe(NeediesObserver::class);
+        NeedyMedia::observe(NeediesMediasObserver::class);
         FoodSharingMarker::observe(FoodSharingMarkersObserver::class);
     }
 }
