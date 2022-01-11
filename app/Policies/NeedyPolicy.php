@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\Needy;
+use App\Models\Ahed\Needy;
 use App\Models\User;
 use App\Models\BanTypes;
 use Illuminate\Auth\Access\HandlesAuthorization;

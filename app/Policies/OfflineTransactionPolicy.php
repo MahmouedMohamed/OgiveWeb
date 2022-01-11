@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\OfflineTransaction;
+use App\Models\Ahed\OfflineTransaction;
 use App\Models\User;
 use App\Models\BanTypes;
 use Illuminate\Auth\Access\HandlesAuthorization;

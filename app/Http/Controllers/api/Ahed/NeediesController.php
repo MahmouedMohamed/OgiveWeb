@@ -7,7 +7,7 @@ use App\Exceptions\NeedyNotFound;
 use App\Exceptions\UserNotAuthorized;
 use App\Exceptions\UserNotFound;
 use App\Http\Controllers\api\BaseController;
-use App\Models\Needy;
+use App\Models\Ahed\Needy;
 use App\Traits\ControllersTraits\NeedyValidator;
 use App\Traits\ControllersTraits\UserValidator;
 use Illuminate\Http\Request;

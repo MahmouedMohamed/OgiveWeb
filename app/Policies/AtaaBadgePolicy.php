@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\AtaaBadge;
+use App\Models\Ataa\AtaaBadge;
 use App\Models\User;
 use App\Models\BanTypes;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -22,8 +22,7 @@ class AtaaBadgePolicy
      */
     public function viewAny(User $user)
     {
-        return $this->hasAbility($user, AvailableAbilities::ViewAtaaBadge)
-            && $this->hasNoBan($user, BanTypes::ViewAtaaBadge);
+        return $this->hasNoBan($user, BanTypes::ViewAtaaBadge);
     }
 
     /**

@@ -3,16 +3,20 @@
 
 namespace App\Http\Controllers\api\Ataa;
 
+use App\Exceptions\AtaaBadgeNotFound;
+use App\Exceptions\UserNotAuthorized;
+use App\Exceptions\UserNotFound;
 use App\Http\Controllers\api\BaseController;
-use App\Models\AtaaBadge;
+use App\Models\Ataa\AtaaBadge;
 use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Support\Carbon;
+use App\Traits\ControllersTraits\AtaaBadgeValidator;
+use App\Traits\ControllersTraits\UserValidator;
 use Exception;
-use Illuminate\Support\Facades\Validator;
 
 class AtaaBadgeController extends BaseController
 {
+    use UserValidator, AtaaBadgeValidator;
     /**
      * Display a listing of the resource.
      *
@@ -21,15 +25,15 @@ class AtaaBadgeController extends BaseController
      */
     public function index(Request $request)
     {
-        $admin = User::find($request['userId']);
-        if ($admin == null) {
-            return $this->sendError('Admin User Not Found');
-        }
-        //Check if current user can view Ataa Badges
-        if (!$admin->can('viewAny', AtaaBadge::class)) {
+        try {
+            $user = $this->userExists($request['userId']);
+            $this->userIsAuthorized($user, 'viewAny', AtaaBadge::class);
+            return $this->sendResponse(AtaaBadge::get(), 'Ataa Badges Retrieved Successfully');
+        } catch (UserNotFound $e) {
+            return $this->sendError('User Not Found');
+        } catch (UserNotAuthorized $e) {
             return $this->sendForbidden('You aren\'t authorized to view these badges.');
         }
-        return AtaaBadge::get();
     }
 
     /**
@@ -40,22 +44,12 @@ class AtaaBadgeController extends BaseController
      */
     public function store(Request $request)
     {
-        //Check user "Admin" who is updating exists
-        $admin = User::find($request['createdBy']);
-        if ($admin == null) {
-            return $this->sendError('Admin User Not Found');
-        }
-
-        //Check if current user can create
-        if (!$admin->can('create', AtaaBadge::class)) {
-            return $this->sendForbidden('You aren\'t authorized to create a Badge.');
-        }
-        $validated = $this->validateAtaaBadge($request);
-        if ($validated->fails()) {
-            return $this->sendError('Invalid data', $validated->messages(), 400);
-        }
-
         try {
+            $admin = $this->userExists($request['userId']);
+            $this->userIsAuthorized($admin, 'create', AtaaBadge::class);
+            $validated = $this->validateBadge($request);
+            if ($validated->fails())
+                return $this->sendError('Invalid data', $validated->messages(), 400);
             $imagePath = null;
             if ($request['image']) {
                 $imagePath = $request['image']->store('ataa_badges', 'public');
@@ -67,10 +61,14 @@ class AtaaBadgeController extends BaseController
                 'description' => $request['description'],
                 'active' => $request['active'] ? $request['active'] : 1,
             ]);
+            return $this->sendResponse([], 'Ataa Badge Created Successfully!');
+        } catch (UserNotFound $e) {
+            return $this->sendError('User Not Found');
+        } catch (UserNotAuthorized $e) {
+            return $this->sendForbidden('You aren\'t authorized to create a Badge.');
         } catch (Exception $e) {
             return $this->sendError('Something went wrong', [], 500);
         }
-        return $this->sendResponse([], 'Ataa Badge Created Successfully!');
     }
 
     /**
@@ -82,24 +80,19 @@ class AtaaBadgeController extends BaseController
      */
     public function activate(Request $request, $id)
     {
-        //Check needy exists
-        $badge = AtaaBadge::find($id);
-        if ($badge == null) {
+        try {
+            $user = $this->userExists($request['userId']);
+            $badge = $this->badgeExists($id);
+            $this->userIsAuthorized($user,'activate',$badge);
+            $badge->activate();
+            return $this->sendResponse([], 'Badge Activated Successfully!');
+        } catch (AtaaBadgeNotFound $e) {
             return $this->sendError('Badge Not Found');
-        }
-
-        //Check user who is updating exists
-        $user = User::find($request['userId']);
-        if ($user == null) {
+        } catch (UserNotFound $e) {
             return $this->sendError('User Not Found');
-        }
-
-        //Check if current user can activate
-        if (!$user->can('activate', $badge)) {
+        } catch (UserNotAuthorized $e) {
             return $this->sendForbidden('You aren\'t authorized to activate this badge.');
         }
-        $badge->activate();
-        return $this->sendResponse([], 'Badge Activated Successfully!');
     }
     /**
      * Deactivate Badge.
@@ -110,24 +103,19 @@ class AtaaBadgeController extends BaseController
      */
     public function deactivate(Request $request, $id)
     {
-        //Check needy exists
-        $badge = AtaaBadge::find($id);
-        if ($badge == null) {
+        try {
+            $user = $this->userExists($request['userId']);
+            $badge = $this->badgeExists($id);
+            $this->userIsAuthorized($user,'deactivate',$badge);
+            $badge->deactivate();
+            return $this->sendResponse([], 'Badge Deactivated Successfully!');
+        } catch (AtaaBadgeNotFound $e) {
             return $this->sendError('Badge Not Found');
-        }
-
-        //Check user who is updating exists
-        $user = User::find($request['userId']);
-        if ($user == null) {
+        } catch (UserNotFound $e) {
             return $this->sendError('User Not Found');
+        } catch (UserNotAuthorized $e) {
+            return $this->sendForbidden('You aren\'t authorized to deactivate this badge.');
         }
-
-        //Check if current user can deactivate
-        if (!$user->can('deactivate', $badge)) {
-            return $this->sendForbidden('You aren\'t authorized to deactivate this Badge.');
-        }
-        $badge->deactivate();
-        return $this->sendResponse([], 'Badge Deactivated Successfully!');
     }
 
     /**
@@ -138,7 +126,7 @@ class AtaaBadgeController extends BaseController
      */
     public function show(AtaaBadge $ataaBadge)
     {
-        //
+        return $this->sendError('Not Implemented', '', 404);
     }
 
     /**
@@ -150,7 +138,7 @@ class AtaaBadgeController extends BaseController
      */
     public function update(Request $request, AtaaBadge $ataaBadge)
     {
-        //
+        return $this->sendError('Not Implemented', '', 404);
     }
 
     /**
@@ -161,24 +149,6 @@ class AtaaBadgeController extends BaseController
      */
     public function destroy(AtaaBadge $ataaBadge)
     {
-        //
-    }
-
-    public function validateAtaaBadge(Request $request)
-    {
-
-        $rules = [
-            'createdBy' => 'required',
-            'name' => 'required',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'description' => 'required|string'
-        ];
-        $messages = [
-            'required' => 'This field is required',
-            'max' => 'Wrong size, maximum size is :max',
-            'image' => 'Wrong value, supports only images',
-            'mimes' => 'Wrong value, supports only :values'
-        ];
-        return Validator::make($request->all(), $rules, $messages);
+        return $this->sendError('Not Implemented', '', 404);
     }
 }

@@ -49,75 +49,91 @@ Route::patch('/profile/{id}/information', [UserController::class, 'updateinforma
 
 
 //**      Ataa Controllers      **//
+//* * Optimized * */
 Route::middleware(['api_auth'])->prefix('ataa')->group(function () {
-Route::apiResource('/markers', FoodSharingMarkersController::class);
-Route::patch('/collect/{id}', [FoodSharingMarkersController::class, 'collect']);
-Route::get('/achievement/{id}', [AtaaAchievementController::class, 'show']);
-Route::apiResource('/prize', AtaaPrizeController::class);
-Route::post('/prize/{id}/activate', [AtaaPrizeController::class, 'activate']);
-Route::post('/prize/{id}/deactivate', [AtaaPrizeController::class, 'deactivate']);
-Route::apiResource('/badge', AtaaBadgeController::class);
-Route::post('/badge/{id}/activate', [AtaaBadgeController::class, 'activate']);
-Route::post('/badge/{id}/deactivate', [AtaaBadgeController::class, 'deactivate']);
+    Route::apiResource('/markers', FoodSharingMarkersController::class);
+    Route::patch('/collect/{id}', [FoodSharingMarkersController::class, 'collect']);
+    Route::get('/achievement/{id}', [AtaaAchievementController::class, 'show']);
 });
 
 
-// Route::group(['middleware' => 'auth:api'], function () {
-Route::get('/memory', [MemoryController::class, 'getAll']);
-Route::post('/memory', [MemoryController::class, 'create']);
-Route::delete('/memory', [MemoryController::class, 'delete']);
-Route::post('/like', [LikesController::class, 'likeUnlike']);
-// });
+//**      Memory Wall Controllers      **//
+//* * Optimized * */
+Route::prefix('memorywall')->group(function () {
+    //**memories middleware in the controller **//
+    Route::apiResource('/memories', MemoryController::class);
+    Route::middleware(['api_auth'])->apiResource('/likes', LikesController::class);
+    Route::get('/getTopMemories', [MemoryController::class, 'getTopMemories']);
+});
 
 //TODO: Add This APIs to be auth by 2oauth token
 
-Route::apiResource('pets', PetController::class);
-Route::get('/filterByType', [PetController::class, 'filterByType']);
+//**      Breed Me Controllers      **//
+Route::
+// middleware(['api_auth'])->
+prefix('breedme')->group(function () {
+    Route::apiResource('pets', PetController::class);
+    Route::get('/filterByType', [PetController::class, 'filterByType']);
 
-Route::apiResource('consultations', ConsultationController::class);
-Route::apiResource('comments', ConsultationCommentController::class);
-Route::apiResource('requests', AdoptionRequestController::class);
+    Route::apiResource('consultations', ConsultationController::class);
+    Route::apiResource('comments', ConsultationCommentController::class);
+    Route::apiResource('requests', AdoptionRequestController::class);
 
-Route::post('myRequests', [AdoptionRequestController::class, 'getRequests']);
-Route::post('sendRequest', [AdoptionRequestController::class, 'sendRequest']);
+    Route::post('myRequests', [AdoptionRequestController::class, 'getRequests']);
+    Route::post('sendRequest', [AdoptionRequestController::class, 'sendRequest']);
 
-Route::apiResource('articles', PetsArticleController::class);
+    Route::apiResource('articles', PetsArticleController::class);
 
-Route::apiResource('places', PlaceController::class);
-Route::get('sales', [PlaceController::class, 'sales']);
-Route::get('clinics', [PlaceController::class, 'clinics']);
-Route::get('filterPlacesByType', [PlaceController::class, 'filterByType']);
+    Route::apiResource('places', PlaceController::class);
+    Route::get('sales', [PlaceController::class, 'sales']);
+    Route::get('clinics', [PlaceController::class, 'clinics']);
+    Route::get('filterPlacesByType', [PlaceController::class, 'filterByType']);
+});
 
 
 //**      Ahed Controllers      **//
-
+//* * Optimized * */
 Route::middleware(['api_auth'])->prefix('ahed')->group(function () {
-Route::apiResource('/needies', NeediesController::class);
-Route::get('/urgentneedies', [NeediesController::class, 'urgentIndex']);
-Route::get('/allNeedies', [NeediesController::class, 'getAllNeedies']);
-Route::get('/neediesWithIDs', [NeediesController::class, 'getNeediesWithIDs']);
-Route::post('/needies/addImages/{id}', [NeediesController::class, 'addAssociatedImages']);
-Route::post('/needies/removeImage/{id}', [NeediesController::class, 'removeAssociatedImage']);
-Route::apiResource('/onlinetransactions', OnlineTransactionsController::class);
-Route::apiResource('/offlinetransactions', OfflineTransactionsController::class);
-Route::get('/ahedachievement/{id}', [UserController::class, 'getAhedAchievementRecords']);
+    Route::apiResource('/needies', NeediesController::class);
+    Route::get('/urgentneedies', [NeediesController::class, 'urgentIndex']);
+    Route::get('/allNeedies', [NeediesController::class, 'getAllNeedies']);
+    Route::get('/neediesWithIDs', [NeediesController::class, 'getNeediesWithIDs']);
+    Route::post('/needies/addImages/{id}', [NeediesController::class, 'addAssociatedImages']);
+    Route::post('/needies/removeImage/{id}', [NeediesController::class, 'removeAssociatedImage']);
+    Route::apiResource('/onlinetransactions', OnlineTransactionsController::class);
+    Route::apiResource('/offlinetransactions', OfflineTransactionsController::class);
+    Route::get('/ahedachievement/{id}', [UserController::class, 'getAhedAchievementRecords']);
 });
 
 
 
 //**      Admin Controllers      **//
 Route::middleware(['api_auth'])->prefix('admin')->group(function () {
+    //* * Optimized * */
     Route::get('/', [AdminController::class, 'generalAdminDashboard']);
+    //**      Ahed      **//
+    //* * Optimized * */
     Route::post('/ahed/approve/{id}', [AdminController::class, 'approve']);
     Route::post('/ahed/disapprove/{id}', [AdminController::class, 'disapprove']);
-    Route::post('/ahed/collect', [AdminController::class, 'collectOfflineTransaction']);
+    Route::patch('/ahed/collect', [AdminController::class, 'collectOfflineTransaction']);
+    //**      Ataa      **//
+    //* * Optimized * */
+    Route::apiResource('/ataa/prize', AtaaPrizeController::class);
+    Route::patch('/ataa/prize/{id}/activate', [AtaaPrizeController::class, 'activate']);
+    Route::patch('/ataa/prize/{id}/deactivate', [AtaaPrizeController::class, 'deactivate']);
+    Route::apiResource('/ataa/badge', AtaaBadgeController::class);
+    Route::patch('/ataa/badge/{id}/activate', [AtaaBadgeController::class, 'activate']);
+    Route::patch('/ataa/badge/{id}/deactivate', [AtaaBadgeController::class, 'deactivate']);
     Route::post('/ataa/freezeachievment', [AdminController::class, 'freezeUserAtaaAchievements']);
     Route::post('/ataa/defreezeachievment', [AdminController::class, 'defreezeUserAtaaAchievements']);
+    //**      Ban      **//
     Route::get('/ban', [AdminController::class, 'getUserBans']);
     Route::post('/ban', [AdminController::class, 'addUserBan']);
     Route::patch('/ban/activate/{id}', [AdminController::class, 'activateBan']);
     Route::patch('/ban/deactivate/{id}', [AdminController::class, 'deactivateBan']);
-    Route::post('/importCSV',[AdminController::class,'importCSV']);
+    //**      Import      **//
+    //* * Not Optimized * */
+    Route::post('/importCSV', [AdminController::class, 'importCSV']);
 });
 
 

@@ -2,25 +2,54 @@
 
 namespace App\Http\Controllers\api\BreedMe;
 
+use App\Exceptions\UserNotAuthorized;
+use App\Exceptions\UserNotFound;
+use App\Helpers\ResponseHandler;
 use App\Http\Controllers\api\BaseController;
-use App\Models\Pet;
+use App\Models\BreedMe\Pet;
 use App\Models\User;
+use App\Traits\ControllersTraits\PetValidator;
+use App\Traits\ControllersTraits\UserValidator;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 
 class PetController extends BaseController
 {
+    use UserValidator, PetValidator;
     /**
      * Display a listing of the resource.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        // return Pet::all();
-        // return PetResource::collection(Pet::all());
-        $pets = Pet::with('user')->get();
-        return $this->sendResponse($pets, 'Pets retrieved successfully.');
+        try {
+            $responseHandler = new ResponseHandler($request['language']);
+            $user = $this->userExists($request['userId']);
+            $this->userIsAuthorized($user, 'viewAny', Pet::class);
+            $currentPage = request()->get('page', 1);
+            return $this->sendResponse(
+                Pet::join('users', 'users.id', 'pets.createdBy')
+                    ->join('profiles', 'users.profile', 'profiles.id')
+                    ->select(
+                        'pets.*',
+                        'users.id as userId',
+                        'users.name as userName',
+                        'users.email_verified_at as userEmailVerifiedAt',
+                        'profiles.image as userImage'
+                    )
+                    ->where('pets.nationality', '=', $user->nationality)
+                    ->latest('pets.created_at')
+                    ->paginate(8),
+                ''
+            );  ///Cases retrieved successfully.
+        } catch (UserNotFound $e) {
+            return $this->sendError($responseHandler->words['UserNotFound']);
+        } catch (UserNotAuthorized $e) {
+            return $this->sendForbidden($responseHandler->words['PetViewingBannedMessage']);
+        }
     }
 
     /**
@@ -32,25 +61,32 @@ class PetController extends BaseController
      */
     public function store(Request $request)
     {
-        $validated = $this->validatePet($request);
-        // $data=request()->all();
-        if ($validated->fails())
-            return $this->sendError('خطأ في البيانات', $validated->messages(), 400);   ///Invalid data.
-        $user = User::find(request()->input('user_id'));
-        if (!$user) {
-            return $this->sendError('User Not Found');
+        try {
+            $responseHandler = new ResponseHandler($request['language']);
+            $user = $this->userExists($request['createdBy']);
+            //Validate Request
+            $validated = $this->validatePet($request, 'store');
+            if ($validated->fails()) {
+                return $this->sendError($responseHandler->words['InvalidData'], $validated->messages(), 400);   ///Invalid data
+            }
+            $this->userIsAuthorized($user, 'create', Pet::class);
+            $imagePath = $request['image']->store('pets', 'public');
+            $user->pets()->create([
+                'name' => $request['name'],
+                'age' => $request['age'],
+                'sex' => $request['sex'],
+                'type' => $request['type'],
+                'notes' => $request['notes'],
+                'image' => "/storage/" . $imagePath,
+                'nationality' => $user->nationality,
+                'status' => true,
+            ]);
+            return $this->sendResponse([], $responseHandler->words['PetCreationSuccessMessage']); ///Thank You For Your Contribution!
+        } catch (UserNotFound $e) {
+            return $this->sendError($responseHandler->words['UserNotFound']);
+        } catch (UserNotAuthorized $e) {
+            return $this->sendForbidden($responseHandler->words['PetCreationBannedMessage']);
         }
-        $imagePath = "/storage/" . $request['image']->store('uploads', 'public');
-        $user->pets()->create([
-            'name' => $request['name'],
-            'age' => $request['age'],
-            'sex' => $request['sex'],
-            'type' => $request['type'],
-            'notes' => $request['notes'],
-            'image' => $imagePath,
-            'status' => true,
-        ]);
-        return $this->sendResponse([], 'Pet is added successfully.');
     }
 
     /**
@@ -121,25 +157,7 @@ class PetController extends BaseController
             return $this->sendError('Pet not found.');
         }
     }
-    public function validatePet(Request $request)
-    {
-        $rules = [
-            'user_id' => 'required',
-            'name' => 'required|max:255',
-            'age' => 'required|integer|max:100',
-            'sex' => 'required|in:male,female',
-            'type' => 'required',
-            'notes' => 'max:1024',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048e',
 
-        ];
-        return Validator::make($request->all(), $rules, [
-            'required' => 'هذا الحقل مطلوب',
-            'min' => 'قيمة خاطئة، أقل قيمة هي :min',
-            'max' => 'قيمة خاطئة أعلي قيمة هي :max',
-            'numeric' => 'قيمة خاطئة، يمكن قبول الأرقام فقط',
-        ]);
-    }
     // public function filterByType()
     // {
     //     $result = QueryBuilder::for(Pet::class) {

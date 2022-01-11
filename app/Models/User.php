@@ -2,6 +2,18 @@
 
 namespace App\Models;
 
+use App\Models\Ataa\FoodSharingMarker;
+use App\Models\Ataa\AtaaAchievement;
+use App\Models\Ahed\Needy;
+use App\Models\Ahed\OnlineTransaction;
+use App\Models\Ahed\OfflineTransaction;
+use App\Models\MemoryWall\Memory;
+use App\Models\MemoryWall\Like;
+use App\Models\TimeCatcher\FCMToken;
+use App\Models\BreedMe\Pet;
+use App\Models\BreedMe\AdoptionRequest;
+use App\Models\BreedMe\Consultation;
+use App\Models\BreedMe\ConsultationComment;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -53,9 +65,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(OauthAccessToken::class);
     }
-    public function createAccessToken()
+    public function createAccessToken($accessType, $appType)
     {
-        $this->deleteRelatedAccessTokens();
+        $this->deleteRelatedAccessTokens($appType);
         //Hash::make() -> saves only 60 chars to database
         //TODO: Solve & extend to 255 chars
         $accessToken = Str::random(60);
@@ -63,15 +75,17 @@ class User extends Authenticatable
         $this->accessTokens()->create([
             'access_token' => Hash::make($accessToken),
             'scopes' => '[]',
+            'appType' => $appType,
+            'accessType' => $accessType,
             'active' => 1,
             'expires_at' => $expiryDate,
 
         ]);
         return ['accessToken' => $accessToken, 'expiryDate' => $expiryDate];
     }
-    public function deleteRelatedAccessTokens()
+    public function deleteRelatedAccessTokens($appType)
     {
-        $this->accessTokens()->delete();
+        $this->accessTokens()->where('appType', '=', $appType)->delete();
     }
     public function profile()
     {
@@ -83,15 +97,15 @@ class User extends Authenticatable
     }
     public function memories()
     {
-        return $this->hasMany(Memory::class)->orderBy('id', 'DESC');
+        return $this->hasMany(Memory::class, 'createdBy')->orderBy('id', 'DESC');
     }
     public function likes()
     {
-        return $this->hasMany(Like::class);
+        return $this->hasMany(Like::class, 'userId');
     }
     public function pets()
     {
-        return $this->hasMany(Pet::class);
+        return $this->hasMany(Pet::class, 'createdBy');
     }
     public function adoptionRequests()
     {

@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\AtaaPrize;
+use App\Models\Ataa\AtaaPrize;
 use App\Models\AvailableAbilities;
 use App\Models\User;
 use App\Models\BanTypes;
@@ -22,8 +22,7 @@ class AtaaPrizePolicy
      */
     public function viewAny(User $user)
     {
-        return $this->hasAbility($user, AvailableAbilities::ViewAtaaPrize)
-            && $this->hasNoBan($user, BanTypes::ViewAtaaPrize);
+        return $this->hasNoBan($user, BanTypes::ViewAtaaPrize);
     }
 
     /**

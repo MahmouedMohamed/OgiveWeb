@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class OauthAccessToken extends Model
 {
+    use HasFactory;
     /**
      * The attributes that are mass assignable.
      *
@@ -14,6 +16,8 @@ class OauthAccessToken extends Model
     protected $fillable = [
         'access_token',
         'scopes',
+        'appType',
+        'accessType',
         'active',
         'expires_at'
     ];

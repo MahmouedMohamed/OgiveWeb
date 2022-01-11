@@ -4,7 +4,7 @@ namespace App\Http\Controllers\api\BreedMe;
 
 use App\Http\Controllers\api\BaseController;
 
-use App\Models\PetsArticle;
+use App\Models\BreedMe\PetsArticle;
 use Faker\Provider\Base;
 use Illuminate\Http\Request;
 

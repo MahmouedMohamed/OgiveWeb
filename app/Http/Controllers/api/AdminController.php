@@ -2,29 +2,34 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Exceptions\AtaaAchievementNotFound;
 use App\Exceptions\NeedyNotFound;
 use App\Exceptions\NotSupportedType;
+use App\Exceptions\OfflineTransactionNotFound;
+use App\Exceptions\UserBanNotFound;
+use App\Exceptions\UserNotAuthorized;
 use App\Exceptions\UserNotFound;
 use App\Http\Controllers\API\BaseController as BaseController;
-use App\Models\AtaaPrize;
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\Needy;
-use App\Models\OfflineTransaction;
-use App\Models\OnlineTransaction;
-use App\Models\Pet;
+use App\Models\Ahed\Needy;
+use App\Models\OauthAccessToken;
+use App\Models\Ahed\OfflineTransaction;
+use App\Models\Ahed\OnlineTransaction;
+use App\Models\BreedMe\Pet;
 use App\Models\UserBan;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Validator;
-use App\Models\BanType;
 use App\Traits\ControllersTraits\NeedyValidator;
+use App\Traits\ControllersTraits\OfflineTransactionValidator;
+use App\Traits\ControllersTraits\UserBanValidator;
 use App\Traits\ControllersTraits\UserValidator;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends BaseController
 {
-    use UserValidator, NeedyValidator;
+    use UserValidator, NeedyValidator, OfflineTransactionValidator, UserBanValidator;
 
     /**
      * Dashboard.
@@ -34,39 +39,73 @@ class AdminController extends BaseController
      */
     public function generalAdminDashboard(Request $request)
     {
-        $user = User::find($request['userId']);
-        if ($user == null) {
+        try {
+            $user = User::find($request['userId']);
+            //TODO: Check privilige
+            $numberOfUsers = User::count();
+
+            //Get users created in the last 6 years
+            $numberOfJoinedUsersByYear = User::selectRaw('count(*) as count, YEAR(created_at) year')
+                ->where('created_at', '>=', Carbon::now()->subYears(6)->year)
+                ->groupBy('year')
+                ->orderBy('year', 'ASC')
+                ->get();
+
+            $numberOfUsersGroupedByNationality = User::selectRaw('count(*) as count, nationality')
+                ->groupBy('nationality')
+                //take first 6 only
+                ->take(6)
+                ->orderBy('count', 'ASC')
+                ->get();
+
+            $numberOfActiveUsersGroupedByAccessType = OauthAccessToken::selectRaw('count(*) as count, accessType')
+                ->groupBy('accessType')
+                ->where('active', '=', 1)
+                ->orderBy('count', 'ASC')
+                ->get();
+
+            $numberOfActiveUsersGroupedByAppType = OauthAccessToken::selectRaw('count(*) as count, appType')
+                ->groupBy('appType')
+                ->where('active', '=', 1)
+                ->orderBy('count', 'ASC')
+                ->get();
+
+            //BreedMe Data
+            $pets = Pet::get();
+
+            //Ahed Data
+            $needies = Needy::select('id', 'satisfied')->get();
+            $numberOfNeedies = $needies->count();
+            $numberOfNeediesSatisfied = $needies->where('satisfied', '=', true)->count();
+            $offlineTransactions = OfflineTransaction::select('id', 'amount', 'collected')->get();
+            $onlineTransactions = OnlineTransaction::select('id', 'amount')->get();
+            $numberOfTransactions = $onlineTransactions->count() + $offlineTransactions->where('collected', '=', true)->count();
+            $givesCollected = $onlineTransactions->sum('amount') + $offlineTransactions->where('collected', '=', true)->sum('amount');
+
+            //Ataa Data
+
+            //Finalize
+            return $this->sendResponse([
+                'General' => [
+                    'NumberOfActiveUsers' => $numberOfUsers,
+                    'NumberOfActiveUsersGroupedByAccessType' => $numberOfActiveUsersGroupedByAccessType,
+                    'NumberOfActiveUsersGroupedByAppType' => $numberOfActiveUsersGroupedByAppType,
+                    'NumberOfJoinedUsersByYear' => $numberOfJoinedUsersByYear,
+                    'NumberOfUsersGroupedByNationality' => $numberOfUsersGroupedByNationality
+                ],
+                'Ahed' => [
+                    'NumberOfNeedies' => $numberOfNeedies,
+                    'NumberOfNeediesSatisfied' => $numberOfNeediesSatisfied,
+                    'NumberOfTransactions' => $numberOfTransactions,
+                    'NumberOfGives' => $givesCollected,
+                ],
+                'BreedMe' => [
+                    'NumberOfPets' => $pets->count()
+                ],
+            ], 'Data Retrieved Successfully!');
+        } catch (UserNotFound $e) {
             return $this->sendError('User Not Found');
         }
-        //TODO: Check privilige
-        $data = array();
-        $generalData = array();
-        $ahedData = array();
-        $breedmeData = array();
-        $numberOfUsers = User::count();
-        $numberOfNeedies = Needy::count();
-        $numberOfNeediesSatisfied = Needy::where('satisfied', '=', true)->count();
-        $numberOfTransactions = OnlineTransaction::all()->count() + OfflineTransaction::all()->where('collected', '=', true)->count();
-        $givesCollected = OnlineTransaction::all()->sum('amount') + OfflineTransaction::all()->where('collected', '=', true)->sum('amount');
-        $numberOfPets = Pet::all()->count();
-        array_push($generalData, [
-            'NumberOfActiveUsers' => $numberOfUsers,
-        ]);
-        array_push($ahedData, [
-            'NumberOfNeedies' => $numberOfNeedies,
-            'NumberOfNeediesSatisfied' => $numberOfNeediesSatisfied,
-            'NumberOfTransactions' => $numberOfTransactions,
-            'NumberOfGives' => $givesCollected,
-        ]);
-        array_push($breedmeData, [
-            'NumberOfPets' => $numberOfPets
-        ]);
-        array_push($data, [
-            'General' => $generalData,
-            'Ahed' => $ahedData,
-            'BreedMe' => $breedmeData,
-        ]);
-        return $this->sendResponse($data, 'Data Retrieved Successfully!');
     }
 
     /**
@@ -78,24 +117,19 @@ class AdminController extends BaseController
      */
     public function approve(Request $request, $id)
     {
-        //Check needy exists
-        $needy = Needy::find($id);
-        if ($needy == null) {
+        try {
+            $user = $this->userExists($request['userId']);
+            $needy = $this->needyExists($id);
+            $this->userIsAuthorized($user, 'approve', $needy);
+            $needy->approve();
+            return $this->sendResponse([], 'Needy Approved Successfully!');
+        } catch (UserNotFound $e) {
+            return $this->sendError('User Not Found');
+        } catch (UserNotAuthorized $e) {
+            return $this->sendForbidden('You aren\'t authorized to approve this needy.');
+        } catch (NeedyNotFound $e) {
             return $this->sendError('Needy Not Found');
         }
-
-        //Check user who is updating exists
-        $user = User::find($request['userId']);
-        if ($user == null) {
-            return $this->sendError('User Not Found');
-        }
-
-        //Check if current user can approve
-        if (!$user->can('approve', $needy)) {
-            return $this->sendForbidden('You aren\'t authorized to approve this needy.');
-        }
-        $needy->approve();
-        return $this->sendResponse([], 'Needy Approved Successfully!');
     }
 
     /**
@@ -107,24 +141,19 @@ class AdminController extends BaseController
      */
     public function disapprove(Request $request, $id)
     {
-        //Check needy exists
-        $needy = Needy::find($id);
-        if ($needy == null) {
+        try {
+            $user = $this->userExists($request['userId']);
+            $needy = $this->needyExists($id);
+            $this->userIsAuthorized($user, 'disapprove', $needy);
+            $needy->disapprove();
+            return $this->sendResponse([], 'Needy Disapprove Successfully!');
+        } catch (UserNotFound $e) {
+            return $this->sendError('User Not Found');
+        } catch (UserNotAuthorized $e) {
+            return $this->sendForbidden('You aren\'t authorized to disapprove this needy.');
+        } catch (NeedyNotFound $e) {
             return $this->sendError('Needy Not Found');
         }
-
-        //Check user who is updating exists
-        $user = User::find($request['userId']);
-        if ($user == null) {
-            return $this->sendError('User Not Found');
-        }
-
-        //Check if current user can disapprove
-        if (!$user->can('disapprove', $needy)) {
-            return $this->sendForbidden('You aren\'t authorized to disapprove this needy.');
-        }
-        $needy->disapprove();
-        return $this->sendResponse([], 'Needy Disapprove Successfully!');
     }
 
     /**
@@ -135,24 +164,19 @@ class AdminController extends BaseController
      */
     public function collectOfflineTransaction(Request $request)
     {
-        //Check needy exists
-        $offlinetransaction = OfflineTransaction::find($request['transactionId']);
-        if ($offlinetransaction == null) {
+        try {
+            $user = $this->userExists($request['userId']);
+            $offlinetransaction = $this->offlineTransactionExists($request['transactionId']);
+            $this->userIsAuthorized($user, 'collect', $offlinetransaction);
+            $offlinetransaction->collect();
+            return $this->sendResponse([], 'Transaction Collected Successfully!');
+        } catch (UserNotFound $e) {
+            return $this->sendError('User Not Found');
+        } catch (UserNotAuthorized $e) {
+            return $this->sendForbidden('You aren\'t authorized to collect this transaction.');
+        } catch (OfflineTransactionNotFound $e) {
             return $this->sendError('Transaction Not Found');
         }
-
-        //Check user who is updating exists
-        $user = User::find($request['userId']);
-        if ($user == null) {
-            return $this->sendError('User Not Found');
-        }
-
-        //Check if current user can approve
-        if (!$user->can('collect', $offlinetransaction)) {
-            return $this->sendForbidden('You aren\'t authorized to collect this transaction.');
-        }
-        $offlinetransaction->collect();
-        return $this->sendResponse([], 'Transaction Collected Successfully!');
     }
 
     /**
@@ -163,30 +187,19 @@ class AdminController extends BaseController
      */
     public function freezeUserAtaaAchievements(Request $request)
     {
-        //Check User exists
-        $user = User::find($request['userId']);
-        if ($user == null) {
+        try {
+            $user = $this->userExists($request['userId']);
+            $admin = $this->userExists($request['adminId']);
+            $this->userIsAuthorized($admin, 'freeze', $user->ataaAchievement);
+            $user->ataaAchievement->freeze();
+            return $this->sendResponse([], 'User Achievement Freezed Successfully!');
+        } catch (UserNotFound $e) {
             return $this->sendError('User Not Found');
-        }
-
-        //Check user "Admin" who is updating exists
-        $admin = User::find($request['adminId']);
-        if ($admin == null) {
-            return $this->sendError('Admin User Not Found');
-        }
-
-        //Check if current user can freeze
-        if (!$admin->can('freeze', $user->ataaAchievement)) {
+        } catch (UserNotAuthorized $e) {
             return $this->sendForbidden('You aren\'t authorized to freeze this user achievement.');
-        }
-
-        //Check if user has achievement
-        if (!$user->ataaAchievement) {
+        } catch (AtaaAchievementNotFound $e) {
             return $this->sendError('User Achievement doesn\'t exist');
         }
-
-        $user->ataaAchievement->freeze();
-        return $this->sendResponse([], 'User Achievement Freezed Successfully!');
     }
 
     /**
@@ -197,30 +210,19 @@ class AdminController extends BaseController
      */
     public function defreezeUserAtaaAchievements(Request $request)
     {
-        //Check User exists
-        $user = User::find($request['userId']);
-        if ($user == null) {
+        try {
+            $user = $this->userExists($request['userId']);
+            $admin = $this->userExists($request['adminId']);
+            $this->userIsAuthorized($admin, 'defreeze', $user->ataaAchievement);
+            $user->ataaAchievement->defreeze();
+            return $this->sendResponse([], 'User Achievement Defreezed Successfully!');
+        } catch (UserNotFound $e) {
             return $this->sendError('User Not Found');
-        }
-
-        //Check user "Admin" who is updating exists
-        $admin = User::find($request['adminId']);
-        if ($admin == null) {
-            return $this->sendError('Admin User Not Found');
-        }
-
-        //Check if current user can freeze
-        if (!$admin->can('defreeze', $user->ataaAchievement)) {
-            return $this->sendForbidden('You aren\'t authorized to defreeze this user achievements.');
-        }
-
-        //Check if user has achievement
-        if (!$user->ataaAchievement) {
+        } catch (UserNotAuthorized $e) {
+            return $this->sendForbidden('You aren\'t authorized to defreeze this user achievement.');
+        } catch (AtaaAchievementNotFound $e) {
             return $this->sendError('User Achievement doesn\'t exist');
         }
-
-        $user->ataaAchievement->defreeze();
-        return $this->sendResponse([], 'User Achievements Defreezed Successfully!');
     }
 
     /**
@@ -231,18 +233,15 @@ class AdminController extends BaseController
      */
     public function getUserBans(Request $request)
     {
-        //Check user exists
-        $admin = User::find($request['userId']);
-        if ($admin == null) {
+        try {
+            $user = $this->userExists($request['userId']);
+            $this->userIsAuthorized($user, 'viewAny', UserBan::class);
+            return $this->sendResponse(UserBan::all(), 'User Bans Retrieved Successfully');
+        } catch (UserNotFound $e) {
             return $this->sendError('User Not Found');
-        }
-
-        //Check if current user can get List of User Bans
-        if (!$admin->can('viewAny', UserBan::class)) {
+        } catch (UserNotAuthorized $e) {
             return $this->sendForbidden('You aren\'t authorized to see these resources.');
         }
-
-        return $this->sendResponse(UserBan::all(), 'User Bans Retrieved Successfully');
     }
 
     /**
@@ -253,25 +252,20 @@ class AdminController extends BaseController
      * @return \Illuminate\Http\Response
      */
     public function activateBan(Request $request, int $id)
-    { //Check UserBan exists
-        $userBan = UserBan::find($id);
-        if ($userBan == null) {
+    {
+        try {
+            $user = $this->userExists($request['userId']);
+            $userBan = $this->userBanExists($id);
+            $this->userIsAuthorized($user, 'activate', $userBan);
+            $userBan->activate();
+            return $this->sendResponse('', 'User Ban Activated Successfully');
+        } catch (UserBanNotFound $e) {
             return $this->sendError('User Ban doesn\'t exist');
-        }
-        //Check admin exists
-        $admin = User::find($request['userId']);
-        if ($admin == null) {
+        } catch (UserNotFound $e) {
             return $this->sendError('User Not Found');
+        } catch (UserNotAuthorized $e) {
+            return $this->sendForbidden('You aren\'t authorized to see these resources.');
         }
-
-        //Check if current user can Activate User Ban
-        if (!$admin->can('activate', $userBan)) {
-            return $this->sendForbidden('You aren\'t authorized to activate the ban.');
-        }
-
-        $userBan->activate();
-
-        return $this->sendResponse('', 'User Ban Activated Successfully');
     }
 
     /**
@@ -283,26 +277,19 @@ class AdminController extends BaseController
      */
     public function deactivateBan(Request $request, int $id)
     {
-        //Check UserBan exists
-        $userBan = UserBan::find($id);
-        if ($userBan == null) {
+        try {
+            $user = $this->userExists($request['userId']);
+            $userBan = $this->userBanExists($id);
+            $this->userIsAuthorized($user, 'deactivate', $userBan);
+            $userBan->deactivate();
+            return $this->sendResponse('', 'User Ban Deactivated Successfully');
+        } catch (UserBanNotFound $e) {
             return $this->sendError('User Ban doesn\'t exist');
-        }
-
-        //Check admin exists
-        $admin = User::find($request['userId']);
-        if ($admin == null) {
+        } catch (UserNotFound $e) {
             return $this->sendError('User Not Found');
+        } catch (UserNotAuthorized $e) {
+            return $this->sendForbidden('You aren\'t authorized to see these resources.');
         }
-
-        //Check if current user can Deactivate User Ban
-        if (!$admin->can('deactivate', $userBan)) {
-            return $this->sendForbidden('You aren\'t authorized to deactivate the ban.');
-        }
-
-        $userBan->deactivate();
-
-        return $this->sendResponse('', 'User Ban Deactivated Successfully');
     }
 
     /**
@@ -313,57 +300,33 @@ class AdminController extends BaseController
      */
     public function addUserBan(Request $request)
     {
-        //Check admin exists
-        $admin = User::find($request['userId']);
-        if ($admin == null) {
-            return $this->sendError('Admin Not Found');
-        }
-
-        //Check banned User exists
-        $bannedUser = User::find($request['bannedUser']);
-        if ($bannedUser == null) {
+        try {
+            $admin = $this->userExists($request['userId']);
+            $bannedUser = $this->userExists($request['bannedUser']);
+            //Check if current user can Deactivate User Ban
+            if (!$admin->can('create', [UserBan::class, $bannedUser])) {
+                return $this->sendForbidden('You aren\'t authorized to create the ban.');
+            }
+            $validated = $this->validateUserBan($request);
+            if ($validated->fails()) {
+                return $this->sendError('Invalid data', $validated->messages(), 400);
+            }
+            //TODO: Extend Ban if already exists & Active?
+            $admin->createdBans()->create([
+                'banned_user' => $bannedUser->id,
+                'tag' => $request['tag'],
+                'active' => $request['startAt'] != null ? ($request['startAt'] <= Carbon::now('GMT+2') ? 1 : 0) : 1,
+                'start_at' => $request['startAt'] ?? Carbon::now('GMT+2'),
+                'end_at' => $request['endAt'] ?? null
+            ]);
+            return $this->sendResponse('', 'User Ban Created Successfully');
+        } catch (UserBanNotFound $e) {
+            return $this->sendError('User Ban doesn\'t exist');
+        } catch (UserNotFound $e) {
             return $this->sendError('User Not Found');
+        } catch (UserNotAuthorized $e) {
+            return $this->sendForbidden('You aren\'t authorized to see these resources.');
         }
-
-        //Check if current user can Deactivate User Ban
-        if (!$admin->can('create', [UserBan::class, $bannedUser])) {
-            return $this->sendForbidden('You aren\'t authorized to create the ban.');
-        }
-
-
-        $validated = $this->validateUserBan($request);
-        if ($validated->fails()) {
-            return $this->sendError('Invalid data', $validated->messages(), 400);
-        }
-
-        //TODO: Extend Ban if already exists & Active?
-
-        $admin->createdBans()->create([
-            'banned_user' => $bannedUser->id,
-            'tag' => $request['tag'],
-            'active' => $request['startAt'] != null ? ($request['startAt'] <= Carbon::now('GMT+2') ? 1 : 0) : 1,
-            'start_at' => $request['startAt'] ?? Carbon::now('GMT+2'),
-            'end_at' => $request['endAt'] ?? null
-        ]);
-
-        return $this->sendResponse('', 'User Ban Created Successfully');
-    }
-
-
-
-    public function validateUserBan(Request $request)
-    {
-        $rules = [
-            'tag' => 'required',
-            'start_at' => 'date',
-            'end_at' => 'date|after:from'
-        ];
-        $messages = [
-            'required' => 'This field is required',
-            'date' => 'Wrong value, supports only date',
-            'after' => 'The :attribute must be after :date'
-        ];
-        return Validator::make($request->all(), $rules, $messages);
     }
 
     public function importCSV(Request $request)
@@ -401,7 +364,6 @@ class AdminController extends BaseController
                             'updated_at' => $now
                         ];
                     }
-                    // dd($needies);
                     OnlineTransaction::insert($onlineTransactions);
                     break;
                 default:

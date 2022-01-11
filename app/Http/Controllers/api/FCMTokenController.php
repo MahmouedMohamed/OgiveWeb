@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\api\BaseController;
-use App\Models\FCMToken;
+use App\Models\TimeCatcher\FCMToken;
 use Illuminate\Http\Request;
 
 class FCMTokenController extends BaseController

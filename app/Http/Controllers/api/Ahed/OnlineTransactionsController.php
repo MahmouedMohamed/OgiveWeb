@@ -121,5 +121,6 @@ class OnlineTransactionsController extends BaseController
         //cancellation process to be considered
         //Money guarantee back must be done before deletion
         //IF money already
+        return $this->sendError('Not Implemented', '', 404);
     }
 }
