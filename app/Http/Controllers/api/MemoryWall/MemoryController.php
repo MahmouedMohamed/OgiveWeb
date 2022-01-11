@@ -18,8 +18,9 @@ class MemoryController extends BaseController
 {
     use UserValidator, MemoryValidator;
 
-    public function __construct() {
-        $this->middleware('api_auth')->except('index','getTopMemories');
+    public function __construct()
+    {
+        $this->middleware('api_auth')->except('index', 'getTopMemories');
     }
 
     /**
@@ -42,13 +43,14 @@ class MemoryController extends BaseController
                             'personName',
                             'birthDate',
                             'deathDate',
+                            'brief',
                             'lifeStory',
                             'image',
                             'created_at',
                             DB::raw('CAST(DATEDIFF(deathDate,birthDate) / 365 AS int) as age'),
                             DB::raw('exists(select 1 from `likes` li where li.memoryId = id and li.userId = ' . $user->id . ' limit 1) as liked')
                         ]
-                    )->withCount('likes')
+                    )->withCount('likes as numberOfLikes')
                         ->where('nationality', '=', $user->nationality)
                         ->paginate(8),
                     ''
@@ -61,12 +63,13 @@ class MemoryController extends BaseController
                         'personName',
                         'birthDate',
                         'deathDate',
+                        'brief',
                         'lifeStory',
                         'image',
                         'created_at',
                         DB::raw('CAST(DATEDIFF(deathDate,birthDate) / 365 AS int) as age'),
                     ]
-                )->withCount('likes')
+                )->withCount('likes as numberOfLikes')
                     ->paginate(8),
                 ''
             );
@@ -76,8 +79,15 @@ class MemoryController extends BaseController
             return $this->sendForbidden($responseHandler->words['MemoryViewingBannedMessage']);
         }
     }
-    
-    public function getTopMemories(Request $request){
+
+    /**
+     * Display a listing of the top resources.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getTopMemories(Request $request)
+    {
         $responseHandler = new ResponseHandler($request['language']);
         return $this->sendResponse(
             Memory::select(
@@ -86,13 +96,14 @@ class MemoryController extends BaseController
                     'personName',
                     'birthDate',
                     'deathDate',
+                    'brief',
                     'lifeStory',
                     'image',
                     'created_at',
                     DB::raw('CAST(DATEDIFF(deathDate,birthDate) / 365 AS int) as age'),
                 ]
-            )->withCount('likes')
-            ->orderBy('likes_count', 'desc')
+            )->withCount('likes as numberOfLikes')
+                ->orderBy('numberOfLikes', 'desc')
                 ->take(3)->get(),
             ''
         );
@@ -119,6 +130,7 @@ class MemoryController extends BaseController
                 'personName' => $request['personName'],
                 'birthDate' => $request['birthDate'],
                 'deathDate' => $request['deathDate'],
+                'brief' => $request['brief'],
                 'lifeStory' => $request['lifeStory'],
                 'image' => "/storage/" . $imagePath,
                 'nationality' => $user->nationality,
@@ -149,6 +161,7 @@ class MemoryController extends BaseController
                     'personName' => $memory->id,
                     'birthDate' => $memory->birthDate,
                     'deathDate' => $memory->deathDate,
+                    'brief' => $memory->brief,
                     'lifeStory' => $memory->lifeStory,
                     'image' => $memory->image,
                     'age' => date_diff(date_create($memory->deathDate), date_create($memory->birthDate))->y,
@@ -186,6 +199,7 @@ class MemoryController extends BaseController
                 'personName' => $request['personName'] ?? $memory->personName,
                 'birthDate' => $request['birthDate'] ?? $memory->birthDate,
                 'deathDate' => $request['deathDate'] ?? $memory->deathDate,
+                'brief' => $request['brief'] ?? $memory->brief,
                 'lifeStory' => $request['lifeStory'] ?? $memory->lifeStory,
                 'image' => $request['image'] ? "/storage/" . $imagePath : $memory->image,
                 'nationality' => $user->nationality,
