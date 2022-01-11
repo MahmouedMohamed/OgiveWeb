@@ -4,6 +4,7 @@ namespace App\Traits\ControllersTraits;
 
 use App\Models\BreedMe\Pet;
 use App\Exceptions\PetNotFound;
+use App\Models\BreedMe\AvailablePetTypes;
 use App\Traits\ValidatorLanguagesSupport;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -29,27 +30,26 @@ trait PetValidator
     public function validatePet(Request $request, String $related)
     {
         $rules = null;
+        $availablePetTypes = new AvailablePetTypes();
         switch ($related) {
             case 'store':
                 $rules = [
-                    'userId' => 'required',
                     'createdBy' => 'required',
                     'name' => 'required|max:255',
                     'age' => 'required|integer|max:100',
                     'sex' => 'required|in:male,female',
-                    'type' => 'required',
+                    'type' => 'required|in:' . $availablePetTypes->toString(),
                     'notes' => 'max:1024',
                     'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048e'
                 ];
                 break;
             case 'update':
                 $rules = [
-                    'userId' => 'required',
                     'createdBy' => 'required',
                     'name' => 'required|max:255',
                     'age' => 'required|integer|max:100',
                     'sex' => 'required|in:male,female',
-                    'type' => 'required',
+                    'type' => 'required|in:' . $availablePetTypes->toString(),
                     'notes' => 'max:1024',
                     'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048e'
                 ];
