@@ -3,7 +3,7 @@
 namespace App\Traits\ControllersTraits;
 
 use App\Exceptions\AtaaBadgeNotFound;
-use App\Models\AtaaBadge;
+use App\Models\Ataa\AtaaBadge;
 use App\Traits\ValidatorLanguagesSupport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;

@@ -9,7 +9,7 @@ class NeedyMedia extends Model
 {
     use HasFactory;
     protected $table = 'needies_media';
-        protected $fillable = [
+    protected $fillable = [
         'needy',
         'path',
         'before',

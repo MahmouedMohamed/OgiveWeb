@@ -2,6 +2,7 @@
 
 namespace App\Models\BreedMe;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,7 +11,7 @@ class AdoptionRequest extends Model
     use HasFactory;
     protected $fillable = [
         'user_id', 'pet_id', 'phone_number', 'address',
-        'adoption_place', 'exprience', 'accepted_terms',
+        'adoption_place', 'experience', 'accepted_terms',
     ];
     public function user()
     {

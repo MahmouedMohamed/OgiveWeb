@@ -3,8 +3,8 @@
 namespace App\Traits\ControllersTraits;
 
 use App\Exceptions\OfflineTransactionNotFound;
-use App\Models\CaseType;
-use App\Models\OfflineTransaction;
+use App\Models\Ahed\CaseType;
+use App\Models\Ahed\OfflineTransaction;
 use App\Traits\ValidatorLanguagesSupport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;

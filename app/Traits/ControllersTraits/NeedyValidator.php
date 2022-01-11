@@ -2,13 +2,12 @@
 
 namespace App\Traits\ControllersTraits;
 
-use App\Models\Needy;
+use App\Models\Ahed\Needy;
+use App\Models\Ahed\CaseType;
 use App\Exceptions\NeedyNotFound;
 use App\Exceptions\NeedyNotApproved;
 use App\Exceptions\NeedyIsSatisfied;
 use App\Exceptions\NeedyMediaNotFound;
-use App\Models\CaseType;
-use App\Models\NeedyMedia;
 use App\Traits\ValidatorLanguagesSupport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;

@@ -4,7 +4,7 @@ namespace App\Traits\ControllersTraits;
 
 use App\Exceptions\AtaaPrizeCreationActionNotFound;
 use App\Exceptions\AtaaPrizeNotFound;
-use App\Models\AtaaPrize;
+use App\Models\Ataa\AtaaPrize;
 use App\Traits\ValidatorLanguagesSupport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;

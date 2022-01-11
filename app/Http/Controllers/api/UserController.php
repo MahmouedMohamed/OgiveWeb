@@ -5,11 +5,11 @@ namespace App\Http\Controllers\api;
 use App\Exceptions\LoginParametersNotFound;
 use App\Exceptions\UserNotAuthorized;
 use App\Http\Controllers\API\BaseController as BaseController;
-use App\Models\Needy;
-use App\Models\OfflineTransaction;
-use App\Models\OnlineTransaction;
+use App\Models\Ahed\Needy;
+use App\Models\Ahed\OfflineTransaction;
+use App\Models\Ahed\OnlineTransaction;
+use App\Models\Ahed\CaseType;
 use App\Models\Profile;
-use App\Models\CaseType;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
@@ -89,6 +89,7 @@ class UserController extends BaseController
         ]);
         return $this->sendResponse('', 'User Created Successfully');
     }
+
     public function validateUser(Request $request)
     {
         return Validator::make($request->all(), [
@@ -113,6 +114,7 @@ class UserController extends BaseController
             'numeric' => 'Invalid type, only numbers are supported',
         ]);
     }
+
     public function getAhedAchievementRecords($id)
     {
         $user = User::find($id);

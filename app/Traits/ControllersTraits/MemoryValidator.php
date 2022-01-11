@@ -2,7 +2,7 @@
 
 namespace App\Traits\ControllersTraits;
 
-use App\Models\Memory;
+use App\Models\MemoryWall\Memory;
 use App\Exceptions\MemoryNotFound;
 use App\Traits\ValidatorLanguagesSupport;
 use Illuminate\Support\Facades\Validator;

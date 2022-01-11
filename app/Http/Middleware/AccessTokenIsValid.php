@@ -37,7 +37,7 @@ class AccessTokenIsValid
             ->get();
         foreach ($activeOauthAccessTokens as $accessToken) {
             if (Hash::check($request->bearerToken(), $accessToken->access_token)) {
-                if($this->isValidAccessToken($accessToken,''))
+                if($this->isValidAccessToken($accessToken,$accessToken->appType))
                     return $next($request);
             }
         }

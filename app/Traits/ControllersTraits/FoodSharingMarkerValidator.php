@@ -2,7 +2,7 @@
 
 namespace App\Traits\ControllersTraits;
 
-use App\Models\FoodSharingMarker;
+use App\Models\Ataa\FoodSharingMarker;
 use App\Exceptions\FoodSharingMarkerNotFound;
 use App\Exceptions\FoodSharingMarkerIsCollected;
 use App\Traits\ValidatorLanguagesSupport;

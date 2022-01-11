@@ -3,8 +3,8 @@
 namespace App\Traits\ControllersTraits;
 
 use App\Jobs\AtaaAchievementCalculator;
-use App\Models\AtaaPrize;
-use App\Models\FoodSharingMarker;
+use App\Models\Ataa\AtaaPrize;
+use App\Models\Ataa\FoodSharingMarker;
 use App\Models\User;
 
 /**
