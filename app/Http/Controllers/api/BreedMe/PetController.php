@@ -13,7 +13,6 @@ use App\Traits\ControllersTraits\UserValidator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
 
 class PetController extends BaseController
 {
@@ -32,21 +31,18 @@ class PetController extends BaseController
             $this->userIsAuthorized($user, 'viewAny', Pet::class);
             $currentPage = request()->get('page', 1);
             return $this->sendResponse(
-                Cache::remember('pets-' . $currentPage, 60 * 60 * 24, function () use ($user) {
-                    return
-                        Pet::join('users', 'users.id', 'pets.userId')
-                        ->join('profiles', 'users.profile', 'profiles.id')
-                        ->select(
-                            'pets.*',
-                            'users.id as userId',
-                            'users.name as userName',
-                            'users.email_verified_at as userEmailVerifiedAt',
-                            'profiles.image as userImage'
-                        )
-                        ->where('nationality', '=', $user->nationality)
-                        ->latest('pets.created_at')
-                        ->paginate(8);
-                }),
+                Pet::join('users', 'users.id', 'pets.createdBy')
+                    ->join('profiles', 'users.profile', 'profiles.id')
+                    ->select(
+                        'pets.*',
+                        'users.id as userId',
+                        'users.name as userName',
+                        'users.email_verified_at as userEmailVerifiedAt',
+                        'profiles.image as userImage'
+                    )
+                    ->where('pets.nationality', '=', $user->nationality)
+                    ->latest('pets.created_at')
+                    ->paginate(8),
                 ''
             );  ///Cases retrieved successfully.
         } catch (UserNotFound $e) {
