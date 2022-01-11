@@ -58,6 +58,7 @@ Route::middleware(['api_auth'])->prefix('ataa')->group(function () {
 
 
 //**      Memory Wall Controllers      **//
+//* * Optimized * */
 Route::prefix('memorywall')->group(function () {
     //**memories middleware in the controller **//
     Route::apiResource('/memories', MemoryController::class);
@@ -68,7 +69,9 @@ Route::prefix('memorywall')->group(function () {
 //TODO: Add This APIs to be auth by 2oauth token
 
 //**      Breed Me Controllers      **//
-Route::middleware(['api_auth'])->prefix('breedme')->group(function () {
+Route::
+// middleware(['api_auth'])->
+prefix('breedme')->group(function () {
     Route::apiResource('pets', PetController::class);
     Route::get('/filterByType', [PetController::class, 'filterByType']);
 
