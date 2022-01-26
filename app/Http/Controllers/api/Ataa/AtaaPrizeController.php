@@ -19,6 +19,46 @@ class AtaaPrizeController extends BaseController
 {
     use UserValidator, AtaaPrizeValidator;
     /**
+     * Display a listing of the resource Acquired By User.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getAcquired(Request $request)
+    {
+        try {
+            $user = $this->userExists($request['userId']);
+            $this->userIsAuthorized($user, 'viewAny', AtaaPrize::class);
+            return $this->sendResponse(
+                DB::table('ataa_prizes')
+                    ->leftJoin('user_ataa_acquired_prizes', function ($join) use ($user) {
+                        $join->on('ataa_prizes.id', '=', 'user_ataa_acquired_prizes.prize_id');
+                        $join->on('user_ataa_acquired_prizes.user_id', '=', DB::raw($user->id));
+                    })
+                    ->select(
+                        'ataa_prizes.id as id',
+                        'name',
+                        'image',
+                        'required_markers_collected',
+                        'required_markers_posted',
+                        'from',
+                        'to',
+                        'active',
+                        'level',
+                        DB::raw('user_ataa_acquired_prizes.prize_id IS NOT NULL as acquired'),
+                        DB::raw('user_ataa_acquired_prizes.created_at as acquiredAt'),
+                    )
+                    ->orderBy('level', 'ASC')->get(),
+                'Ataa Prizes Retrieved Successfully'
+            );
+        } catch (UserNotFound $e) {
+            return $this->sendError('User Not Found');
+        } catch (UserNotAuthorized $e) {
+            return $this->sendForbidden('You aren\'t authorized to view these Prizes.');
+        }
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -40,8 +80,7 @@ class AtaaPrizeController extends BaseController
                     'to',
                     'active',
                     'level',
-                    DB::raw('exists(select 1 from `user_ataa_acquired_prizes` uaap where uaap.prize_id = ataaPrizeId and uaap.user_id = ' . $user->id . ' limit 1) as acquired')
-                )
+                )->orderBy('level', 'ASC')
                     ->get(),
                 'Ataa Prizes Retrieved Successfully'
             );
