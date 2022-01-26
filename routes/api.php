@@ -55,6 +55,7 @@ Route::middleware(['api_auth'])->prefix('ataa')->group(function () {
     Route::patch('/collect/{id}', [FoodSharingMarkersController::class, 'collect']);
     Route::get('/achievement/{id}', [AtaaAchievementController::class, 'show']);
     Route::get('/prizes', [AtaaPrizeController::class, 'getAcquired']);
+    Route::get('/badges', [AtaaBadgeController::class, 'getAcquired']);
 });
 
 

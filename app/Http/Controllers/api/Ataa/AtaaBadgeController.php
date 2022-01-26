@@ -13,10 +13,47 @@ use App\Models\User;
 use App\Traits\ControllersTraits\AtaaBadgeValidator;
 use App\Traits\ControllersTraits\UserValidator;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 class AtaaBadgeController extends BaseController
 {
     use UserValidator, AtaaBadgeValidator;
+    /**
+     * Display a listing of the resource Acquired By User.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getAcquired(Request $request)
+    {
+        try {
+            $user = $this->userExists($request['userId']);
+            $this->userIsAuthorized($user, 'viewAny', AtaaBadge::class);
+            return $this->sendResponse(
+                DB::table('ataa_badges')
+                    ->leftJoin('user_ataa_acquired_badges', function ($join) use ($user) {
+                        $join->on('ataa_badges.id', '=', 'user_ataa_acquired_badges.badge_id');
+                        $join->on('user_ataa_acquired_badges.user_id', '=', DB::raw($user->id));
+                    })
+                    ->select(
+                        'ataa_badges.id as id',
+                        'name',
+                        'image',
+                        'description',
+                        'active',
+                        DB::raw('user_ataa_acquired_badges.badge_id IS NOT NULL as acquired'),
+                        DB::raw('user_ataa_acquired_badges.created_at as acquiredAt'),
+                    )
+                    ->get(),
+                'Ataa Badges Retrieved Successfully'
+            );
+        } catch (UserNotFound $e) {
+            return $this->sendError('User Not Found');
+        } catch (UserNotAuthorized $e) {
+            return $this->sendForbidden('You aren\'t authorized to view these badges.');
+        }
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -28,7 +65,17 @@ class AtaaBadgeController extends BaseController
         try {
             $user = $this->userExists($request['userId']);
             $this->userIsAuthorized($user, 'viewAny', AtaaBadge::class);
-            return $this->sendResponse(AtaaBadge::get(), 'Ataa Badges Retrieved Successfully');
+            return $this->sendResponse(
+                AtaaBadge::select(
+                    'id as ataaBadgeId',
+                    'name',
+                    'image',
+                    'description',
+                    'active',
+                )
+                    ->get(),
+                'Ataa Badges Retrieved Successfully'
+            );
         } catch (UserNotFound $e) {
             return $this->sendError('User Not Found');
         } catch (UserNotAuthorized $e) {
@@ -83,7 +130,7 @@ class AtaaBadgeController extends BaseController
         try {
             $user = $this->userExists($request['userId']);
             $badge = $this->badgeExists($id);
-            $this->userIsAuthorized($user,'activate',$badge);
+            $this->userIsAuthorized($user, 'activate', $badge);
             $badge->activate();
             return $this->sendResponse([], 'Badge Activated Successfully!');
         } catch (AtaaBadgeNotFound $e) {
@@ -106,7 +153,7 @@ class AtaaBadgeController extends BaseController
         try {
             $user = $this->userExists($request['userId']);
             $badge = $this->badgeExists($id);
-            $this->userIsAuthorized($user,'deactivate',$badge);
+            $this->userIsAuthorized($user, 'deactivate', $badge);
             $badge->deactivate();
             return $this->sendResponse([], 'Badge Deactivated Successfully!');
         } catch (AtaaBadgeNotFound $e) {
