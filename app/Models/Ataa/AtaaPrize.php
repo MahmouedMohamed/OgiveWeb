@@ -14,7 +14,7 @@ class AtaaPrize extends Model
     protected $fillable = [
         'createdBy', 'name', 'image', 'required_markers_collected',
         'required_markers_posted', 'from', 'to',
-        'level', 'active'
+        'level', 'active','arabic_name'
     ];
     public function winners()
     {

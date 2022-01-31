@@ -38,6 +38,7 @@ class AtaaPrizeController extends BaseController
                     ->select(
                         'ataa_prizes.id as id',
                         'name',
+            		'arabic_name',
                         'image',
                         'required_markers_collected',
                         'required_markers_posted',
@@ -73,6 +74,7 @@ class AtaaPrizeController extends BaseController
                 AtaaPrize::select(
                     'id as ataaPrizeId',
                     'name',
+		    'arabic_name',
                     'image',
                     'required_markers_collected',
                     'required_markers_posted',
@@ -114,6 +116,7 @@ class AtaaPrizeController extends BaseController
             AtaaPrize::create([
                 'createdBy' => $request['userId'],
                 'name' => $request['name'],
+		'arabic_name' => $request['arabic_name'],
                 'image' => $imagePath,
                 'required_markers_collected' => $request['required_markers_collected'],
                 'required_markers_posted' => $request['required_markers_posted'],

@@ -16,6 +16,7 @@ class CreateAtaaBadgesTable extends Migration
         Schema::create('ataa_badges', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
+            $table->string('arabic_name');
             $table->string('image');
             $table->text('description');
             $table->boolean('active')->default(1);

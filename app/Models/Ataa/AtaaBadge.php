@@ -10,7 +10,7 @@ class AtaaBadge extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'name', 'image', 'description', 'active'
+        'name', 'image', 'description', 'active','arabic_name'
     ];
     public function winners()
     {

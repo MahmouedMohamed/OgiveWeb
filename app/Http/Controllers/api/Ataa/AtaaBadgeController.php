@@ -38,6 +38,7 @@ class AtaaBadgeController extends BaseController
                     ->select(
                         'ataa_badges.id as id',
                         'name',
+		    	'arabic_name',
                         'image',
                         'description',
                         'active',
@@ -69,6 +70,7 @@ class AtaaBadgeController extends BaseController
                 AtaaBadge::select(
                     'id as ataaBadgeId',
                     'name',
+		    'arabic_name',
                     'image',
                     'description',
                     'active',
@@ -104,6 +106,7 @@ class AtaaBadgeController extends BaseController
             }
             AtaaBadge::create([
                 'name' => $request['name'],
+		'arabic_name' => $request['arabic_name'],
                 'image' => $imagePath,
                 'description' => $request['description'],
                 'active' => $request['active'] ? $request['active'] : 1,

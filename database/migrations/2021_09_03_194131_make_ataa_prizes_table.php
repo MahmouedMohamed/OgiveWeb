@@ -17,6 +17,7 @@ class MakeAtaaPrizesTable extends Migration
         Schema::create('ataa_prizes', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
+            $table->string('arabic_name');
             $table->string('image')->nullable(); //if money would be nullable
             $table->integer('required_markers_collected')->default(0);
             $table->integer('required_markers_posted')->default(0);

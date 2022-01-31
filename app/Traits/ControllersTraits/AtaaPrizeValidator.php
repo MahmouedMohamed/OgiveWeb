@@ -58,6 +58,7 @@ trait AtaaPrizeValidator
         $rules = [
             'userId' => 'required',
             'name' => 'required',
+            'arabic_name' => 'required',
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'required_markers_collected' => 'required|integer|min:0',
             'required_markers_posted' => 'required|integer|min:0',

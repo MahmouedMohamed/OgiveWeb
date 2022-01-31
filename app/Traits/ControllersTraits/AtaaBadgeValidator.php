@@ -31,6 +31,7 @@ trait AtaaBadgeValidator
         $rules = [
             'userId' => 'required',
             'name' => 'required',
+            'arabic_name' => 'required',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'description' => 'required|string'
         ];
