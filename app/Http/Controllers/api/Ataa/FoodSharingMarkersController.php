@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers\api\Ataa;
 
+use App\Events\FoodSharingMarkerCollected;
+use App\Events\FoodSharingMarkerCreated;
+use App\Events\FoodSharingMarkerDeleted;
+use App\Events\FoodSharingMarkerUpdated;
 use App\Http\Controllers\api\BaseController;
 use App\Exceptions\FoodSharingMarkerIsCollected;
 use App\Exceptions\FoodSharingMarkerNotFound;
@@ -96,6 +100,7 @@ class FoodSharingMarkersController extends BaseController
                 'collected' => 0,
                 'nationality' => $user->nationality
             ]);
+            FoodSharingMarkerCreated::dispatch($foodSharingMarker);
             $this->handleMarkerCreated($user, $foodSharingMarker);
             return $this->sendResponse([], $responseHandler->words['FoodSharingMarkerCreationSuccessMessage']);
         } catch (UserNotFound $e) {
@@ -129,6 +134,7 @@ class FoodSharingMarkersController extends BaseController
             $foodSharingMarker->collect($foodSharingMarkerExists);
             $this->handleMarkerExistingAction($foodSharingMarker, $foodSharingMarkerExists);
             $this->handleMarkerCollected($user, $foodSharingMarker);
+            FoodSharingMarkerCollected::dispatch($foodSharingMarker);
             if ($foodSharingMarkerExists == 1)
                 return $this->sendResponse([], $responseHandler->words['FoodSharingMarkerSuccessCollectExist']);
             return $this->sendResponse([], $responseHandler->words['FoodSharingMarkerSuccessCollectNoExist']);
@@ -181,6 +187,7 @@ class FoodSharingMarkersController extends BaseController
                 'collected' => 0,
                 'nationality' => $user->nationality
             ]);
+            FoodSharingMarkerUpdated::dispatch($foodSharingMarker);
             return $this->sendResponse([], $responseHandler->words['FoodSharingMarkerUpdateSuccessMessage']);
         } catch (FoodSharingMarkerNotFound $e) {
             return $this->sendError($responseHandler->words['FoodSharingMarkerNotFound']);
@@ -205,6 +212,7 @@ class FoodSharingMarkersController extends BaseController
             $foodSharingMarker = $this->foodSharingMarkerExists($id);
             $user = $this->userExists($request['userId']);
             $this->userIsAuthorized($user, 'delete', $foodSharingMarker);
+            FoodSharingMarkerDeleted::dispatch($foodSharingMarker);
             $foodSharingMarker->delete();
             $this->handleMarkerDeleted($user);
             return $this->sendResponse([], $responseHandler->words['FoodSharingMarkerDeleteSuccessMessage']);  ///Needy Updated Successfully!
