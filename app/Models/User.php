@@ -139,7 +139,6 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserBan::class, 'banned_user');
     }
-
     public function createdBans()
     {
         return $this->hasMany(UserBan::class, 'created_by');
@@ -163,5 +162,13 @@ class User extends Authenticatable
     public function fcmTokens()
     {
         return $this->hasOne(FCMToken::class);
+    }
+    public function timeCatcherTracked()
+    {
+        return $this->hasMany(TimeCatcherTracking::class, 'tracked_id');
+    }
+    public function timeCatcherTracker()
+    {
+        return $this->hasMany(TimeCatcherTracking::class, 'tracker_id');
     }
 }
