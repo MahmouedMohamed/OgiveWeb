@@ -20,8 +20,8 @@ class Pet extends Model
         'sex',
         'type',
         'image',
-        'availableForAdoption',
-        'createdBy',
+        'available_for_adoption',
+        'created_by',
         'nationality',
         'notes',
     ];

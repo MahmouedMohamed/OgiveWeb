@@ -14,13 +14,17 @@ class CreateExceptionsReportsTable extends Migration
     public function up()
     {
         Schema::create('exceptions_reports', function (Blueprint $table) {
-            $table->unsignedBigInteger('user_id');
             $table->uuid('id');
             $table->primary('id');
+            $table->string('user_id');
             $table->text('type');
             $table->longText('details');
             $table->timestamps();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 

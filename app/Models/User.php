@@ -42,7 +42,7 @@ class User extends Authenticatable
         'phone_number',
         'address',
         'nationality',
-        'profile'
+        'profile_id'
     ];
 
     /**
@@ -75,10 +75,11 @@ class User extends Authenticatable
         $accessToken = Str::random(60);
         $expiryDate = Carbon::now('GMT+2')->addMonth();
         $this->accessTokens()->create([
+            'id'=> Str::uuid(),
             'access_token' => Hash::make($accessToken),
             'scopes' => '[]',
-            'appType' => $appType,
-            'accessType' => $accessType,
+            'app_type' => $appType,
+            'access_type' => $accessType,
             'active' => 1,
             'expires_at' => $expiryDate,
 
@@ -87,7 +88,7 @@ class User extends Authenticatable
     }
     public function deleteRelatedAccessTokens($appType)
     {
-        $this->accessTokens()->where('appType', '=', $appType)->delete();
+        $this->accessTokens()->where('app_type', '=', $appType)->delete();
     }
     public function profile()
     {
@@ -99,15 +100,15 @@ class User extends Authenticatable
     }
     public function memories()
     {
-        return $this->hasMany(Memory::class, 'createdBy')->orderBy('id', 'DESC');
+        return $this->hasMany(Memory::class, 'created_by')->orderBy('id', 'DESC');
     }
     public function likes()
     {
-        return $this->hasMany(Like::class, 'userId');
+        return $this->hasMany(Like::class, 'user_id');
     }
     public function pets()
     {
-        return $this->hasMany(Pet::class, 'createdBy');
+        return $this->hasMany(Pet::class, 'created_by');
     }
     public function adoptionRequests()
     {
@@ -123,7 +124,7 @@ class User extends Authenticatable
     }
     public function createdNeedies()
     {
-        return $this->hasMany(Needy::class, 'createdBy');
+        return $this->hasMany(Needy::class, 'created_by');
     }
     public function onlinetransactions()
     {

@@ -19,10 +19,10 @@ class Memory extends Model
 
     public function author()
     {
-        return $this->belongsTo(User::class,'createdBy');
+        return $this->belongsTo(User::class, 'created_by');
     }
     public function likes()
     {
-        return $this->hasMany(Like::class,'memoryId')->orderBy('memoryId','DESC');
+        return $this->hasMany(Like::class, 'memory_id')->orderBy('memory_id', 'DESC');
     }
 }

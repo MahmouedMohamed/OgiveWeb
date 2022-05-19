@@ -29,8 +29,8 @@ class NeediesController extends BaseController
         return $this->sendResponse(
             Cache::remember('needies-' . $currentPage, 60 * 60 * 24, function () {
                 return
-                    Needy::join('users', 'users.id', 'needies.createdBy')
-                    ->join('profiles', 'users.profile', 'profiles.id')
+                    Needy::join('users', 'users.id', 'needies.created_by')
+                    ->join('profiles', 'users.profile_id', 'profiles.id')
                     ->select(
                         'needies.*',
                         'users.id as userId',
@@ -39,8 +39,8 @@ class NeediesController extends BaseController
                         'profiles.image as userImage'
                     )
                     ->latest('needies.created_at')
-                    ->with('mediasBefore:id,path,needy')
-                    ->with('mediasAfter:id,path,needy')
+                    ->with('mediasBefore:id,path,needy_id')
+                    ->with('mediasAfter:id,path,needy_id')
                     ->where('approved', '=', 1)
                     ->where('severity', '<', '7')
                     ->paginate(8);
@@ -60,8 +60,8 @@ class NeediesController extends BaseController
         return $this->sendResponse(
             Cache::remember('urgentNeedies-' . $currentPage, 60 * 60 * 24, function () {
                 return
-                    Needy::join('users', 'users.id', 'needies.createdBy')
-                    ->join('profiles', 'users.profile', 'profiles.id')
+                    Needy::join('users', 'users.id', 'needies.created_by')
+                    ->join('profiles', 'users.profile_id', 'profiles.id')
                     ->select(
                         'needies.*',
                         'users.id as userId',
@@ -70,8 +70,8 @@ class NeediesController extends BaseController
                         'profiles.image as userImage'
                     )
                     ->latest('needies.created_at')
-                    ->with('mediasBefore:id,path,needy')
-                    ->with('mediasAfter:id,path,needy')
+                    ->with('mediasBefore:id,path,needy_id')
+                    ->with('mediasAfter:id,path,needy_id')
                     ->where('approved', '=', 1)
                     ->where('severity', '>=', '7')
                     ->paginate(8);
@@ -108,8 +108,8 @@ class NeediesController extends BaseController
     public function getNeediesWithIDs(Request $request)
     {
         return $this->sendResponse(
-            Needy::join('users', 'users.id', 'needies.createdBy')
-                ->join('profiles', 'users.profile', 'profiles.id')
+            Needy::join('users', 'users.id', 'needies.created_by')
+                ->join('profiles', 'users.profile_id', 'profiles.id')
                 ->select(
                     'needies.*',
                     'users.id as userId',
@@ -118,8 +118,8 @@ class NeediesController extends BaseController
                     'profiles.image as userImage'
                 )
                 ->latest('needies.created_at')
-                ->with('mediasBefore:id,path,needy')
-                ->with('mediasAfter:id,path,needy')
+                ->with('mediasBefore:id,path,needy_id')
+                ->with('mediasAfter:id,path,needy_id')
                 ->where('approved', '=', 1)
                 ->whereIn('id', $request['ids'])
                 ->get(),
@@ -178,7 +178,7 @@ class NeediesController extends BaseController
     {
         try {
             $this->needyExists($id);
-            return $this->sendResponse(Needy::join('users', 'users.id', 'needies.createdBy')
+            return $this->sendResponse(Needy::join('users', 'users.id', 'needies.created_by')
                 ->join('profiles', 'users.profile', 'profiles.id')
                 ->select(
                     'needies.*',

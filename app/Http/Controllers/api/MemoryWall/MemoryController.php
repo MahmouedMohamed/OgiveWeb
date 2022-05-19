@@ -41,15 +41,15 @@ class MemoryController extends BaseController
                     Memory::select(
                         [
                             'id',
-                            'personName',
-                            'birthDate',
-                            'deathDate',
+                            'person_name',
+                            'birth_date',
+                            'death_date',
                             'brief',
-                            'lifeStory',
+                            'life_story',
                             'image',
                             'created_at',
-                            DB::raw('CAST(DATEDIFF(deathDate,birthDate) / 365 AS int) as age'),
-                            DB::raw('exists(select 1 from `likes` li where li.memoryId = id and li.userId = ' . $user->id . ' limit 1) as liked')
+                            DB::raw('CAST(DATEDIFF(death_date,birth_date) / 365 AS int) as age'),
+                            DB::raw('exists(select 1 from `likes` li where li.memory_id = id and li.user_id = ' . $user->id . ' limit 1) as liked')
                         ]
                     )->withCount('likes as numberOfLikes')
                         ->where('nationality', '=', $user->nationality)
@@ -61,14 +61,14 @@ class MemoryController extends BaseController
                 Memory::select(
                     [
                         'id',
-                        'personName',
-                        'birthDate',
-                        'deathDate',
+                        'person_name',
+                        'birth_date',
+                        'death_date',
                         'brief',
-                        'lifeStory',
+                        'life_story',
                         'image',
                         'created_at',
-                        DB::raw('CAST(DATEDIFF(deathDate,birthDate) / 365 AS int) as age'),
+                        DB::raw('CAST(DATEDIFF(death_date,birth_date) / 365 AS int) as age'),
                     ]
                 )->withCount('likes as numberOfLikes')
                     ->paginate(8),
@@ -94,14 +94,14 @@ class MemoryController extends BaseController
             Memory::select(
                 [
                     'id',
-                    'personName',
-                    'birthDate',
-                    'deathDate',
+                    'person_name',
+                    'birth_date',
+                    'death_date',
                     'brief',
-                    'lifeStory',
+                    'life_story',
                     'image',
                     'created_at',
-                    DB::raw('CAST(DATEDIFF(deathDate,birthDate) / 365 AS int) as age'),
+                    DB::raw('CAST(DATEDIFF(death_date,birth_date) / 365 AS int) as age'),
                 ]
             )->withCount('likes as numberOfLikes')
                 ->orderBy('numberOfLikes', 'desc')
@@ -128,12 +128,12 @@ class MemoryController extends BaseController
             $this->userIsAuthorized($user, 'create', Memory::class);
             $imagePath = $request['image']->store('memories', 'public');
             $user->memories()->create([
-                'personName' => $request['personName'],
-                'birthDate' => $request['birthDate'],
-                'deathDate' => $request['deathDate'],
                 'id' => Str::uuid(),
+                'person_name' => $request['personName'],
+                'birth_date' => $request['birthDate'],
+                'death_date' => $request['deathDate'],
                 'brief' => $request['brief'],
-                'lifeStory' => $request['lifeStory'],
+                'life_story' => $request['lifeStory'],
                 'image' => "/storage/" . $imagePath,
                 'nationality' => $user->nationality,
             ]);
@@ -160,11 +160,11 @@ class MemoryController extends BaseController
             return $this->sendResponse(collect([$memory])->map(function ($memory) {
                 return [
                     'id' => $memory->id,
-                    'personName' => $memory->id,
-                    'birthDate' => $memory->birthDate,
-                    'deathDate' => $memory->deathDate,
+                    'person_name' => $memory->id,
+                    'birth_date' => $memory->birthDate,
+                    'death_date' => $memory->deathDate,
                     'brief' => $memory->brief,
-                    'lifeStory' => $memory->lifeStory,
+                    'life_story' => $memory->lifeStory,
                     'image' => $memory->image,
                     'age' => date_diff(date_create($memory->deathDate), date_create($memory->birthDate))->y,
                 ];
@@ -198,11 +198,11 @@ class MemoryController extends BaseController
                 $imagePath = $request['image']->store('memories', 'public');
             }
             $memory->update([
-                'personName' => $request['personName'] ?? $memory->personName,
-                'birthDate' => $request['birthDate'] ?? $memory->birthDate,
-                'deathDate' => $request['deathDate'] ?? $memory->deathDate,
+                'person_name' => $request['personName'] ?? $memory->personName,
+                'birth_date' => $request['birthDate'] ?? $memory->birthDate,
+                'death_date' => $request['deathDate'] ?? $memory->deathDate,
                 'brief' => $request['brief'] ?? $memory->brief,
-                'lifeStory' => $request['lifeStory'] ?? $memory->lifeStory,
+                'life_story' => $request['lifeStory'] ?? $memory->lifeStory,
                 'image' => $request['image'] ? "/storage/" . $imagePath : $memory->image,
                 'nationality' => $user->nationality,
             ]);

@@ -14,9 +14,9 @@ class CreateFoodSharingMarkerTable extends Migration
     public function up()
     {
         Schema::create('food_sharing_markers', function (Blueprint $table) {
-            $table->unsignedBigInteger('user_id');
             $table->uuid('id');
             $table->primary('id');
+            $table->string('user_id');
             $table->double('latitude');
             $table->double('longitude');
             $table->string('type');
@@ -28,7 +28,11 @@ class CreateFoodSharingMarkerTable extends Migration
             $table->dateTime('collected_at')->nullable();
             $table->string('nationality');
             $table->timestamps();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 

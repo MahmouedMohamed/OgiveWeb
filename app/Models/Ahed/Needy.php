@@ -26,24 +26,24 @@ class Needy extends Model
         'satisfied',
         'address',
         'approved',
-        'createdBy',
+        'created_by',
         'url'
     ];
     public function createdBy()
     {
-        return $this->belongsTo(User::class, 'createdBy');
+        return $this->belongsTo(User::class, 'created_by');
     }
     public function onlinetransactions()
     {
-        return $this->hasMany(OnlineTransaction::class, 'needy');
+        return $this->hasMany(OnlineTransaction::class, 'needy_id');
     }
     public function offlinetransactions()
     {
-        return $this->hasMany(OfflineTransaction::class, 'needy');
+        return $this->hasMany(OfflineTransaction::class, 'needy_id');
     }
     public function medias()
     {
-        return $this->hasMany(NeedyMedia::class, 'needy');
+        return $this->hasMany(NeedyMedia::class, 'needy_id');
     }
     public function mediasBefore()
     {

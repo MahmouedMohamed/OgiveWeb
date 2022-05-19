@@ -53,11 +53,12 @@ class OnlineTransactionsController extends BaseController
             $this->needyApproved($needy);
             $this->needyIsSatisfied($needy);
             $transaction = $user->onlinetransactions()->create([
-                'needy' => $needy->id,
                 'id'=> Str::uuid(),
+                'needy_id' => $needy->id,
                 'amount' => $request['amount'],
                 'remaining' => $request['amount']
             ]);
+            //TODO: implement transaction
             //TODO: if failed remove transaction
             $transaction->transferAmount($request['amount']);
             return $this->sendResponse([], 'شكراً لمساهمتك القيمة'); ///Thank You For Your Contribution!

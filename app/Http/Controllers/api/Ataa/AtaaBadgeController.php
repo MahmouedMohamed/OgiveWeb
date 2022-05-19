@@ -9,7 +9,6 @@ use App\Exceptions\UserNotFound;
 use App\Http\Controllers\api\BaseController;
 use App\Models\Ataa\AtaaBadge;
 use Illuminate\Http\Request;
-use App\Models\User;
 use App\Traits\ControllersTraits\AtaaBadgeValidator;
 use App\Traits\ControllersTraits\UserValidator;
 use Exception;
@@ -39,7 +38,7 @@ class AtaaBadgeController extends BaseController
                     ->select(
                         'ataa_badges.id as id',
                         'name',
-		    	'arabic_name',
+                        'arabic_name',
                         'image',
                         'description',
                         'active',
@@ -71,7 +70,7 @@ class AtaaBadgeController extends BaseController
                 AtaaBadge::select(
                     'id as ataaBadgeId',
                     'name',
-		    'arabic_name',
+                    'arabic_name',
                     'image',
                     'description',
                     'active',
@@ -108,7 +107,7 @@ class AtaaBadgeController extends BaseController
             AtaaBadge::create([
                 'id' => Str::uuid(),
                 'name' => $request['name'],
-		'arabic_name' => $request['arabic_name'],
+                'arabic_name' => $request['arabic_name'],
                 'image' => $imagePath,
                 'description' => $request['description'],
                 'active' => $request['active'] ? $request['active'] : 1,

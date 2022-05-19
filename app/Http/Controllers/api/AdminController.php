@@ -329,7 +329,28 @@ class AdminController extends BaseController
             return $this->sendForbidden('You aren\'t authorized to see these resources.');
         }
     }
-
+    /**
+     * Display a listing of all Needies.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getPendingNeedies()
+    {
+        return $this->sendResponse(Needy::join('users', 'users.id', 'needies.created_by')
+            ->join('profiles', 'users.profile_id', 'profiles.id')
+            ->select(
+                'needies.*',
+                'users.id as userId',
+                'users.name as userName',
+                'users.email_verified_at as userEmailVerifiedAt',
+                'profiles.image as userImage'
+            )
+            ->latest('needies.created_at')
+            ->with('mediasBefore:id,path,needy_id')
+            ->with('mediasAfter:id,path,needy_id')
+            ->where('approved', '=', 0)
+            ->paginate(8), 'تم إسترجاع البيانات بنجاح');  ///Cases retrieved successfully.
+    }
     public function importCSV(Request $request)
     {
         $validated = Validator::make($request->all(), [

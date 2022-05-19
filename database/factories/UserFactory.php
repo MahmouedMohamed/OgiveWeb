@@ -24,13 +24,13 @@ class UserFactory extends Factory
     public function definition()
     {
         $availableNationalities = ['Australia', 'Palestine', 'Syria', 'USA', 'Egypt'];
-        $availableGender = ['male','female'];
-        $userName = $this->faker->unique()->name.'2';
+        $availableGender = ['male', 'female'];
+        $userName = $this->faker->unique()->name . '2';
         return [
             'id' => Str::uuid(),
             'name' => $this->faker->name,
             'user_name' => $userName,
-            'gender'=> Arr::random($availableGender),
+            'gender' => Arr::random($availableGender),
             'phone_number' => $this->faker->phoneNumber(),
             'email' => "$userName@ogive.com",
             // 'email' => $this->faker->unique()->safeEmail,
@@ -38,7 +38,7 @@ class UserFactory extends Factory
             "nationality" => Arr::random($availableNationalities),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
-            'created_at' => $this->faker->dateTimeBetween('-5 years','now')
+            'created_at' => $this->faker->dateTimeBetween('-5 years', 'now')
         ];
     }
 }

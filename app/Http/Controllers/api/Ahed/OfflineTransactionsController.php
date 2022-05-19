@@ -52,23 +52,25 @@ class OfflineTransactionsController extends BaseController
                 $user = $this->userExists(request()->input('giver'));
                 $user->offlineTransactions()->create([
                     'id'=> Str::uuid(),
+                    'needy_id' => $needy->id,
                     'amount' => $request['amount'],
-                    'preferredSection' => $request['preferredSection'],
+                    'preferred_section' => $request['preferredSection'],
                     'address' => $request['address'],
-                    'startCollectDate' => $request['startCollectDate'],
-                    'endCollectDate' => $request['endCollectDate'],
-                    'phoneNumber' => $request['phoneNumber'],
+                    'start_collect_date' => $request['startCollectDate'],
+                    'end_collect_date' => $request['endCollectDate'],
+                    'phone_number' => $request['phoneNumber'],
                     'collected' => 0,
                 ]);
             } else {
                 OfflineTransaction::create([
                     'id'=> Str::uuid(),
+                    'needy_id' => $needy->id,
                     'amount' => $request['amount'],
-                    'preferredSection' => $request['preferredSection'],
+                    'preferred_section' => $request['preferredSection'],
                     'address' => $request['address'],
-                    'startCollectDate' => $request['startCollectDate'],
-                    'endCollectDate' => $request['endCollectDate'],
-                    'phoneNumber' => $request['phoneNumber'],
+                    'start_collect_date' => $request['startCollectDate'],
+                    'end_collect_date' => $request['endCollectDate'],
+                    'phone_number' => $request['phoneNumber'],
                     'collected' => 0,
                 ]);
             }
@@ -134,13 +136,13 @@ class OfflineTransactionsController extends BaseController
             $this->needyApproved($needy);
             $this->needyIsSatisfied($needy);
             $transaction->update([
-                'needy' => $needy->id,
+                'needy_id' => $needy->id,
                 'amount' => $request['amount'],
-                'preferredSection' => $request['preferredSection'],
+                'preferred_section' => $request['preferredSection'],
                 'address' => $request['address'],
-                'phoneNumber' => $request['phoneNumber'],
-                'startCollectDate' => $request['startCollectDate'],
-                'endCollectDate' => $request['endCollectDate'],
+                'phone_number' => $request['phoneNumber'],
+                'start_collect_date' => $request['startCollectDate'],
+                'end_collect_date' => $request['endCollectDate'],
             ]);
             return $this->sendResponse([], 'تم التعديل بنجاح'); ///Transaction Updated Successfully
         } catch (OfflineTransactionNotFound $e) {

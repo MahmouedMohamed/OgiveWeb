@@ -18,7 +18,7 @@ class CreatePlacesTable extends Migration
             $table->primary('id');
             $table->string('name');
             $table->string('contact_number');
-            $table->string('speciality');
+            $table->string('specialty');
             $table->string('type');
             $table->string('address');
             $table->double('latitude');

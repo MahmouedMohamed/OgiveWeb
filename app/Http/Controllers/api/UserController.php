@@ -45,7 +45,7 @@ class UserController extends BaseController
                     $tokenDetails['expiryDate'];
 
                 $this->content['user'] = Auth::user();
-                $profile = Profile::findOrFail(Auth::user()->profile);
+                $profile = Profile::findOrFail(Auth::user()->profile_id);
                 $this->content['profile'] = $profile;
                 return $this->sendResponse($this->content, 'Data Retrieved Successfully');
             } else {
@@ -89,7 +89,7 @@ class UserController extends BaseController
             'phone_number' => request('phone_number'),
             'address' => request('address'),
             'nationality' => request('nationality'),
-            'profile' => $profile->id
+            'profile_id' => $profile->id
         ]);
         return $this->sendResponse('', 'User Created Successfully');
     }
@@ -186,7 +186,7 @@ class UserController extends BaseController
         if ($validated->fails())
             return $this->sendError('Invalid data', $validated->messages(), 400);
 
-        $profile = Profile::find($user->profile);
+        $profile = Profile::find($user->profile_id);
         if ($profile->image == null) {
             $imagePath = $request['image']->store('users', 'public');
             $profile->image = "/storage/" . $imagePath;
@@ -211,7 +211,7 @@ class UserController extends BaseController
         if ($validated->fails())
             return $this->sendError('Invalid data', $validated->messages(), 400);
 
-        $profile = Profile::find($user->profile);
+        $profile = Profile::find($user->profile_id);
         if ($profile->cover == null) {
             $imagePath = $request['image']->store('users', 'public');
             $profile->cover = "/storage/" . $imagePath;
@@ -231,11 +231,11 @@ class UserController extends BaseController
         if ($request['userId'] != $id)
             return $this->sendForbidden('أنت لا تملك صلاحية تعديل هذا الملف الشخصي');  ///You aren\'t authorized to delete this transaction.
 
-        $profile = Profile::find($user->profile);
-        $profile->bio = $request['bio'];
-        $user->phone_number = $request['phoneNumber'];
-        $user->address = $request['address'];
-        $user->nationality = $request['nationality'];
+        $profile = Profile::find($user->profile_id);
+        $profile->bio = $request['bio'] ?? $profile->bio;
+        $user->phone_number = $request['phoneNumber'] ?? $user->phone_number;
+        $user->address = $request['address'] ?? $user->address;
+        $user->nationality = $request['nationality'] ?? $user->nationality;
         $profile->save();
         $user->save();
         return $this->sendResponse([], 'تم تغيير بياناتك بنجاح');    ///Image Updated Successfully!

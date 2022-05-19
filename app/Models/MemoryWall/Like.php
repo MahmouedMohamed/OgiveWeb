@@ -9,10 +9,10 @@ class Like extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['userId','memoryId'];
+    protected $fillable = ['user_id','memory_id'];
     public function memory()
     {
-        return $this->belongsTo(Memory::class,'memoryId');
+        return $this->belongsTo(Memory::class,'memory_id');
     }
     public function user()
     {

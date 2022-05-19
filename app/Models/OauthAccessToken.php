@@ -20,8 +20,8 @@ class OauthAccessToken extends Model
         'id',
         'access_token',
         'scopes',
-        'appType',
-        'accessType',
+        'app_type',
+        'access_type',
         'active',
         'expires_at'
     ];
@@ -33,15 +33,13 @@ class OauthAccessToken extends Model
      */
     protected $hidden = [
         'access_token',
-        // 'password',
-        // 'remember_token',
     ];
     public function user()
     {
         return $this->belongsTo(User::class);
     }
-    public function refresh()
+    public function refreshToken($accessType, $appType)
     {
-        return $this->user->createAccessToken();
+        return $this->user->createAccessToken($accessType, $appType);
     }
 }

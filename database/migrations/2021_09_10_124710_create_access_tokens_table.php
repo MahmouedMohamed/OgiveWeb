@@ -14,17 +14,21 @@ class CreateAccessTokensTable extends Migration
     public function up()
     {
         Schema::create('oauth_access_tokens', function (Blueprint $table) {
-            $table->unsignedBigInteger('user_id');
             $table->uuid('id');
             $table->primary('id');
+            $table->string('user_id');
             $table->text('access_token')->unique();
             $table->text('scopes')->nullable();  //To Support Roles //2x Checks feature
-            $table->string('appType');
-            $table->string('accessType');
+            $table->string('app_type');
+            $table->string('access_type');
             $table->boolean('active')->default(1);
             $table->dateTime('expires_at')->nullable();
             $table->timestamps();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 

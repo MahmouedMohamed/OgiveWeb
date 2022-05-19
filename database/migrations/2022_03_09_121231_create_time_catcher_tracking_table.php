@@ -14,16 +14,24 @@ class CreateTimeCatcherTrackingTable extends Migration
     public function up()
     {
         Schema::create('time_catcher_tracking', function (Blueprint $table) {
-            $table->unsignedBigInteger('tracker_id');
-            $table->unsignedBigInteger('tracked_id');
             $table->uuid('id');
             $table->primary('id');
+            $table->string('tracker_id');
+            $table->string('tracked_id');
             $table->double('point_x');
             $table->double('point_y');
             $table->double('range_in_meter');
             $table->timestamps();
-            $table->foreign('tracker_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('tracked_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('tracker_id')
+                ->references('id')
+                ->on('users')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+            $table->foreign('tracked_id')
+                ->references('id')
+                ->on('users')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 

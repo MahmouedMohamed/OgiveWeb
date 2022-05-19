@@ -14,16 +14,23 @@ class CreateOnlineTransactionsTable extends Migration
     public function up()
     {
         Schema::create('online_transactions', function (Blueprint $table) {
-            $table->unsignedBigInteger('giver');
-            $table->unsignedBigInteger('needy');
             $table->uuid('id');
             $table->primary('id');
+            $table->string('giver');
+            $table->string('needy_id');
             $table->double('amount');
             $table->double('remaining');
             $table->timestamps();
-            $table->foreign('giver')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('needy')->references('id')->on('needies')->onDelete('cascade');
-
+            $table->foreign('giver')
+                ->references('id')
+                ->on('users')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+            $table->foreign('needy_id')
+                ->references('id')
+                ->on('needies')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 
