@@ -6,11 +6,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class Needy extends Model
 {
     use HasFactory;
+
+    public $incrementing = false;
+
     protected $fillable = [
+        'id',
         'name',
         'age',
         'severity',
@@ -68,6 +73,7 @@ class Needy extends Model
     {
         foreach ($imagePaths as $imagePath) {
             $this->medias()->create([
+                'id'=> Str::uuid(),
                 'path' => $imagePath,
                 'before' => $before
             ]);

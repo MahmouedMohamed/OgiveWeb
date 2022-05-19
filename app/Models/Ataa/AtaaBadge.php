@@ -9,8 +9,11 @@ use Illuminate\Database\Eloquent\Model;
 class AtaaBadge extends Model
 {
     use HasFactory;
+
+    public $incrementing = false;
+
     protected $fillable = [
-        'name', 'image', 'description', 'active','arabic_name'
+        'id','name', 'image', 'description', 'active','arabic_name'
     ];
     public function winners()
     {

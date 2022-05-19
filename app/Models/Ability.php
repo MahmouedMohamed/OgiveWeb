@@ -10,7 +10,9 @@ class Ability extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name'];
+    public $incrementing = false;
+
+    protected $fillable = ['id', 'name',];
 
     public function roles(){
         return $this->hasMany(Role::class);

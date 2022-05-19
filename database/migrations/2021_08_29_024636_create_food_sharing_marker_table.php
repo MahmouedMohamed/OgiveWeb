@@ -14,8 +14,9 @@ class CreateFoodSharingMarkerTable extends Migration
     public function up()
     {
         Schema::create('food_sharing_markers', function (Blueprint $table) {
-            $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id');
+            $table->uuid('id');
+            $table->primary('id');
             $table->double('latitude');
             $table->double('longitude');
             $table->string('type');

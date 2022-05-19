@@ -8,12 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class TimeCatcherTracking extends Model
 {
     use HasFactory;
+
+    public $incrementing = false;
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
+        'id',
         'tracker_id',
         'tracked_id',
         'point_x',

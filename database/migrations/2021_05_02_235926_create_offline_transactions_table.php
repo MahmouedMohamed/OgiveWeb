@@ -14,9 +14,10 @@ class CreateOfflineTransactionsTable extends Migration
     public function up()
     {
         Schema::create('offline_transactions', function (Blueprint $table) {
-            $table->bigIncrements('id');
             $table->unsignedBigInteger('giver')->nullable();
             $table->unsignedBigInteger('needy');
+            $table->uuid('id');
+            $table->primary('id');
             $table->double('amount');
             $table->text('preferredSection');
             $table->text('address');

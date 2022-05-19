@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 use Illuminate\Http\Request;
 
@@ -69,7 +70,9 @@ class UserController extends BaseController
         if ($validated->fails()) {
             return $this->sendError('Invalid data', $validated->messages(), 400);
         }
-        $profile = Profile::create([]);
+        $profile = Profile::create([
+            'id' => Str::uuid()
+        ]);
         $image = $request['image'];
         if ($image != null) {
             $imagePath = $image->store('users', 'public');
@@ -77,6 +80,7 @@ class UserController extends BaseController
             $profile->save();
         }
         User::create([
+            'id' => Str::uuid(),
             'name' => request('name'),
             'user_name' => request('user_name'),
             'email' => request('email'),

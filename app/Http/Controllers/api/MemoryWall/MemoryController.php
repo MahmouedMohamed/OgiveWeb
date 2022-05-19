@@ -13,6 +13,7 @@ use App\Traits\ControllersTraits\UserValidator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class MemoryController extends BaseController
 {
@@ -130,6 +131,7 @@ class MemoryController extends BaseController
                 'personName' => $request['personName'],
                 'birthDate' => $request['birthDate'],
                 'deathDate' => $request['deathDate'],
+                'id' => Str::uuid(),
                 'brief' => $request['brief'],
                 'lifeStory' => $request['lifeStory'],
                 'image' => "/storage/" . $imagePath,

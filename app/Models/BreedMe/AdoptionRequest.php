@@ -9,8 +9,11 @@ use Illuminate\Database\Eloquent\Model;
 class AdoptionRequest extends Model
 {
     use HasFactory;
+
+    public $incrementing = false;
+
     protected $fillable = [
-        'user_id', 'pet_id', 'phone_number', 'address',
+        'id','user_id', 'pet_id', 'phone_number', 'address',
         'adoption_place', 'experience', 'accepted_terms',
     ];
     public function user()

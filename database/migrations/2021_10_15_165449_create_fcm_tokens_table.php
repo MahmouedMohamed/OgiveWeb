@@ -14,8 +14,9 @@ class CreateFcmTokensTable extends Migration
     public function up()
     {
         Schema::create('fcm_tokens', function (Blueprint $table) {
-            $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id');
+            $table->uuid('id');
+            $table->primary('id');
             $table->text('token');
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

@@ -14,6 +14,7 @@ use App\Traits\ControllersTraits\UserValidator;
 use Illuminate\Support\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class AtaaPrizeController extends BaseController
 {
@@ -114,6 +115,7 @@ class AtaaPrizeController extends BaseController
                 $imagePath = "/storage/" . $imagePath;
             }
             AtaaPrize::create([
+                'id' => Str::uuid(),
                 'createdBy' => $request['userId'],
                 'name' => $request['name'],
 		'arabic_name' => $request['arabic_name'],

@@ -14,8 +14,9 @@ class CreateExceptionsReportsTable extends Migration
     public function up()
     {
         Schema::create('exceptions_reports', function (Blueprint $table) {
-            $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id');
+            $table->uuid('id');
+            $table->primary('id');
             $table->text('type');
             $table->longText('details');
             $table->timestamps();

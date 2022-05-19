@@ -5,12 +5,16 @@ namespace App\Models\Ataa;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class AtaaAchievement extends Model
 {
     use HasFactory;
+
+    public $incrementing = false;
+
     protected $fillable = [
-        'markers_collected', 'markers_posted'
+        'id','markers_collected', 'markers_posted'
     ];
     public function user()
     {
@@ -48,6 +52,7 @@ class AtaaAchievement extends Model
     public static function calculateThenGet(User $user, FoodSharingMarker $foodSharingMarker, String $method)
     {
         $userAchievement = $user->ataaAchievement ?? $user->ataaAchievement()->create([
+            'id'=> Str::uuid(),
             'markers_collected' => 0,
             'markers_posted' => 0
         ]);

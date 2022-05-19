@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Role;
 use App\Models\Ability;
+use Illuminate\Support\Str;
 
 class RoleSeeder extends Seeder
 {
@@ -45,6 +46,7 @@ class RoleSeeder extends Seeder
         ];
         foreach ($availableRoles as $role) {
             $insertedRole = Role::create([
+                'id' => Str::uuid(),
                 'name' => $role['name'],
                 'label' => $role['label']
             ]);
@@ -55,6 +57,7 @@ class RoleSeeder extends Seeder
                     $insertedRole->allowTo($roleAbility);
                 else {
                     $insertedAbility = Ability::create([
+                        'id' => Str::uuid(),
                         'name' => $ability
                     ]);
                     $insertedRole->allowTo(

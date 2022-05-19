@@ -14,7 +14,8 @@ class CreateNeediesTable extends Migration
     public function up()
     {
         Schema::create('needies', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->uuid('id');
+            $table->primary('id');
             $table->string('name');
             $table->double('age')->nullable();
             $table->integer('severity')->default(1);

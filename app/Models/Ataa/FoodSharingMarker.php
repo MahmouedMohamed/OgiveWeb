@@ -11,10 +11,13 @@ class FoodSharingMarker extends Model
 {
     use HasFactory;
 
+    public $incrementing = false;
+
     protected $table = 'food_sharing_markers';
+
     protected $fillable = [
-        'latitude', 'longitude', 'type', 'description', 'quantity', 'priority', 'collected',
-        'nationality','existed', 'collected_at'
+        'id','latitude', 'longitude', 'type', 'description', 'quantity', 'priority', 'collected',
+        'nationality', 'existed', 'collected_at'
     ];
 
     public function user()

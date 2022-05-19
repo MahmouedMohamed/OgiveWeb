@@ -14,6 +14,7 @@ use App\Traits\ControllersTraits\AtaaBadgeValidator;
 use App\Traits\ControllersTraits\UserValidator;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class AtaaBadgeController extends BaseController
 {
@@ -105,6 +106,7 @@ class AtaaBadgeController extends BaseController
                 $imagePath = "/storage/" . $imagePath;
             }
             AtaaBadge::create([
+                'id' => Str::uuid(),
                 'name' => $request['name'],
 		'arabic_name' => $request['arabic_name'],
                 'image' => $imagePath,

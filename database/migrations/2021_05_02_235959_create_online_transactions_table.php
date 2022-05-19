@@ -14,9 +14,10 @@ class CreateOnlineTransactionsTable extends Migration
     public function up()
     {
         Schema::create('online_transactions', function (Blueprint $table) {
-            $table->bigIncrements('id');
             $table->unsignedBigInteger('giver');
             $table->unsignedBigInteger('needy');
+            $table->uuid('id');
+            $table->primary('id');
             $table->double('amount');
             $table->double('remaining');
             $table->timestamps();

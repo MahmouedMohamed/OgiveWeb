@@ -7,14 +7,18 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class AtaaPrize extends Model
 {
     use HasFactory;
+
+    public $incrementing = false;
+
     protected $fillable = [
-        'createdBy', 'name', 'image', 'required_markers_collected',
+        'id', 'created_by', 'name', 'image', 'required_markers_collected',
         'required_markers_posted', 'from', 'to',
-        'level', 'active','arabic_name'
+        'level', 'active', 'arabic_name'
     ];
     public function winners()
     {
@@ -59,6 +63,7 @@ class AtaaPrize extends Model
     {
         return AtaaPrize::create([
             'createdBy' => null,
+            'id'=> Str::uuid(),
             'name' =>  "Level " . (((int) $highestAtaaPrize['level']) + 1) . " Prize",
             'image' => null,
             'required_markers_collected' => $highestAtaaPrize['required_markers_collected'] + 10,

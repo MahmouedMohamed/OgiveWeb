@@ -14,8 +14,9 @@ class CreateUserBansTable extends Migration
     public function up()
     {
         Schema::create('user_bans', function (Blueprint $table) {
-            $table->bigIncrements('id');
             $table->unsignedBigInteger('banned_user');
+            $table->uuid('id');
+            $table->primary('id');
             $table->string('tag');
             $table->boolean('active')->default(1);
             $table->dateTime('start_at');

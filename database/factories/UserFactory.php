@@ -27,6 +27,7 @@ class UserFactory extends Factory
         $availableGender = ['male','female'];
         $userName = $this->faker->unique()->name.'2';
         return [
+            'id' => Str::uuid(),
             'name' => $this->faker->name,
             'user_name' => $userName,
             'gender'=> Arr::random($availableGender),

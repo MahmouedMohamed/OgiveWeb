@@ -15,7 +15,8 @@ class MakeAtaaPrizesTable extends Migration
     public function up()
     {
         Schema::create('ataa_prizes', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->uuid('id');
+            $table->primary('id');
             $table->string('name');
             $table->string('arabic_name');
             $table->string('image')->nullable(); //if money would be nullable

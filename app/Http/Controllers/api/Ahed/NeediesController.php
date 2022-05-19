@@ -13,6 +13,7 @@ use App\Traits\ControllersTraits\UserValidator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class NeediesController extends BaseController
 {
@@ -148,6 +149,7 @@ class NeediesController extends BaseController
                 array_push($imagePaths, "/storage/" . $imagePath);
             }
             $needy = $user->createdNeedies()->create([
+                'id' => Str::uuid(),
                 'name' => $request['name'],
                 'age' => $request['age'],
                 'severity' => $request['severity'],

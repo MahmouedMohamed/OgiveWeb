@@ -13,6 +13,7 @@ use App\Exceptions\UserNotFound;
 use App\Traits\ControllersTraits\UserValidator;
 use App\Traits\ControllersTraits\NeedyValidator;
 use App\Traits\ControllersTraits\OnlineTransactionValidator;
+use Illuminate\Support\Str;
 
 class OnlineTransactionsController extends BaseController
 {
@@ -53,6 +54,7 @@ class OnlineTransactionsController extends BaseController
             $this->needyIsSatisfied($needy);
             $transaction = $user->onlinetransactions()->create([
                 'needy' => $needy->id,
+                'id'=> Str::uuid(),
                 'amount' => $request['amount'],
                 'remaining' => $request['amount']
             ]);

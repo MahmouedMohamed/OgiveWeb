@@ -14,8 +14,9 @@ class CreateNeediesMediaTable extends Migration
     public function up()
     {
         Schema::create('needies_media', function (Blueprint $table) {
-            $table->bigIncrements('id');
             $table->unsignedBigInteger('needy');
+            $table->uuid('id');
+            $table->primary('id');
             $table->string('path');
             $table->boolean('before')->default(1);
             $table->timestamps();

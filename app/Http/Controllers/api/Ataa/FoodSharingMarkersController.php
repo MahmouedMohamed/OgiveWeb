@@ -18,6 +18,7 @@ use App\Traits\ControllersTraits\FoodSharingMarkerValidator;
 use App\Traits\ControllersTraits\UserValidator;
 use App\Traits\ControllersTraits\AtaaActionHandler;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class FoodSharingMarkersController extends BaseController
 {
@@ -91,6 +92,7 @@ class FoodSharingMarkersController extends BaseController
             $this->userIsAuthorized($user, 'create', FoodSharingMarker::class);
             //Create Food Sharing Marker
             $foodSharingMarker = $user->foodSharingMarkers()->create([
+                'id'=> Str::uuid(),
                 'latitude' => $request['latitude'],
                 'longitude' => $request['longitude'],
                 'type' => $request['type'],

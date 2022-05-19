@@ -9,6 +9,13 @@ use Illuminate\Database\Eloquent\Model;
 class Consultation extends Model
 {
     use HasFactory;
+
+    public $incrementing = false;
+
+    protected $fillable = [
+        'id', 'user_id', 'description', 'image'
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

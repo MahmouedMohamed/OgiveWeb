@@ -14,9 +14,10 @@ class CreateAdoptionRequestsTable extends Migration
     public function up()
     {
         Schema::create('adoption_requests', function (Blueprint $table) {
-            $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('pet_id');
+            $table->uuid('id');
+            $table->primary('id');
             $table->string('phone_number');
             $table->string('address');
             $table->string('adoption_place')->default('House'); //Roof, House, Garden , Countryside

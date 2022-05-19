@@ -9,7 +9,10 @@ use App\Models\Ability;
 class Role extends Model
 {
     use HasFactory;
-    protected $guarded=[];
+
+    public $incrementing = false;
+
+    protected $fillable = ['id', 'name', 'label'];
 
     public function abilities()
     {

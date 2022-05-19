@@ -25,7 +25,7 @@ use App\Traits\ControllersTraits\NeedyValidator;
 use App\Traits\ControllersTraits\OfflineTransactionValidator;
 use App\Traits\ControllersTraits\UserBanValidator;
 use App\Traits\ControllersTraits\UserValidator;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class AdminController extends BaseController
 {
@@ -112,10 +112,10 @@ class AdminController extends BaseController
      * Approve Case.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param String $id
      * @return \Illuminate\Http\Response
      */
-    public function approve(Request $request, $id)
+    public function approve(Request $request, String $id)
     {
         try {
             $user = $this->userExists($request['userId']);
@@ -136,10 +136,10 @@ class AdminController extends BaseController
      * Disapprove Case.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param String $id
      * @return \Illuminate\Http\Response
      */
-    public function disapprove(Request $request, $id)
+    public function disapprove(Request $request, String $id)
     {
         try {
             $user = $this->userExists($request['userId']);
@@ -248,10 +248,10 @@ class AdminController extends BaseController
      * activate User Bans.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param int $id
+     * @param String $id
      * @return \Illuminate\Http\Response
      */
-    public function activateBan(Request $request, int $id)
+    public function activateBan(Request $request, String $id)
     {
         try {
             $user = $this->userExists($request['userId']);
@@ -272,10 +272,10 @@ class AdminController extends BaseController
      * deactivate User Bans.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param int $id
+     * @param String $id
      * @return \Illuminate\Http\Response
      */
-    public function deactivateBan(Request $request, int $id)
+    public function deactivateBan(Request $request, String $id)
     {
         try {
             $user = $this->userExists($request['userId']);
@@ -313,6 +313,7 @@ class AdminController extends BaseController
             }
             //TODO: Extend Ban if already exists & Active?
             $admin->createdBans()->create([
+                'id' => Str::uuid(),
                 'banned_user' => $bannedUser->id,
                 'tag' => $request['tag'],
                 'active' => $request['startAt'] != null ? ($request['startAt'] <= Carbon::now('GMT+2') ? 1 : 0) : 1,

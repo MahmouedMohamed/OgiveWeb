@@ -14,9 +14,10 @@ class MakeUserAtaaAcquiredPrizesTable extends Migration
     public function up()
     {
         Schema::create('user_ataa_acquired_prizes', function (Blueprint $table) {
-            $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('prize_id');
+            $table->uuid('id');
+            $table->primary('id');
             $table->timestamps();
             $table->unique(['user_id','prize_id']);
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

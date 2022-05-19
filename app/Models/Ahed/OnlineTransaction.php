@@ -9,7 +9,11 @@ use Illuminate\Database\Eloquent\Model;
 class OnlineTransaction extends Model
 {
     use HasFactory;
+
+    public $incrementing = false;
+
     protected $fillable = [
+        'id',
         'giver',
         'needy',
         'amount',

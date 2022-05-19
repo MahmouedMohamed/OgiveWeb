@@ -10,7 +10,13 @@ class Memory extends Model
 {
     use HasFactory;
 
-    protected $guarded=['createdBy'];
+    public $incrementing = false;
+
+    protected $fillable = [
+        'id', 'created_by', 'person_name', 'birth_date', 'death_date',
+        'brief', 'life_story', 'image', 'nationality',
+    ];
+
     public function author()
     {
         return $this->belongsTo(User::class,'createdBy');

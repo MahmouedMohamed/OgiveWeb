@@ -10,7 +10,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Pet extends Model
 {
     use HasFactory;
+
+    public $incrementing = false;
+
     protected $fillable = [
+        'id',
         'name',
         'age',
         'sex',

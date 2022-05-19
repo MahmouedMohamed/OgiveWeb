@@ -10,7 +10,13 @@ class ConsultationComment extends Model
 {
     use HasFactory;
 
+    public $incrementing = false;
+
     protected $table = 'consultations_comments';
+
+    protected $fillable = [
+        'id', 'user_id', 'consultation_id', 'text'
+    ];
 
     public function user()
     {

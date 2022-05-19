@@ -14,6 +14,7 @@ use App\Models\Ahed\OfflineTransaction;
 use App\Traits\ControllersTraits\NeedyValidator;
 use App\Traits\ControllersTraits\OfflineTransactionValidator;
 use App\Traits\ControllersTraits\UserValidator;
+use Illuminate\Support\Str;
 
 class OfflineTransactionsController extends BaseController
 {
@@ -50,7 +51,7 @@ class OfflineTransactionsController extends BaseController
             if (request()->input('giver') != null) {
                 $user = $this->userExists(request()->input('giver'));
                 $user->offlineTransactions()->create([
-                    'needy' => $needy->id,
+                    'id'=> Str::uuid(),
                     'amount' => $request['amount'],
                     'preferredSection' => $request['preferredSection'],
                     'address' => $request['address'],
@@ -61,7 +62,7 @@ class OfflineTransactionsController extends BaseController
                 ]);
             } else {
                 OfflineTransaction::create([
-                    'needy' => $needy->id,
+                    'id'=> Str::uuid(),
                     'amount' => $request['amount'],
                     'preferredSection' => $request['preferredSection'],
                     'address' => $request['address'],
