@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\AtaaBadge;
+use App\Models\Ataa\AtaaBadge;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
