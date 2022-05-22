@@ -98,7 +98,6 @@ prefix('breedme')->group(function () {
 Route::middleware(['api_auth'])->prefix('ahed')->group(function () {
     Route::apiResource('/needies', NeediesController::class);
     Route::get('/urgentneedies', [NeediesController::class, 'urgentIndex']);
-    Route::get('/allNeedies', [NeediesController::class, 'getAllNeedies']);
     Route::get('/neediesWithIDs', [NeediesController::class, 'getNeediesWithIDs']);
     Route::post('/needies/addImages/{id}', [NeediesController::class, 'addAssociatedImages']);
     Route::post('/needies/removeImage/{id}', [NeediesController::class, 'removeAssociatedImage']);
@@ -115,6 +114,7 @@ Route::middleware(['api_auth'])->prefix('admin')->group(function () {
     Route::get('/', [AdminController::class, 'generalAdminDashboard']);
     //**      Ahed      **//
     //* * Optimized * */
+    Route::get('/pending-needies', [AdminController::class, 'getPendingNeedies']);
     Route::post('/ahed/approve/{id}', [AdminController::class, 'approve']);
     Route::post('/ahed/disapprove/{id}', [AdminController::class, 'disapprove']);
     Route::patch('/ahed/collect', [AdminController::class, 'collectOfflineTransaction']);
@@ -126,8 +126,8 @@ Route::middleware(['api_auth'])->prefix('admin')->group(function () {
     Route::apiResource('/ataa/badge', AtaaBadgeController::class);
     Route::patch('/ataa/badge/{id}/activate', [AtaaBadgeController::class, 'activate']);
     Route::patch('/ataa/badge/{id}/deactivate', [AtaaBadgeController::class, 'deactivate']);
-    Route::post('/ataa/freezeachievment', [AdminController::class, 'freezeUserAtaaAchievements']);
-    Route::post('/ataa/defreezeachievment', [AdminController::class, 'defreezeUserAtaaAchievements']);
+    Route::post('/ataa/freeze-achievement', [AdminController::class, 'freezeUserAtaaAchievements']);
+    Route::post('/ataa/defreeze-achievement', [AdminController::class, 'defreezeUserAtaaAchievements']);
     //**      Ban      **//
     Route::get('/ban', [AdminController::class, 'getUserBans']);
     Route::post('/ban', [AdminController::class, 'addUserBan']);
