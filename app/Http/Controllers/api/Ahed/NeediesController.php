@@ -80,27 +80,6 @@ class NeediesController extends BaseController
         );  ///Cases retrieved successfully.
     }
     /**
-     * Display a listing of all Needies.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function getAllNeedies()
-    {
-        return $this->sendResponse(Needy::join('users', 'users.id', 'needies.createdBy')
-            ->join('profiles', 'users.profile', 'profiles.id')
-            ->select(
-                'needies.*',
-                'users.id as userId',
-                'users.name as userName',
-                'users.email_verified_at as userEmailVerifiedAt',
-                'profiles.image as userImage'
-            )
-            ->latest('needies.created_at')
-            ->with('mediasBefore:id,path,needy')
-            ->with('mediasAfter:id,path,needy')
-            ->paginate(8), 'تم إسترجاع البيانات بنجاح');  ///Cases retrieved successfully.
-    }
-    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response

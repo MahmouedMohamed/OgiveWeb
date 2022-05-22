@@ -62,7 +62,6 @@ class AtaaPrize extends Model
     public static function seedHigherPrize(AtaaPrize $highestAtaaPrize)
     {
         return AtaaPrize::create([
-            'createdBy' => null,
             'id'=> Str::uuid(),
             'name' =>  "Level " . (((int) $highestAtaaPrize['level']) + 1) . " Prize",
             'image' => null,
@@ -78,7 +77,6 @@ class AtaaPrize extends Model
         switch ($method) {
             case 'Create':
                 AtaaPrize::create([
-                    'createdBy' => null,
                     'name' =>  "Level 1 Prize",
                     'image' => null,
                     'required_markers_collected' => 0,

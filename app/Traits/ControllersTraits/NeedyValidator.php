@@ -83,7 +83,6 @@ trait NeedyValidator
                 break;
             case 'update':
                 $rules = [
-                    'createdBy' => 'required',
                     'name' => 'required|max:255',
                     'age' => 'required|integer|max:100',
                     'severity' => 'required|integer|min:1|max:10',
