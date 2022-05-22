@@ -126,6 +126,7 @@ Route::middleware(['api_auth'])->prefix('admin')->group(function () {
     Route::apiResource('/ataa/badge', AtaaBadgeController::class);
     Route::patch('/ataa/badge/{id}/activate', [AtaaBadgeController::class, 'activate']);
     Route::patch('/ataa/badge/{id}/deactivate', [AtaaBadgeController::class, 'deactivate']);
+    Route::get('/ataa/achievement', [AdminController::class, 'getAtaaAchievements']);
     Route::post('/ataa/freeze-achievement', [AdminController::class, 'freezeUserAtaaAchievements']);
     Route::post('/ataa/defreeze-achievement', [AdminController::class, 'defreezeUserAtaaAchievements']);
     //**      Ban      **//

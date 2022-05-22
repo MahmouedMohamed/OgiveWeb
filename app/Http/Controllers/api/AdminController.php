@@ -16,6 +16,7 @@ use App\Models\Ahed\Needy;
 use App\Models\OauthAccessToken;
 use App\Models\Ahed\OfflineTransaction;
 use App\Models\Ahed\OnlineTransaction;
+use App\Models\Ataa\AtaaAchievement;
 use App\Models\BreedMe\Pet;
 use App\Models\UserBan;
 use Carbon\Carbon;
@@ -107,7 +108,24 @@ class AdminController extends BaseController
             return $this->sendError('User Not Found');
         }
     }
-
+    /**
+     * List Ataa Achievement for All Users.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getAtaaAchievements(Request $request)
+    {
+        try {
+            $user = $this->userExists($request['userId']);
+            $this->userIsAuthorized($user, 'viewAny', AtaaAchievement::class);
+            return $this->sendResponse(AtaaAchievement::all(), 'Data Retrieved Successfully');
+        } catch (UserNotFound $e) {
+            return $this->sendError('User Not Found');
+        } catch (UserNotAuthorized $e) {
+            return $this->sendForbidden('You aren\'t authorized to show these resources.');
+        }
+    }
     /**
      * Approve Case.
      *
