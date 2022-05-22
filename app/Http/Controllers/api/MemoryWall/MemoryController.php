@@ -149,10 +149,10 @@ class MemoryController extends BaseController
      * Display the specified resource.
      *
      * @param  Request  $request
-     * @param  int  $id
+     * @param  String  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, $id)
+    public function show(Request $request, String $id)
     {
         try {
             $responseHandler = new ResponseHandler($request['language']);
@@ -178,10 +178,10 @@ class MemoryController extends BaseController
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  String  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, int $id)
+    public function update(Request $request, String $id)
     {
         try {
             $responseHandler = new ResponseHandler($request['language']);
@@ -220,10 +220,10 @@ class MemoryController extends BaseController
      * Remove the specified resource from storage.
      *
      * @param  Request  $request
-     * @param  int  $id
+     * @param  String  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, int $id)
+    public function destroy(Request $request, String $id)
     {
         try {
             $responseHandler = new ResponseHandler($request['language']);

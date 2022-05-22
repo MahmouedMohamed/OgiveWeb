@@ -79,10 +79,10 @@ class LikesController extends BaseController
      * Display the specified resource.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  String  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(int $id)
+    public function show(String $id)
     {
         return $this->sendError('Not Implemented', '', 404);
     }
@@ -91,10 +91,10 @@ class LikesController extends BaseController
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  String  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, int $id)
+    public function update(Request $request, String $id)
     {
         return $this->sendError('Not Implemented', '', 404);
     }
@@ -103,10 +103,10 @@ class LikesController extends BaseController
      * Remove the specified resource from storage.
      *
      * @param  Request  $request
-     * @param  int  $id
+     * @param  String  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, int $id)
+    public function destroy(Request $request, String $id)
     {
         try {
             $responseHandler = new ResponseHandler($request['language']);
