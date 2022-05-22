@@ -18,7 +18,7 @@ trait MemoryValidator
      * @param String $id
      * @return mixed
      */
-    public function memoryExists(String $id)
+    public function memoryExists($id)
     {
         $memory = Memory::find($id);
         if (!$memory)
