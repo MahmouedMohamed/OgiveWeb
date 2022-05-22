@@ -4,7 +4,6 @@ namespace App\Http\Controllers\api\BreedMe;
 
 use App\Exceptions\UserNotAuthorized;
 use App\Exceptions\UserNotFound;
-use App\Helpers\ResponseHandler;
 use App\Http\Controllers\api\BaseController;
 use App\Models\BreedMe\Pet;
 use App\Models\User;
@@ -26,7 +25,6 @@ class PetController extends BaseController
     public function index(Request $request)
     {
         try {
-            $responseHandler = new ResponseHandler($request['language']);
             $user = $this->userExists($request['userId']);
             $this->userIsAuthorized($user, 'viewAny', Pet::class);
             $currentPage = request()->get('page', 1);
@@ -46,9 +44,9 @@ class PetController extends BaseController
                 ''
             );  ///Cases retrieved successfully.
         } catch (UserNotFound $e) {
-            return $this->sendError($responseHandler->words['UserNotFound']);
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
-            return $this->sendForbidden($responseHandler->words['PetViewingBannedMessage']);
+            return $this->sendForbidden(__('BreedMe.PetViewingBannedMessage'));
         }
     }
 
@@ -62,12 +60,11 @@ class PetController extends BaseController
     public function store(Request $request)
     {
         try {
-            $responseHandler = new ResponseHandler($request['language']);
             $user = $this->userExists($request['createdBy']);
             //Validate Request
             $validated = $this->validatePet($request, 'store');
             if ($validated->fails()) {
-                return $this->sendError($responseHandler->words['InvalidData'], $validated->messages(), 400);   ///Invalid data
+                return $this->sendError(__('General.InvalidData'), $validated->messages(), 400);   ///Invalid data
             }
             $this->userIsAuthorized($user, 'create', Pet::class);
             $imagePath = $request['image']->store('pets', 'public');
@@ -81,11 +78,11 @@ class PetController extends BaseController
                 'nationality' => $user->nationality,
                 'status' => true,
             ]);
-            return $this->sendResponse([], $responseHandler->words['PetCreationSuccessMessage']); ///Thank You For Your Contribution!
+            return $this->sendResponse([], __('BreedMe.PetCreationSuccessMessage')); ///Thank You For Your Contribution!
         } catch (UserNotFound $e) {
-            return $this->sendError($responseHandler->words['UserNotFound']);
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
-            return $this->sendForbidden($responseHandler->words['PetCreationBannedMessage']);
+            return $this->sendForbidden(__('BreedMe.PetCreationBannedMessage'));
         }
     }
 

@@ -6,7 +6,6 @@ use App\Exceptions\MemoryNotFound;
 use App\Http\Controllers\api\BaseController;
 use App\Exceptions\UserNotAuthorized;
 use App\Exceptions\UserNotFound;
-use App\Helpers\ResponseHandler;
 use App\Models\MemoryWall\Memory;
 use App\Traits\ControllersTraits\MemoryValidator;
 use App\Traits\ControllersTraits\UserValidator;
@@ -33,7 +32,6 @@ class MemoryController extends BaseController
     public function index(Request $request)
     {
         try {
-            $responseHandler = new ResponseHandler($request['language']);
             if ($request['userId']) {
                 $user = $this->userExists($request['userId']);
                 $this->userIsAuthorized($user, 'viewAny', Memory::class);
@@ -54,7 +52,7 @@ class MemoryController extends BaseController
                     )->withCount('likes as numberOfLikes')
                         ->where('nationality', '=', $user->nationality)
                         ->paginate(8),
-                    ''
+                    __('MemoryWall.MemoryIndexSuccess')
                 );
             }
             return $this->sendResponse(
@@ -72,12 +70,14 @@ class MemoryController extends BaseController
                     ]
                 )->withCount('likes as numberOfLikes')
                     ->paginate(8),
-                ''
+                __('MemoryWall.MemoryIndexSuccess')
             );
         } catch (UserNotFound $e) {
-            return $this->sendError($responseHandler->words['UserNotFound']);
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
-            return $this->sendForbidden($responseHandler->words['MemoryViewingBannedMessage']);
+            return $this->sendForbidden(
+                __('MemoryWall.MemoryViewingBannedMessage')
+            );
         }
     }
 
@@ -89,7 +89,7 @@ class MemoryController extends BaseController
      */
     public function getTopMemories(Request $request)
     {
-        $responseHandler = new ResponseHandler($request['language']);
+        //ToDo: Get Based on Nationality
         return $this->sendResponse(
             Memory::select(
                 [
@@ -106,7 +106,7 @@ class MemoryController extends BaseController
             )->withCount('likes as numberOfLikes')
                 ->orderBy('numberOfLikes', 'desc')
                 ->take(3)->get(),
-            ''
+            __('MemoryWall.MemoryIndexSuccess')
         );
     }
     /**
@@ -118,12 +118,15 @@ class MemoryController extends BaseController
     public function store(Request $request)
     {
         try {
-            $responseHandler = new ResponseHandler($request['language']);
             $user = $this->userExists($request['createdBy']);
             //Validate Request
             $validated = $this->validateMemory($request, 'store');
             if ($validated->fails()) {
-                return $this->sendError($responseHandler->words['InvalidData'], $validated->messages(), 400);   ///Invalid data
+                return $this->sendError(
+                    __('General.InvalidData'),
+                    $validated->messages(),
+                    400
+                );   ///Invalid data
             }
             $this->userIsAuthorized($user, 'create', Memory::class);
             $imagePath = $request['image']->store('memories', 'public');
@@ -137,25 +140,23 @@ class MemoryController extends BaseController
                 'image' => "/storage/" . $imagePath,
                 'nationality' => $user->nationality,
             ]);
-            return $this->sendResponse([], $responseHandler->words['MemoryCreationSuccessMessage']); ///Thank You For Your Contribution!
+            return $this->sendResponse([], __('MemoryWall.MemoryCreationSuccessMessage')); ///Thank You For Your Contribution!
         } catch (UserNotFound $e) {
-            return $this->sendError($responseHandler->words['UserNotFound']);
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
-            return $this->sendForbidden($responseHandler->words['MemoryCreationBannedMessage']);
+            return $this->sendForbidden(__('MemoryWall.MemoryCreationBannedMessage'));
         }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  Request  $request
      * @param  String  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, String $id)
+    public function show(String $id)
     {
         try {
-            $responseHandler = new ResponseHandler($request['language']);
             $memory = $this->memoryExists($id);
             return $this->sendResponse(collect([$memory])->map(function ($memory) {
                 return [
@@ -170,7 +171,7 @@ class MemoryController extends BaseController
                 ];
             })->first(), "");
         } catch (MemoryNotFound $e) {
-            return $this->sendError($responseHandler->words['MemoryNotFound']);
+            return $this->sendError(__('MemoryWall.MemoryNotFound'));
         }
     }
 
@@ -184,11 +185,14 @@ class MemoryController extends BaseController
     public function update(Request $request, String $id)
     {
         try {
-            $responseHandler = new ResponseHandler($request['language']);
             //Validate Request
             $validated = $this->validateMemory($request, 'update');
             if ($validated->fails()) {
-                return $this->sendError($responseHandler->words['InvalidData'], $validated->messages(), 400);
+                return $this->sendError(
+                    __('General.InvalidData'),
+                    $validated->messages(),
+                    400
+                );
             }
             $memory = $this->memoryExists($id);
             $user = $this->userExists($request['userId']);
@@ -206,13 +210,13 @@ class MemoryController extends BaseController
                 'image' => $request['image'] ? "/storage/" . $imagePath : $memory->image,
                 'nationality' => $user->nationality,
             ]);
-            return $this->sendResponse([], $responseHandler->words['MemoryUpdateSuccessMessage']);
+            return $this->sendResponse([], __('MemoryWall.MemoryUpdateSuccessMessage'));
         } catch (MemoryNotFound $e) {
-            return $this->sendError($responseHandler->words['MemoryNotFound']);
+            return $this->sendError(__('MemoryWall.MemoryNotFound'));
         } catch (UserNotFound $e) {
-            return $this->sendError($responseHandler->words['UserNotFound']);
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
-            return $this->sendForbidden($responseHandler->words['MemoryUpdateForbiddenMessage']);
+            return $this->sendForbidden(__('MemoryWall.MemoryUpdateForbiddenMessage'));
         }
     }
 
@@ -226,20 +230,19 @@ class MemoryController extends BaseController
     public function destroy(Request $request, String $id)
     {
         try {
-            $responseHandler = new ResponseHandler($request['language']);
             $memory = $this->memoryExists($id);
             $user = $this->userExists($request['userId']);
             $this->userIsAuthorized($user, 'delete', $memory);
             if ($memory->image)
                 Storage::delete('public/' . substr($memory->image, 9));
             $memory->delete();
-            return $this->sendResponse([], $responseHandler->words['MemoryDeleteSuccessMessage']);  ///Needy Updated Successfully!
+            return $this->sendResponse([], __('MemoryWall.MemoryDeleteSuccessMessage'));
         } catch (MemoryNotFound $e) {
-            return $this->sendError($responseHandler->words['MemoryNotFound']);
+            return $this->sendError(__('MemoryWall.MemoryNotFound'));
         } catch (UserNotFound $e) {
-            return $this->sendError($responseHandler->words['UserNotFound']);
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
-            return $this->sendForbidden($responseHandler->words['MemoryDeletionForbiddenMessage']);
+            return $this->sendForbidden(__('MemoryWall.MemoryDeletionForbiddenMessage'));
         }
     }
 }

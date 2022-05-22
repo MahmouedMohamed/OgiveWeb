@@ -13,7 +13,6 @@ use App\Exceptions\UserNotFound;
 use App\Exceptions\UserNotAuthorized;
 use App\Models\Ataa\FoodSharingMarker;
 use Illuminate\Http\Request;
-use App\Helpers\ResponseHandler;
 use App\Traits\ControllersTraits\FoodSharingMarkerValidator;
 use App\Traits\ControllersTraits\UserValidator;
 use App\Traits\ControllersTraits\AtaaActionHandler;
@@ -32,7 +31,6 @@ class FoodSharingMarkersController extends BaseController
     public function index(Request $request)
     {
         try {
-            $responseHandler = new ResponseHandler($request['language']);
             $user = $this->userExists($request['userId']);
             $userLatitude = $request['latitude'] ?? 29.9832678;
             $userLongitude = $request['longitude'] ?? 31.2282846;
@@ -67,9 +65,9 @@ class FoodSharingMarkersController extends BaseController
                 ''
             );
         } catch (UserNotFound $e) {
-            return $this->sendError($responseHandler->words['UserNotFound']);
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
-            return $this->sendForbidden($responseHandler->words['FoodSharingMarkerViewingBannedMessage']);
+            return $this->sendForbidden(__('Ataa.FoodSharingMarkerViewingBannedMessage'));
         }
     }
 
@@ -82,17 +80,16 @@ class FoodSharingMarkersController extends BaseController
     public function store(Request $request)
     {
         try {
-            $responseHandler = new ResponseHandler($request['language']);
             //Validate Request
             $validated = $this->validateMarker($request, 'store');
             if ($validated->fails()) {
-                return $this->sendError($responseHandler->words['InvalidData'], $validated->messages(), 400);
+                return $this->sendError(__('General.InvalidData'), $validated->messages(), 400);
             }
             $user = $this->userExists(request()->input('createdBy'));
             $this->userIsAuthorized($user, 'create', FoodSharingMarker::class);
             //Create Food Sharing Marker
             $foodSharingMarker = $user->foodSharingMarkers()->create([
-                'id'=> Str::uuid(),
+                'id' => Str::uuid(),
                 'latitude' => $request['latitude'],
                 'longitude' => $request['longitude'],
                 'type' => $request['type'],
@@ -104,11 +101,11 @@ class FoodSharingMarkersController extends BaseController
             ]);
             FoodSharingMarkerCreated::dispatch($foodSharingMarker);
             $this->handleMarkerCreated($user, $foodSharingMarker);
-            return $this->sendResponse([], $responseHandler->words['FoodSharingMarkerCreationSuccessMessage']);
+            return $this->sendResponse([], __('Ataa.FoodSharingMarkerCreationSuccessMessage'));
         } catch (UserNotFound $e) {
-            return $this->sendError($responseHandler->words['UserNotFound']);
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
-            return $this->sendForbidden($responseHandler->words['FoodSharingMarkerCreationBannedMessage']);
+            return $this->sendForbidden(__('Ataa.FoodSharingMarkerCreationBannedMessage'));
         }
     }
 
@@ -122,7 +119,6 @@ class FoodSharingMarkersController extends BaseController
     public function collect(Request $request, $id)
     {
         try {
-            $responseHandler = new ResponseHandler($request['language']);
             //Check if Marker exists
             $foodSharingMarker = $this->foodSharingMarkerExists($id);
             //Check if it has been collected to prevent fake collection
@@ -132,20 +128,20 @@ class FoodSharingMarkersController extends BaseController
             //Validate Existing value
             $foodSharingMarkerExists = $request['exists'];
             if ($foodSharingMarkerExists == null || ($foodSharingMarkerExists != 1 && $foodSharingMarkerExists != 0))
-                return $this->sendError($responseHandler->words['InvalidData'], '', 400);
+                return $this->sendError(__('General.InvalidData'), '', 400);
             $foodSharingMarker->collect($foodSharingMarkerExists);
             $this->handleMarkerExistingAction($foodSharingMarker, $foodSharingMarkerExists);
             $this->handleMarkerCollected($user, $foodSharingMarker);
             FoodSharingMarkerCollected::dispatch($foodSharingMarker);
             if ($foodSharingMarkerExists == 1)
-                return $this->sendResponse([], $responseHandler->words['FoodSharingMarkerSuccessCollectExist']);
-            return $this->sendResponse([], $responseHandler->words['FoodSharingMarkerSuccessCollectNoExist']);
+                return $this->sendResponse([], __('Ataa.FoodSharingMarkerSuccessCollectExist'));
+            return $this->sendResponse([], __('Ataa.FoodSharingMarkerSuccessCollectNoExist'));
         } catch (FoodSharingMarkerNotFound $e) {
-            return $this->sendError($responseHandler->words['FoodSharingMarkerNotFound']);
+            return $this->sendError(__('Ataa.FoodSharingMarkerNotFound'));
         } catch (FoodSharingMarkerIsCollected $e) {
-            return $this->sendError($responseHandler->words['FoodSharingMarkerAlreadyCollected']);
+            return $this->sendError(__('Ataa.FoodSharingMarkerAlreadyCollected'));
         } catch (UserNotFound $e) {
-            return $this->sendError($responseHandler->words['UserNotFound']);
+            return $this->sendError(__('General.UserNotFound'));
         }
     }
 
@@ -170,11 +166,10 @@ class FoodSharingMarkersController extends BaseController
     public function update(Request $request, int $id)
     {
         try {
-            $responseHandler = new ResponseHandler($request['language']);
             //Validate Request
             $validated = $this->validateMarker($request, 'update');
             if ($validated->fails()) {
-                return $this->sendError($responseHandler->words['InvalidData'], $validated->messages(), 400);
+                return $this->sendError(__('General.InvalidData'), $validated->messages(), 400);
             }
             $foodSharingMarker = $this->foodSharingMarkerExists($id);
             $user = $this->userExists(request()->input('userId'));
@@ -190,13 +185,13 @@ class FoodSharingMarkersController extends BaseController
                 'nationality' => $user->nationality
             ]);
             FoodSharingMarkerUpdated::dispatch($foodSharingMarker);
-            return $this->sendResponse([], $responseHandler->words['FoodSharingMarkerUpdateSuccessMessage']);
+            return $this->sendResponse([], __('Ataa.FoodSharingMarkerUpdateSuccessMessage'));
         } catch (FoodSharingMarkerNotFound $e) {
-            return $this->sendError($responseHandler->words['FoodSharingMarkerNotFound']);
+            return $this->sendError(__('Ataa.FoodSharingMarkerNotFound'));
         } catch (UserNotFound $e) {
-            return $this->sendError($responseHandler->words['UserNotFound']);
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
-            return $this->sendForbidden($responseHandler->words['FoodSharingMarkerUpdateForbiddenMessage']);
+            return $this->sendForbidden(__('Ataa.FoodSharingMarkerUpdateForbiddenMessage'));
         }
     }
 
@@ -210,20 +205,19 @@ class FoodSharingMarkersController extends BaseController
     public function destroy(Request $request, int $id)
     {
         try {
-            $responseHandler = new ResponseHandler($request['language']);
             $foodSharingMarker = $this->foodSharingMarkerExists($id);
             $user = $this->userExists($request['userId']);
             $this->userIsAuthorized($user, 'delete', $foodSharingMarker);
             FoodSharingMarkerDeleted::dispatch($foodSharingMarker);
             $foodSharingMarker->delete();
             $this->handleMarkerDeleted($user);
-            return $this->sendResponse([], $responseHandler->words['FoodSharingMarkerDeleteSuccessMessage']);  ///Needy Updated Successfully!
+            return $this->sendResponse([], __('Ataa.FoodSharingMarkerDeleteSuccessMessage'));  ///Needy Updated Successfully!
         } catch (FoodSharingMarkerNotFound $e) {
-            return $this->sendError($responseHandler->words['FoodSharingMarkerNotFound']);
+            return $this->sendError(__('Ataa.FoodSharingMarkerNotFound'));
         } catch (UserNotFound $e) {
-            return $this->sendError($responseHandler->words['UserNotFound']);
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
-            return $this->sendForbidden($responseHandler->words['FoodSharingMarkerDeletionForbiddenMessage']);
+            return $this->sendForbidden(__('Ataa.FoodSharingMarkerDeletionForbiddenMessage'));
         }
     }
 }

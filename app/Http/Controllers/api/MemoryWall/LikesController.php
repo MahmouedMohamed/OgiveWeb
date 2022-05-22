@@ -6,7 +6,6 @@ use App\Exceptions\MemoryNotFound;
 use App\Http\Controllers\api\BaseController;
 use App\Exceptions\UserNotAuthorized;
 use App\Exceptions\UserNotFound;
-use App\Helpers\ResponseHandler;
 use App\Models\MemoryWall\Like;
 use App\Traits\ControllersTraits\MemoryValidator;
 use App\Traits\ControllersTraits\UserValidator;
@@ -24,7 +23,6 @@ class LikesController extends BaseController
     public function index(Request $request)
     {
         try {
-            $responseHandler = new ResponseHandler($request['language']);
             $user = $this->userExists($request['userId']);
             $this->userIsAuthorized($user, 'viewAny', Like::class);
             return $this->sendResponse(
@@ -38,9 +36,9 @@ class LikesController extends BaseController
                 ''
             );
         } catch (UserNotFound $e) {
-            return $this->sendError($responseHandler->words['UserNotFound']);
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
-            return $this->sendForbidden($responseHandler->words['LikeViewingBannedMessage']);
+            return $this->sendForbidden(__('MemoryWall.LikeViewingBannedMessage'));
         }
     }
 
@@ -53,7 +51,6 @@ class LikesController extends BaseController
     public function store(Request $request)
     {
         try {
-            $responseHandler = new ResponseHandler($request['language']);
             $user = $this->userExists($request['userId']);
             $memory = $this->memoryExists($request['memoryId']);
             $this->userIsAuthorized($user, 'create', Like::class);
@@ -65,13 +62,16 @@ class LikesController extends BaseController
                     'memory_id' => $memory->id
                 ]);
             }
-            return $this->sendResponse([], $responseHandler->words['LikeCreationSuccessMessage']); ///Thank You For Your Contribution!
+            return $this->sendResponse(
+                [],
+                __('MemoryWall.LikeCreationSuccessMessage'),
+            ); ///Thank You For Your Contribution!
         } catch (UserNotFound $e) {
-            return $this->sendError($responseHandler->words['UserNotFound']);
+            return $this->sendError(__('General.UserNotFound'));
         } catch (MemoryNotFound $e) {
-            return $this->sendError($responseHandler->words['MemoryNotFound']);
+            return $this->sendError(__('MemoryWall.MemoryNotFound'));
         } catch (UserNotAuthorized $e) {
-            return $this->sendForbidden($responseHandler->words['LikeCreationBannedMessage']);
+            return $this->sendForbidden(__('MemoryWall.LikeCreationBannedMessage'));
         }
     }
 
@@ -109,7 +109,6 @@ class LikesController extends BaseController
     public function destroy(Request $request, String $id)
     {
         try {
-            $responseHandler = new ResponseHandler($request['language']);
             $memory = $this->memoryExists($id);
             $user = $this->userExists($request['userId']);
             $like = Like::where('user_id', '=', $user->id)
@@ -118,13 +117,18 @@ class LikesController extends BaseController
                 $this->userIsAuthorized($user, 'delete', $like->first());
                 $like->delete();
             }
-            return $this->sendResponse([], $responseHandler->words['LikeDeleteSuccessMessage']);  ///Needy Updated Successfully!
+            return $this->sendResponse(
+                [],
+                __('MemoryWall.LikeDeleteSuccessMessage'),
+            );
         } catch (MemoryNotFound $e) {
-            return $this->sendError($responseHandler->words['MemoryNotFound']);
+            return $this->sendError(
+                __('MemoryWall.MemoryNotFound'),
+            );
         } catch (UserNotFound $e) {
-            return $this->sendError($responseHandler->words['UserNotFound']);
+            return $this->sendError(__('General.UserNotFound'),);
         } catch (UserNotAuthorized $e) {
-            return $this->sendForbidden($responseHandler->words['LikeDeletionForbiddenMessage']);
+            return $this->sendForbidden(__('MemoryWall.LikeDeletionForbiddenMessage'),);
         }
     }
 }
