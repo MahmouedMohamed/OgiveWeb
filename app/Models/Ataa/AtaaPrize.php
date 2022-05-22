@@ -63,7 +63,9 @@ class AtaaPrize extends Model
     {
         return AtaaPrize::create([
             'id'=> Str::uuid(),
+            'created_by' => null,
             'name' =>  "Level " . (((int) $highestAtaaPrize['level']) + 1) . " Prize",
+            'arabic_name' => "جائزة مستوي " . (((int) $highestAtaaPrize['level']) + 1),
             'image' => null,
             'required_markers_collected' => $highestAtaaPrize['required_markers_collected'] + 10,
             'required_markers_posted' => $highestAtaaPrize['required_markers_posted'] + 10,
@@ -77,7 +79,10 @@ class AtaaPrize extends Model
         switch ($method) {
             case 'Create':
                 AtaaPrize::create([
+                    'id'=> Str::uuid(),
+                    'created_by' => null,
                     'name' =>  "Level 1 Prize",
+                    'arabic_name' => "جائزة مستوي 1",
                     'image' => null,
                     'required_markers_collected' => 0,
                     'required_markers_posted' => 5,
@@ -88,7 +93,8 @@ class AtaaPrize extends Model
                 break;
             case 'Collect':
                 AtaaPrize::create([
-                    'createdBy' => null,
+                    'id'=> Str::uuid(),
+                    'created_by' => null,
                     'name' =>  "Level 1 Prize",
                     'image' => null,
                     'required_markers_collected' => 5,

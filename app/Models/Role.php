@@ -16,10 +16,11 @@ class Role extends Model
 
     public function abilities()
     {
-        return $this->belongsToMany(Ability::class);
+        return $this->belongsToMany(Ability::class,'ability_role')->withTimestamps();
     }
 
-    public function allowTo($ability){
-        $this->abilities()->sync($ability,false);
+    public function allowTo($ability)
+    {
+        $this->abilities()->attach($ability);
     }
 }

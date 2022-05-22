@@ -16,7 +16,7 @@ class NeediesMediasObserver
      */
     public function created(NeedyMedia $needyMedia)
     {
-        $needy = Needy::find($needyMedia->needy);
+        $needy = Needy::find($needyMedia->needy)->first();
         $index = 1;
         if ($needy->severity >= 7) {
             while (true) {
@@ -46,7 +46,7 @@ class NeediesMediasObserver
      */
     public function updated(NeedyMedia $needyMedia)
     {
-        $needy = Needy::find($needyMedia->needy);
+        $needy = Needy::find($needyMedia->needy)->first();
         $index = 1;
         if ($needy->severity >= 7) {
             while (true) {
@@ -76,7 +76,7 @@ class NeediesMediasObserver
      */
     public function deleted(NeedyMedia $needyMedia)
     {
-        $needy = Needy::find($needyMedia->needy);
+        $needy = Needy::find($needyMedia->needy)->first();
         $index = 1;
         if ($needy->severity >= 7) {
             while (true) {

@@ -15,6 +15,6 @@ class Ability extends Model
     protected $fillable = ['id', 'name',];
 
     public function roles(){
-        return $this->hasMany(Role::class);
+        return $this->belongsToMany(Role::class,'ability_role')->withTimestamps();
     }
 }
