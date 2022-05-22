@@ -30,8 +30,8 @@ class LikesController extends BaseController
             return $this->sendResponse(
                 $user->likes()->with('memory')->select(
                     [
-                        'userId',
-                        'memoryId'
+                        'user_id',
+                        'memory_id'
                     ]
                 )
                     ->paginate(8),
@@ -57,12 +57,12 @@ class LikesController extends BaseController
             $user = $this->userExists($request['userId']);
             $memory = $this->memoryExists($request['memoryId']);
             $this->userIsAuthorized($user, 'create', Like::class);
-            $like = Like::where('userId', '=', $user->id)
-                ->where('memoryId', '=', $memory->id)
+            $like = Like::where('user_id', '=', $user->id)
+                ->where('memory_id', '=', $memory->id)
                 ->first();
             if (!$like) {
                 $user->likes()->create([
-                    'memoryId' => $memory->id
+                    'memory_id' => $memory->id
                 ]);
             }
             return $this->sendResponse([], $responseHandler->words['LikeCreationSuccessMessage']); ///Thank You For Your Contribution!
@@ -112,8 +112,8 @@ class LikesController extends BaseController
             $responseHandler = new ResponseHandler($request['language']);
             $memory = $this->memoryExists($id);
             $user = $this->userExists($request['userId']);
-            $like = Like::where('userId', '=', $user->id)
-                ->where('memoryId', '=', $memory->id);
+            $like = Like::where('user_id', '=', $user->id)
+                ->where('memory_id', '=', $memory->id);
             if ($like->first() != null) {
                 $this->userIsAuthorized($user, 'delete', $like->first());
                 $like->delete();
