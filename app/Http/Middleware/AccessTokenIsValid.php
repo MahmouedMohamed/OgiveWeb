@@ -3,22 +3,15 @@
 namespace App\Http\Middleware;
 
 use App\Models\OauthAccessToken;
+use App\Traits\ApiResponse;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class AccessTokenIsValid
 {
-    public function sendForbidden($message)
-    {
-        $response = [
-            'Err_Flag' => true,
-            'Err_Desc' => $message,
-        ];
+    use ApiResponse;
 
-
-        return response()->json($response, 403);
-    }
     public function isValidAccessToken($accessToken, $appType)
     {
         //ToDo: Check if accessToken is specified for this appType
