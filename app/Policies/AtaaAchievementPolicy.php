@@ -22,7 +22,8 @@ class AtaaAchievementPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return (($this->hasAbility($user, AvailableAbilities::ViewAtaaAchievement)
+            && $this->hasNoBan($user, BanTypes::ViewAtaaAchievement)));
     }
 
     /**
