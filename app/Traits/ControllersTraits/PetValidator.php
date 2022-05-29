@@ -5,13 +5,11 @@ namespace App\Traits\ControllersTraits;
 use App\Models\BreedMe\Pet;
 use App\Exceptions\PetNotFound;
 use App\Models\BreedMe\AvailablePetTypes;
-use App\Traits\ValidatorLanguagesSupport;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
 trait PetValidator
 {
-    use ValidatorLanguagesSupport;
 
     /**
      * Returns If Pet exists or not.
@@ -55,9 +53,6 @@ trait PetValidator
                 ];
                 break;
         }
-        $messages = [];
-        if ($request['language'] != null)
-            $messages = $this->getValidatorMessagesBasedOnLanguage($request['language']);
-        return Validator::make($request->all(), $rules, $messages);
+        return Validator::make($request->all(), $rules);
     }
 }

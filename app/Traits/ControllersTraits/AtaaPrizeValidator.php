@@ -5,13 +5,11 @@ namespace App\Traits\ControllersTraits;
 use App\Exceptions\AtaaPrizeCreationActionNotFound;
 use App\Exceptions\AtaaPrizeNotFound;
 use App\Models\Ataa\AtaaPrize;
-use App\Traits\ValidatorLanguagesSupport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 trait AtaaPrizeValidator
 {
-    use ValidatorLanguagesSupport;
 
     /**
      * Returns If Online Transaction exists or not.
@@ -66,9 +64,6 @@ trait AtaaPrizeValidator
             'to' => 'date|after:from',
             'level' => 'required|integer|min:1',
         ];
-        $messages = [];
-        if ($request['language'] != null)
-            $messages = $this->getValidatorMessagesBasedOnLanguage($request['language']);
-        return Validator::make($request->all(), $rules, $messages);
+        return Validator::make($request->all(), $rules);
     }
 }

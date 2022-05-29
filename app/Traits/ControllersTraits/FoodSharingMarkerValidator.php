@@ -5,13 +5,11 @@ namespace App\Traits\ControllersTraits;
 use App\Models\Ataa\FoodSharingMarker;
 use App\Exceptions\FoodSharingMarkerNotFound;
 use App\Exceptions\FoodSharingMarkerIsCollected;
-use App\Traits\ValidatorLanguagesSupport;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
 trait FoodSharingMarkerValidator
 {
-    use ValidatorLanguagesSupport;
 
     /**
      * Returns If FoodSharingMarker exists or not.
@@ -64,9 +62,6 @@ trait FoodSharingMarkerValidator
                 ];
                 break;
         }
-        $messages = [];
-        if ($request['language'] != null)
-            $messages = $this->getValidatorMessagesBasedOnLanguage($request['language']);
-        return Validator::make($request->all(), $rules, $messages);
+        return Validator::make($request->all(), $rules);
     }
 }

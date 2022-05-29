@@ -6,12 +6,10 @@ use App\Exceptions\LoginParametersNotFound;
 use App\Exceptions\UserNotAuthorized;
 use App\Models\BanTypes;
 use App\Models\User;
-use App\Traits\ValidatorLanguagesSupport;
 use Illuminate\Http\Request;
 
 trait LoginValidator
 {
-    use ValidatorLanguagesSupport;
 
     /**
      * Returns If FoodSharingMarker exists or not.

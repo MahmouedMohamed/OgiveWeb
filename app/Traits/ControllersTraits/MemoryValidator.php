@@ -4,13 +4,11 @@ namespace App\Traits\ControllersTraits;
 
 use App\Models\MemoryWall\Memory;
 use App\Exceptions\MemoryNotFound;
-use App\Traits\ValidatorLanguagesSupport;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
 trait MemoryValidator
 {
-    use ValidatorLanguagesSupport;
 
     /**
      * Returns If Memory exists or not.
@@ -52,9 +50,6 @@ trait MemoryValidator
                 ];
                 break;
         }
-        $messages = [];
-        if ($request['language'] != null)
-            $messages = $this->getValidatorMessagesBasedOnLanguage($request['language']);
-        return Validator::make($request->all(), $rules, $messages);
+        return Validator::make($request->all(), $rules);
     }
 }

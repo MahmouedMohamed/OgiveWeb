@@ -5,13 +5,11 @@ namespace App\Traits\ControllersTraits;
 use App\Exceptions\OnlineTransactionNotFound;
 use App\Models\Ahed\CaseType;
 use App\Models\Ahed\OnlineTransaction;
-use App\Traits\ValidatorLanguagesSupport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 trait OnlineTransactionValidator
 {
-    use ValidatorLanguagesSupport;
 
     /**
      * Returns If Online Transaction exists or not.
@@ -33,9 +31,6 @@ trait OnlineTransactionValidator
             'needy' => 'required|max:255',
             'amount' => 'required|numeric|min:1',
         ];
-        $messages = [];
-        if ($request['language'] != null)
-            $messages = $this->getValidatorMessagesBasedOnLanguage($request['language']);
-        return Validator::make($request->all(), $rules, $messages);
+        return Validator::make($request->all(), $rules);
     }
 }
