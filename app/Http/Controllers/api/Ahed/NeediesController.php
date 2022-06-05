@@ -45,8 +45,8 @@ class NeediesController extends BaseController
                     ->where('severity', '<', '7')
                     ->paginate(8);
             }),
-            'تم إسترجاع البيانات بنجاح'
-        );  ///Cases retrieved successfully.
+            __('General.DataRetrievedSuccessMessage')
+        );
     }
 
     /**
@@ -76,8 +76,8 @@ class NeediesController extends BaseController
                     ->where('severity', '>=', '7')
                     ->paginate(8);
             }),
-            'تم إسترجاع البيانات بنجاح'
-        );  ///Cases retrieved successfully.
+            __('General.DataRetrievedSuccessMessage')
+        );
     }
     /**
      * Display a listing of the resource.
@@ -102,8 +102,8 @@ class NeediesController extends BaseController
                 ->where('approved', '=', 1)
                 ->whereIn('id', $request['ids'])
                 ->get(),
-            'تم إسترجاع البيانات بنجاح'
-        );  ///Cases retrieved successfully.
+            __('General.DataRetrievedSuccessMessage')
+        );
     }
     /**
      * Store a newly created resource in storage.
@@ -117,7 +117,7 @@ class NeediesController extends BaseController
             //Validate Request
             $validated = $this->validateNeedy($request, 'store');
             if ($validated->fails()) {
-                return $this->sendError('خطأ في البيانات', $validated->messages(), 400);   ///Invalid data
+                return $this->sendError(__('General.InvalidData'), $validated->messages(), 400);   ///Invalid data
             }
             $user = $this->userExists($request['createdBy']);
             $this->userIsAuthorized($user, 'create', Needy::class);
@@ -139,11 +139,11 @@ class NeediesController extends BaseController
             ]);
             $needy->updateUrl();
             $needy->addImages($imagePaths);
-            return $this->sendResponse([], 'شكراً لمساهتمك القيمة'); ///Thank You For Your Contribution!
+            return $this->sendResponse([], __('Ahed.NeediesCreationSuccessMessage'));
         } catch (UserNotFound $e) {
-            return $this->sendError('المستخدم غير موجود');  ///User Not Found
+            return $this->sendError(__('General.UserNotFound'));  ///User Not Found
         } catch (UserNotAuthorized $e) {
-            return $this->sendForbidden('يبدو أنك محظور من إنشاء أي حالة');
+            return $this->sendForbidden(__('Ahed.NeediesCreationBannedMessage'));
         }
     }
 
@@ -169,9 +169,9 @@ class NeediesController extends BaseController
                 ->where('needies.id', '=', $id)
                 ->with('mediasBefore:id,path,needy')
                 ->with('mediasAfter:id,path,needy')
-                ->first(), 'تم إسترجاع البيانات بنجاح'); ///Data Retrieved Successfully!
+                ->first(), __('General.DataRetrievedSuccessMessage')); ///Data Retrieved Successfully!
         } catch (NeedyNotFound $e) {
-            return $this->sendError('الحالة غير موجودة');   ///Case Not Found
+            return $this->sendError(__('Ahed.NeedyNotFound'));   ///Case Not Found
         }
     }
 
@@ -194,7 +194,7 @@ class NeediesController extends BaseController
             //Validate Request
             $validated = $this->validateNeedy($request, 'update');
             if ($validated->fails()) {
-                return $this->sendError('خطأ في البيانات', $validated->messages(), 400);   ///Invalid data
+                return $this->sendError(__('General.InvalidData'), $validated->messages(), 400);
             }
             //Update
             $needy->update([
@@ -206,13 +206,13 @@ class NeediesController extends BaseController
                 'need' => $request['need'],
                 'address' => $request['address'],
             ]);
-            return $this->sendResponse([], 'تم تعديل الحالة بنجاح');  ///Needy Updated Successfully!
+            return $this->sendResponse([], __('Ahed.NeediesUpdateSuccessMessage'));
         } catch (NeedyNotFound $e) {
-            return $this->sendError('الحالة غير موجودة'); ///Case Not Found
+            return $this->sendError(__('Ahed.NeedyNotFound'));
         } catch (UserNotFound $e) {
-            return $this->sendError('المستخدم غير موجود');  ///User Not Found
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
-            return $this->sendForbidden('أنت لا تملك صلاحية تعديل الحالة');  ///You aren\'t authorized to edit this needy.
+            return $this->sendForbidden(__('Ahed.NeediesUpdateForbiddenMessage'));
         }
     }
     /**
@@ -234,7 +234,7 @@ class NeediesController extends BaseController
             //Validate Request
             $validated = $this->validateNeedy($request, 'addImage');
             if ($validated->fails()) {
-                return $this->sendError('خطأ في البيانات', $validated->messages(), 400);   ///Invalid data
+                return $this->sendError(__('General.InvalidData'), $validated->messages(), 400);
             }
             $images = $request['images'];
             $imagePaths = array();
@@ -243,13 +243,13 @@ class NeediesController extends BaseController
                 array_push($imagePaths, "/storage/" . $imagePath);
             }
             $needy->addImages($imagePaths, $request['before']);
-            return $this->sendResponse([], 'تمت إضافة الوسائط بنجاح');   ///Images Added successfully!
+            return $this->sendResponse([], __('Ahed.NeedyMediaCreationSuccessMessage'));
         } catch (NeedyNotFound $e) {
-            return $this->sendError('الحالة غير موجودة'); ///Case Not Found
+            return $this->sendError(__('Ahed.NeedyNotFound'));
         } catch (UserNotFound $e) {
-            return $this->sendError('المستخدم غير موجود');  ///User Not Found
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
-            return $this->sendForbidden('أنت لا تملك صلاحية تعديل الحالة');  ///You aren\'t authorized to edit this needy.
+            return $this->sendForbidden(__('Ahed.NeediesUpdateForbiddenMessage'));
         }
     }
     /**
@@ -272,15 +272,15 @@ class NeediesController extends BaseController
             $needyMedia = $this->needyMediaExists($needy, $request['imageId']);
             Storage::delete('public/' . substr($needyMedia->path, 9));
             $needyMedia->delete();
-            return $this->sendResponse([], 'تم إزالة الوسائط بنجاح');  ///Image Deleted successfully!
+            return $this->sendResponse([], __('Ahed.NeedyMediaDeleteSuccessMessage'));
         } catch (NeedyNotFound $e) {
-            return $this->sendError('الحالة غير موجودة'); ///Case Not Found
+            return $this->sendError(__('Ahed.NeedyNotFound'));
         } catch (UserNotFound $e) {
-            return $this->sendError('المستخدم غير موجود');  ///User Not Found
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
-            return $this->sendForbidden('أنت لا تملك صلاحية تعديل الحالة');  ///You aren\'t authorized to edit this needy.
+            return $this->sendForbidden(__('Ahed.NeediesUpdateForbiddenMessage'));
         } catch (NeedyMediaNotFound $e) {
-            return $this->sendError('لم يتم العثور علي هذة الوسائط');   ///Needy Media Not Found
+            return $this->sendError(__('Ahed.NeedyMediaNotFound'));
         }
     }
     /**
@@ -302,15 +302,13 @@ class NeediesController extends BaseController
             //Remove images from disk before deleting to save storage
             $needy->removeMedia();
             $needy->delete();
-            return $this->sendResponse([], 'تم إزالة الحالة بنجاح');  ///Needy Deleted successfully!
+            return $this->sendResponse([], __('Ahed.NeediesDeleteSuccessMessage'));
         } catch (NeedyNotFound $e) {
-            return $this->sendError('الحالة غير موجودة'); ///Case Not Found
+            return $this->sendError(__('Ahed.NeedyNotFound'));
         } catch (UserNotFound $e) {
-            return $this->sendError('المستخدم غير موجود');  ///User Not Found
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
-            return $this->sendForbidden('أنت لا تملك صلاحية إزالة الحالة');  ///You aren\'t authorized to delete this needy.
-        } catch (NeedyMediaNotFound $e) {
-            return $this->sendError('لم يتم العثور علي هذة الوسائط');   ///Needy Media Not Found
+            return $this->sendForbidden(__('Ahed.NeediesDeletionForbiddenMessage'));
         }
     }
 }
