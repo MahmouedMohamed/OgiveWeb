@@ -20,7 +20,7 @@ return [
     'TransactionUpdateSuccessMessage' => 'تم تعديل التعامل بنجاح',
     'TransactionDeleteSuccessMessage' => 'تم إزالة التعامل بنجاح',
     'TransactionNotFound' => 'هذا التعامل غير موجود',
-    'TransactionCreationForbiddenMessage' => 'يبدو أنك محظور من إنشاء أي تعامل جديد',
+    'TransactionCreationBannedMessage' => 'يبدو أنك محظور من إنشاء أي تعامل جديد',
     'TransactionViewingBannedMessage' => 'أنت لا تملك صلاحية عرض هذا التعامل',
     'TransactionUpdateForbiddenMessage' => 'أنت لا تملك صلاحية تعديل ذلك التعامل',
     'TransactionDeletionForbiddenMessage' => 'أنت لا تملك صلاحية إزالة ذلك التعامل',
