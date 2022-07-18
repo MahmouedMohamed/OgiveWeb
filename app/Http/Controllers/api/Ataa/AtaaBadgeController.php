@@ -51,7 +51,7 @@ class AtaaBadgeController extends BaseController
         } catch (UserNotFound $e) {
             return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
-            return $this->sendForbidden('You aren\'t authorized to view these badges.');
+            return $this->sendForbidden(__('Ataa.BadgeViewForbiddenMessage'));
         }
     }
 
@@ -81,7 +81,7 @@ class AtaaBadgeController extends BaseController
         } catch (UserNotFound $e) {
             return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
-            return $this->sendForbidden('You aren\'t authorized to view these badges.');
+            return $this->sendForbidden(__('Ataa.BadgeViewForbiddenMessage'));
         }
     }
 
@@ -112,11 +112,11 @@ class AtaaBadgeController extends BaseController
                 'description' => $request['description'],
                 'active' => $request['active'] ? $request['active'] : 1,
             ]);
-            return $this->sendResponse([], 'Ataa Badge Created Successfully!');
+            return $this->sendResponse([], __('Ataa.BadgeCreationSuccessMessage'));
         } catch (UserNotFound $e) {
             return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
-            return $this->sendForbidden('You aren\'t authorized to create a Badge.');
+            return $this->sendForbidden(__('Ataa.BadgeCreateForbiddenMessage'));
         } catch (Exception $e) {
             return $this->sendError('Something went wrong', [], 500);
         }
@@ -136,13 +136,13 @@ class AtaaBadgeController extends BaseController
             $badge = $this->badgeExists($id);
             $this->userIsAuthorized($user, 'activate', $badge);
             $badge->activate();
-            return $this->sendResponse([], 'Badge Activated Successfully!');
+            return $this->sendResponse([], __('Ataa.BadgeActivateSuccessMessage'));
         } catch (AtaaBadgeNotFound $e) {
-            return $this->sendError('Badge Not Found');
+            return $this->sendError(__('Ataa.BadgeNotFound'));
         } catch (UserNotFound $e) {
             return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
-            return $this->sendForbidden('You aren\'t authorized to activate this badge.');
+            return $this->sendForbidden(__('Ataa.BadgeActivateForbiddenMessage'));
         }
     }
     /**
@@ -159,13 +159,13 @@ class AtaaBadgeController extends BaseController
             $badge = $this->badgeExists($id);
             $this->userIsAuthorized($user, 'deactivate', $badge);
             $badge->deactivate();
-            return $this->sendResponse([], 'Badge Deactivated Successfully!');
+            return $this->sendResponse([], __('Ataa.BadgeDeactivateSuccessMessage'));
         } catch (AtaaBadgeNotFound $e) {
-            return $this->sendError('Badge Not Found');
+            return $this->sendError(__('Ataa.BadgeNotFound'));
         } catch (UserNotFound $e) {
             return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
-            return $this->sendForbidden('You aren\'t authorized to deactivate this badge.');
+            return $this->sendForbidden(__('Ataa.BadgeDeactivateForbiddenMessage'));
         }
     }
 
