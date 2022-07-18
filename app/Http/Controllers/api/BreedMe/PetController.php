@@ -117,7 +117,7 @@ class PetController extends BaseController
         // if (!empty($request['user_id'])) {
         //     $user = User::find(request()->input('user_id'));
         //     if (!$user) {
-        //         return $this->sendError('User Not Found');
+        //         return $this->sendError(__('General.UserNotFound));
         //     }
         // }
         $pet = Pet::find($pet->id);

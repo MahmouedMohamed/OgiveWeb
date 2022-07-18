@@ -62,7 +62,7 @@ class FoodSharingMarkersController extends BaseController
                     ->havingRaw('distance < 100')
                     ->take(100)
                     ->get(),
-                ''
+                __('General.DataRetrievedSuccessMessage')
             );
         } catch (UserNotFound $e) {
             return $this->sendError(__('General.UserNotFound'));

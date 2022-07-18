@@ -103,9 +103,9 @@ class AdminController extends BaseController
                 'BreedMe' => [
                     'NumberOfPets' => $pets->count()
                 ],
-            ], 'Data Retrieved Successfully!');
+            ], __('General.DataRetrievedSuccessMessage'));
         } catch (UserNotFound $e) {
-            return $this->sendError('User Not Found');
+            return $this->sendError(__('General.UserNotFound'));
         }
     }
     /**
@@ -121,7 +121,7 @@ class AdminController extends BaseController
             $this->userIsAuthorized($user, 'viewAny', AtaaAchievement::class);
             return $this->sendResponse(AtaaAchievement::all(), 'Data Retrieved Successfully');
         } catch (UserNotFound $e) {
-            return $this->sendError('User Not Found');
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden('You aren\'t authorized to show these resources.');
         }
@@ -142,7 +142,7 @@ class AdminController extends BaseController
             $needy->approve();
             return $this->sendResponse([], 'Needy Approved Successfully!');
         } catch (UserNotFound $e) {
-            return $this->sendError('User Not Found');
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden('You aren\'t authorized to approve this needy.');
         } catch (NeedyNotFound $e) {
@@ -166,7 +166,7 @@ class AdminController extends BaseController
             $needy->disapprove();
             return $this->sendResponse([], 'Needy Disapprove Successfully!');
         } catch (UserNotFound $e) {
-            return $this->sendError('User Not Found');
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden('You aren\'t authorized to disapprove this needy.');
         } catch (NeedyNotFound $e) {
@@ -189,7 +189,7 @@ class AdminController extends BaseController
             $offlinetransaction->collect();
             return $this->sendResponse([], 'Transaction Collected Successfully!');
         } catch (UserNotFound $e) {
-            return $this->sendError('User Not Found');
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden('You aren\'t authorized to collect this transaction.');
         } catch (OfflineTransactionNotFound $e) {
@@ -212,7 +212,7 @@ class AdminController extends BaseController
             $user->ataaAchievement->freeze();
             return $this->sendResponse([], 'User Achievement Freezed Successfully!');
         } catch (UserNotFound $e) {
-            return $this->sendError('User Not Found');
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden('You aren\'t authorized to freeze this user achievement.');
         } catch (AtaaAchievementNotFound $e) {
@@ -235,7 +235,7 @@ class AdminController extends BaseController
             $user->ataaAchievement->defreeze();
             return $this->sendResponse([], 'User Achievement Defreezed Successfully!');
         } catch (UserNotFound $e) {
-            return $this->sendError('User Not Found');
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden('You aren\'t authorized to defreeze this user achievement.');
         } catch (AtaaAchievementNotFound $e) {
@@ -256,7 +256,7 @@ class AdminController extends BaseController
             $this->userIsAuthorized($user, 'viewAny', UserBan::class);
             return $this->sendResponse(UserBan::all(), 'User Bans Retrieved Successfully');
         } catch (UserNotFound $e) {
-            return $this->sendError('User Not Found');
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden('You aren\'t authorized to see these resources.');
         }
@@ -280,7 +280,7 @@ class AdminController extends BaseController
         } catch (UserBanNotFound $e) {
             return $this->sendError('User Ban doesn\'t exist');
         } catch (UserNotFound $e) {
-            return $this->sendError('User Not Found');
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden('You aren\'t authorized to see these resources.');
         }
@@ -304,7 +304,7 @@ class AdminController extends BaseController
         } catch (UserBanNotFound $e) {
             return $this->sendError('User Ban doesn\'t exist');
         } catch (UserNotFound $e) {
-            return $this->sendError('User Not Found');
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden('You aren\'t authorized to see these resources.');
         }
@@ -327,7 +327,7 @@ class AdminController extends BaseController
             }
             $validated = $this->validateUserBan($request);
             if ($validated->fails()) {
-                return $this->sendError('Invalid data', $validated->messages(), 400);
+                return $this->sendError(__('General.InvalidData'), $validated->messages(), 400);
             }
             //TODO: Extend Ban if already exists & Active?
             $admin->createdBans()->create([
@@ -342,7 +342,7 @@ class AdminController extends BaseController
         } catch (UserBanNotFound $e) {
             return $this->sendError('User Ban doesn\'t exist');
         } catch (UserNotFound $e) {
-            return $this->sendError('User Not Found');
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden('You aren\'t authorized to see these resources.');
         }
@@ -376,7 +376,7 @@ class AdminController extends BaseController
             'file' => 'required|mimes:csv,txt',
         ]);
         if ($validated->fails()) {
-            return $this->sendError('Invalid data', $validated->messages(), 400);
+            return $this->sendError(__('General.InvalidData'), $validated->messages(), 400);
         }
         $now = Carbon::now()->toDateTimeString();
         try {
@@ -413,7 +413,7 @@ class AdminController extends BaseController
         } catch (NotSupportedType $e) {
             return $this->sendError('This type isn\'t supported');
         } catch (UserNotFound $e) {
-            return $this->sendError('User Not Found');
+            return $this->sendError(__('General.UserNotFound'));
         } catch (NeedyNotFound $e) {
             return $this->sendError('Needy Not Found');
         } catch (Exception $e) {

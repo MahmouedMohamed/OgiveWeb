@@ -57,7 +57,7 @@ class AtaaAchievementController extends BaseController
                 'latest_badge' => $latestBadgeAcquired
             ];
 
-            return $this->sendResponse($response, 'User Achievement Returned Successfully');
+            return $this->sendResponse($response, __('General.DataRetrievedSuccessMessage'));
         } catch (UserNotFound $e) {
             return $this->sendError(__('General.UserNotFound'));
         } catch (AtaaAchievementNotFound $e) {

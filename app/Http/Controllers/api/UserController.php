@@ -47,7 +47,7 @@ class UserController extends BaseController
                 $this->content['user'] = Auth::user();
                 $profile = Profile::findOrFail(Auth::user()->profile_id);
                 $this->content['profile'] = $profile;
-                return $this->sendResponse($this->content, 'Data Retrieved Successfully');
+                return $this->sendResponse($this->content, __('General.DataRetrievedSuccessMessage'));
             } else {
                 return $this->sendError('The email or password is incorrect.');
             }
@@ -68,7 +68,7 @@ class UserController extends BaseController
         $data = request()->all();
         $validated = $this->validateUser($request);
         if ($validated->fails()) {
-            return $this->sendError('Invalid data', $validated->messages(), 400);
+            return $this->sendError(__('General.InvalidData'), $validated->messages(), 400);
         }
         $profile = Profile::create([
             'id' => Str::uuid()
@@ -184,7 +184,7 @@ class UserController extends BaseController
 
         $validated = $this->validateImage($request);
         if ($validated->fails())
-            return $this->sendError('Invalid data', $validated->messages(), 400);
+            return $this->sendError(__('General.InvalidData'), $validated->messages(), 400);
 
         $profile = Profile::find($user->profile_id);
         if ($profile->image == null) {
@@ -209,7 +209,7 @@ class UserController extends BaseController
 
         $validated = $this->validateImage($request);
         if ($validated->fails())
-            return $this->sendError('Invalid data', $validated->messages(), 400);
+            return $this->sendError(__('General.InvalidData'), $validated->messages(), 400);
 
         $profile = Profile::find($user->profile_id);
         if ($profile->cover == null) {
