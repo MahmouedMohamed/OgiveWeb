@@ -23,6 +23,10 @@ class Pet extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function userProfile()
+    {
+        return $this->belongsTo(Profile::class,'user_id');
+    }
     public function adoptionRequests()
     {
         return $this->hasMany(AdoptionRequest::class);

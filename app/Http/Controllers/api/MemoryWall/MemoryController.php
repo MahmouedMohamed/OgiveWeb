@@ -49,7 +49,7 @@ class MemoryController extends BaseController
                         ]
                     )->withCount('likes')
                         ->where('nationality', '=', $user->nationality)
-                        ->paginate(8),
+                        ->paginate(8)->with('likes'),
                     ''
                 );
             }
@@ -65,7 +65,7 @@ class MemoryController extends BaseController
                         'created_at',
                         DB::raw('CAST(DATEDIFF(deathDate,birthDate) / 365 AS int) as age'),
                     ]
-                )->withCount('likes')
+                )->withCount('likes')->with('likes')
                     ->paginate(8),
                 ''
             );

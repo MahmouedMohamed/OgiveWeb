@@ -103,7 +103,7 @@ function MainPage() {
                             <Card className={classes.card}>
                                 <CardMedia
                                     className={classes.cardMedia}
-                                    image="https://source.unsplash.com/random"
+                                    image={pet.image}
                                     title="Image title"
                                 />
                                 <CardContent className={classes.cardContent}>
