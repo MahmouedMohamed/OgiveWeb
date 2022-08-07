@@ -51,13 +51,8 @@ class MemoryController extends BaseController
                         ]
                     )->withCount('likes as numberOfLikes')
                         ->where('nationality', '=', $user->nationality)
-<<<<<<< HEAD
-                        ->paginate(8)->with('likes'),
-                    ''
-=======
                         ->paginate(8),
                     __('MemoryWall.MemoryIndexSuccess')
->>>>>>> e1aab632cc2154f9855ab50b8049342f47e988c6
                 );
             }
             return $this->sendResponse(
@@ -73,11 +68,7 @@ class MemoryController extends BaseController
                         'created_at',
                         DB::raw('CAST(DATEDIFF(death_date,birth_date) / 365 AS int) as age'),
                     ]
-<<<<<<< HEAD
-                )->withCount('likes')->with('likes')
-=======
                 )->withCount('likes as numberOfLikes')
->>>>>>> e1aab632cc2154f9855ab50b8049342f47e988c6
                     ->paginate(8),
                 __('MemoryWall.MemoryIndexSuccess')
             );

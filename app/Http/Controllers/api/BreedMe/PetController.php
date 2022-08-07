@@ -24,10 +24,6 @@ class PetController extends BaseController
      */
     public function index(Request $request)
     {
-<<<<<<< HEAD
-        $pets = Pet::with('user')->with('userProfile')->get();
-        return $this->sendResponse($pets,'Pets retrieved successfully.');
-=======
         try {
             $user = $this->userExists($request['userId']);
             $this->userIsAuthorized($user, 'viewAny', Pet::class);
@@ -52,7 +48,6 @@ class PetController extends BaseController
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden(__('BreedMe.PetViewingBannedMessage'));
         }
->>>>>>> e1aab632cc2154f9855ab50b8049342f47e988c6
     }
 
     /**
