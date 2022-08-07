@@ -14,20 +14,29 @@ class CreateOfflineTransactionsTable extends Migration
     public function up()
     {
         Schema::create('offline_transactions', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('giver')->nullable();
-            $table->unsignedBigInteger('needy');
+            $table->uuid('id');
+            $table->primary('id');
+            $table->string('giver')->nullable();
+            $table->string('needy_id');
             $table->double('amount');
-            $table->text('preferredSection');
+            $table->text('preferred_section');
             $table->text('address');
-            $table->string('phoneNumber')->nullable();
-            $table->dateTime('startCollectDate');
-            $table->dateTime('endCollectDate');
-            $table->dateTime('selectedDate')->nullable();
+            $table->string('phone_number')->nullable();
+            $table->dateTime('start_collect_date');
+            $table->dateTime('end_collect_date');
+            $table->dateTime('selected_date')->nullable();
             $table->boolean('collected')->default(0);
             $table->timestamps();
-            $table->foreign('giver')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('needy')->references('id')->on('needies')->onDelete('cascade');
+            $table->foreign('giver')
+                ->references('id')
+                ->on('users')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+            $table->foreign('needy_id')
+                ->references('id')
+                ->on('needies')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 

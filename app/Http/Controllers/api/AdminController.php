@@ -12,11 +12,12 @@ use App\Exceptions\UserNotFound;
 use App\Http\Controllers\API\BaseController as BaseController;
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\Needy;
+use App\Models\Ahed\Needy;
 use App\Models\OauthAccessToken;
-use App\Models\OfflineTransaction;
-use App\Models\OnlineTransaction;
-use App\Models\Pet;
+use App\Models\Ahed\OfflineTransaction;
+use App\Models\Ahed\OnlineTransaction;
+use App\Models\Ataa\AtaaAchievement;
+use App\Models\BreedMe\Pet;
 use App\Models\UserBan;
 use Carbon\Carbon;
 use Exception;
@@ -25,7 +26,7 @@ use App\Traits\ControllersTraits\NeedyValidator;
 use App\Traits\ControllersTraits\OfflineTransactionValidator;
 use App\Traits\ControllersTraits\UserBanValidator;
 use App\Traits\ControllersTraits\UserValidator;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class AdminController extends BaseController
 {
@@ -102,20 +103,37 @@ class AdminController extends BaseController
                 'BreedMe' => [
                     'NumberOfPets' => $pets->count()
                 ],
-            ], 'Data Retrieved Successfully!');
+            ], __('General.DataRetrievedSuccessMessage'));
         } catch (UserNotFound $e) {
-            return $this->sendError('User Not Found');
+            return $this->sendError(__('General.UserNotFound'));
         }
     }
-
+    /**
+     * List Ataa Achievement for All Users.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getAtaaAchievements(Request $request)
+    {
+        try {
+            $user = $this->userExists($request['userId']);
+            $this->userIsAuthorized($user, 'viewAny', AtaaAchievement::class);
+            return $this->sendResponse(AtaaAchievement::all(), 'Data Retrieved Successfully');
+        } catch (UserNotFound $e) {
+            return $this->sendError(__('General.UserNotFound'));
+        } catch (UserNotAuthorized $e) {
+            return $this->sendForbidden('You aren\'t authorized to show these resources.');
+        }
+    }
     /**
      * Approve Case.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param String $id
      * @return \Illuminate\Http\Response
      */
-    public function approve(Request $request, $id)
+    public function approve(Request $request, String $id)
     {
         try {
             $user = $this->userExists($request['userId']);
@@ -124,7 +142,7 @@ class AdminController extends BaseController
             $needy->approve();
             return $this->sendResponse([], 'Needy Approved Successfully!');
         } catch (UserNotFound $e) {
-            return $this->sendError('User Not Found');
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden('You aren\'t authorized to approve this needy.');
         } catch (NeedyNotFound $e) {
@@ -136,10 +154,10 @@ class AdminController extends BaseController
      * Disapprove Case.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param String $id
      * @return \Illuminate\Http\Response
      */
-    public function disapprove(Request $request, $id)
+    public function disapprove(Request $request, String $id)
     {
         try {
             $user = $this->userExists($request['userId']);
@@ -148,7 +166,7 @@ class AdminController extends BaseController
             $needy->disapprove();
             return $this->sendResponse([], 'Needy Disapprove Successfully!');
         } catch (UserNotFound $e) {
-            return $this->sendError('User Not Found');
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden('You aren\'t authorized to disapprove this needy.');
         } catch (NeedyNotFound $e) {
@@ -171,7 +189,7 @@ class AdminController extends BaseController
             $offlinetransaction->collect();
             return $this->sendResponse([], 'Transaction Collected Successfully!');
         } catch (UserNotFound $e) {
-            return $this->sendError('User Not Found');
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden('You aren\'t authorized to collect this transaction.');
         } catch (OfflineTransactionNotFound $e) {
@@ -194,7 +212,7 @@ class AdminController extends BaseController
             $user->ataaAchievement->freeze();
             return $this->sendResponse([], 'User Achievement Freezed Successfully!');
         } catch (UserNotFound $e) {
-            return $this->sendError('User Not Found');
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden('You aren\'t authorized to freeze this user achievement.');
         } catch (AtaaAchievementNotFound $e) {
@@ -217,7 +235,7 @@ class AdminController extends BaseController
             $user->ataaAchievement->defreeze();
             return $this->sendResponse([], 'User Achievement Defreezed Successfully!');
         } catch (UserNotFound $e) {
-            return $this->sendError('User Not Found');
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden('You aren\'t authorized to defreeze this user achievement.');
         } catch (AtaaAchievementNotFound $e) {
@@ -238,7 +256,7 @@ class AdminController extends BaseController
             $this->userIsAuthorized($user, 'viewAny', UserBan::class);
             return $this->sendResponse(UserBan::all(), 'User Bans Retrieved Successfully');
         } catch (UserNotFound $e) {
-            return $this->sendError('User Not Found');
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden('You aren\'t authorized to see these resources.');
         }
@@ -248,10 +266,10 @@ class AdminController extends BaseController
      * activate User Bans.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param int $id
+     * @param String $id
      * @return \Illuminate\Http\Response
      */
-    public function activateBan(Request $request, int $id)
+    public function activateBan(Request $request, String $id)
     {
         try {
             $user = $this->userExists($request['userId']);
@@ -262,7 +280,7 @@ class AdminController extends BaseController
         } catch (UserBanNotFound $e) {
             return $this->sendError('User Ban doesn\'t exist');
         } catch (UserNotFound $e) {
-            return $this->sendError('User Not Found');
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden('You aren\'t authorized to see these resources.');
         }
@@ -272,10 +290,10 @@ class AdminController extends BaseController
      * deactivate User Bans.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param int $id
+     * @param String $id
      * @return \Illuminate\Http\Response
      */
-    public function deactivateBan(Request $request, int $id)
+    public function deactivateBan(Request $request, String $id)
     {
         try {
             $user = $this->userExists($request['userId']);
@@ -286,7 +304,7 @@ class AdminController extends BaseController
         } catch (UserBanNotFound $e) {
             return $this->sendError('User Ban doesn\'t exist');
         } catch (UserNotFound $e) {
-            return $this->sendError('User Not Found');
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden('You aren\'t authorized to see these resources.');
         }
@@ -309,10 +327,11 @@ class AdminController extends BaseController
             }
             $validated = $this->validateUserBan($request);
             if ($validated->fails()) {
-                return $this->sendError('Invalid data', $validated->messages(), 400);
+                return $this->sendError(__('General.InvalidData'), $validated->messages(), 400);
             }
             //TODO: Extend Ban if already exists & Active?
             $admin->createdBans()->create([
+                'id' => Str::uuid(),
                 'banned_user' => $bannedUser->id,
                 'tag' => $request['tag'],
                 'active' => $request['startAt'] != null ? ($request['startAt'] <= Carbon::now('GMT+2') ? 1 : 0) : 1,
@@ -323,12 +342,33 @@ class AdminController extends BaseController
         } catch (UserBanNotFound $e) {
             return $this->sendError('User Ban doesn\'t exist');
         } catch (UserNotFound $e) {
-            return $this->sendError('User Not Found');
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden('You aren\'t authorized to see these resources.');
         }
     }
-
+    /**
+     * Display a listing of all Needies.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getPendingNeedies()
+    {
+        return $this->sendResponse(Needy::join('users', 'users.id', 'needies.created_by')
+            ->join('profiles', 'users.profile_id', 'profiles.id')
+            ->select(
+                'needies.*',
+                'users.id as userId',
+                'users.name as userName',
+                'users.email_verified_at as userEmailVerifiedAt',
+                'profiles.image as userImage'
+            )
+            ->latest('needies.created_at')
+            ->with('mediasBefore:id,path,needy_id')
+            ->with('mediasAfter:id,path,needy_id')
+            ->where('approved', '=', 0)
+            ->paginate(8), 'تم إسترجاع البيانات بنجاح');  ///Cases retrieved successfully.
+    }
     public function importCSV(Request $request)
     {
         $validated = Validator::make($request->all(), [
@@ -336,7 +376,7 @@ class AdminController extends BaseController
             'file' => 'required|mimes:csv,txt',
         ]);
         if ($validated->fails()) {
-            return $this->sendError('Invalid data', $validated->messages(), 400);
+            return $this->sendError(__('General.InvalidData'), $validated->messages(), 400);
         }
         $now = Carbon::now()->toDateTimeString();
         try {
@@ -373,7 +413,7 @@ class AdminController extends BaseController
         } catch (NotSupportedType $e) {
             return $this->sendError('This type isn\'t supported');
         } catch (UserNotFound $e) {
-            return $this->sendError('User Not Found');
+            return $this->sendError(__('General.UserNotFound'));
         } catch (NeedyNotFound $e) {
             return $this->sendError('Needy Not Found');
         } catch (Exception $e) {

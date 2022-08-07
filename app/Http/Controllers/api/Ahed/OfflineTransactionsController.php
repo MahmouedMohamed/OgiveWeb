@@ -10,10 +10,11 @@ use App\Exceptions\OfflineTransactionNotFound;
 use App\Exceptions\UserNotAuthorized;
 use App\Exceptions\UserNotFound;
 use Illuminate\Http\Request;
-use App\Models\OfflineTransaction;
+use App\Models\Ahed\OfflineTransaction;
 use App\Traits\ControllersTraits\NeedyValidator;
 use App\Traits\ControllersTraits\OfflineTransactionValidator;
 use App\Traits\ControllersTraits\UserValidator;
+use Illuminate\Support\Str;
 
 class OfflineTransactionsController extends BaseController
 {
@@ -27,9 +28,9 @@ class OfflineTransactionsController extends BaseController
     {
         try {
             $user = $this->userExists(request()->input('userId'));
-            return $this->sendResponse($user->offlineTransactions, 'تم إسترجاع البيانات بنجاح'); ///Transactions retrieved successfully.
+            return $this->sendResponse($user->offlineTransactions, __('General.DataRetrievedSuccessMessage'));
         } catch (UserNotFound $e) {
-            return $this->sendError('المستخدم غير موجود');  ///User Not Found
+            return $this->sendError(__('General.UserNotFound'));
         }
     }
     /**
@@ -42,7 +43,7 @@ class OfflineTransactionsController extends BaseController
     {
         $validated = $this->validateTransaction($request, 'store');
         if ($validated->fails())
-            return $this->sendError('خطأ في البيانات', $validated->messages(), 400);   ///Invalid data
+            return $this->sendError(__('General.InvalidData'), $validated->messages(), 400);
         try {
             $needy = $this->needyExists(request()->input('needy'));
             $this->needyApproved($needy);
@@ -50,36 +51,38 @@ class OfflineTransactionsController extends BaseController
             if (request()->input('giver') != null) {
                 $user = $this->userExists(request()->input('giver'));
                 $user->offlineTransactions()->create([
-                    'needy' => $needy->id,
+                    'id' => Str::uuid(),
+                    'needy_id' => $needy->id,
                     'amount' => $request['amount'],
-                    'preferredSection' => $request['preferredSection'],
+                    'preferred_section' => $request['preferredSection'],
                     'address' => $request['address'],
-                    'startCollectDate' => $request['startCollectDate'],
-                    'endCollectDate' => $request['endCollectDate'],
-                    'phoneNumber' => $request['phoneNumber'],
+                    'start_collect_date' => $request['startCollectDate'],
+                    'end_collect_date' => $request['endCollectDate'],
+                    'phone_number' => $request['phoneNumber'],
                     'collected' => 0,
                 ]);
             } else {
                 OfflineTransaction::create([
-                    'needy' => $needy->id,
+                    'id' => Str::uuid(),
+                    'needy_id' => $needy->id,
                     'amount' => $request['amount'],
-                    'preferredSection' => $request['preferredSection'],
+                    'preferred_section' => $request['preferredSection'],
                     'address' => $request['address'],
-                    'startCollectDate' => $request['startCollectDate'],
-                    'endCollectDate' => $request['endCollectDate'],
-                    'phoneNumber' => $request['phoneNumber'],
+                    'start_collect_date' => $request['startCollectDate'],
+                    'end_collect_date' => $request['endCollectDate'],
+                    'phone_number' => $request['phoneNumber'],
                     'collected' => 0,
                 ]);
             }
-            return $this->sendResponse([], 'شكراً لمساهتمك القيمة، سوف يتم التواصل معك قريباً');   ///Thank You For Your Contribution, We will contact you soon!
+            return $this->sendResponse([],  __('Ahed.OfflineTransactionCreationSuccessMessage'));
         } catch (UserNotFound $e) {
-            return $this->sendError('المستخدم غير موجود');  ///User Not Found
+            return $this->sendError(__('General.UserNotFound'));
         } catch (NeedyNotFound $e) {
-            return $this->sendError('الحالة غير موجودة');  ///Case Not Found
+            return $this->sendError(__('Ahed.NeedyNotFound'));
         } catch (NeedyNotApproved $e) {
-            return $this->sendError('من فضلك أنتظر لحين تأكيد الحالة', [], 403);  ///Kindly wait until Case is approved so you can donate.
+            return $this->sendError(__('Ahed.NeedyNotApproved'), [], 403);
         } catch (NeedyIsSatisfied $e) {
-            return $this->sendError('تم جمع اللازم لهذة الحالة، من فضلك تفقد حالة أخري', [], 403);   ///Case already satisfied, Kindly check another one
+            return $this->sendError(__('Ahed.TransactionNeedySatisfiedMessage'), [], 403);
         }
     }
 
@@ -99,14 +102,14 @@ class OfflineTransactionsController extends BaseController
             $user = $this->userExists($request['userId']);
             //Check if current user can show transaction
             $this->userIsAuthorized($user, 'view', $transaction);
-            return $this->sendResponse($transaction, 'تم إسترجاع البيانات بنجاح');   ///Data Retrieved Successfully!
+            return $this->sendResponse($transaction, __('General.DataRetrievedSuccessMessage'));
         } catch (OfflineTransactionNotFound $e) {
-            return $this->sendError('هذا التعامل غير موجود');   ///Transaction Not Found
+            return $this->sendError(__('Ahed.TransactionNotFound'));
         } catch (UserNotFound $e) {
-            return $this->sendError('المستخدم غير موجود');  ///User Not Found
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             $e->report($user, 'UserAccessOfflineTransaction', $transaction);
-            return $this->sendForbidden('أنت لا تملك صلاحية عرض هذا التعامل');    ///You aren\'t authorized to show this transaction.
+            return $this->sendForbidden(__('Ahed.TransactionViewingBannedMessage'));
         }
     }
 
@@ -128,33 +131,33 @@ class OfflineTransactionsController extends BaseController
             $this->userIsAuthorized($user, 'update', $transaction);
             $validated = $this->validateTransaction($request, 'update');
             if ($validated->fails())
-                return $this->sendError('Invalid data', $validated->messages(), 400);
+                return $this->sendError(__('General.InvalidData'), $validated->messages(), 400);
             $needy = $this->needyExists(request()->input('needy'));
             $this->needyApproved($needy);
             $this->needyIsSatisfied($needy);
             $transaction->update([
-                'needy' => $needy->id,
+                'needy_id' => $needy->id,
                 'amount' => $request['amount'],
-                'preferredSection' => $request['preferredSection'],
+                'preferred_section' => $request['preferredSection'],
                 'address' => $request['address'],
-                'phoneNumber' => $request['phoneNumber'],
-                'startCollectDate' => $request['startCollectDate'],
-                'endCollectDate' => $request['endCollectDate'],
+                'phone_number' => $request['phoneNumber'],
+                'start_collect_date' => $request['startCollectDate'],
+                'end_collect_date' => $request['endCollectDate'],
             ]);
-            return $this->sendResponse([], 'تم التعديل بنجاح'); ///Transaction Updated Successfully
+            return $this->sendResponse([], __('Ahed.TransactionUpdateSuccessMessage'));
         } catch (OfflineTransactionNotFound $e) {
-            return $this->sendError('هذا التعامل غير موجود');   ///Transaction Not Found
+            return $this->sendError(__('Ahed.TransactionNotFound'));
         } catch (UserNotFound $e) {
-            return $this->sendError('المستخدم غير موجود');  ///User Not Found
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             $e->report($user, 'UserUpdateOfflineTransaction', $transaction);
-            return $this->sendForbidden('أنت لا تملك صلاحية تعديل هذا التعامل');   ///You aren\'t authorized to update this transaction
+            return $this->sendForbidden(__('Ahed.TransactionUpdateForbiddenMessage'));
         } catch (NeedyNotFound $e) {
-            return $this->sendError('الحالة غير موجودة');  ///Case Not Found
+            return $this->sendError(__('Ahed.NeedyNotFound'));
         } catch (NeedyNotApproved $e) {
-            return $this->sendError('من فضلك أنتظر لحين تأكيد الحالة', [], 403);  ///Kindly wait until Case is approved so you can donate.
+            return $this->sendError(__('Ahed.NeedyNotApproved'), [], 403);
         } catch (NeedyIsSatisfied $e) {
-            return $this->sendError('تم جمع اللازم لهذة الحالة، من فضلك تفقد حالة أخري', [], 403);   ///Case already satisfied, Kindly check another one
+            return $this->sendError(__('Ahed.TransactionNeedySatisfiedMessage'), [], 403);
         }
     }
 
@@ -175,14 +178,14 @@ class OfflineTransactionsController extends BaseController
             //Check if user who is deleting is authorized
             $this->userIsAuthorized($user, 'delete', $transaction);
             $transaction->delete();
-            return $this->sendResponse([], 'تم إزالة العنصر بنجاح');    ///Transaction Deleted Successfully!
+            return $this->sendResponse([], __('Ahed.TransactionDeleteSuccessMessage'));
         } catch (OfflineTransactionNotFound $e) {
-            return $this->sendError('هذا التعامل غير موجود');   ///Transaction Not Found
+            return $this->sendError(__('Ahed.TransactionNotFound'));
         } catch (UserNotFound $e) {
-            return $this->sendError('المستخدم غير موجود');  ///User Not Found
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             $e->report($user, 'UserDeleteOfflineTransaction', $transaction);
-            return $this->sendForbidden('أنت لا تملك صلاحية إزالة هذا التعامل');  ///You aren\'t authorized to delete this transaction.
+            return $this->sendForbidden(__('Ahed.TransactionDeletionForbiddenMessage'));
         }
     }
 }

@@ -6,31 +6,32 @@ use App\Exceptions\MemoryNotFound;
 use App\Http\Controllers\api\BaseController;
 use App\Exceptions\UserNotAuthorized;
 use App\Exceptions\UserNotFound;
-use App\Helpers\ResponseHandler;
-use App\Models\Memory;
+use App\Models\MemoryWall\Memory;
 use App\Traits\ControllersTraits\MemoryValidator;
 use App\Traits\ControllersTraits\UserValidator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class MemoryController extends BaseController
 {
     use UserValidator, MemoryValidator;
+
+    public function __construct()
+    {
+        $this->middleware('api_auth')->except('index', 'getTopMemories');
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function __construct() {
-        $this->middleware('api_auth')->except('index','getTopMemories');
-    }
-    
     public function index(Request $request)
     {
         try {
-            $responseHandler = new ResponseHandler($request['language']);
             if ($request['userId']) {
                 $user = $this->userExists($request['userId']);
                 $this->userIsAuthorized($user, 'viewAny', Memory::class);
@@ -38,44 +39,85 @@ class MemoryController extends BaseController
                     Memory::select(
                         [
                             'id',
-                            'personName',
-                            'birthDate',
-                            'deathDate',
-                            'lifeStory',
+                            'person_name',
+                            'birth_date',
+                            'death_date',
+                            'brief',
+                            'life_story',
                             'image',
                             'created_at',
-                            DB::raw('CAST(DATEDIFF(deathDate,birthDate) / 365 AS int) as age'),
-                            DB::raw('exists(select 1 from `likes` li where li.memoryId = id and li.userId = ' . $user->id . ' limit 1) as liked')
+                            DB::raw('CAST(DATEDIFF(death_date,birth_date) / 365 AS int) as age'),
+                            DB::raw('exists(select 1 from `likes` li where li.memory_id = id and li.user_id = ' . $user->id . ' limit 1) as liked')
                         ]
-                    )->withCount('likes')
+                    )->withCount('likes as numberOfLikes')
                         ->where('nationality', '=', $user->nationality)
+<<<<<<< HEAD
                         ->paginate(8)->with('likes'),
                     ''
+=======
+                        ->paginate(8),
+                    __('MemoryWall.MemoryIndexSuccess')
+>>>>>>> e1aab632cc2154f9855ab50b8049342f47e988c6
                 );
             }
             return $this->sendResponse(
                 Memory::select(
                     [
                         'id',
-                        'personName',
-                        'birthDate',
-                        'deathDate',
-                        'lifeStory',
+                        'person_name',
+                        'birth_date',
+                        'death_date',
+                        'brief',
+                        'life_story',
                         'image',
                         'created_at',
-                        DB::raw('CAST(DATEDIFF(deathDate,birthDate) / 365 AS int) as age'),
+                        DB::raw('CAST(DATEDIFF(death_date,birth_date) / 365 AS int) as age'),
                     ]
+<<<<<<< HEAD
                 )->withCount('likes')->with('likes')
+=======
+                )->withCount('likes as numberOfLikes')
+>>>>>>> e1aab632cc2154f9855ab50b8049342f47e988c6
                     ->paginate(8),
-                ''
+                __('MemoryWall.MemoryIndexSuccess')
             );
         } catch (UserNotFound $e) {
-            return $this->sendError($responseHandler->words['UserNotFound']);
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
-            return $this->sendForbidden($responseHandler->words['MemoryViewingBannedMessage']);
+            return $this->sendForbidden(
+                __('MemoryWall.MemoryViewingBannedMessage')
+            );
         }
     }
 
+    /**
+     * Display a listing of the top resources.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getTopMemories(Request $request)
+    {
+        //ToDo: Get Based on Nationality
+        return $this->sendResponse(
+            Memory::select(
+                [
+                    'id',
+                    'person_name',
+                    'birth_date',
+                    'death_date',
+                    'brief',
+                    'life_story',
+                    'image',
+                    'created_at',
+                    DB::raw('CAST(DATEDIFF(death_date,birth_date) / 365 AS int) as age'),
+                ]
+            )->withCount('likes as numberOfLikes')
+                ->orderBy('numberOfLikes', 'desc')
+                ->take(3)->get(),
+            __('MemoryWall.MemoryIndexSuccess')
+        );
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -85,56 +127,60 @@ class MemoryController extends BaseController
     public function store(Request $request)
     {
         try {
-            $responseHandler = new ResponseHandler($request['language']);
             $user = $this->userExists($request['createdBy']);
             //Validate Request
             $validated = $this->validateMemory($request, 'store');
             if ($validated->fails()) {
-                return $this->sendError($responseHandler->words['InvalidData'], $validated->messages(), 400);   ///Invalid data
+                return $this->sendError(
+                    __('General.InvalidData'),
+                    $validated->messages(),
+                    400
+                );   ///Invalid data
             }
             $this->userIsAuthorized($user, 'create', Memory::class);
             $imagePath = $request['image']->store('memories', 'public');
             $user->memories()->create([
-                'personName' => $request['personName'],
-                'birthDate' => $request['birthDate'],
-                'deathDate' => $request['deathDate'],
-                'lifeStory' => $request['lifeStory'],
+                'id' => Str::uuid(),
+                'person_name' => $request['personName'],
+                'birth_date' => $request['birthDate'],
+                'death_date' => $request['deathDate'],
+                'brief' => $request['brief'],
+                'life_story' => $request['lifeStory'],
                 'image' => "/storage/" . $imagePath,
                 'nationality' => $user->nationality,
             ]);
-            return $this->sendResponse([], $responseHandler->words['MemoryCreationSuccessMessage']); ///Thank You For Your Contribution!
+            return $this->sendResponse([], __('MemoryWall.MemoryCreationSuccessMessage')); ///Thank You For Your Contribution!
         } catch (UserNotFound $e) {
-            return $this->sendError($responseHandler->words['UserNotFound']);
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
-            return $this->sendForbidden($responseHandler->words['MemoryCreationBannedMessage']);
+            return $this->sendForbidden(__('MemoryWall.MemoryCreationBannedMessage'));
         }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  Request  $request
-     * @param  int  $id
+     * @param  String  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, $id)
+    public function show(String $id)
     {
         try {
-            $responseHandler = new ResponseHandler($request['language']);
             $memory = $this->memoryExists($id);
             return $this->sendResponse(collect([$memory])->map(function ($memory) {
                 return [
                     'id' => $memory->id,
-                    'personName' => $memory->id,
-                    'birthDate' => $memory->birthDate,
-                    'deathDate' => $memory->deathDate,
-                    'lifeStory' => $memory->lifeStory,
+                    'person_name' => $memory->id,
+                    'birth_date' => $memory->birthDate,
+                    'death_date' => $memory->deathDate,
+                    'brief' => $memory->brief,
+                    'life_story' => $memory->lifeStory,
                     'image' => $memory->image,
                     'age' => date_diff(date_create($memory->deathDate), date_create($memory->birthDate))->y,
                 ];
             })->first(), "");
         } catch (MemoryNotFound $e) {
-            return $this->sendError($responseHandler->words['MemoryNotFound']);
+            return $this->sendError(__('MemoryWall.MemoryNotFound'));
         }
     }
 
@@ -142,17 +188,20 @@ class MemoryController extends BaseController
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  String  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, int $id)
+    public function update(Request $request, String $id)
     {
         try {
-            $responseHandler = new ResponseHandler($request['language']);
             //Validate Request
             $validated = $this->validateMemory($request, 'update');
             if ($validated->fails()) {
-                return $this->sendError($responseHandler->words['InvalidData'], $validated->messages(), 400);
+                return $this->sendError(
+                    __('General.InvalidData'),
+                    $validated->messages(),
+                    400
+                );
             }
             $memory = $this->memoryExists($id);
             $user = $this->userExists($request['userId']);
@@ -162,20 +211,21 @@ class MemoryController extends BaseController
                 $imagePath = $request['image']->store('memories', 'public');
             }
             $memory->update([
-                'personName' => $request['personName'] ?? $memory->personName,
-                'birthDate' => $request['birthDate'] ?? $memory->birthDate,
-                'deathDate' => $request['deathDate'] ?? $memory->deathDate,
-                'lifeStory' => $request['lifeStory'] ?? $memory->lifeStory,
+                'person_name' => $request['personName'] ?? $memory->personName,
+                'birth_date' => $request['birthDate'] ?? $memory->birthDate,
+                'death_date' => $request['deathDate'] ?? $memory->deathDate,
+                'brief' => $request['brief'] ?? $memory->brief,
+                'life_story' => $request['lifeStory'] ?? $memory->lifeStory,
                 'image' => $request['image'] ? "/storage/" . $imagePath : $memory->image,
                 'nationality' => $user->nationality,
             ]);
-            return $this->sendResponse([], $responseHandler->words['MemoryUpdateSuccessMessage']);
+            return $this->sendResponse([], __('MemoryWall.MemoryUpdateSuccessMessage'));
         } catch (MemoryNotFound $e) {
-            return $this->sendError($responseHandler->words['MemoryNotFound']);
+            return $this->sendError(__('MemoryWall.MemoryNotFound'));
         } catch (UserNotFound $e) {
-            return $this->sendError($responseHandler->words['UserNotFound']);
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
-            return $this->sendForbidden($responseHandler->words['MemoryUpdateForbiddenMessage']);
+            return $this->sendForbidden(__('MemoryWall.MemoryUpdateForbiddenMessage'));
         }
     }
 
@@ -183,47 +233,25 @@ class MemoryController extends BaseController
      * Remove the specified resource from storage.
      *
      * @param  Request  $request
-     * @param  int  $id
+     * @param  String  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, int $id)
+    public function destroy(Request $request, String $id)
     {
         try {
-            $responseHandler = new ResponseHandler($request['language']);
             $memory = $this->memoryExists($id);
             $user = $this->userExists($request['userId']);
             $this->userIsAuthorized($user, 'delete', $memory);
             if ($memory->image)
                 Storage::delete('public/' . substr($memory->image, 9));
             $memory->delete();
-            return $this->sendResponse([], $responseHandler->words['MemoryDeleteSuccessMessage']);  ///Needy Updated Successfully!
+            return $this->sendResponse([], __('MemoryWall.MemoryDeleteSuccessMessage'));
         } catch (MemoryNotFound $e) {
-            return $this->sendError($responseHandler->words['MemoryNotFound']);
+            return $this->sendError(__('MemoryWall.MemoryNotFound'));
         } catch (UserNotFound $e) {
-            return $this->sendError($responseHandler->words['UserNotFound']);
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
-            return $this->sendForbidden($responseHandler->words['MemoryDeletionForbiddenMessage']);
+            return $this->sendForbidden(__('MemoryWall.MemoryDeletionForbiddenMessage'));
         }
-    }
-    public function getTopMemories(Request $request){
-        $responseHandler = new ResponseHandler($request['language']);
-        return $this->sendResponse(
-            Memory::select(
-                [
-                    'id',
-                    'personName',
-                    'birthDate',
-                    'deathDate',
-                    'lifeStory',
-                    'image',
-                    'created_at',
-                    DB::raw('CAST(DATEDIFF(deathDate,birthDate) / 365 AS int) as age'),
-                ]
-            )->withCount('likes')
-            ->orderBy('likes_count', 'desc')
-                ->take(3)->get(),
-            ''
-        );
-      
     }
 }

@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\FoodSharingMarker;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class FoodSharingMarkerFactory extends Factory
 {
@@ -24,6 +25,7 @@ class FoodSharingMarkerFactory extends Factory
     {
         $user = User::inRandomOrder()->first();
         return [
+            'id'=> Str::uuid(),
             'user_id' => $user->id,
             'type'=>'Food',
             'description'=>$this->faker->text(5000),

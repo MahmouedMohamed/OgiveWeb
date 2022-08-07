@@ -2,7 +2,7 @@
 
 namespace App\Observers;
 
-use App\Models\FoodSharingMarker;
+use App\Models\Ataa\FoodSharingMarker;
 use Illuminate\Support\Facades\Cache;
 
 class FoodSharingMarkersObserver

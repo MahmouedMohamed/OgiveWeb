@@ -2,20 +2,17 @@
 
 namespace App\Traits\ControllersTraits;
 
-use App\Models\Needy;
+use App\Models\Ahed\Needy;
+use App\Models\Ahed\CaseType;
 use App\Exceptions\NeedyNotFound;
 use App\Exceptions\NeedyNotApproved;
 use App\Exceptions\NeedyIsSatisfied;
 use App\Exceptions\NeedyMediaNotFound;
-use App\Models\CaseType;
-use App\Models\NeedyMedia;
-use App\Traits\ValidatorLanguagesSupport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 trait NeedyValidator
 {
-    use ValidatorLanguagesSupport;
 
     /**
      * Returns If Needy exists or not.
@@ -84,7 +81,6 @@ trait NeedyValidator
                 break;
             case 'update':
                 $rules = [
-                    'createdBy' => 'required',
                     'name' => 'required|max:255',
                     'age' => 'required|integer|max:100',
                     'severity' => 'required|integer|min:1|max:10',
@@ -102,9 +98,6 @@ trait NeedyValidator
                 ];
                 break;
         }
-        $messages = [];
-        if ($request['language'] != null)
-            $messages = $this->getValidatorMessagesBasedOnLanguage($request['language']);
-        return Validator::make($request->all(), $rules, $messages);
+        return Validator::make($request->all(), $rules);
     }
 }

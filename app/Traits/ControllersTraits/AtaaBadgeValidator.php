@@ -3,14 +3,12 @@
 namespace App\Traits\ControllersTraits;
 
 use App\Exceptions\AtaaBadgeNotFound;
-use App\Models\AtaaBadge;
-use App\Traits\ValidatorLanguagesSupport;
+use App\Models\Ataa\AtaaBadge;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 trait AtaaBadgeValidator
 {
-    use ValidatorLanguagesSupport;
 
     /**
      * Returns If Online Transaction exists or not.
@@ -31,12 +29,10 @@ trait AtaaBadgeValidator
         $rules = [
             'userId' => 'required',
             'name' => 'required',
+            'arabic_name' => 'required',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'description' => 'required|string'
         ];
-        $messages = [];
-        if ($request['language'] != null)
-            $messages = $this->getValidatorMessagesBasedOnLanguage($request['language']);
-        return Validator::make($request->all(), $rules, $messages);
+        return Validator::make($request->all(), $rules);
     }
 }

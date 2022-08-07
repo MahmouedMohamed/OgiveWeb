@@ -2,7 +2,7 @@
 
 namespace App\Observers;
 
-use App\Models\Needy;
+use App\Models\Ahed\Needy;
 use Illuminate\Support\Facades\Cache;
 
 class NeediesObserver

@@ -8,7 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class UserBan extends Model
 {
     use HasFactory;
+
+    public $incrementing = false;
+
     protected $fillable = [
+        'id',
         'banned_user',
         'tag',
         'active',

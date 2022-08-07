@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\AtaaBadge;
+use App\Models\Ataa\AtaaBadge;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class AtaaBadgeSeeder extends Seeder
 {
@@ -22,6 +23,7 @@ class AtaaBadgeSeeder extends Seeder
         ];
         foreach ($availableBadges as $badge) {
             AtaaBadge::create([
+                'id'=> Str::uuid(),
                 'name' => $badge['name'],
                 'image' => $badge['image'],
                 'description' => $badge['description']

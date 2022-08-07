@@ -2,15 +2,13 @@
 
 namespace App\Traits\ControllersTraits;
 
-use App\Models\Memory;
+use App\Models\MemoryWall\Memory;
 use App\Exceptions\MemoryNotFound;
-use App\Traits\ValidatorLanguagesSupport;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
 trait MemoryValidator
 {
-    use ValidatorLanguagesSupport;
 
     /**
      * Returns If Memory exists or not.
@@ -18,7 +16,7 @@ trait MemoryValidator
      * @param String $id
      * @return mixed
      */
-    public function memoryExists(String $id)
+    public function memoryExists($id)
     {
         $memory = Memory::find($id);
         if (!$memory)
@@ -36,6 +34,7 @@ trait MemoryValidator
                     'personName' => 'required|string',
                     'birthDate' => 'required|date|date_format:Y-m-d|before:deathDate',
                     'deathDate' => 'required|date|date_format:Y-m-d|after:birthDate',
+                    'brief' => 'required|string|max:300',
                     'lifeStory' => 'required|string',
                     'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
                 ];
@@ -45,14 +44,12 @@ trait MemoryValidator
                     'personName' => 'string',
                     'birthDate' => 'date|date_format:Y-m-d|before:deathDate',
                     'deathDate' => 'date|date_format:Y-m-d|after:birthDate',
+                    'brief' => 'required|string|max:300',
                     'lifeStory' => 'string',
                     'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
                 ];
                 break;
         }
-        $messages = [];
-        if ($request['language'] != null)
-            $messages = $this->getValidatorMessagesBasedOnLanguage($request['language']);
-        return Validator::make($request->all(), $rules, $messages);
+        return Validator::make($request->all(), $rules);
     }
 }

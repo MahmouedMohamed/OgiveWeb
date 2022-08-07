@@ -2,9 +2,9 @@
 
 namespace App\Jobs;
 
-use App\Models\AtaaAchievement;
-use App\Models\AtaaPrize;
-use App\Models\FoodSharingMarker;
+use App\Models\Ataa\AtaaAchievement;
+use App\Models\Ataa\AtaaPrize;
+use App\Models\Ataa\FoodSharingMarker;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;

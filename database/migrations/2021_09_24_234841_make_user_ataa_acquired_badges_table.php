@@ -14,13 +14,22 @@ class MakeUserAtaaAcquiredBadgesTable extends Migration
     public function up()
     {
         Schema::create('user_ataa_acquired_badges', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('badge_id');
+            $table->uuid('id');
+            $table->primary('id');
+            $table->string('user_id');
+            $table->string('badge_id');
             $table->timestamps();
             $table->unique(['user_id', 'badge_id']);
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('badge_id')->references('id')->on('ataa_badges')->onDelete('cascade');
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+            $table->foreign('badge_id')
+                ->references('id')
+                ->on('ataa_badges')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 

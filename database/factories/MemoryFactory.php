@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Memory;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class MemoryFactory extends Factory
 {
@@ -26,7 +27,7 @@ class MemoryFactory extends Factory
     {
         $user = User::inRandomOrder()->first();
         return [
-            //
+            'id' => Str::uuid(),
             'personName' => $this->faker->name(),
             "image" => $this->faker->name(),
             'lifeStory' => $this->faker->text(500),

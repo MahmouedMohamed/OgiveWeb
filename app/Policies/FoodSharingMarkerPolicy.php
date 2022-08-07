@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\FoodSharingMarker;
+use App\Models\Ataa\FoodSharingMarker;
 use App\Models\User;
 use App\Models\BanTypes;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -68,8 +68,12 @@ class FoodSharingMarkerPolicy
      */
     public function update(User $user, FoodSharingMarker $foodSharingMarker)
     {
+        // dd($user->id);
+        // dd($foodSharingMarker->user->id);
+        // dd(($this->hasAbility($user, AvailableAbilities::UpdateFoodSharingMarker)
+        // || $user == $foodSharingMarker->user));
         return ($this->hasAbility($user, AvailableAbilities::UpdateFoodSharingMarker)
-            || $user == $foodSharingMarker->user)
+            || $user->id == $foodSharingMarker->user->id)
             && $this->hasNoBan($user, BanTypes::UpdateFoodSharingMarker);
     }
 

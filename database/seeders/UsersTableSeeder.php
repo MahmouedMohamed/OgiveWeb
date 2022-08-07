@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class UsersTableSeeder extends Seeder
 {
@@ -15,6 +16,7 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         DB::table('users')->insert([
+            'id' => Str::uuid(),
             'name' => 'Shrouk',
             'user_name' => 'Shrouk Sobhy',
             'email' => 'a@a.com',
@@ -24,6 +26,7 @@ class UsersTableSeeder extends Seeder
             'password' => "12345678",
         ]);
         DB::table('users')->insert([
+            'id' => Str::uuid(),
             'name' => 'Mahmoued',
             'user_name' => 'Mahmoued',
             'email' => 'mahmouedmartin222@yahoo.com',

@@ -2,6 +2,18 @@
 
 namespace App\Models;
 
+use App\Models\Ataa\FoodSharingMarker;
+use App\Models\Ataa\AtaaAchievement;
+use App\Models\Ahed\Needy;
+use App\Models\Ahed\OnlineTransaction;
+use App\Models\Ahed\OfflineTransaction;
+use App\Models\MemoryWall\Memory;
+use App\Models\MemoryWall\Like;
+use App\Models\TimeCatcher\FCMToken;
+use App\Models\BreedMe\Pet;
+use App\Models\BreedMe\AdoptionRequest;
+use App\Models\BreedMe\Consultation;
+use App\Models\BreedMe\ConsultationComment;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -14,12 +26,14 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    public $incrementing = false;
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
+        'id',
         'name',
         'user_name',
         'email',
@@ -28,7 +42,7 @@ class User extends Authenticatable
         'phone_number',
         'address',
         'nationality',
-        'profile'
+        'profile_id'
     ];
 
     /**
@@ -61,10 +75,11 @@ class User extends Authenticatable
         $accessToken = Str::random(60);
         $expiryDate = Carbon::now('GMT+2')->addMonth();
         $this->accessTokens()->create([
+            'id'=> Str::uuid(),
             'access_token' => Hash::make($accessToken),
             'scopes' => '[]',
-            'appType' => $appType,
-            'accessType' => $accessType,
+            'app_type' => $appType,
+            'access_type' => $accessType,
             'active' => 1,
             'expires_at' => $expiryDate,
 
@@ -73,7 +88,7 @@ class User extends Authenticatable
     }
     public function deleteRelatedAccessTokens($appType)
     {
-        $this->accessTokens()->where('appType', '=', $appType)->delete();
+        $this->accessTokens()->where('app_type', '=', $appType)->delete();
     }
     public function profile()
     {
@@ -85,15 +100,15 @@ class User extends Authenticatable
     }
     public function memories()
     {
-        return $this->hasMany(Memory::class,'createdBy')->orderBy('id', 'DESC');
+        return $this->hasMany(Memory::class, 'created_by')->orderBy('id', 'DESC');
     }
     public function likes()
     {
-        return $this->hasMany(Like::class, 'userId');
+        return $this->hasMany(Like::class, 'user_id');
     }
     public function pets()
     {
-        return $this->hasMany(Pet::class);
+        return $this->hasMany(Pet::class, 'created_by');
     }
     public function adoptionRequests()
     {
@@ -109,7 +124,7 @@ class User extends Authenticatable
     }
     public function createdNeedies()
     {
-        return $this->hasMany(Needy::class, 'createdBy');
+        return $this->hasMany(Needy::class, 'created_by');
     }
     public function onlinetransactions()
     {
@@ -127,7 +142,6 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserBan::class, 'banned_user');
     }
-
     public function createdBans()
     {
         return $this->hasMany(UserBan::class, 'created_by');
@@ -151,5 +165,13 @@ class User extends Authenticatable
     public function fcmTokens()
     {
         return $this->hasOne(FCMToken::class);
+    }
+    public function timeCatcherTracked()
+    {
+        return $this->hasMany(TimeCatcherTracking::class, 'tracked_id');
+    }
+    public function timeCatcherTracker()
+    {
+        return $this->hasMany(TimeCatcherTracking::class, 'tracker_id');
     }
 }

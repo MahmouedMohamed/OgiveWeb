@@ -52,9 +52,14 @@ abstract class AvailableAbilities
     const ActivateAtaaBadge = "activate_ataa_badge";                             //Implemented
     const DeactivateAtaaBadge = "deactivate_ataa_badge";                             //Implemented
     const ViewMemoryWallReports = "view_memory_wall_reports";
+
     const UpdateMemory = "update_memory";                             //Implemented
     const DeleteMemory = "delete_memory";                             //Implemented
+
     const DeleteLike = "delete_like";                             //Implemented
+
+    const UpdatePet = "update_pet";                             //Implemented
+    const DeletePet = "delete_pet";                             //Implemented
 
     public static function getAll($role)
     {
@@ -143,6 +148,8 @@ abstract class AvailableAbilities
                     "update_memory",
                     "delete_memory",
                     "delete_like",
+                    "update_pet",
+                    "delete_pet"
                 ];
         }
     }

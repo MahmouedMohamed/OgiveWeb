@@ -4,7 +4,7 @@ namespace App\Http\Controllers\api\BreedMe;
 
 use App\Http\Controllers\api\BaseController;
 
-use App\Models\Place;
+use App\Models\BreedMe\Place;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\QueryBuilder;
 

@@ -4,8 +4,7 @@ namespace App\Http\Controllers\api\BreedMe;
 
 use App\Http\Controllers\api\BaseController;
 
-use App\Models\ConsultationComment;
-use App\Models\ConsultationsComment;
+use App\Models\BreedMe\ConsultationComment;
 use Illuminate\Http\Request;
 
 class ConsultationCommentController extends BaseController
@@ -17,7 +16,7 @@ class ConsultationCommentController extends BaseController
      */
     public function index()
     {
-        $comments = ConsultationsComment::all();
+        $comments = ConsultationComment::all();
         return $this->sendResponse($comments, "Comments are retrieved Successfully");
     }
 
@@ -44,7 +43,7 @@ class ConsultationCommentController extends BaseController
             'consultation_id' => 'required',
             'description' => 'required',
         ]);
-        $comment = new ConsultationsComment();
+        $comment = new ConsultationComment();
 
         $comment->user_id = $request['user_id'];
         $comment->consultation_id = $request['consultation_id'];
@@ -61,7 +60,7 @@ class ConsultationCommentController extends BaseController
      */
     public function show($id)
     {
-        $comment = ConsultationsComment::find($id);
+        $comment = ConsultationComment::find($id);
         if($comment) {
             return $this->sendResponse($comment, 'The Comment is retrieved successfully');
         }else {
@@ -75,7 +74,7 @@ class ConsultationCommentController extends BaseController
      * @param  \App\Models\ConsultationComment  $consultationComment
      * @return \Illuminate\Http\Response
      */
-    public function edit(ConsultationsComment $consultationComment)
+    public function edit(ConsultationComment $consultationComment)
     {
         //
     }
@@ -94,7 +93,7 @@ class ConsultationCommentController extends BaseController
             'consultation_id' => 'required',
             'description' => 'required',
         ]);
-        $comment = ConsultationsComment::find($id);
+        $comment = ConsultationComment::find($id);
         $comment->user_id = $request['user_id'];
         $comment->consultation_id = $request['consultation_id'];
         $comment->description = $request['description'];
@@ -110,7 +109,7 @@ class ConsultationCommentController extends BaseController
      */
     public function destroy($id)
     {
-        $comment = ConsultationsComment::find($id);
+        $comment = ConsultationComment::find($id);
         if($comment) {
             $comment->delete();
             return $this->sendResponse([], 'The Comment is deleted successfully');

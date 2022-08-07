@@ -14,13 +14,22 @@ class CreateConsultationsCommentsTable extends Migration
     public function up()
     {
         Schema::create('consultations_comments', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('consultation_id');
-            $table->text('description');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('consultation_id')->references('id')->on('consultations')->onDelete('cascade');
+            $table->uuid('id');
+            $table->primary('id');
+            $table->string('user_id');
+            $table->string('consultation_id');
+            $table->text('text');
             $table->timestamps();
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+            $table->foreign('consultation_id')
+                ->references('id')
+                ->on('consultations')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 

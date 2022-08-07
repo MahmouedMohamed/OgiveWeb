@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Needy;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 class NeedyFactory extends Factory
 {
@@ -27,7 +28,7 @@ class NeedyFactory extends Factory
         $type = ['إيجاد مسكن مناسب', 'تحسين مستوي المعيشة', 'تجهيز لفرحة', 'سداد الديون', 'إيجاد علاج'];
 
         return [
-            //
+            'id' => Str::uuid(),
             'name' => $this->faker->name(),
             "type" => Arr::random($type),
             'age' => $this->faker->numberBetween(1, 10),

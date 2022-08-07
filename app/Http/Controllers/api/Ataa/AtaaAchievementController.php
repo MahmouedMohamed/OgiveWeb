@@ -6,9 +6,8 @@ use App\Http\Controllers\api\BaseController;
 use App\Exceptions\AtaaAchievementNotFound;
 use App\Exceptions\UserNotAuthorized;
 use App\Exceptions\UserNotFound;
-use App\Models\AtaaAchievement;
+use App\Models\Ataa\AtaaAchievement;
 use Illuminate\Http\Request;
-use App\Helpers\ResponseHandler;
 use App\Traits\ControllersTraits\AtaaAchievementValidator;
 use App\Traits\ControllersTraits\UserValidator;
 use Illuminate\Support\Facades\DB;
@@ -25,7 +24,6 @@ class AtaaAchievementController extends BaseController
     public function show(Request $request, String $userId)
     {
         try {
-            $responseHandler = new ResponseHandler($request['language']);
             //Check User exists
             $user = $this->userExists($userId);
             $requesterUser = $this->userExists($request['requesterId']);
@@ -59,15 +57,15 @@ class AtaaAchievementController extends BaseController
                 'latest_badge' => $latestBadgeAcquired
             ];
 
-            return $this->sendResponse($response, 'User Achievement Returned Successfully');
+            return $this->sendResponse($response, __('General.DataRetrievedSuccessMessage'));
         } catch (UserNotFound $e) {
-            return $this->sendError($responseHandler->words['UserNotFound']);
+            return $this->sendError(__('General.UserNotFound'));
         } catch (AtaaAchievementNotFound $e) {
-            return $this->sendError($responseHandler->words['AchievementNotFound']);
+            return $this->sendError(__('Ataa.AchievementNotFound'));
         } catch (UserNotAuthorized $e) {
             if ($user->ataaAchievement)
                 $e->report($requesterUser, 'AccessAtaaAchievement', $user->ataaAchievement);
-            return $this->sendForbidden($responseHandler->words['ShowAchievementForbidden']);
+            return $this->sendForbidden(__('Ataa.ShowAchievementForbidden'));
         }
     }
 }

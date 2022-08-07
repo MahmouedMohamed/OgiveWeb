@@ -15,8 +15,10 @@ class MakeAtaaPrizesTable extends Migration
     public function up()
     {
         Schema::create('ataa_prizes', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->uuid('id');
+            $table->primary('id');
             $table->string('name');
+            $table->string('arabic_name');
             $table->string('image')->nullable(); //if money would be nullable
             $table->integer('required_markers_collected')->default(0);
             $table->integer('required_markers_posted')->default(0);
@@ -25,9 +27,13 @@ class MakeAtaaPrizesTable extends Migration
             $table->integer('level');
             $table->boolean('active')->default(1);
             //nullable -> Can Be auto created
-            $table->unsignedBigInteger('createdBy')->nullable();
+            $table->string('created_by')->nullable();
             $table->timestamps();
-            $table->foreign('createdBy')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('created_by')
+                ->references('id')
+                ->on('users')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 

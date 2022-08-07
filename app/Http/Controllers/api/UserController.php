@@ -5,15 +5,16 @@ namespace App\Http\Controllers\api;
 use App\Exceptions\LoginParametersNotFound;
 use App\Exceptions\UserNotAuthorized;
 use App\Http\Controllers\API\BaseController as BaseController;
-use App\Models\Needy;
-use App\Models\OfflineTransaction;
-use App\Models\OnlineTransaction;
+use App\Models\Ahed\Needy;
+use App\Models\Ahed\OfflineTransaction;
+use App\Models\Ahed\OnlineTransaction;
+use App\Models\Ahed\CaseType;
 use App\Models\Profile;
-use App\Models\CaseType;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 use Illuminate\Http\Request;
 
@@ -44,9 +45,9 @@ class UserController extends BaseController
                     $tokenDetails['expiryDate'];
 
                 $this->content['user'] = Auth::user();
-                $profile = Profile::findOrFail(Auth::user()->profile);
+                $profile = Profile::findOrFail(Auth::user()->profile_id);
                 $this->content['profile'] = $profile;
-                return $this->sendResponse($this->content, 'Data Retrieved Successfully');
+                return $this->sendResponse($this->content, __('General.DataRetrievedSuccessMessage'));
             } else {
                 return $this->sendError('The email or password is incorrect.');
             }
@@ -67,9 +68,11 @@ class UserController extends BaseController
         $data = request()->all();
         $validated = $this->validateUser($request);
         if ($validated->fails()) {
-            return $this->sendError('Invalid data', $validated->messages(), 400);
+            return $this->sendError(__('General.InvalidData'), $validated->messages(), 400);
         }
-        $profile = Profile::create([]);
+        $profile = Profile::create([
+            'id' => Str::uuid()
+        ]);
         $image = $request['image'];
         if ($image != null) {
             $imagePath = $image->store('users', 'public');
@@ -77,6 +80,7 @@ class UserController extends BaseController
             $profile->save();
         }
         User::create([
+            'id' => Str::uuid(),
             'name' => request('name'),
             'user_name' => request('user_name'),
             'email' => request('email'),
@@ -85,10 +89,11 @@ class UserController extends BaseController
             'phone_number' => request('phone_number'),
             'address' => request('address'),
             'nationality' => request('nationality'),
-            'profile' => $profile->id
+            'profile_id' => $profile->id
         ]);
         return $this->sendResponse('', 'User Created Successfully');
     }
+
     public function validateUser(Request $request)
     {
         return Validator::make($request->all(), [
@@ -113,6 +118,7 @@ class UserController extends BaseController
             'numeric' => 'Invalid type, only numbers are supported',
         ]);
     }
+
     public function getAhedAchievementRecords($id)
     {
         $user = User::find($id);
@@ -178,9 +184,9 @@ class UserController extends BaseController
 
         $validated = $this->validateImage($request);
         if ($validated->fails())
-            return $this->sendError('Invalid data', $validated->messages(), 400);
+            return $this->sendError(__('General.InvalidData'), $validated->messages(), 400);
 
-        $profile = Profile::find($user->profile);
+        $profile = Profile::find($user->profile_id);
         if ($profile->image == null) {
             $imagePath = $request['image']->store('users', 'public');
             $profile->image = "/storage/" . $imagePath;
@@ -203,9 +209,9 @@ class UserController extends BaseController
 
         $validated = $this->validateImage($request);
         if ($validated->fails())
-            return $this->sendError('Invalid data', $validated->messages(), 400);
+            return $this->sendError(__('General.InvalidData'), $validated->messages(), 400);
 
-        $profile = Profile::find($user->profile);
+        $profile = Profile::find($user->profile_id);
         if ($profile->cover == null) {
             $imagePath = $request['image']->store('users', 'public');
             $profile->cover = "/storage/" . $imagePath;
@@ -225,11 +231,11 @@ class UserController extends BaseController
         if ($request['userId'] != $id)
             return $this->sendForbidden('أنت لا تملك صلاحية تعديل هذا الملف الشخصي');  ///You aren\'t authorized to delete this transaction.
 
-        $profile = Profile::find($user->profile);
-        $profile->bio = $request['bio'];
-        $user->phone_number = $request['phoneNumber'];
-        $user->address = $request['address'];
-        $user->nationality = $request['nationality'];
+        $profile = Profile::find($user->profile_id);
+        $profile->bio = $request['bio'] ?? $profile->bio;
+        $user->phone_number = $request['phoneNumber'] ?? $user->phone_number;
+        $user->address = $request['address'] ?? $user->address;
+        $user->nationality = $request['nationality'] ?? $user->nationality;
         $profile->save();
         $user->save();
         return $this->sendResponse([], 'تم تغيير بياناتك بنجاح');    ///Image Updated Successfully!

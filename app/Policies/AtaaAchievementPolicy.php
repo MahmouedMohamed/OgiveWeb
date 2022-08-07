@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\AtaaAchievement;
+use App\Models\Ataa\AtaaAchievement;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use App\Models\AvailableAbilities;
@@ -22,7 +22,8 @@ class AtaaAchievementPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return (($this->hasAbility($user, AvailableAbilities::ViewAtaaAchievement)
+            && $this->hasNoBan($user, BanTypes::ViewAtaaAchievement)));
     }
 
     /**
