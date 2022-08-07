@@ -12,6 +12,7 @@ use App\Traits\ControllersTraits\UserValidator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class PetController extends BaseController
 {
@@ -29,8 +30,8 @@ class PetController extends BaseController
             $this->userIsAuthorized($user, 'viewAny', Pet::class);
             $currentPage = request()->get('page', 1);
             return $this->sendResponse(
-                Pet::join('users', 'users.id', 'pets.createdBy')
-                    ->join('profiles', 'users.profile', 'profiles.id')
+                Pet::join('users', 'users.id', 'pets.created_by')
+                    ->join('profiles', 'users.profile_id', 'profiles.id')
                     ->select(
                         'pets.*',
                         'users.id as userId',
@@ -77,6 +78,7 @@ class PetController extends BaseController
                 'image' => "/storage/" . $imagePath,
                 'nationality' => $user->nationality,
                 'status' => true,
+                'id' => Str::uuid(),
             ]);
             return $this->sendResponse([], __('BreedMe.PetCreationSuccessMessage')); ///Thank You For Your Contribution!
         } catch (UserNotFound $e) {
