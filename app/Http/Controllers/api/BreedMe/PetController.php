@@ -74,6 +74,7 @@ class PetController extends BaseController
                 'age' => $request['age'],
                 'sex' => $request['sex'],
                 'type' => $request['type'],
+                'breed' => $request['breed'],
                 'notes' => $request['notes'],
                 'image' => "/storage/" . $imagePath,
                 'nationality' => $user->nationality,

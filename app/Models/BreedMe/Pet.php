@@ -19,6 +19,7 @@ class Pet extends Model
         'age',
         'sex',
         'type',
+        'breed',
         'image',
         'available_for_adoption',
         'created_by',
