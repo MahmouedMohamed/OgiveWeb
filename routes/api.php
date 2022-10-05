@@ -109,7 +109,7 @@ Route::middleware(['api_auth'])->prefix('ahed')->group(function () {
 
 
 //**      Admin Controllers      **//
-Route::middleware(['api_auth'])->prefix('admin')->group(function () {
+Route::middleware(['api_auth', 'Bindings'])->prefix('admin')->group(function () {
     //* * Optimized * */
     Route::get('/', [AdminController::class, 'generalAdminDashboard']);
     //**      Ahed      **//
