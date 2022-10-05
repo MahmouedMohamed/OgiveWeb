@@ -2,13 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class UserBan extends Model
+class UserBan extends BaseModel
 {
-    use HasFactory;
-
     public $incrementing = false;
 
     protected $fillable = [

@@ -269,11 +269,10 @@ class AdminController extends BaseController
      * @param String $id
      * @return \Illuminate\Http\Response
      */
-    public function activateBan(Request $request, String $id)
+    public function activateBan(Request $request, UserBan $userBan)
     {
         try {
             $user = $this->userExists($request['userId']);
-            $userBan = $this->userBanExists($id);
             $this->userIsAuthorized($user, 'activate', $userBan);
             $userBan->activate();
             return $this->sendResponse('', 'User Ban Activated Successfully');
