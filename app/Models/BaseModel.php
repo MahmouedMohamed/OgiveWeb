@@ -18,6 +18,7 @@ class BaseModel extends Model
             $model = static::where('id', '=', $value)->first();
         }
         if (empty($model)) {
+            //ToDo: Make Custom model not found that takes model class
             throw new ModelNotFoundException("Model Cannot be found");
         }
 
