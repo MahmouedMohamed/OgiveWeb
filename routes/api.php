@@ -132,8 +132,8 @@ Route::middleware(['api_auth', 'Bindings'])->prefix('admin')->group(function () 
     //**      Ban      **//
     Route::get('/ban', [AdminController::class, 'getUserBans']);
     Route::post('/ban', [AdminController::class, 'addUserBan']);
-    Route::patch('/ban/activate/{id}', [AdminController::class, 'activateBan']);
-    Route::patch('/ban/deactivate/{id}', [AdminController::class, 'deactivateBan']);
+    Route::patch('/ban/activate/{userBan}', [AdminController::class, 'activateBan']);
+    Route::patch('/ban/deactivate/{userBan}', [AdminController::class, 'deactivateBan']);
     //**      Import      **//
     //* * Not Optimized * */
     Route::post('/importCSV', [AdminController::class, 'importCSV']);

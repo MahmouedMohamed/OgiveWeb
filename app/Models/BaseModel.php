@@ -15,11 +15,10 @@ class BaseModel extends Model
     {
         $model = null;
         if (Uuid::isValid($value)) {
-            $model = static::whereUuid($value)->firstOrFail();
+            $model = static::where('id', '=', $value)->first();
         }
-
         if (empty($model)) {
-            throw new ModelNotFoundException();
+            throw new ModelNotFoundException("Model Cannot be found");
         }
 
         return $model;
