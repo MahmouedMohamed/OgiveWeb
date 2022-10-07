@@ -2,7 +2,7 @@
 
 namespace App\Http;
 
-use App\Http\Middleware\AccessTokenIsValid;
+use App\Http\Middleware\UserIsAuthorized;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -65,6 +65,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'Bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
-        'api_auth' => AccessTokenIsValid::class,
+        'UserIsAuthorized' => UserIsAuthorized::class,
     ];
 }

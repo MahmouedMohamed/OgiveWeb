@@ -43,7 +43,8 @@ use App\Http\Controllers\api\Ahed\OnlineTransactionsController;
 //**      User Controllers      **//
 Route::post('/login', [UserController::class, 'login']);
 Route::post('/register', [UserController::class, 'register']);
-Route::middleware(['api_auth'])->prefix('users')->group(function () {
+
+Route::middleware(['UserIsAuthorized'])->prefix('users')->group(function () {
     Route::patch('/{user}/profile/picture', [UserController::class, 'updateProfilePicture']);
     Route::patch('/{user}/profile/cover', [UserController::class, 'updateCoverPicture']);
     Route::patch('/{user}/profile/information', [UserController::class, 'updateinformation']);
@@ -51,7 +52,7 @@ Route::middleware(['api_auth'])->prefix('users')->group(function () {
 
 //**      Ataa Controllers      **//
 //* * Optimized * */
-Route::middleware(['api_auth'])->prefix('ataa')->group(function () {
+Route::middleware(['UserIsAuthorized'])->prefix('ataa')->group(function () {
     Route::apiResource('/markers', FoodSharingMarkersController::class);
     Route::patch('/collect/{id}', [FoodSharingMarkersController::class, 'collect']);
     Route::get('/achievement/{id}', [AtaaAchievementController::class, 'show']);
@@ -65,7 +66,7 @@ Route::middleware(['api_auth'])->prefix('ataa')->group(function () {
 Route::prefix('memorywall')->group(function () {
     //**memories middleware in the controller **//
     Route::apiResource('/memories', MemoryController::class);
-    Route::middleware(['api_auth'])->apiResource('/likes', LikesController::class);
+    Route::middleware(['UserIsAuthorized'])->apiResource('/likes', LikesController::class);
     Route::get('/top-memories', [MemoryController::class, 'getTopMemories']);
 });
 
@@ -73,7 +74,7 @@ Route::prefix('memorywall')->group(function () {
 
 //**      Breed Me Controllers      **//
 Route::
-    // middleware(['api_auth'])->
+    // middleware(['UserIsAuthorized'])->
     prefix('breedme')->group(function () {
         Route::apiResource('pets', PetController::class);
         Route::get('/filterByType', [PetController::class, 'filterByType']);
@@ -96,7 +97,7 @@ Route::
 
 //**      Ahed Controllers      **//
 //* * Optimized * */
-Route::middleware(['api_auth'])->prefix('ahed')->group(function () {
+Route::middleware(['UserIsAuthorized'])->prefix('ahed')->group(function () {
     Route::apiResource('/needies', NeediesController::class);
     Route::get('/urgent-needies', [NeediesController::class, 'urgentIndex']);
     Route::get('/needies-with-ids', [NeediesController::class, 'getNeediesWithIDs']);

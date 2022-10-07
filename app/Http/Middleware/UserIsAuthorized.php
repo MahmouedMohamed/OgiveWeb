@@ -8,7 +8,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
-class AccessTokenIsValid
+class UserIsAuthorized
 {
     use ApiResponse;
 
@@ -30,7 +30,7 @@ class AccessTokenIsValid
             ->get();
         foreach ($activeOauthAccessTokens as $accessToken) {
             if (Hash::check($request->bearerToken(), $accessToken->access_token)) {
-                if($this->isValidAccessToken($accessToken,$accessToken->appType))
+                if ($this->isValidAccessToken($accessToken, $accessToken->appType))
                     return $next($request);
             }
         }
