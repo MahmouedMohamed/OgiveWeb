@@ -18,13 +18,12 @@ use App\Models\BreedMe\Consultation;
 use App\Models\BreedMe\ConsultationComment;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 
-class User extends Authenticatable
+class User extends AuthenticatableUser
 {
     use HasFactory, Notifiable;
 
