@@ -4,6 +4,7 @@ namespace App\Models\Ataa;
 
 use App\ConverterModels\FoodSharingMarkerPriority;
 use App\ConverterModels\FoodSharingMarkerType;
+use App\ConverterModels\Nationality;
 use App\Models\BaseModel;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -53,6 +54,21 @@ class FoodSharingMarker extends BaseModel
         $source = app()->getLocale() === 'ar' ? 'text_ar' : 'text';
         if ($value) {
             return FoodSharingMarkerPriority::$$source[$value];
+        }
+
+        return null;
+    }
+
+    public function setNationalityAttribute($text)
+    {
+        $this->attributes['nationality'] = Nationality::$value[$text];
+    }
+
+    public function getNationalityAttribute($value)
+    {
+        $source = app()->getLocale() === 'ar' ? 'text_ar' : 'text';
+        if ($value) {
+            return Nationality::$$source[$value];
         }
 
         return null;
