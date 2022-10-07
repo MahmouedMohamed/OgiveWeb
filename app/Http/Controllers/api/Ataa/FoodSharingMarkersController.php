@@ -11,6 +11,7 @@ use App\Exceptions\FoodSharingMarkerIsCollected;
 use App\Exceptions\FoodSharingMarkerNotFound;
 use App\Exceptions\UserNotFound;
 use App\Exceptions\UserNotAuthorized;
+use App\Http\Requests\CollectFoodSharingMarkerRequest;
 use App\Http\Requests\CreateFoodSharingMarkerRequest;
 use App\Http\Requests\UpdateFoodSharingMarkerRequest;
 use App\Http\Resources\FoodSharingMarkerResource;
@@ -112,28 +113,21 @@ class FoodSharingMarkersController extends BaseController
     /**
      * Collect Food Sharing Marker.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Http\Requests\CollectFoodSharingMarkerRequest  $request
+     * @param  \App\Models\Ataa\FoodSharingMarker  $foodSharingMarker
      * @return \Illuminate\Http\Response
      */
-    public function collect(Request $request, $id)
+    public function collect(CollectFoodSharingMarkerRequest $request, FoodSharingMarker $foodSharingMarker)
     {
         try {
-            //Check if Marker exists
-            $foodSharingMarker = $this->foodSharingMarkerExists($id);
             //Check if it has been collected to prevent fake collection
             $this->foodSharingMarkerIsCollected($foodSharingMarker);
-            //Check user exists
-            $user = $this->userExists($request['userId']);
-            //Validate Existing value
-            $foodSharingMarkerExists = $request['exists'];
-            if ($foodSharingMarkerExists == null || ($foodSharingMarkerExists != 1 && $foodSharingMarkerExists != 0))
-                return $this->sendError(__('General.InvalidData'), '', 400);
-            $foodSharingMarker->collect($foodSharingMarkerExists);
-            $this->handleMarkerExistingAction($foodSharingMarker, $foodSharingMarkerExists);
-            $this->handleMarkerCollected($user, $foodSharingMarker);
+
+            $foodSharingMarker->collect($request->exists);
+            $this->handleMarkerExistingAction($foodSharingMarker, $request->exists);
+            $this->handleMarkerCollected($request->user, $foodSharingMarker);
             FoodSharingMarkerCollected::dispatch($foodSharingMarker);
-            if ($foodSharingMarkerExists == 1)
+            if ($request->exists == 1)
                 return $this->sendResponse([], __('Ataa.FoodSharingMarkerSuccessCollectExist'));
             return $this->sendResponse([], __('Ataa.FoodSharingMarkerSuccessCollectNoExist'));
         } catch (FoodSharingMarkerNotFound $e) {

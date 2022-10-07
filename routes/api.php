@@ -58,8 +58,8 @@ Route::group(['prefix' => 'ataa', 'middleware' => ['UserIsAuthorized', 'Bindings
         Route::get('/{foodSharingMarker}', [FoodSharingMarkersController::class, 'show']);
         Route::post('/', [FoodSharingMarkersController::class, 'store']);
         Route::patch('/{foodSharingMarker}', [FoodSharingMarkersController::class, 'update']);
-        Route::delete('/{foodSharingMarker}', [FoodSharingMarkersController::class, 'delete']);
-        Route::patch('/{foodSharingMarker}/collect', [FoodSharingMarkersController::class, 'collect']);
+        Route::delete('/{foodSharingMarker}', [FoodSharingMarkersController::class, 'destroy']);
+        Route::post('/{foodSharingMarker}/collect', [FoodSharingMarkersController::class, 'collect']);
     });
     Route::get('/achievement/{id}', [AtaaAchievementController::class, 'show']);
     Route::get('/prizes', [AtaaPrizeController::class, 'getAcquired']);
