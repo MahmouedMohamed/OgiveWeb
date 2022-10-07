@@ -142,7 +142,7 @@ class FoodSharingMarkersController extends BaseController
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\FoodSharingMarker  $foodSharingMarker
+     * @param  \App\Models\Ataa\FoodSharingMarker  $foodSharingMarker
      * @return \Illuminate\Http\Response
      */
     public function show(FoodSharingMarker $foodSharingMarker)
@@ -185,20 +185,14 @@ class FoodSharingMarkersController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, int $id)
+    public function destroy(Request $request, FoodSharingMarker $foodSharingMarker)
     {
         try {
-            $foodSharingMarker = $this->foodSharingMarkerExists($id);
-            $user = $this->userExists($request['userId']);
-            $this->userIsAuthorized($user, 'delete', $foodSharingMarker);
+            $this->userIsAuthorized($request->user, 'delete', $foodSharingMarker);
             FoodSharingMarkerDeleted::dispatch($foodSharingMarker);
             $foodSharingMarker->delete();
-            $this->handleMarkerDeleted($user);
+            $this->handleMarkerDeleted($request->user);
             return $this->sendResponse([], __('Ataa.FoodSharingMarkerDeleteSuccessMessage'));  ///Needy Updated Successfully!
-        } catch (FoodSharingMarkerNotFound $e) {
-            return $this->sendError(__('Ataa.FoodSharingMarkerNotFound'));
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden(__('Ataa.FoodSharingMarkerDeletionForbiddenMessage'));
         }
