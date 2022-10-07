@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Exceptions\AtaaAchievementNotFound;
 use App\Exceptions\NeedyNotFound;
 use App\Exceptions\NotSupportedType;
 use App\Exceptions\OfflineTransactionNotFound;
@@ -214,8 +213,6 @@ class AdminController extends BaseController
             return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden('You aren\'t authorized to freeze this user achievement.');
-        } catch (AtaaAchievementNotFound $e) {
-            return $this->sendError('User Achievement doesn\'t exist');
         }
     }
 
@@ -237,8 +234,6 @@ class AdminController extends BaseController
             return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden('You aren\'t authorized to defreeze this user achievement.');
-        } catch (AtaaAchievementNotFound $e) {
-            return $this->sendError('User Achievement doesn\'t exist');
         }
     }
 

@@ -3,32 +3,28 @@
 namespace App\Http\Controllers\api\Ataa;
 
 use App\Http\Controllers\api\BaseController;
-use App\Exceptions\AtaaAchievementNotFound;
 use App\Exceptions\UserNotAuthorized;
 use App\Exceptions\UserNotFound;
 use App\Models\Ataa\AtaaAchievement;
 use Illuminate\Http\Request;
-use App\Traits\ControllersTraits\AtaaAchievementValidator;
 use App\Traits\ControllersTraits\UserValidator;
 use Illuminate\Support\Facades\DB;
 
 class AtaaAchievementController extends BaseController
 {
-    use UserValidator, AtaaAchievementValidator;
+    use UserValidator;
     /**
      * Display the specified resource.
      * @param  \Illuminate\Http\Request  $request
-     * @param  String  $userId
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, String $userId)
+    public function show(Request $request)
     {
         try {
             //Check User exists
-            $user = $this->userExists($userId);
-            $requesterUser = $this->userExists($request['requesterId']);
+            $user = $request->user;
             //if Ataa Achievement is null -> Create one with this user to return a results
-            $this->userIsAuthorized($requesterUser, 'view', $user->ataaAchievement ?? ((new AtaaAchievement())->user()->associate($user)));
+            $this->userIsAuthorized($user, 'view', $user->ataaAchievement ?? ((new AtaaAchievement())->user()->associate($user)));
 
             $markersCollected = $user->ataaAchievement->markers_collected ?? 0;
             $markersPosted = $user->ataaAchievement->markers_posted ?? 0;
@@ -60,11 +56,9 @@ class AtaaAchievementController extends BaseController
             return $this->sendResponse($response, __('General.DataRetrievedSuccessMessage'));
         } catch (UserNotFound $e) {
             return $this->sendError(__('General.UserNotFound'));
-        } catch (AtaaAchievementNotFound $e) {
-            return $this->sendError(__('Ataa.AchievementNotFound'));
         } catch (UserNotAuthorized $e) {
             if ($user->ataaAchievement)
-                $e->report($requesterUser, 'AccessAtaaAchievement', $user->ataaAchievement);
+                $e->report($request->user, 'AccessAtaaAchievement', $user->ataaAchievement);
             return $this->sendForbidden(__('Ataa.ShowAchievementForbidden'));
         }
     }
