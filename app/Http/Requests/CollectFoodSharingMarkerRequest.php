@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests;
 
-class UpdateImageRequest extends BaseRequest
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
+class CollectFoodSharingMarkerRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,7 +25,7 @@ class UpdateImageRequest extends BaseRequest
     public function rules()
     {
         return [
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'exists' => ['required', Rule::in([0, 1])]
         ];
     }
 }

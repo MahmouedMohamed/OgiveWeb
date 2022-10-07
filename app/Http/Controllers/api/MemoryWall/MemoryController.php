@@ -18,11 +18,6 @@ class MemoryController extends BaseController
 {
     use UserValidator, MemoryValidator;
 
-    public function __construct()
-    {
-        $this->middleware('api_auth')->except('index', 'getTopMemories');
-    }
-
     /**
      * Display a listing of the resource.
      *

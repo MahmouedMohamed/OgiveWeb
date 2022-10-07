@@ -27,13 +27,12 @@ class AtaaBadgeController extends BaseController
     public function getAcquired(Request $request)
     {
         try {
-            $user = $this->userExists($request['userId']);
-            $this->userIsAuthorized($user, 'viewAny', AtaaBadge::class);
+            $this->userIsAuthorized($request->user, 'viewAny', AtaaBadge::class);
             return $this->sendResponse(
                 DB::table('ataa_badges')
-                    ->leftJoin('user_ataa_acquired_badges', function ($join) use ($user) {
+                    ->leftJoin('user_ataa_acquired_badges', function ($join) use ($request) {
                         $join->on('ataa_badges.id', '=', 'user_ataa_acquired_badges.badge_id');
-                        $join->on('user_ataa_acquired_badges.user_id', '=', DB::raw($user->id));
+                        $join->where('user_ataa_acquired_badges.user_id', '=', $request->user->id);
                     })
                     ->select(
                         'ataa_badges.id as id',

@@ -16,7 +16,6 @@ use App\Models\Ahed\OnlineTransaction;
 use App\Models\Profile;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -150,12 +149,12 @@ class UserController extends BaseController
      * Update Profile Picture.
      *
      * @param  \App\Http\Requests\UpdateImageRequest  $request
-     * @param \App\Models\User $user
+     * @param  \App\Models\User $user
      * @return \Illuminate\Http\Response
      */
     public function updateProfilePicture(UpdateImageRequest $request, User $user)
     {
-        if ($user->id != $request->user_id)
+        if ($user->id != $request->user->id)
             return $this->sendForbidden('أنت لا تملك صلاحية تعديل هذا الملف الشخصي');  ///You aren\'t authorized to delete this transaction.
 
         $profile = Profile::find($user->profile_id);
@@ -174,12 +173,12 @@ class UserController extends BaseController
      * Update Cover Picture.
      *
      * @param  \App\Http\Requests\UpdateImageRequest  $request
-     * @param \App\Models\User $user
+     * @param  \App\Models\User $user
      * @return \Illuminate\Http\Response
      */
     public function updateCoverPicture(UpdateImageRequest $request, User $user)
     {
-        if ($user->id != $request->user_id)
+        if ($user->id != $request->user->id)
             return $this->sendForbidden('أنت لا تملك صلاحية تعديل هذا الملف الشخصي');  ///You aren\'t authorized to delete this transaction.
 
         $profile = Profile::find($user->profile_id);
@@ -198,12 +197,12 @@ class UserController extends BaseController
      * Update Information.
      *
      * @param  \App\Http\Requests\UpdateProfileRequest  $request
-     * @param \App\Models\User $user
+     * @param  \App\Models\User $user
      * @return \Illuminate\Http\Response
      */
     public function updateinformation(UpdateProfileRequest $request, User $user)
     {
-        if ($user->id != $request->user_id)
+        if ($user->id != $request->user->id)
             return $this->sendForbidden('أنت لا تملك صلاحية تعديل هذا الملف الشخصي');  ///You aren\'t authorized to delete this transaction.
 
         $profile = Profile::find($user->profile_id);

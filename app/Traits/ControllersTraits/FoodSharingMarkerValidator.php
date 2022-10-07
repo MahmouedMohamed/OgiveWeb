@@ -36,32 +36,4 @@ trait FoodSharingMarkerValidator
             throw new FoodSharingMarkerIsCollected();
         return;
     }
-    public function validateMarker(Request $request, String $related)
-    {
-        $rules = null;
-        switch ($related) {
-            case 'store':
-                $rules = [
-                    'createdBy' => 'required',
-                    'latitude' => 'required|numeric|min:0',
-                    'longitude' => 'required|numeric|min:0',
-                    'type' => 'required|in:Food,Drink,Both of them',
-                    'description' => 'required|max:1024',
-                    'quantity' => 'required|integer|min:1|max:10',
-                    'priority' => 'required|integer|min:1|max:10'
-                ];
-                break;
-            case 'update':
-                $rules = [
-                    'latitude' => 'required|numeric|min:0',
-                    'longitude' => 'required|numeric|min:0',
-                    'type' => 'required|in:Food,Drink,Both of them',
-                    'description' => 'required|max:1024',
-                    'quantity' => 'required|integer|min:1|max:10',
-                    'priority' => 'required|integer|min:1|max:10'
-                ];
-                break;
-        }
-        return Validator::make($request->all(), $rules);
-    }
 }
