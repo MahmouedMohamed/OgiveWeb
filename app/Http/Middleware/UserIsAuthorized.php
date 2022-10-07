@@ -17,6 +17,7 @@ class UserIsAuthorized
         //ToDo: Check if accessToken is specified for this appType
         return $accessToken->active;
     }
+
     /**
      * Handle an incoming request.
      *
@@ -28,10 +29,15 @@ class UserIsAuthorized
     {
         $activeOauthAccessTokens = OauthAccessToken::where('active', '=', 1)
             ->get();
+
         foreach ($activeOauthAccessTokens as $accessToken) {
             if (Hash::check($request->bearerToken(), $accessToken->access_token)) {
-                if ($this->isValidAccessToken($accessToken, $accessToken->appType))
+                if ($this->isValidAccessToken($accessToken, $accessToken->appType)){
+                    request()->merge([
+                        'user_id' => $accessToken->user_id
+                    ]);
                     return $next($request);
+                }
             }
         }
         return $this->sendForbidden('Invalid Access token');
