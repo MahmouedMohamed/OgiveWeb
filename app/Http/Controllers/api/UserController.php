@@ -173,7 +173,14 @@ class UserController extends BaseController
         return $this->sendResponse($this->content, 'Achievement Records Returned Successfully');
     }
 
-    public function updateProfilePicture(Request $request, $id)
+    /**
+     * Update Profile Picture.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param \App\Models\User $user
+     * @return \Illuminate\Http\Response
+     */
+    public function updateProfilePicture(Request $request, User $user)
     {
         $user = User::find($id);
         if ($user == null) {
@@ -198,7 +205,14 @@ class UserController extends BaseController
 
     }
 
-    public function updateCoverPicture(Request $request, $id)
+    /**
+     * Update Cover Picture.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param \App\Models\User $user
+     * @return \Illuminate\Http\Response
+     */
+    public function updateCoverPicture(Request $request, User $user)
     {
         $user = User::find($id);
         if ($user == null) {
@@ -222,7 +236,15 @@ class UserController extends BaseController
         return $this->sendResponse($profile->cover, 'تم إضافة الصورة بنجاح');    ///Image Updated Successfully!
 
     }
-    public function updateinformation(Request $request, $id)
+
+    /**
+     * Update Information.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param \App\Models\User $user
+     * @return \Illuminate\Http\Response
+     */
+    public function updateinformation(Request $request, User $user)
     {
         $user = User::find($id);
         if ($user == null) {

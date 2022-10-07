@@ -43,10 +43,11 @@ use App\Http\Controllers\api\Ahed\OnlineTransactionsController;
 //**      User Controllers      **//
 Route::post('/login', [UserController::class, 'login']);
 Route::post('/register', [UserController::class, 'register']);
-Route::patch('/profile/{id}/picture', [UserController::class, 'updateProfilePicture']);
-Route::patch('/profile/{id}/cover', [UserController::class, 'updateCoverPicture']);
-Route::patch('/profile/{id}/information', [UserController::class, 'updateinformation']);
-
+Route::middleware(['api_auth'])->prefix('users')->group(function () {
+    Route::patch('/{user}/profile/picture', [UserController::class, 'updateProfilePicture']);
+    Route::patch('/{user}/profile/cover', [UserController::class, 'updateCoverPicture']);
+    Route::patch('/{user}/profile/information', [UserController::class, 'updateinformation']);
+});
 
 //**      Ataa Controllers      **//
 //* * Optimized * */
