@@ -11,6 +11,8 @@ use App\Exceptions\FoodSharingMarkerIsCollected;
 use App\Exceptions\FoodSharingMarkerNotFound;
 use App\Exceptions\UserNotFound;
 use App\Exceptions\UserNotAuthorized;
+use App\Http\Requests\CreateFoodSharingMarkerRequest;
+use App\Http\Requests\UpdateFoodSharingMarkerRequest;
 use App\Models\Ataa\FoodSharingMarker;
 use Illuminate\Http\Request;
 use App\Traits\ControllersTraits\FoodSharingMarkerValidator;
@@ -153,21 +155,14 @@ class FoodSharingMarkersController extends BaseController
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Http\Requests\UpdateFoodSharingMarkerRequest  $request
+     * @param  \App\Models\Ataa\FoodSharingMarker  $foodSharingMarker
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, int $id)
+    public function update(UpdateFoodSharingMarkerRequest $request, FoodSharingMarker $foodSharingMarker)
     {
         try {
-            //Validate Request
-            $validated = $this->validateMarker($request, 'update');
-            if ($validated->fails()) {
-                return $this->sendError(__('General.InvalidData'), $validated->messages(), 400);
-            }
-            $foodSharingMarker = $this->foodSharingMarkerExists($id);
-            $user = $this->userExists(request()->input('userId'));
-            $this->userIsAuthorized($user, 'update', $foodSharingMarker);
+            $this->userIsAuthorized($request->user, 'update', $foodSharingMarker);
             $foodSharingMarker->update([
                 'latitude' => $request['latitude'],
                 'longitude' => $request['longitude'],
@@ -176,14 +171,10 @@ class FoodSharingMarkersController extends BaseController
                 'quantity' => $request['quantity'],
                 'priority' => $request['priority'],
                 'collected' => 0,
-                'nationality' => $user->nationality
+                'nationality' => $request->user->nationality
             ]);
             FoodSharingMarkerUpdated::dispatch($foodSharingMarker);
-            return $this->sendResponse([], __('Ataa.FoodSharingMarkerUpdateSuccessMessage'));
-        } catch (FoodSharingMarkerNotFound $e) {
-            return $this->sendError(__('Ataa.FoodSharingMarkerNotFound'));
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'));
+            return $this->sendResponse(FoodSharingMarkerResource::make($foodSharingMarker), __('Ataa.FoodSharingMarkerUpdateSuccessMessage'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden(__('Ataa.FoodSharingMarkerUpdateForbiddenMessage'));
         }
