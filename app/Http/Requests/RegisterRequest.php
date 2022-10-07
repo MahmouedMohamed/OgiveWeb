@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\ConverterModels\Gender;
+use App\ConverterModels\Nationality;
 use App\Http\Requests\BaseRequest;
 use Illuminate\Validation\Rule;
 
@@ -35,7 +36,7 @@ class RegisterRequest extends BaseRequest
             'phone_number' => 'required',
             'address' => 'string|max:1024',
             'image' => 'image',
-            'nationality' => 'required|string'
+            'nationality' => ['required', Rule::in(array_values(Nationality::$text))],
         ];
     }
 }
