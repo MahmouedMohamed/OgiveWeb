@@ -74,21 +74,15 @@ class FoodSharingMarkersController extends BaseController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\CreateFoodSharingMarkerRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateFoodSharingMarkerRequest $request)
     {
         try {
-            //Validate Request
-            $validated = $this->validateMarker($request, 'store');
-            if ($validated->fails()) {
-                return $this->sendError(__('General.InvalidData'), $validated->messages(), 400);
-            }
-            $user = $this->userExists(request()->input('createdBy'));
-            $this->userIsAuthorized($user, 'create', FoodSharingMarker::class);
+            $this->userIsAuthorized($request->user, 'create', FoodSharingMarker::class);
             //Create Food Sharing Marker
-            $foodSharingMarker = $user->foodSharingMarkers()->create([
+            $foodSharingMarker = $request->user->foodSharingMarkers()->create([
                 'id' => Str::uuid(),
                 'latitude' => $request['latitude'],
                 'longitude' => $request['longitude'],
@@ -97,10 +91,10 @@ class FoodSharingMarkersController extends BaseController
                 'quantity' => $request['quantity'],
                 'priority' => $request['priority'],
                 'collected' => 0,
-                'nationality' => $user->nationality
+                'nationality' => $request->user->nationality
             ]);
             FoodSharingMarkerCreated::dispatch($foodSharingMarker);
-            $this->handleMarkerCreated($user, $foodSharingMarker);
+            $this->handleMarkerCreated($request->user, $foodSharingMarker);
             return $this->sendResponse([], __('Ataa.FoodSharingMarkerCreationSuccessMessage'));
         } catch (UserNotFound $e) {
             return $this->sendError(__('General.UserNotFound'));
