@@ -6,7 +6,6 @@ use App\Exceptions\AtaaAchievementNotFound;
 use App\Exceptions\NeedyNotFound;
 use App\Exceptions\NotSupportedType;
 use App\Exceptions\OfflineTransactionNotFound;
-use App\Exceptions\UserBanNotFound;
 use App\Exceptions\UserNotAuthorized;
 use App\Exceptions\UserNotFound;
 use App\Http\Controllers\API\BaseController as BaseController;
@@ -266,7 +265,7 @@ class AdminController extends BaseController
      * activate User Bans.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param String $id
+     * @param \App\Models\UserBan $userBan
      * @return \Illuminate\Http\Response
      */
     public function activateBan(Request $request, UserBan $userBan)
@@ -276,8 +275,6 @@ class AdminController extends BaseController
             $this->userIsAuthorized($user, 'activate', $userBan);
             $userBan->activate();
             return $this->sendResponse('', 'User Ban Activated Successfully');
-        } catch (UserBanNotFound $e) {
-            return $this->sendError('User Ban doesn\'t exist');
         } catch (UserNotFound $e) {
             return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
@@ -289,19 +286,16 @@ class AdminController extends BaseController
      * deactivate User Bans.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param String $id
+     * @param \App\Models\UserBan $userBan
      * @return \Illuminate\Http\Response
      */
-    public function deactivateBan(Request $request, String $id)
+    public function deactivateBan(Request $request, UserBan $userBan)
     {
         try {
             $user = $this->userExists($request['userId']);
-            $userBan = $this->userBanExists($id);
             $this->userIsAuthorized($user, 'deactivate', $userBan);
             $userBan->deactivate();
             return $this->sendResponse('', 'User Ban Deactivated Successfully');
-        } catch (UserBanNotFound $e) {
-            return $this->sendError('User Ban doesn\'t exist');
         } catch (UserNotFound $e) {
             return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
@@ -338,8 +332,6 @@ class AdminController extends BaseController
                 'end_at' => $request['endAt'] ?? null
             ]);
             return $this->sendResponse('', 'User Ban Created Successfully');
-        } catch (UserBanNotFound $e) {
-            return $this->sendError('User Ban doesn\'t exist');
         } catch (UserNotFound $e) {
             return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
