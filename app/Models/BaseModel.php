@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use App\Exceptions\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Ramsey\Uuid\Uuid;
 
 class BaseModel extends Model
@@ -18,11 +18,13 @@ class BaseModel extends Model
             $model = static::where('id', '=', $value)->first();
         }
         if (empty($model)) {
-            //ToDo: Make Custom model not found that takes model class
-            throw new ModelNotFoundException("Model Cannot be found");
+            $projectName = explode("\\", $this::class)[2]; //All Models would be App/Model/ProjectName/ModelName
+            if ($projectName == class_basename($this))
+                throw (new ModelNotFoundException("General", class_basename($this)));
+
+            throw (new ModelNotFoundException($projectName, class_basename($this)));
         }
 
         return $model;
     }
-
 }
