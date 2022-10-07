@@ -2,12 +2,14 @@
 
 namespace App\Models\Ataa;
 
+use App\ConverterModels\FoodSharingMarkerPriority;
+use App\ConverterModels\FoodSharingMarkerType;
+use App\Models\BaseModel;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 
-class FoodSharingMarker extends Model
+class FoodSharingMarker extends BaseModel
 {
     use HasFactory;
 
@@ -30,5 +32,29 @@ class FoodSharingMarker extends Model
         $this->existed = $existed;
         $this->collected_at = Carbon::now('GMT+2');
         $this->save();
+    }
+    public function setTypeAttribute($text)
+    {
+        $this->attributes['type'] = FoodSharingMarkerType::$value[$text];
+    }
+
+    public function getTypeAttribute($value)
+    {
+        $source = app()->getLocale() === 'ar' ? 'text_ar' : 'text';
+        if ($value) {
+            return FoodSharingMarkerType::$$source[$value];
+        }
+
+        return null;
+    }
+
+    public function getPriorityAttribute($value)
+    {
+        $source = app()->getLocale() === 'ar' ? 'text_ar' : 'text';
+        if ($value) {
+            return FoodSharingMarkerPriority::$$source[$value];
+        }
+
+        return null;
     }
 }
