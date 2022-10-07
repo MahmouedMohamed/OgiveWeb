@@ -2,9 +2,7 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class UpdateImageRequest extends FormRequest
+class UpdateImageRequest extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
