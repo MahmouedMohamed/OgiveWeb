@@ -2,6 +2,7 @@
 
 namespace App\Models\Ahed;
 
+use App\ConverterModels\CaseType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
@@ -84,5 +85,20 @@ class Needy extends Model
         foreach ($this->medias as $media) {
             Storage::delete('public/' . $media->path);
         }
+    }
+
+    public function setTypeAttribute($text)
+    {
+        $this->attributes['type'] = CaseType::$value[$text];
+    }
+
+    public function getTypeAttribute($value)
+    {
+        $source = app()->getLocale() === 'ar' ? 'text_ar' : 'text';
+        if ($value) {
+            return CaseType::$$source[$value];
+        }
+
+        return null;
     }
 }
