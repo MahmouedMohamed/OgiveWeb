@@ -34,7 +34,7 @@ class UserIsAuthorized
             if (Hash::check($request->bearerToken(), $accessToken->access_token)) {
                 if ($this->isValidAccessToken($accessToken, $accessToken->appType)){
                     request()->merge([
-                        'user_id' => $accessToken->user_id
+                        'user' => $accessToken->user
                     ]);
                     return $next($request);
                 }
