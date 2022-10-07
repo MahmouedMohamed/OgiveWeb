@@ -69,11 +69,24 @@ Route::group(['prefix' => 'ataa', 'middleware' => ['UserIsAuthorized', 'Bindings
 
 //**      Memory Wall Controllers      **//
 //* * Optimized * */
-Route::prefix('memorywall')->group(function () {
+Route::group(['prefix' => 'memorywall', 'middleware' => ['UserIsAuthorized', 'Bindings']], function () {
     //**memories middleware in the controller **//
-    Route::apiResource('/memories', MemoryController::class);
-    Route::middleware(['UserIsAuthorized'])->apiResource('/likes', LikesController::class);
-    Route::get('/top-memories', [MemoryController::class, 'getTopMemories']);
+    Route::group(['prefix' => 'memories'], function(){
+        Route::get('/', [MemoryController::class, 'index'])->name('public');
+        Route::get('/top', [MemoryController::class, 'getTopMemories'])->name('public');
+        Route::get('/{memory}', [MemoryController::class, 'show']);
+        Route::post('/', [MemoryController::class, 'store']);
+        Route::patch('/{memory}', [MemoryController::class, 'update']);
+        Route::delete('/{memory}', [MemoryController::class, 'destroy']);
+    });
+
+    Route::group(['prefix' => 'likes'], function(){
+        Route::get('/', [LikesController::class, 'index'])->name('public');
+        Route::get('/{like}', [MemoryController::class, 'show']);
+        Route::post('/', [MemoryController::class, 'store']);
+        Route::patch('/{like}', [MemoryController::class, 'update']);
+        Route::delete('/{like}', [MemoryController::class, 'destroy']);
+    });
 });
 
 //TODO: Add This APIs to be auth by 2oauth token
