@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\ConverterModels\Gender;
 use App\Models\Ataa\FoodSharingMarker;
 use App\Models\Ataa\AtaaAchievement;
 use App\Models\Ahed\Needy;
@@ -75,7 +76,7 @@ class User extends Authenticatable
         $accessToken = Str::random(60);
         $expiryDate = Carbon::now('GMT+2')->addMonth();
         $this->accessTokens()->create([
-            'id'=> Str::uuid(),
+            'id' => Str::uuid(),
             'access_token' => Hash::make($accessToken),
             'scopes' => '[]',
             'app_type' => $appType,
@@ -173,5 +174,20 @@ class User extends Authenticatable
     public function timeCatcherTracker()
     {
         return $this->hasMany(TimeCatcherTracking::class, 'tracker_id');
+    }
+
+    public function setGenderAttribute($text)
+    {
+        $this->attributes['gender'] = Gender::$value[$text];
+    }
+
+    public function getGenderAttribute($value)
+    {
+        $source = app()->getLocale() === 'ar' ? 'text_ar' : 'text';
+        if ($value) {
+            return Gender::$$source[$value];
+        }
+
+        return null;
     }
 }
