@@ -44,7 +44,7 @@ use App\Http\Controllers\api\Ahed\OnlineTransactionsController;
 Route::post('/login', [UserController::class, 'login']);
 Route::post('/register', [UserController::class, 'register']);
 
-Route::middleware(['UserIsAuthorized'])->prefix('users')->group(function () {
+Route::group(['prefix' => 'users', 'middleware' => ['UserIsAuthorized']], function(){
     Route::patch('/{user}/profile/picture', [UserController::class, 'updateProfilePicture']);
     Route::patch('/{user}/profile/cover', [UserController::class, 'updateCoverPicture']);
     Route::patch('/{user}/profile/information', [UserController::class, 'updateinformation']);
@@ -52,9 +52,15 @@ Route::middleware(['UserIsAuthorized'])->prefix('users')->group(function () {
 
 //**      Ataa Controllers      **//
 //* * Optimized * */
-Route::middleware(['UserIsAuthorized'])->prefix('ataa')->group(function () {
-    Route::apiResource('/markers', FoodSharingMarkersController::class);
-    Route::patch('/collect/{id}', [FoodSharingMarkersController::class, 'collect']);
+Route::group(['prefix' => 'ataa', 'middleware' => ['UserIsAuthorized', 'Bindings']], function () {
+    Route::group(['prefix' => 'markers'], function(){
+        Route::get('/', [FoodSharingMarkersController::class, 'index']);
+        Route::get('/{foodSharingMarker}', [FoodSharingMarkersController::class, 'show']);
+        Route::post('/', [FoodSharingMarkersController::class, 'store']);
+        Route::patch('/{foodSharingMarker}', [FoodSharingMarkersController::class, 'update']);
+        Route::delete('/{foodSharingMarker}', [FoodSharingMarkersController::class, 'delete']);
+        Route::patch('/{foodSharingMarker}/collect', [FoodSharingMarkersController::class, 'collect']);
+    });
     Route::get('/achievement/{id}', [AtaaAchievementController::class, 'show']);
     Route::get('/prizes', [AtaaPrizeController::class, 'getAcquired']);
     Route::get('/badges', [AtaaBadgeController::class, 'getAcquired']);
@@ -111,7 +117,7 @@ Route::middleware(['UserIsAuthorized'])->prefix('ahed')->group(function () {
 
 
 //**      Admin Controllers      **//
-Route::middleware(['api_auth', 'Bindings'])->prefix('admin')->group(function () {
+Route::middleware(['UserIsAuthorized', 'Bindings'])->prefix('admin')->group(function () {
     //* * Optimized * */
     Route::get('/', [AdminController::class, 'generalAdminDashboard']);
     //**      Ahed      **//
