@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api;
 
+use App\ConverterModels\CaseType;
 use App\Exceptions\LoginParametersNotFound;
 use App\Exceptions\UserNotAuthorized;
 use App\Http\Controllers\API\BaseController as BaseController;
@@ -10,7 +11,6 @@ use App\Http\Resources\UserResource;
 use App\Models\Ahed\Needy;
 use App\Models\Ahed\OfflineTransaction;
 use App\Models\Ahed\OnlineTransaction;
-use App\Models\Ahed\CaseType;
 use App\Models\Profile;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
@@ -122,21 +122,20 @@ class UserController extends BaseController
         $neediesSatisfied = $activeNeedies->where('satisfied', '=', '1')->pluck('id')->unique()->count();
         $this->content['NeediesSatisfied'] = $neediesSatisfied;
 
-        $caseType = new CaseType();
         ///All Needies safisfied with إيجاد مسكن مناسب
-        $neediesFoundTheirNewHome = $activeNeedies->where('satisfied', '=', '1')->where('type', '=', $caseType->types[0])->pluck('id')->unique()->count();
+        $neediesFoundTheirNewHome = $activeNeedies->where('satisfied', '=', '1')->where('type', '=', CaseType::$text[1])->pluck('id')->unique()->count();
         $this->content['NeediesFoundTheirNewHome'] = $neediesFoundTheirNewHome;
         ///All Needies safisfied with تحسين مستوي المعيشة
-        $neediesUpgradedTheirStandardOfLiving = $activeNeedies->where('satisfied', '=', '1')->where('type', '=', $caseType->types[1])->pluck('id')->unique()->count();
+        $neediesUpgradedTheirStandardOfLiving = $activeNeedies->where('satisfied', '=', '1')->where('type', '=', CaseType::$text[2])->pluck('id')->unique()->count();
         $this->content['NeediesUpgradedTheirStandardOfLiving'] = $neediesUpgradedTheirStandardOfLiving;
         ///All Needies safisfied with تجهيز عرائس
-        $neediesHelpedToPrepareForPride = $activeNeedies->where('satisfied', '=', '1')->where('type', '=', $caseType->types[2])->pluck('id')->unique()->count();
+        $neediesHelpedToPrepareForPride = $activeNeedies->where('satisfied', '=', '1')->where('type', '=', CaseType::$text[3])->pluck('id')->unique()->count();
         $this->content['NeediesHelpedToPrepareForPride'] = $neediesHelpedToPrepareForPride;
         ///All Needies safisfied with ديون
-        $neediesHelpedToPayDept = $activeNeedies->where('satisfied', '=', '1')->where('type', '=', $caseType->types[3])->pluck('id')->unique()->count();
+        $neediesHelpedToPayDept = $activeNeedies->where('satisfied', '=', '1')->where('type', '=', CaseType::$text[4])->pluck('id')->unique()->count();
         $this->content['NeediesHelpedToPayDept'] = $neediesHelpedToPayDept;
         ///All Needies safisfied with علاج
-        $neediesHelpedToCure = $activeNeedies->where('satisfied', '=', '1')->where('type', '=', $caseType->types[4])->pluck('id')->unique()->count();
+        $neediesHelpedToCure = $activeNeedies->where('satisfied', '=', '1')->where('type', '=', CaseType::$text[5])->pluck('id')->unique()->count();
         $this->content['NeediesHelpedToCure'] = $neediesHelpedToCure;
 
         ///neediesNotSatisfied

@@ -2,11 +2,12 @@
 
 namespace App\Traits\ControllersTraits;
 
+use App\ConverterModels\CaseType;
 use App\Exceptions\OfflineTransactionNotFound;
-use App\Models\Ahed\CaseType;
 use App\Models\Ahed\OfflineTransaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 trait OfflineTransactionValidator
 {
@@ -27,13 +28,12 @@ trait OfflineTransactionValidator
     public function validateTransaction(Request $request, String $related)
     {
         $rules = null;
-        $caseType = new CaseType();
         switch ($related) {
             case 'store':
                 $rules = [
                     'needy' => 'required|max:255|exists:needies,id',
                     'amount' => 'required|numeric|min:1',
-                    'preferredSection' => 'required|in:' . $caseType->toString(),
+                    'preferredSection' => ['required', Rule::in(array_values(CaseType::$text_ar))],
                     'address' => 'required',
                     'phoneNumber' => 'required',
                     'startCollectDate' => 'required|date|before:endCollectDate',
@@ -44,7 +44,7 @@ trait OfflineTransactionValidator
                 $rules = [
                     'needy' => 'required|max:255|exists:needies,id',
                     'amount' => 'required|numeric|min:1',
-                    'preferredSection' => 'required|in:' . $caseType->toString(),
+                    'preferredSection' => ['required', Rule::in(array_values(CaseType::$text_ar))],
                     'address' => 'required',
                     'phoneNumber' => 'required',
                     'startCollectDate' => 'required|date|before:endCollectDate',
