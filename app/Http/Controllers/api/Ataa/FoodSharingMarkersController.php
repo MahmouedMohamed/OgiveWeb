@@ -13,6 +13,7 @@ use App\Exceptions\UserNotFound;
 use App\Exceptions\UserNotAuthorized;
 use App\Http\Requests\CreateFoodSharingMarkerRequest;
 use App\Http\Requests\UpdateFoodSharingMarkerRequest;
+use App\Http\Resources\FoodSharingMarkerResource;
 use App\Models\Ataa\FoodSharingMarker;
 use Illuminate\Http\Request;
 use App\Traits\ControllersTraits\FoodSharingMarkerValidator;
@@ -33,10 +34,9 @@ class FoodSharingMarkersController extends BaseController
     public function index(Request $request)
     {
         try {
-            $user = $this->userExists($request['userId']);
-            $userLatitude = $request['latitude'] ?? 29.9832678;
-            $userLongitude = $request['longitude'] ?? 31.2282846;
-            $this->userIsAuthorized($user, 'viewAny', FoodSharingMarker::class);
+            $userLatitude = $request->query('latitude') ?? 29.9832678;
+            $userLongitude = $request->query('longitude') ?? 31.2282846;
+            $this->userIsAuthorized($request->user, 'viewAny', FoodSharingMarker::class);
             $distance = "(6371 * acos(cos(radians($userLatitude))
                      * cos(radians(latitude))
                      * cos(radians(longitude)
@@ -44,9 +44,10 @@ class FoodSharingMarkersController extends BaseController
                      + sin(radians($userLatitude))
                      * sin(radians(latitude))))";
             return $this->sendResponse(
-                FoodSharingMarker::select(
+                FoodSharingMarkerResource::collection(FoodSharingMarker::select(
                     [
                         'id',
+                        'user_id',
                         'latitude',
                         'longitude',
                         'type',
@@ -54,20 +55,23 @@ class FoodSharingMarkersController extends BaseController
                         'quantity',
                         'priority',
                         'collected',
+                        'collected_at',
+                        'nationality',
+                        'created_at',
+                        'collected_at',
                         DB::raw(
                             $distance . ' AS distance'
                         )
                     ]
                 )
+                    ->with('user')
                     ->where('collected', '=', 0)
-                    ->where('nationality', '=', $user->nationality)
+                    ->where('nationality', '=', $request->user->nationality)
                     ->havingRaw('distance < 100')
                     ->take(100)
-                    ->get(),
+                    ->get()),
                 __('General.DataRetrievedSuccessMessage')
             );
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden(__('Ataa.FoodSharingMarkerViewingBannedMessage'));
         }
