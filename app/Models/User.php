@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\ConverterModels\Gender;
+use App\ConverterModels\Nationality;
 use App\Models\Ataa\FoodSharingMarker;
 use App\Models\Ataa\AtaaAchievement;
 use App\Models\Ahed\Needy;
@@ -186,6 +187,21 @@ class User extends Authenticatable
         $source = app()->getLocale() === 'ar' ? 'text_ar' : 'text';
         if ($value) {
             return Gender::$$source[$value];
+        }
+
+        return null;
+    }
+
+    public function setNationalityAttribute($text)
+    {
+        $this->attributes['nationality'] = Nationality::$value[$text];
+    }
+
+    public function getNationalityAttribute($value)
+    {
+        $source = app()->getLocale() === 'ar' ? 'text_ar' : 'text';
+        if ($value) {
+            return Nationality::$$source[$value];
         }
 
         return null;
