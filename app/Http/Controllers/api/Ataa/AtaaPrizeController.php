@@ -28,13 +28,12 @@ class AtaaPrizeController extends BaseController
     public function getAcquired(Request $request)
     {
         try {
-            $user = $this->userExists($request['userId']);
-            $this->userIsAuthorized($user, 'viewAny', AtaaPrize::class);
+            $this->userIsAuthorized($request->user, 'viewAny', AtaaPrize::class);
             return $this->sendResponse(
                 DB::table('ataa_prizes')
-                    ->leftJoin('user_ataa_acquired_prizes', function ($join) use ($user) {
-                        $join->on('ataa_prizes.id', '=', 'user_ataa_acquired_prizes.prize_id');
-                        $join->on('user_ataa_acquired_prizes.user_id', '=', DB::raw($user->id));
+                    ->leftJoin('user_ataa_acquired_prizes', function ($join) use ($request) {
+                        $join->on('ataa_prizes.id', 'user_ataa_acquired_prizes.prize_id');
+                        $join->where('user_ataa_acquired_prizes.user_id', $request->user->id);
                     })
                     ->select(
                         'ataa_prizes.id as id',
@@ -53,8 +52,6 @@ class AtaaPrizeController extends BaseController
                     ->orderBy('level', 'ASC')->get(),
                 __('General.DataRetrievedSuccessMessage')
             );
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden(__('Ataa.PrizeViewForbiddenMessage'));
         }
