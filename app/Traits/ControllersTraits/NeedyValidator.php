@@ -3,7 +3,6 @@
 namespace App\Traits\ControllersTraits;
 
 use App\Models\Ahed\Needy;
-use App\Models\Ahed\CaseType;
 use App\Exceptions\NeedyNotFound;
 use App\Exceptions\NeedyNotApproved;
 use App\Exceptions\NeedyIsSatisfied;
@@ -62,23 +61,7 @@ trait NeedyValidator
 
     public function validateNeedy(Request $request, String $related)
     {
-        $rules = null;
-        $caseType = new CaseType();
         switch ($related) {
-            case 'store':
-                $rules = [
-                    'createdBy' => 'required',
-                    'name' => 'required|max:255',
-                    'age' => 'required|integer|max:100',
-                    'severity' => 'required|integer|min:1|max:10',
-                    'type' => 'required|in:' . $caseType->toString(),
-                    'details' => 'required|max:1024',
-                    'need' => 'required|numeric|min:1',
-                    'address' => 'required',
-                    'images' => 'required',
-                    'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-                ];
-                break;
             case 'update':
                 $rules = [
                     'name' => 'required|max:255',

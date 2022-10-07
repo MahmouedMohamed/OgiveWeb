@@ -7,6 +7,7 @@ use App\Exceptions\NeedyNotFound;
 use App\Exceptions\UserNotAuthorized;
 use App\Exceptions\UserNotFound;
 use App\Http\Controllers\api\BaseController;
+use App\Http\Requests\CreateNeedyRequest;
 use App\Models\Ahed\Needy;
 use App\Traits\ControllersTraits\NeedyValidator;
 use App\Traits\ControllersTraits\UserValidator;
@@ -108,10 +109,10 @@ class NeediesController extends BaseController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\CreateNeedyRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateNeedyRequest $request)
     {
         try {
             //Validate Request
