@@ -3,11 +3,12 @@
 namespace App\Models\MemoryWall;
 
 use App\ConverterModels\Nationality;
+use App\Models\BaseModel;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class Memory extends Model
+class Memory extends BaseModel
 {
     use HasFactory;
 
@@ -39,5 +40,11 @@ class Memory extends Model
         }
 
         return null;
+    }
+    public function getAgeAttribute()
+    {
+        $death_date = Carbon::parse($this->death_date);
+        $birth_date = Carbon::parse($this->birth_date);
+        return $death_date->diffInYears($birth_date);
     }
 }
