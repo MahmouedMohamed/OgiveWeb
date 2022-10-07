@@ -7,6 +7,7 @@ use App\Exceptions\LoginParametersNotFound;
 use App\Exceptions\UserNotAuthorized;
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\UpdateImageRequest;
 use App\Http\Resources\UserResource;
 use App\Models\Ahed\Needy;
 use App\Models\Ahed\OfflineTransaction;
@@ -147,11 +148,11 @@ class UserController extends BaseController
     /**
      * Update Profile Picture.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\UpdateImageRequest  $request
      * @param \App\Models\User $user
      * @return \Illuminate\Http\Response
      */
-    public function updateProfilePicture(Request $request, User $user)
+    public function updateProfilePicture(UpdateImageRequest $request, User $user)
     {
         $user = User::find($id);
         if ($user == null) {
@@ -159,10 +160,6 @@ class UserController extends BaseController
         }
         if ($request['userId'] != $id)
             return $this->sendForbidden('أنت لا تملك صلاحية تعديل هذا الملف الشخصي');  ///You aren\'t authorized to delete this transaction.
-
-        $validated = $this->validateImage($request);
-        if ($validated->fails())
-            return $this->sendError(__('General.InvalidData'), $validated->messages(), 400);
 
         $profile = Profile::find($user->profile_id);
         if ($profile->image == null) {
@@ -179,11 +176,11 @@ class UserController extends BaseController
     /**
      * Update Cover Picture.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\UpdateImageRequest  $request
      * @param \App\Models\User $user
      * @return \Illuminate\Http\Response
      */
-    public function updateCoverPicture(Request $request, User $user)
+    public function updateCoverPicture(UpdateImageRequest $request, User $user)
     {
         $user = User::find($id);
         if ($user == null) {
@@ -191,10 +188,6 @@ class UserController extends BaseController
         }
         if ($request['userId'] != $id)
             return $this->sendForbidden('أنت لا تملك صلاحية تعديل هذا الملف الشخصي');  ///You aren\'t authorized to delete this transaction.
-
-        $validated = $this->validateImage($request);
-        if ($validated->fails())
-            return $this->sendError(__('General.InvalidData'), $validated->messages(), 400);
 
         $profile = Profile::find($user->profile_id);
         if ($profile->cover == null) {
