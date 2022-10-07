@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Http\Requests\StorePetRequest;
 
 class PetController extends BaseController
 {
@@ -39,7 +40,7 @@ class PetController extends BaseController
                         'users.email_verified_at as userEmailVerifiedAt',
                         'profiles.image as userImage'
                     )
-                    ->where('pets.nationality', '=', $user->nationality)
+                    // ->where('pets.nationality', '=', $user->nationality)
                     ->latest('pets.created_at')
                     ->paginate(8),
                 ''
@@ -55,29 +56,31 @@ class PetController extends BaseController
      * Store a newly created resource in storage.
      *
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\StorePetRequest  $storePetRequest
      * @return \Illuminate\Http\Response
+     *
      */
-    public function store(Request $request)
+    public function store(StorePetRequest $storePetRequest)
     {
         try {
-            $user = $this->userExists($request['createdBy']);
+            $user = $this->userExists($storePetRequest['createdBy']);
             //Validate Request
-            $validated = $this->validatePet($request, 'store');
-            if ($validated->fails()) {
-                return $this->sendError(__('General.InvalidData'), $validated->messages(), 400);   ///Invalid data
-            }
+            // $validated = $this->validatePet($request, 'store');
+            // if ($validated->fails()) {
+            //     return $this->sendError(__('General.InvalidData'), $validated->messages(), 400);   ///Invalid data
+            // }
             $this->userIsAuthorized($user, 'create', Pet::class);
-            $imagePath = $request['image']->store('pets', 'public');
+            $imagePath = $storePetRequest['image']->store('pets', 'public');
             $user->pets()->create([
-                'name' => $request['name'],
-                'age' => $request['age'],
-                'sex' => $request['sex'],
-                'type' => $request['type'],
-                'breed' => $request['breed'],
-                'notes' => $request['notes'],
+                'name' => $storePetRequest['name'],
+                'age' => $storePetRequest['age'],
+                'sex' => $storePetRequest['sex'],
+                'type' => $storePetRequest['type'],
+                'breed' => $storePetRequest['breed'],
+                'notes' => $storePetRequest['notes'],
                 'image' => "/storage/" . $imagePath,
-                'nationality' => $user->nationality,
+                // 'nationality' => $user->nationality,
+                'nationality' => $storePetRequest['nationality'],
                 'status' => true,
                 'id' => Str::uuid(),
             ]);

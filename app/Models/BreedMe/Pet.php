@@ -38,4 +38,17 @@ class Pet extends Model
     {
         return $this->hasMany(AdoptionRequest::class);
     }
+    public function setPetTypeAttribute($text)
+    {
+        $this->attributes['type'] = Pet::$value[$text];
+    }
+    public function getPetTypeAttribute($value)
+    {
+        $source = app()->getLocale() === 'ar' ? 'text_ar' : 'text';
+        if ($value) {
+            return Pet::$$source[$value];
+        }
+
+        return null;
+    }
 }
