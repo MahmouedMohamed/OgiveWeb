@@ -5,6 +5,8 @@ namespace App\Http\Controllers\api;
 use App\Exceptions\LoginParametersNotFound;
 use App\Exceptions\UserNotAuthorized;
 use App\Http\Controllers\API\BaseController as BaseController;
+use App\Http\Requests\RegisterRequest;
+use App\Http\Resources\UserResource;
 use App\Models\Ahed\Needy;
 use App\Models\Ahed\OfflineTransaction;
 use App\Models\Ahed\OnlineTransaction;
@@ -63,23 +65,18 @@ class UserController extends BaseController
         return response()->json(['user' => Auth::user()]);
     }
 
-    public function register(Request $request)
+    public function register(RegisterRequest $registerRequest)
     {
-        $data = request()->all();
-        $validated = $this->validateUser($request);
-        if ($validated->fails()) {
-            return $this->sendError(__('General.InvalidData'), $validated->messages(), 400);
-        }
         $profile = Profile::create([
             'id' => Str::uuid()
         ]);
-        $image = $request['image'];
+        $image = $registerRequest['image'];
         if ($image != null) {
             $imagePath = $image->store('users', 'public');
             $profile->image = "/storage/" . $imagePath;
             $profile->save();
         }
-        User::create([
+        $user = User::create([
             'id' => Str::uuid(),
             'name' => request('name'),
             'user_name' => request('user_name'),
@@ -91,32 +88,7 @@ class UserController extends BaseController
             'nationality' => request('nationality'),
             'profile_id' => $profile->id
         ]);
-        return $this->sendResponse('', 'User Created Successfully');
-    }
-
-    public function validateUser(Request $request)
-    {
-        return Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'user_name' => 'required|string|max:255|unique:users',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8',
-            'gender' => 'required|in:male,female',
-            //|regex:^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$
-            'phone_number' => 'required',
-            'address' => 'string|max:1024',
-            'image' => 'image',
-            'nationality' => 'required|string'
-        ], [
-            'required' => 'This field is required',
-            'min' => 'Invalid size, min size is :min',
-            'max' => 'Invalid size, max size is :max',
-            'integer' => 'Invalid type, only numbers are supported',
-            'in' => 'Invalid type, support values are :values',
-            'image' => 'Invalid type, only images are accepted',
-            'mimes' => 'Invalid type, supported types are :values',
-            'numeric' => 'Invalid type, only numbers are supported',
-        ]);
+        return $this->sendResponse(UserResource::make($user), 'User Created Successfully');
     }
 
     public function getAhedAchievementRecords($id)
