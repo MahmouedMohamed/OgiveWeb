@@ -62,17 +62,6 @@ trait NeedyValidator
     public function validateNeedy(Request $request, String $related)
     {
         switch ($related) {
-            case 'update':
-                $rules = [
-                    'name' => 'required|max:255',
-                    'age' => 'required|integer|max:100',
-                    'severity' => 'required|integer|min:1|max:10',
-                    'type' => 'required|in:' . $caseType->toString(),
-                    'details' => 'required|max:1024',
-                    'need' => 'required|numeric|min:1',
-                    'address' => 'required',
-                ];
-                break;
             case 'addImage':
                 $rules = [
                     'images' => 'required',

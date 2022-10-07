@@ -8,6 +8,7 @@ use App\Exceptions\UserNotAuthorized;
 use App\Exceptions\UserNotFound;
 use App\Http\Controllers\api\BaseController;
 use App\Http\Requests\CreateNeedyRequest;
+use App\Http\Requests\UpdateNeedyRequest;
 use App\Models\Ahed\Needy;
 use App\Traits\ControllersTraits\NeedyValidator;
 use App\Traits\ControllersTraits\UserValidator;
@@ -116,10 +117,6 @@ class NeediesController extends BaseController
     {
         try {
             //Validate Request
-            $validated = $this->validateNeedy($request, 'store');
-            if ($validated->fails()) {
-                return $this->sendError(__('General.InvalidData'), $validated->messages(), 400);   ///Invalid data
-            }
             $user = $this->userExists($request['createdBy']);
             $this->userIsAuthorized($user, 'create', Needy::class);
             $images = $request['images'];
@@ -179,11 +176,11 @@ class NeediesController extends BaseController
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\CreateNeedyRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateNeedyRequest $request, $id)
     {
         try {
             //Check needy exists
