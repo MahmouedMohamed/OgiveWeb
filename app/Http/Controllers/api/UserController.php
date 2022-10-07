@@ -8,6 +8,7 @@ use App\Exceptions\UserNotAuthorized;
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\UpdateImageRequest;
+use App\Http\Requests\UpdateProfileRequest;
 use App\Http\Resources\UserResource;
 use App\Models\Ahed\Needy;
 use App\Models\Ahed\OfflineTransaction;
@@ -154,11 +155,7 @@ class UserController extends BaseController
      */
     public function updateProfilePicture(UpdateImageRequest $request, User $user)
     {
-        $user = User::find($id);
-        if ($user == null) {
-            return $this->sendError('المستخدم غير موجود'); ///Case Not Found
-        }
-        if ($request['userId'] != $id)
+        if ($user->id != $request->user_id)
             return $this->sendForbidden('أنت لا تملك صلاحية تعديل هذا الملف الشخصي');  ///You aren\'t authorized to delete this transaction.
 
         $profile = Profile::find($user->profile_id);
@@ -182,11 +179,7 @@ class UserController extends BaseController
      */
     public function updateCoverPicture(UpdateImageRequest $request, User $user)
     {
-        $user = User::find($id);
-        if ($user == null) {
-            return $this->sendError('المستخدم غير موجود'); ///Case Not Found
-        }
-        if ($request['userId'] != $id)
+        if ($user->id != $request->user_id)
             return $this->sendForbidden('أنت لا تملك صلاحية تعديل هذا الملف الشخصي');  ///You aren\'t authorized to delete this transaction.
 
         $profile = Profile::find($user->profile_id);
@@ -204,17 +197,13 @@ class UserController extends BaseController
     /**
      * Update Information.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\UpdateProfileRequest  $request
      * @param \App\Models\User $user
      * @return \Illuminate\Http\Response
      */
-    public function updateinformation(Request $request, User $user)
+    public function updateinformation(UpdateProfileRequest $request, User $user)
     {
-        $user = User::find($id);
-        if ($user == null) {
-            return $this->sendError('المستخدم غير موجود'); ///Case Not Found
-        }
-        if ($request['userId'] != $id)
+        if ($user->id != $request->user_id)
             return $this->sendForbidden('أنت لا تملك صلاحية تعديل هذا الملف الشخصي');  ///You aren\'t authorized to delete this transaction.
 
         $profile = Profile::find($user->profile_id);
@@ -224,16 +213,6 @@ class UserController extends BaseController
         $user->nationality = $request['nationality'] ?? $user->nationality;
         $profile->save();
         $user->save();
-        return $this->sendResponse([], 'تم تغيير بياناتك بنجاح');    ///Image Updated Successfully!
-
-    }
-    public function validateImage(Request $request)
-    {
-        $rules = [
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ];
-        return Validator::make($request->all(), $rules, [
-            'image' => 'قيمة خاطئة، يمكن قبول الصور فقط',
-        ]);
+        return $this->sendResponse(UserResource::make($user), 'تم تغيير بياناتك بنجاح');    ///Image Updated Successfully!
     }
 }
