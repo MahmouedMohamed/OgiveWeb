@@ -13,6 +13,8 @@ use App\Models\Ataa\FoodSharingMarker;
 use App\Observers\FoodSharingMarkersObserver;
 
 use App\Models\BreedMe\Pet;
+use App\Models\OauthAccessToken;
+use App\Observers\OauthAccessTokenObserver;
 use App\Observers\OfflineTransactionObserver;
 use App\Observers\OnlineTransactionObserver;
 use App\Observers\PetsObserver;
@@ -48,5 +50,6 @@ class AppServiceProvider extends ServiceProvider
         Pet::observe(PetsObserver::class);
         OnlineTransaction::observe(OnlineTransactionObserver::class);
         OfflineTransaction::observe(OfflineTransactionObserver::class);
+        OauthAccessToken::observe(OauthAccessTokenObserver::class);
     }
 }
