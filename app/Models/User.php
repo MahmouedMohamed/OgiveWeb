@@ -205,4 +205,14 @@ class User extends AuthenticatableUser
 
         return null;
     }
+
+    public function getNationalityValue()
+    {
+        $source = app()->getLocale() === 'ar' ? 'value_ar' : 'value';
+        if ($this->nationality) {
+            return Nationality::$$source[$this->nationality];
+        }
+
+        return null;
+    }
 }

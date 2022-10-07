@@ -67,7 +67,7 @@ class FoodSharingMarkersController extends BaseController
                 )
                     ->with('user')
                     ->where('collected', '=', 0)
-                    ->where('nationality', '=', $request->user->nationality)
+                    ->where('nationality', '=', $request->user->getNationalityValue())
                     ->havingRaw('distance < 100')
                     ->take(100)
                     ->get()),
