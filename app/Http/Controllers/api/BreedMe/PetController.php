@@ -59,7 +59,7 @@ class PetController extends BaseController
                         'users.email_verified_at as userEmailVerifiedAt',
                         'profiles.image as userImage'
                     )
-                    // ->where('pets.nationality', '=', $user->nationality)
+                    ->where('pets.nationality', '=', $user->getNationalityValue())
                     ->latest('pets.created_at')
                     ->paginate(8),
                 ''

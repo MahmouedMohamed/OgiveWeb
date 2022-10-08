@@ -57,7 +57,7 @@ class MemoryPolicy
      */
     public function update(User $user, Memory $memory)
     {
-        return ($user->id == $memory->createdBy ||
+        return ($user->id == $memory->created_by ||
             $this->hasAbility($user, AvailableAbilities::UpdateMemory)) &&
             $this->hasNoBan($user, BanTypes::UpdateMemory);
     }
@@ -71,7 +71,7 @@ class MemoryPolicy
      */
     public function delete(User $user, Memory $memory)
     {
-        return ($user->id == $memory->createdBy ||
+        return ($user->id == $memory->created_by ||
             $this->hasAbility($user, AvailableAbilities::DeleteMemory)) &&
             $this->hasNoBan($user, BanTypes::DeleteMemory);
     }
