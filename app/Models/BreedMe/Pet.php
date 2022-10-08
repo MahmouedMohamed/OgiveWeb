@@ -26,6 +26,22 @@ class Pet extends Model
         'nationality',
         'notes',
     ];
+    protected $filters = [
+        'type',
+        'sex',
+        'breed'
+    ];
+    public function scopeType($query , $filter){
+        $query->where('type', '=', $filter);
+    }
+    public function scopeFilter($query , $filters){
+        foreach($this->filters as $filter){
+            if(array_key_exists($filter,$filters)){
+                $query->where($filter, '=', $filters[$filter]);
+            }
+        }
+        return $query;
+    }
     public function user()
     {
         return $this->belongsTo(User::class, 'createdBy');
