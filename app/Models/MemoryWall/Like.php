@@ -11,7 +11,7 @@ class Like extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id','memory_id'];
+    protected $fillable = ['user_id', 'memory_id', 'type'];
     public function memory()
     {
         return $this->belongsTo(Memory::class,'memory_id');
