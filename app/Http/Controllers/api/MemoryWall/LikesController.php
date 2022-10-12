@@ -6,10 +6,14 @@ use App\Exceptions\MemoryNotFound;
 use App\Http\Controllers\api\BaseController;
 use App\Exceptions\UserNotAuthorized;
 use App\Exceptions\UserNotFound;
+use App\Http\Requests\CreateLikeRequest;
+use App\Http\Resources\LikePaginationResource;
 use App\Models\MemoryWall\Like;
+use App\Models\MemoryWall\Memory;
 use App\Traits\ControllersTraits\MemoryValidator;
 use App\Traits\ControllersTraits\UserValidator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class LikesController extends BaseController
 {
@@ -23,20 +27,14 @@ class LikesController extends BaseController
     public function index(Request $request)
     {
         try {
-            $user = $this->userExists($request['userId']);
-            $this->userIsAuthorized($user, 'viewAny', Like::class);
+            $this->userIsAuthorized($request->user, 'viewAny', Like::class);
             return $this->sendResponse(
-                $user->likes()->with('memory')->select(
-                    [
-                        'user_id',
-                        'memory_id'
-                    ]
-                )
-                    ->paginate(8),
+                new LikePaginationResource(
+                    $request->user->likes()->with('memory')
+                        ->paginate(8)
+                ),
                 ''
             );
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden(__('MemoryWall.LikeViewingBannedMessage'));
         }
@@ -45,31 +43,28 @@ class LikesController extends BaseController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\CreateLikeRequest  $request
+     * @param  \App\Models\MemoryWall\Memory  $memory
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateLikeRequest $request, Memory $memory)
     {
         try {
-            $user = $this->userExists($request['userId']);
-            $memory = $this->memoryExists($request['memoryId']);
-            $this->userIsAuthorized($user, 'create', Like::class);
-            $like = Like::where('user_id', '=', $user->id)
+            $this->userIsAuthorized($request->user, 'create', Like::class);
+            $like = Like::where('user_id', '=', $request->user->id)
                 ->where('memory_id', '=', $memory->id)
                 ->first();
             if (!$like) {
-                $user->likes()->create([
+                $request->user->likes()->create([
                     'memory_id' => $memory->id
                 ]);
+            } else {
+                $like->update(['type' => $request->type]);
             }
             return $this->sendResponse(
                 [],
                 __('MemoryWall.LikeCreationSuccessMessage'),
-            ); ///Thank You For Your Contribution!
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'));
-        } catch (MemoryNotFound $e) {
-            return $this->sendError(__('MemoryWall.MemoryNotFound'));
+            );
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden(__('MemoryWall.LikeCreationBannedMessage'));
         }
@@ -79,10 +74,10 @@ class LikesController extends BaseController
      * Display the specified resource.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  String  $id
+     * @param  \App\Models\MemoryWall\Like  $like
      * @return \Illuminate\Http\Response
      */
-    public function show(String $id)
+    public function show(Like $like)
     {
         return $this->sendError('Not Implemented', '', 404);
     }
@@ -103,30 +98,22 @@ class LikesController extends BaseController
      * Remove the specified resource from storage.
      *
      * @param  Request  $request
-     * @param  String  $id
+     * @param  \App\Models\MemoryWall\Memory  $memory
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, String $id)
+    public function destroy(Request $request, Memory $memory)
     {
         try {
-            $memory = $this->memoryExists($id);
-            $user = $this->userExists($request['userId']);
-            $like = Like::where('user_id', '=', $user->id)
+            $like = Like::where('user_id', '=', $request->user->id)
                 ->where('memory_id', '=', $memory->id);
             if ($like->first() != null) {
-                $this->userIsAuthorized($user, 'delete', $like->first());
+                $this->userIsAuthorized($request->user, 'delete', $like->first());
                 $like->delete();
             }
             return $this->sendResponse(
                 [],
                 __('MemoryWall.LikeDeleteSuccessMessage'),
             );
-        } catch (MemoryNotFound $e) {
-            return $this->sendError(
-                __('MemoryWall.MemoryNotFound'),
-            );
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'),);
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden(__('MemoryWall.LikeDeletionForbiddenMessage'),);
         }
