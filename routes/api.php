@@ -78,14 +78,12 @@ Route::group(['prefix' => 'memorywall', 'middleware' => ['UserIsAuthorized', 'Bi
         Route::post('/', [MemoryController::class, 'store']);
         Route::patch('/{memory}', [MemoryController::class, 'update']);
         Route::delete('/{memory}', [MemoryController::class, 'destroy']);
+        Route::post('/{memory}/like', [LikesController::class, 'store']);
+        Route::delete('/{memory}/unlike', [LikesController::class, 'destroy']);
     });
 
     Route::group(['prefix' => 'likes'], function(){
         Route::get('/', [LikesController::class, 'index'])->name('public');
-        Route::get('/{like}', [MemoryController::class, 'show']);
-        Route::post('/', [MemoryController::class, 'store']);
-        Route::patch('/{like}', [MemoryController::class, 'update']);
-        Route::delete('/{like}', [MemoryController::class, 'destroy']);
     });
 });
 
