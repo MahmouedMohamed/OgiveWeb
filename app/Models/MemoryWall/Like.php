@@ -12,9 +12,22 @@ class Like extends Model
     use HasFactory;
 
     protected $fillable = ['user_id', 'memory_id', 'type'];
+
+    /**
+     * Set the keys for a save update query.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    protected function setKeysForSaveQuery($query)
+    {
+        $query->where('memory_id', '=', $this->memory_id)->where('user_id', '=', $this->user_id);
+
+        return $query;
+    }
     public function memory()
     {
-        return $this->belongsTo(Memory::class,'memory_id');
+        return $this->belongsTo(Memory::class, 'memory_id');
     }
     public function user()
     {
