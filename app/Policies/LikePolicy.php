@@ -69,7 +69,7 @@ class LikePolicy
      */
     public function delete(User $user, Like $like)
     {
-        return ($user->id == $like->userId ||
+        return ($user->id == $like->user_id ||
             $this->hasAbility($user, AvailableAbilities::DeleteLike)) &&
             $this->hasNoBan($user, BanTypes::DeleteLike);
     }
