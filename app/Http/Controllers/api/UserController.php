@@ -5,7 +5,6 @@ namespace App\Http\Controllers\api;
 use App\ConverterModels\CaseType;
 use App\Exceptions\LoginParametersNotFound;
 use App\Exceptions\UserNotAuthorized;
-use App\Http\Controllers\API\BaseController as BaseController;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\UpdateImageRequest;
 use App\Http\Requests\UpdateProfileRequest;
@@ -27,6 +26,8 @@ use App\Traits\ControllersTraits\LoginValidator;
 class UserController extends BaseController
 {
     use LoginValidator;
+
+    private $content;
 
     public function __construct()
     {

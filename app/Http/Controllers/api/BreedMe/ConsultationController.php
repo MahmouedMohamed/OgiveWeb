@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\api\BreedMe;
 
 use App\Http\Controllers\api\BaseController;
-
-use App\Models\Consultation;
+use App\Models\BreedMe\Consultation;
 use Illuminate\Http\Request;
 
 class ConsultationController extends BaseController
@@ -27,7 +26,7 @@ class ConsultationController extends BaseController
      */
     public function create()
     {
-        //
+        return $this->sendError("Not Implemented");
     }
 
     /**
@@ -78,7 +77,7 @@ class ConsultationController extends BaseController
      */
     public function edit(Consultation $consultation)
     {
-        //
+        return $this->sendError("Not Implemented");
     }
 
     /**

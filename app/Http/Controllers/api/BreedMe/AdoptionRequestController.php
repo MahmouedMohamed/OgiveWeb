@@ -33,7 +33,7 @@ class AdoptionRequestController extends BaseController
      */
     public function create()
     {
-        //
+        return $this->sendError("Not Implemented");
     }
 
     /**
@@ -90,7 +90,7 @@ class AdoptionRequestController extends BaseController
      */
     public function edit(AdoptionRequest $adoptionRequest)
     {
-        //
+        return $this->sendError("Not Implemented");
     }
 
     /**

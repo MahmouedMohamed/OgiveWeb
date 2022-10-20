@@ -34,7 +34,7 @@ class AtaaBadgePolicy
      */
     public function view(User $user, AtaaBadge $ataaBadge)
     {
-        //
+        return false;
     }
 
     /**
@@ -108,7 +108,7 @@ class AtaaBadgePolicy
      */
     public function restore(User $user, AtaaBadge $ataaBadge)
     {
-        //
+        return false;
     }
 
     /**
@@ -120,6 +120,6 @@ class AtaaBadgePolicy
      */
     public function forceDelete(User $user, AtaaBadge $ataaBadge)
     {
-        //
+        return false;
     }
 }

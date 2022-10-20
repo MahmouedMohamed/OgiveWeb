@@ -57,7 +57,7 @@ class LikePolicy
      */
     public function update(User $user, Like $like)
     {
-        //
+        return false;
     }
 
     /**
@@ -83,7 +83,7 @@ class LikePolicy
      */
     public function restore(User $user, Like $like)
     {
-        //
+        return false;
     }
 
     /**
@@ -95,6 +95,6 @@ class LikePolicy
      */
     public function forceDelete(User $user, Like $like)
     {
-        //
+        return false;
     }
 }

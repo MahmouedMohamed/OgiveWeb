@@ -11,6 +11,8 @@ class LanguageHandler
 {
     use ApiResponse;
 
+    private $app;
+
     /**
      * Localization constructor.
      *

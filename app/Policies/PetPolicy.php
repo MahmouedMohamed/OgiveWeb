@@ -86,7 +86,7 @@ class PetPolicy
      */
     public function restore(User $user, Pet $pet)
     {
-        //
+        return false;
     }
 
     /**
@@ -98,6 +98,6 @@ class PetPolicy
      */
     public function forceDelete(User $user, Pet $pet)
     {
-        //
+        return false;
     }
 }

@@ -2,10 +2,10 @@
 
 namespace App\Providers;
 
-use App\Models\Needy;
+use App\Models\Ahed\Needy;
 use App\Policies\NeedyPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Gate;
+
 class AuthServiceProvider extends ServiceProvider
 {
     /**

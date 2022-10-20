@@ -28,7 +28,7 @@ class PetsArticleController extends BaseController
      */
     public function create()
     {
-        //
+        return $this->sendError("Not Implemented");
     }
 
     /**
@@ -74,7 +74,7 @@ class PetsArticleController extends BaseController
      */
     public function edit(PetsArticle $petsArticle)
     {
-        //
+        return $this->sendError("Not Implemented");
     }
 
     /**

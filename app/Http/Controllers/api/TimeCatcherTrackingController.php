@@ -15,7 +15,7 @@ class TimeCatcherTrackingController extends BaseController
      */
     public function index()
     {
-        //
+        return $this->sendError("Not Implemented");
     }
 
     /**
@@ -26,7 +26,7 @@ class TimeCatcherTrackingController extends BaseController
      */
     public function store(Request $request)
     {
-        //
+        return $this->sendError("Not Implemented");
     }
 
     /**
@@ -37,7 +37,7 @@ class TimeCatcherTrackingController extends BaseController
      */
     public function show(TimeCatcherTracking $timeCatcherTracking)
     {
-        //
+        return $this->sendError("Not Implemented");
     }
 
     /**
@@ -49,7 +49,7 @@ class TimeCatcherTrackingController extends BaseController
      */
     public function update(Request $request, TimeCatcherTracking $timeCatcherTracking)
     {
-        //
+        return $this->sendError("Not Implemented");
     }
 
     /**
@@ -60,6 +60,6 @@ class TimeCatcherTrackingController extends BaseController
      */
     public function destroy(TimeCatcherTracking $timeCatcherTracking)
     {
-        //
+        return $this->sendError("Not Implemented");
     }
 }

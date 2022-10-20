@@ -27,7 +27,7 @@ class ConsultationCommentController extends BaseController
      */
     public function create()
     {
-        //
+        return $this->sendError("Not Implemented");
     }
 
     /**
@@ -76,7 +76,7 @@ class ConsultationCommentController extends BaseController
      */
     public function edit(ConsultationComment $consultationComment)
     {
-        //
+        return $this->sendError("Not Implemented");
     }
 
     /**

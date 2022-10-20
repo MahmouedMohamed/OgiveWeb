@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\api;
-use App\Http\Controllers\API\BaseController as BaseController;
 
 use App\Models\OauthAccessToken;
 use Illuminate\Http\Request;
