@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api\BreedMe;
 
+use App\ConverterModels\PlaceType;
 use App\Http\Controllers\api\BaseController;
 
 use App\Models\BreedMe\Place;
@@ -15,27 +16,16 @@ class PlaceController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function clinics()
+    public function index(Request $request)
     {
-        $clinics = Place::where('type','clinics')->get();
-        return $this->sendResponse($clinics,"Clinics Places");
-    }
-    public function sales()
-    {
-        $sales = Place::where('type','sales')->get();
-        return $this->sendResponse($sales,"Sales Places");
-    }
-    public function filterByType()
-    {
-        $result = QueryBuilder::for(Place::class)
-            ->allowedFilters('type')
-            ->get();
-        if ($result->isEmpty()) {
-            return $this->sendError('No Places are found.');
-        }
-        return $this->sendResponse($result, 'Places Retrieved successfully.');
-    }
+        $places = Place::query();
 
+        if ($request->has('type') && in_array($request->query('type'), array_values(PlaceType::$value))) {
+            $places->type($request->query('type'));
+        }
+
+        return $this->sendResponse($places->get(), 'Places Retrieved successfully.');
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -44,7 +34,7 @@ class PlaceController extends BaseController
      */
     public function create()
     {
-        //
+        return $this->sendError("Not Implemented");
     }
 
     /**
@@ -58,15 +48,14 @@ class PlaceController extends BaseController
         $place = new Place();
         $place->name = $request['name'];
         $place->contact_number = $request['contact_number'];
-        $place->type =$request['type'];
+        $place->type = $request['type'];
         $place->speciality = $request['speciality'];
         $place->latitude = $request['latitude'];
         $place->longitude = $request['longitude'];
         $place->rate = $request['rate'];
         $place->address = $request['address'];
         $place->save();
-        return $this->sendResponse($place,"The Place is added Successfully");
-
+        return $this->sendResponse($place, "The Place is added Successfully");
     }
 
     /**
@@ -79,9 +68,9 @@ class PlaceController extends BaseController
     {
         // any  type of places
         $place = Place::find($id);
-        if($place){
-            return $this->sendResponse($place,'Place is retireved Successfully');
-        }else{
+        if ($place) {
+            return $this->sendResponse($place, 'Place is retireved Successfully');
+        } else {
             return $this->sendError('Place is not found');
         }
     }
@@ -94,7 +83,7 @@ class PlaceController extends BaseController
      */
     public function edit(Place $place)
     {
-        //
+        return $this->sendError("Not Implemented");
     }
 
     /**
@@ -109,14 +98,14 @@ class PlaceController extends BaseController
         $place = Place::find($id);
         $place->name = $request['name'];
         $place->contact_number = $request['contact_number'];
-        $place->type =$request['type'];
+        $place->type = $request['type'];
         $place->speciality = $request['speciality'];
         $place->latitude = $request['latitude'];
         $place->longitude = $request['longitude'];
         $place->rate = $request['rate'];
         $place->address = $request['address'];
         $place->save();
-        return $this->sendResponse($place,"The Place is updates Successfully");
+        return $this->sendResponse($place, "The Place is updates Successfully");
     }
 
     /**
@@ -128,12 +117,11 @@ class PlaceController extends BaseController
     public function destroy($id)
     {
         $place = Place::find($id);
-        if($place){
+        if ($place) {
             $place->delete();
-            return $this->sendResponse([],'Place is deleted Successfully');
-        }else{
+            return $this->sendResponse([], 'Place is deleted Successfully');
+        } else {
             return $this->sendError('Place is not found');
         }
-
     }
 }
