@@ -14,7 +14,6 @@ class MemoryResource extends JsonResource
      */
     public function toArray($request)
     {
-
         return [
             'id' => $this->id,
             'person_name' => $this->person_name,

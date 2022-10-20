@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers\api\MemoryWall;
 
-use App\Exceptions\MemoryNotFound;
 use App\Http\Controllers\api\BaseController;
 use App\Exceptions\UserNotAuthorized;
-use App\Exceptions\UserNotFound;
 use App\Http\Requests\CreateLikeRequest;
 use App\Http\Resources\LikePaginationResource;
 use App\Models\MemoryWall\Like;
@@ -13,7 +11,6 @@ use App\Models\MemoryWall\Memory;
 use App\Traits\ControllersTraits\MemoryValidator;
 use App\Traits\ControllersTraits\UserValidator;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class LikesController extends BaseController
 {
