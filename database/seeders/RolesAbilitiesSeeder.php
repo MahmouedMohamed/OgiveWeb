@@ -19,18 +19,20 @@ class RolesAbilitiesSeeder extends Seeder
     {
         $availableRoles = ['Admin', 'Ahed Admin', 'Ataa Admin'];
         foreach ($availableRoles as $role) {
-            $addedRole = Role::create([
+            $addedRole = Role::firstOrCreate([
+                'name' => $role
+            ], [
                 'id' => Str::uuid(),
                 'name' => $role,
                 'label' => $role,
-                // 'created_at' => Carbon::now(),
             ]);
             $availableAbilities = AvailableAbilities::getAll($role);
             foreach ($availableAbilities as $ability) {
                 $addedAbility = Ability::firstOrCreate([
+                    'name' => $ability
+                ], [
                     'id' => Str::uuid(),
                     'name' => $ability,
-                    // 'created_at' => Carbon::now(),
                 ]);
                 $addedRole->allowTo($addedAbility);
             }
