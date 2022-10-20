@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\ConverterModels\Gender;
 use App\ConverterModels\Nationality;
+use App\Http\Resources\RoleResource;
 use App\Models\Ataa\FoodSharingMarker;
 use App\Models\Ataa\AtaaAchievement;
 use App\Models\Ahed\Needy;
@@ -85,6 +86,18 @@ class User extends AuthenticatableUser
             'expires_at' => $expiryDate,
 
         ]);
+
+        //ToDo: Try to Add Roles
+        $key = random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES);
+        $nonce = random_bytes(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
+
+        $encryptedData['token'] = $accessToken;
+        $encryptedData['roles'] = RoleResource::collection($this->roles);
+        $encryptedData['expiryDate'] = $expiryDate;
+
+        $cipherText = sodium_crypto_secretbox(json_encode($encryptedData), $nonce, $key);
+        $accessToken = sodium_bin2base64($cipherText, 5) . '.' . sodium_bin2base64($nonce, 5) . '.' . sodium_bin2base64($key, 5);
+
         return ['accessToken' => $accessToken, 'expiryDate' => $expiryDate];
     }
     public function deleteRelatedAccessTokens($appType)

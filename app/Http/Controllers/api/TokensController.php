@@ -5,6 +5,7 @@ use App\Http\Controllers\API\BaseController as BaseController;
 
 use App\Models\OauthAccessToken;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 
 class TokensController extends BaseController
@@ -17,10 +18,19 @@ class TokensController extends BaseController
      */
     public function refresh(Request $request)
     {
-        // $oauthAccessToken = OauthAccessToken::find($request['oauthAccessToken']);
-        $activeOauthAccessTokens = OauthAccessToken::get();
+        $token = explode('.', $request->bearerToken());
+        $userData = sodium_base642bin($token[0], 5);
+        $nonceBin = sodium_base642bin($token[1], 5);
+        $keyBin = sodium_base642bin($token[2], 5);
+        $encodedUserData = (array) json_decode(sodium_crypto_secretbox_open($userData, $nonceBin, $keyBin));
+
+        $activeOauthAccessTokens = Cache::remember('oauthAccessTokens', 60 * 60 * 24, function () {
+            return OauthAccessToken::where('active', '=', 1)
+                ->get();
+        });
+
         foreach ($activeOauthAccessTokens as $accessToken) {
-            if (Hash::check($request['oauthAccessToken'], $accessToken->access_token)) {
+            if (Hash::check($encodedUserData['token'], $accessToken->access_token)) {
                 return $this->sendResponse($accessToken->refreshToken($accessToken->access_type, $accessToken->app_type),'Access Token Refreshed Successfully');
             }
         }

@@ -9,6 +9,7 @@ use App\Http\Controllers\API\BaseController as BaseController;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\UpdateImageRequest;
 use App\Http\Requests\UpdateProfileRequest;
+use App\Http\Resources\ProfileResource;
 use App\Http\Resources\UserResource;
 use App\Models\Ahed\Needy;
 use App\Models\Ahed\OfflineTransaction;
@@ -26,16 +27,23 @@ use App\Traits\ControllersTraits\LoginValidator;
 class UserController extends BaseController
 {
     use LoginValidator;
+
     public function __construct()
     {
         $this->content = array();
     }
+
+    private function getAuthenticatedUser(): User
+    {
+        return Auth::user();
+    }
+
     public function login(Request $request)
     {
         try {
             $this->validateLoginParameters($request);
             if (Auth::attempt(['email' => $request['email'], 'password' => $request['password']])) {
-                $user = Auth::user();
+                $user = $this->getAuthenticatedUser();
                 $this->userBanValidator($user);
                 if ($request['appType'] == "TimeCatcher")
                     $user->fcmTokens()->create([
@@ -47,9 +55,9 @@ class UserController extends BaseController
                 $this->content['expiryDate'] =
                     $tokenDetails['expiryDate'];
 
-                $this->content['user'] = Auth::user();
-                $profile = Profile::findOrFail(Auth::user()->profile_id);
-                $this->content['profile'] = $profile;
+                $this->content['user'] = UserResource::make($user);
+                $profile = Profile::findOrFail($user->profile_id);
+                $this->content['profile'] = ProfileResource::make($profile);
                 return $this->sendResponse($this->content, __('General.DataRetrievedSuccessMessage'));
             } else {
                 return $this->sendError('The email or password is incorrect.');
