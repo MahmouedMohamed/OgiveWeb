@@ -44,7 +44,7 @@ use App\Http\Controllers\api\Ahed\OnlineTransactionsController;
 Route::post('/login', [UserController::class, 'login']);
 Route::post('/register', [UserController::class, 'register']);
 
-Route::group(['prefix' => 'users', 'middleware' => ['UserIsAuthorized']], function(){
+Route::group(['prefix' => 'users', 'middleware' => ['UserIsAuthorized']], function () {
     Route::patch('/{user}/profile/picture', [UserController::class, 'updateProfilePicture']);
     Route::patch('/{user}/profile/cover', [UserController::class, 'updateCoverPicture']);
     Route::patch('/{user}/profile/information', [UserController::class, 'updateinformation']);
@@ -53,7 +53,7 @@ Route::group(['prefix' => 'users', 'middleware' => ['UserIsAuthorized']], functi
 //**      Ataa Controllers      **//
 //* * Optimized * */
 Route::group(['prefix' => 'ataa', 'middleware' => ['UserIsAuthorized', 'Bindings']], function () {
-    Route::group(['prefix' => 'markers'], function(){
+    Route::group(['prefix' => 'markers'], function () {
         Route::get('/', [FoodSharingMarkersController::class, 'index']);
         Route::get('/{foodSharingMarker}', [FoodSharingMarkersController::class, 'show']);
         Route::post('/', [FoodSharingMarkersController::class, 'store']);
@@ -71,7 +71,7 @@ Route::group(['prefix' => 'ataa', 'middleware' => ['UserIsAuthorized', 'Bindings
 //* * Optimized * */
 Route::group(['prefix' => 'memorywall', 'middleware' => ['UserIsAuthorized', 'Bindings']], function () {
     //**memories middleware in the controller **//
-    Route::group(['prefix' => 'memories'], function(){
+    Route::group(['prefix' => 'memories'], function () {
         Route::get('/', [MemoryController::class, 'index'])->name('public');
         Route::get('/top', [MemoryController::class, 'getTopMemories'])->name('public');
         Route::get('/{memory}', [MemoryController::class, 'show']);
@@ -82,7 +82,7 @@ Route::group(['prefix' => 'memorywall', 'middleware' => ['UserIsAuthorized', 'Bi
         Route::delete('/{memory}/unlike', [LikesController::class, 'destroy']);
     });
 
-    Route::group(['prefix' => 'likes'], function(){
+    Route::group(['prefix' => 'likes'], function () {
         Route::get('/', [LikesController::class, 'index'])->name('public');
     });
 });
@@ -90,26 +90,31 @@ Route::group(['prefix' => 'memorywall', 'middleware' => ['UserIsAuthorized', 'Bi
 //TODO: Add This APIs to be auth by 2oauth token
 
 //**      Breed Me Controllers      **//
-Route::
-    // middleware(['UserIsAuthorized'])->
-    prefix('breedme')->group(function () {
-        Route::apiResource('pets', PetController::class);
-        Route::get('/filterByType', [PetController::class, 'filterByType']);
+Route::group(['prefix' => 'breedme', 'middleware' => [
+    // 'UserIsAuthorized',
+    'Bindings'
+]], function () {
+    Route::apiResource('pets', PetController::class);
+    Route::get('/filterByType', [PetController::class, 'filterByType']);
 
-        Route::apiResource('consultations', ConsultationController::class);
-        Route::apiResource('comments', ConsultationCommentController::class);
-        Route::apiResource('requests', AdoptionRequestController::class);
+    Route::apiResource('consultations', ConsultationController::class);
+    Route::apiResource('comments', ConsultationCommentController::class);
+    Route::apiResource('requests', AdoptionRequestController::class);
 
-        Route::post('myRequests', [AdoptionRequestController::class, 'getRequests']);
-        Route::post('sendRequest', [AdoptionRequestController::class, 'sendRequest']);
+    Route::post('myRequests', [AdoptionRequestController::class, 'getRequests']);
+    Route::post('sendRequest', [AdoptionRequestController::class, 'sendRequest']);
 
-        Route::apiResource('articles', PetsArticleController::class);
+    Route::apiResource('articles', PetsArticleController::class);
 
-        Route::apiResource('places', PlaceController::class);
-        Route::get('sales', [PlaceController::class, 'sales']);
-        Route::get('clinics', [PlaceController::class, 'clinics']);
-        Route::get('filterPlacesByType', [PlaceController::class, 'filterByType']);
+
+    Route::group(['prefix' => 'places'], function () {
+        Route::get('/', [MemoryController::class, 'index'])->name('public');
+        Route::get('/{place}', [MemoryController::class, 'show']);
+        Route::post('/', [MemoryController::class, 'store']);
+        Route::patch('/{place}', [MemoryController::class, 'update']);
+        Route::delete('/{place}', [MemoryController::class, 'destroy']);
     });
+});
 
 
 //**      Ahed Controllers      **//
