@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class AnonymousUser extends BaseUserModel
 {
-    use HasFactory;
 
     protected $table = 'anonymous_users';
 

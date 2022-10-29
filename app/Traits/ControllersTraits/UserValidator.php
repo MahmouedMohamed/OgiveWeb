@@ -5,6 +5,7 @@ namespace App\Traits\ControllersTraits;
 use App\Exceptions\UserNotAuthorized;
 use App\Models\User;
 use App\Exceptions\UserNotFound;
+use App\Models\BaseUserModel;
 
 trait UserValidator
 {
@@ -32,7 +33,7 @@ trait UserValidator
      *
      * @return mixed
      */
-    public function userIsAuthorized(User $user, String $action, $model)
+    public function userIsAuthorized(BaseUserModel $user, String $action, $model)
     {
         if (!$user->can($action, $model))
             throw new UserNotAuthorized();

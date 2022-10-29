@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Models\BaseUserModel;
 use App\Models\User;
 
 trait HasNoBan
@@ -14,7 +15,7 @@ trait HasNoBan
      * @param  String  $banType
      * @return mixed
      */
-    public function hasNoBan(User $user, String $banType)
+    public function hasNoBan(BaseUserModel $user, String $banType)
     {
         return $user->bans()->where('active', '=', 1)
             ->where('tag', '=', $banType)

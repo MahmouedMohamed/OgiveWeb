@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Models\BaseUserModel;
 use App\Models\User;
 
 trait HasAbility
@@ -14,8 +15,8 @@ trait HasAbility
      * @param  String  $banType
      * @return mixed
      */
-    public function hasAbility(User $user, String $ability)
-    {
+    public function hasAbility(BaseUserModel $user, String $ability)
+    {dd();
         return $user->abilities()->contains($ability);
     }
 }
