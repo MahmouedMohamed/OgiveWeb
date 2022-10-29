@@ -2,6 +2,7 @@
 
 namespace App\Models\Ataa;
 
+use App\Models\BaseUserModel;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -18,7 +19,7 @@ class AtaaAchievement extends Model
     ];
     public function user()
     {
-        return $this->belongsTo(User::class, 'owner_id');
+        return $this->belongsTo(BaseUserModel::class, 'owner_id');
     }
     public function incrementMarkersPosted()
     {
