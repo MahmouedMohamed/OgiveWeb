@@ -4,9 +4,6 @@ namespace App\Models;
 
 use App\ConverterModels\Gender;
 use App\ConverterModels\Nationality;
-use App\Http\Resources\RoleResource;
-use App\Models\Ataa\FoodSharingMarker;
-use App\Models\Ataa\AtaaAchievement;
 use App\Models\Ahed\Needy;
 use App\Models\Ahed\OnlineTransaction;
 use App\Models\Ahed\OfflineTransaction;
@@ -17,12 +14,6 @@ use App\Models\BreedMe\Pet;
 use App\Models\BreedMe\AdoptionRequest;
 use App\Models\BreedMe\Consultation;
 use App\Models\BreedMe\ConsultationComment;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Hash;
 
 class User extends BaseUserModel
 {
