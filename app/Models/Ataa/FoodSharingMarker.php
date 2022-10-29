@@ -5,6 +5,7 @@ namespace App\Models\Ataa;
 use App\ConverterModels\FoodSharingMarkerPriority;
 use App\ConverterModels\FoodSharingMarkerType;
 use App\ConverterModels\Nationality;
+use App\ConverterModels\OwnerType;
 use App\Models\BaseModel;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -19,14 +20,15 @@ class FoodSharingMarker extends BaseModel
     protected $table = 'food_sharing_markers';
 
     protected $fillable = [
-        'id','latitude', 'longitude', 'type', 'description', 'quantity', 'priority', 'collected',
+        'id', 'owner_type', 'latitude', 'longitude', 'type', 'description', 'quantity', 'priority', 'collected',
         'nationality', 'existed', 'collected_at'
     ];
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'owner_id');
     }
+
     public function collect(bool $existed)
     {
         $this->collected = true;
@@ -69,6 +71,16 @@ class FoodSharingMarker extends BaseModel
         $source = app()->getLocale() === 'ar' ? 'text_ar' : 'text';
         if ($value) {
             return Nationality::$$source[$value];
+        }
+
+        return null;
+    }
+
+    public function getOwnerTypeAttribute($value)
+    {
+        $source = app()->getLocale() === 'ar' ? 'text_ar' : 'text';
+        if ($value) {
+            return OwnerType::$$source[$value];
         }
 
         return null;

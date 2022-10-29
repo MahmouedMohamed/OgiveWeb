@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\ConverterModels\CaseType;
 use App\Exceptions\LoginParametersNotFound;
 use App\Exceptions\UserNotAuthorized;
+use App\Http\Requests\AnonymousLoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\UpdateImageRequest;
 use App\Http\Requests\UpdateProfileRequest;
@@ -13,6 +14,7 @@ use App\Http\Resources\UserResource;
 use App\Models\Ahed\Needy;
 use App\Models\Ahed\OfflineTransaction;
 use App\Models\Ahed\OnlineTransaction;
+use App\Models\AnonymousUser;
 use App\Models\Profile;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
@@ -37,6 +39,33 @@ class UserController extends BaseController
     private function getAuthenticatedUser(): User
     {
         return Auth::user();
+    }
+
+    public function anonymousLogin(AnonymousLoginRequest $request)
+    {
+        try {
+            $anonymousUser = AnonymousUser::where('device_id', '=', $request['deviceId'])->first();
+            if ($anonymousUser) {
+                $this->userBanValidator($anonymousUser);
+            }else{
+                $anonymousUser = AnonymousUser::create([
+                    'id' => Str::uuid(),
+                    'device_id' => $request['deviceId']
+                ]);
+            }
+
+            $tokenDetails = $anonymousUser->createAccessToken($request['accessType'], $request['appType']);
+                $this->content['token'] =
+                    $tokenDetails['accessToken'];
+                $this->content['expiryDate'] =
+                    $tokenDetails['expiryDate'];
+
+                $this->content['user'] = $anonymousUser;
+
+                return $this->sendResponse($this->content, __('General.DataRetrievedSuccessMessage'));
+        } catch (UserNotAuthorized $e) {
+            return $this->sendForbidden($e->getMessage());
+        }
     }
 
     public function login(Request $request)

@@ -42,6 +42,7 @@ use App\Http\Controllers\api\Ahed\OnlineTransactionsController;
 
 //**      User Controllers      **//
 Route::post('/login', [UserController::class, 'login']);
+Route::post('/anonymous-login', [UserController::class, 'anonymousLogin']);
 Route::post('/register', [UserController::class, 'register']);
 
 Route::group(['prefix' => 'users', 'middleware' => ['UserIsAuthorized']], function () {

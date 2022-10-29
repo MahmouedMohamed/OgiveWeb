@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\ConverterModels\OwnerType;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class FoodSharingMarkerResource extends JsonResource
@@ -14,9 +15,11 @@ class FoodSharingMarkerResource extends JsonResource
      */
     public function toArray($request)
     {
+        // dd(OwnerType::$value[class_basename(request()->user)] == 1);
         return [
             'id' => $this->id,
-            'user_id' => $this->user_id,
+            'owner_id' => $this->owner_id,
+            'owner_type' => $this->owner_type,
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
             'type' => $this->type,
@@ -27,7 +30,7 @@ class FoodSharingMarkerResource extends JsonResource
             'collected_at' => $this->collected_at,
             'nationality' => $this->nationality,
             'created_at' => $this->created_at,
-            'user' => UserResource::make($this->user),
+            'user' => $this->when(OwnerType::$value[class_basename(request()->user)] == 1, UserResource::make($this->user)),
         ];
     }
 }

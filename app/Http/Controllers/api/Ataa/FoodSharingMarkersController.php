@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api\Ataa;
 
+use App\ConverterModels\OwnerType;
 use App\Events\FoodSharingMarkerCollected;
 use App\Events\FoodSharingMarkerCreated;
 use App\Events\FoodSharingMarkerDeleted;
@@ -48,7 +49,8 @@ class FoodSharingMarkersController extends BaseController
                 FoodSharingMarkerResource::collection(FoodSharingMarker::select(
                     [
                         'id',
-                        'user_id',
+                        'owner_id',
+                        'owner_type',
                         'latitude',
                         'longitude',
                         'type',
@@ -91,6 +93,7 @@ class FoodSharingMarkersController extends BaseController
             //Create Food Sharing Marker
             $foodSharingMarker = $request->user->foodSharingMarkers()->create([
                 'id' => Str::uuid(),
+                'owner_type' => OwnerType::$value[class_basename($request->user)],
                 'latitude' => $request['latitude'],
                 'longitude' => $request['longitude'],
                 'type' => $request['type'],

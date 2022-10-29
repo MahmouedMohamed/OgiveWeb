@@ -24,11 +24,11 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 
-class User extends AuthenticatableUser
+class User extends BaseUserModel
 {
-    use HasFactory, Notifiable;
 
-    public $incrementing = false;
+    protected $table = 'users';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -65,53 +65,12 @@ class User extends AuthenticatableUser
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-    public function accessTokens()
-    {
-        return $this->hasMany(OauthAccessToken::class);
-    }
-    public function createAccessToken($accessType, $appType)
-    {
-        $this->deleteRelatedAccessTokens($appType);
-        //Hash::make() -> saves only 60 chars to database
-        //TODO: Solve & extend to 255 chars
-        $accessToken = Str::random(60);
-        $expiryDate = Carbon::now('GMT+2')->addMonth();
-        $this->accessTokens()->create([
-            'id' => Str::uuid(),
-            'access_token' => Hash::make($accessToken),
-            'scopes' => '[]',
-            'app_type' => $appType,
-            'access_type' => $accessType,
-            'active' => 1,
-            'expires_at' => $expiryDate,
 
-        ]);
-
-        //ToDo: Try to Add Roles
-        $key = random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES);
-        $nonce = random_bytes(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
-
-        $encryptedData['token'] = $accessToken;
-        $encryptedData['roles'] = RoleResource::collection($this->roles);
-        $encryptedData['expiryDate'] = $expiryDate;
-
-        $cipherText = sodium_crypto_secretbox(json_encode($encryptedData), $nonce, $key);
-        $accessToken = sodium_bin2base64($cipherText, 5) . '.' . sodium_bin2base64($nonce, 5) . '.' . sodium_bin2base64($key, 5);
-
-        return ['accessToken' => $accessToken, 'expiryDate' => $expiryDate];
-    }
-    public function deleteRelatedAccessTokens($appType)
-    {
-        $this->accessTokens()->where('app_type', '=', $appType)->delete();
-    }
     public function profile()
     {
         return $this->hasOne(Profile::class);
     }
-    public function foodSharingMarkers()
-    {
-        return $this->hasMany(FoodSharingMarker::class)->orderBy('id', 'DESC');
-    }
+
     public function memories()
     {
         return $this->hasMany(Memory::class, 'created_by')->orderBy('id', 'DESC');
@@ -147,14 +106,6 @@ class User extends AuthenticatableUser
     public function offlinetransactions()
     {
         return $this->hasMany(OfflineTransaction::class, 'giver');
-    }
-    public function ataaAchievement()
-    {
-        return $this->hasOne(AtaaAchievement::class);
-    }
-    public function bans()
-    {
-        return $this->hasMany(UserBan::class, 'banned_user');
     }
     public function createdBans()
     {

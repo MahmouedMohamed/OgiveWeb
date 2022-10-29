@@ -18,6 +18,8 @@ class OauthAccessToken extends Model
      */
     protected $fillable = [
         'id',
+        'owner_id',
+        'owner_type',
         'access_token',
         'scopes',
         'app_type',
@@ -36,7 +38,9 @@ class OauthAccessToken extends Model
     ];
     public function user()
     {
-        return $this->belongsTo(User::class);
+        if ($this->owner_type == 1)
+            return $this->belongsTo(User::class, 'owner_id');
+        return $this->belongsTo(AnonymousUser::class, 'owner_id');
     }
     public function refreshToken($accessType, $appType)
     {
