@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\ConverterModels\Nationality;
 use App\ConverterModels\OwnerType;
 use App\Http\Resources\RoleResource;
 use App\Models\Ataa\FoodSharingMarker;
@@ -77,5 +78,32 @@ class BaseUserModel extends AuthenticatableUser
     public function bans()
     {
         return $this->hasMany(UserBan::class, 'banned_user');
+    }
+
+    public function setNationalityAttribute($text)
+    {
+        $source = app()->getLocale() === 'ar' ? 'value_ar' : 'value';
+
+        $this->attributes['nationality'] = Nationality::$$source[$text];
+    }
+
+    public function getNationalityAttribute($value)
+    {
+        $source = app()->getLocale() === 'ar' ? 'text_ar' : 'text';
+        if ($value) {
+            return Nationality::$$source[$value];
+        }
+
+        return null;
+    }
+
+    public function getNationalityValue()
+    {
+        $source = app()->getLocale() === 'ar' ? 'value_ar' : 'value';
+        if ($this->nationality) {
+            return Nationality::$$source[$this->nationality];
+        }
+
+        return null;
     }
 }

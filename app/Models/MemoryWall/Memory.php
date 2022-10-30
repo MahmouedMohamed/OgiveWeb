@@ -29,7 +29,9 @@ class Memory extends BaseModel
     }
     public function setNationalityAttribute($text)
     {
-        $this->attributes['nationality'] = Nationality::$value[$text];
+        $source = app()->getLocale() === 'ar' ? 'value_ar' : 'value';
+
+        $this->attributes['nationality'] = Nationality::$$source[$text];
     }
 
     public function getNationalityAttribute($value)
