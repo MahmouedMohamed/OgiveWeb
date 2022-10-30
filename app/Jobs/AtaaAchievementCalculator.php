@@ -2,9 +2,11 @@
 
 namespace App\Jobs;
 
+use App\ConverterModels\OwnerType;
 use App\Models\Ataa\AtaaAchievement;
 use App\Models\Ataa\AtaaPrize;
 use App\Models\Ataa\FoodSharingMarker;
+use App\Models\BaseUserModel;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -24,7 +26,7 @@ class AtaaAchievementCalculator implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(User $user, FoodSharingMarker $foodSharingMarker, String $method)
+    public function __construct(BaseUserModel $user, FoodSharingMarker $foodSharingMarker, String $method)
     {
         $this->user = $user;
         $this->foodSharingMarker = $foodSharingMarker;
@@ -39,28 +41,30 @@ class AtaaAchievementCalculator implements ShouldQueue
     public function handle()
     {
         $userAchievement = AtaaAchievement::calculateThenGet($this->user, $this->foodSharingMarker, $this->method);
-        $prizesNotAcquired = AtaaPrize::notAcquiredByUser($this->user);
-        //If Empty -> no previous prizes || user acquired all -> Auto Create new one with higher value
-        if ($prizesNotAcquired->isEmpty()) {
-            $highestAcquiredPrize = AtaaPrize::orderBy('level', 'DESC')->where('active', '=', 1)->get()->first();
-            //There is previous prize then create one with higher level
-            if ($highestAcquiredPrize) {
-                AtaaPrize::seedHigherPrize($highestAcquiredPrize);
+        if(OwnerType::$value[class_basename($this->user)] == 1){
+            $prizesNotAcquired = AtaaPrize::notAcquiredByUser($this->user);
+            //If Empty -> no previous prizes || user acquired all -> Auto Create new one with higher value
+            if ($prizesNotAcquired->isEmpty()) {
+                $highestAcquiredPrize = AtaaPrize::orderBy('level', 'DESC')->where('active', '=', 1)->get()->first();
+                //There is previous prize then create one with higher level
+                if ($highestAcquiredPrize) {
+                    AtaaPrize::seedHigherPrize($highestAcquiredPrize);
+                }
+                //There is no previous prize
+                else {
+                    AtaaPrize::initiatePrize($this->method);
+                }
             }
-            //There is no previous prize
+            //There is prizes exists & Not acquired By User
             else {
-                AtaaPrize::initiatePrize($this->method);
-            }
-        }
-        //There is prizes exists & Not acquired By User
-        else {
-            foreach ($prizesNotAcquired as $prize) {
-                if ($prize['required_markers_collected'] <= $userAchievement['markers_collected'] && $prize['required_markers_posted'] <= $userAchievement['markers_posted']) {
-                    $prize->winners()->attach(
-                        $this->user->id
-                    );
-                } else {
-                    //TODO: Maybe show the user what's left for his next milestone
+                foreach ($prizesNotAcquired as $prize) {
+                    if ($prize['required_markers_collected'] <= $userAchievement['markers_collected'] && $prize['required_markers_posted'] <= $userAchievement['markers_posted']) {
+                        $prize->winners()->attach(
+                            $this->user->id
+                        );
+                    } else {
+                        //TODO: Maybe show the user what's left for his next milestone
+                    }
                 }
             }
         }
