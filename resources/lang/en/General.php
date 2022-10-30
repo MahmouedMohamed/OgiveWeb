@@ -6,5 +6,6 @@ return [
     'DataRetrievedSuccessMessage' => 'Data Retrieved Successfully.',
     'NotImplemented' => 'Not Implemented',
     'UserBanNotFound' => 'User Ban Cannot be Found',
-    'InvalidAccess' => 'Invalid Access'
+    'InvalidAccess' => 'Invalid Access',
+    'ValidationFailure' => 'Invalid Data'
 ];

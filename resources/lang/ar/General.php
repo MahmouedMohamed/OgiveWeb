@@ -6,5 +6,6 @@ return [
     'DataRetrievedSuccessMessage' => 'تم إسترجاع البيانات بنجاح',
     'NotImplemented' => 'غير معرفة',
     'UserBanNotFound' => 'العنصر غير موجود',
-    'InvalidAccess' => 'أنت لا تملك صلاحية عرض هذا العنصر'
+    'InvalidAccess' => 'أنت لا تملك الصلاحية الكافية',
+    'ValidationFailure' => 'خطأ في البيانات'
 ];
