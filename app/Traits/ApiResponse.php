@@ -35,7 +35,7 @@ trait ApiResponse
     {
         $response = [
             'Err_Flag' => true,
-            'message' => $message,
+            'Err_Desc' => $message,
         ];
 
 

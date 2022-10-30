@@ -23,6 +23,26 @@ class UserIsAuthorized
         return $accessToken->active;
     }
 
+    public function allowedToAnonymous()
+    {
+        $routeNames = explode('.', Route::currentRouteName());
+        foreach ($routeNames as $name) {
+            if ($name == 'anonymous') {
+                return true;
+            }
+        }
+        return false;
+    }
+    public function allowedToPublic()
+    {
+        $routeNames = explode('.', Route::currentRouteName());
+        foreach ($routeNames as $name) {
+            if ($name == static::PUBLIC_ROUTE_NAME) {
+                return true;
+            }
+        }
+        return false;
+    }
     /**
      * Handle an incoming request.
      *
@@ -47,21 +67,29 @@ class UserIsAuthorized
                 });
 
                 foreach ($activeOauthAccessTokens as $accessToken) {
-                    if (Hash::check($encodedUserData['token'], $accessToken->access_token)) {
+                    if (
+                        Hash::check($encodedUserData['token'], $accessToken->access_token)
+                    ) {
                         if ($this->isValidAccessToken($accessToken, $accessToken->appType)) {
-                            request()->merge([
-                                'user' => $accessToken->user
-                            ]);
-                            return $next($request);
+                            if (
+                                $accessToken->owner_type != 2 //anonymous
+                                || $this->allowedToAnonymous()
+                                || $this->allowedToPublic()
+                            ) {
+                                request()->merge([
+                                    'user' => $accessToken->user
+                                ]);
+                                return $next($request);
+                            }
                         }
                     }
                 }
-            } else if (Route::currentRouteName() == static::PUBLIC_ROUTE_NAME) {
+            } else if ($this->allowedToPublic()) {
                 return $next($request);
             }
         } catch (Exception $ex) {
             return $this->sendForbidden('Invalid Access token');
         }
-        return $this->sendForbidden('Invalid Access token');
+        return $this->sendForbidden(__('General.InvalidAccess'));
     }
 }

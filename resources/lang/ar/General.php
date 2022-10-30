@@ -5,5 +5,6 @@ return [
     'UserNotFound' => 'المستخدم غير موجود',
     'DataRetrievedSuccessMessage' => 'تم إسترجاع البيانات بنجاح',
     'NotImplemented' => 'غير معرفة',
-    'UserBanNotFound' => 'العنصر غير موجود'
+    'UserBanNotFound' => 'العنصر غير موجود',
+    'InvalidAccess' => 'أنت لا تملك صلاحية عرض هذا العنصر'
 ];

@@ -45,124 +45,124 @@ Route::post('/login', [UserController::class, 'login']);
 Route::post('/anonymous-login', [UserController::class, 'anonymousLogin']);
 Route::post('/register', [UserController::class, 'register']);
 
-Route::group(['prefix' => 'users', 'middleware' => ['UserIsAuthorized']], function () {
-    Route::patch('/{user}/profile/picture', [UserController::class, 'updateProfilePicture']);
-    Route::patch('/{user}/profile/cover', [UserController::class, 'updateCoverPicture']);
-    Route::patch('/{user}/profile/information', [UserController::class, 'updateinformation']);
-});
-
-//**      Ataa Controllers      **//
-//* * Optimized * */
-Route::group(['prefix' => 'ataa', 'middleware' => ['UserIsAuthorized', 'Bindings']], function () {
-    Route::group(['prefix' => 'markers'], function () {
-        Route::get('/', [FoodSharingMarkersController::class, 'index']);
-        Route::get('/{foodSharingMarker}', [FoodSharingMarkersController::class, 'show']);
-        Route::post('/', [FoodSharingMarkersController::class, 'store']);
-        Route::patch('/{foodSharingMarker}', [FoodSharingMarkersController::class, 'update']);
-        Route::delete('/{foodSharingMarker}', [FoodSharingMarkersController::class, 'destroy']);
-        Route::post('/{foodSharingMarker}/collect', [FoodSharingMarkersController::class, 'collect']);
-    });
-    Route::get('/achievement', [AtaaAchievementController::class, 'show']);
-    Route::get('/prizes', [AtaaPrizeController::class, 'getAcquired']);
-    Route::get('/badges', [AtaaBadgeController::class, 'getAcquired']);
-});
-
-
-//**      Memory Wall Controllers      **//
-//* * Optimized * */
-Route::group(['prefix' => 'memorywall', 'middleware' => ['UserIsAuthorized', 'Bindings']], function () {
-    //**memories middleware in the controller **//
-    Route::group(['prefix' => 'memories'], function () {
-        Route::get('/', [MemoryController::class, 'index'])->name('public');
-        Route::get('/top', [MemoryController::class, 'getTopMemories'])->name('public');
-        Route::get('/{memory}', [MemoryController::class, 'show']);
-        Route::post('/', [MemoryController::class, 'store']);
-        Route::patch('/{memory}', [MemoryController::class, 'update']);
-        Route::delete('/{memory}', [MemoryController::class, 'destroy']);
-        Route::post('/{memory}/like', [LikesController::class, 'store']);
-        Route::delete('/{memory}/unlike', [LikesController::class, 'destroy']);
+Route::group(['middleware' => ['UserIsAuthorized']], function () {
+    Route::group(['prefix' => 'users'], function () {
+        Route::patch('/{user}/profile/picture', [UserController::class, 'updateProfilePicture']);
+        Route::patch('/{user}/profile/cover', [UserController::class, 'updateCoverPicture']);
+        Route::patch('/{user}/profile/information', [UserController::class, 'updateinformation']);
     });
 
-    Route::group(['prefix' => 'likes'], function () {
-        Route::get('/', [LikesController::class, 'index'])->name('public');
-    });
-});
-
-//TODO: Add This APIs to be auth by 2oauth token
-
-//**      Breed Me Controllers      **//
-Route::group(['prefix' => 'breedme', 'middleware' => [
-    // 'UserIsAuthorized',
-    'Bindings'
-]], function () {
-    Route::apiResource('pets', PetController::class);
-    Route::get('/filterByType', [PetController::class, 'filterByType']);
-
-    Route::apiResource('consultations', ConsultationController::class);
-    Route::apiResource('comments', ConsultationCommentController::class);
-    Route::apiResource('requests', AdoptionRequestController::class);
-
-    Route::post('myRequests', [AdoptionRequestController::class, 'getRequests']);
-    Route::post('sendRequest', [AdoptionRequestController::class, 'sendRequest']);
-
-    Route::apiResource('articles', PetsArticleController::class);
-
-
-    Route::group(['prefix' => 'places'], function () {
-        Route::get('/', [MemoryController::class, 'index'])->name('public');
-        Route::get('/{place}', [MemoryController::class, 'show']);
-        Route::post('/', [MemoryController::class, 'store']);
-        Route::patch('/{place}', [MemoryController::class, 'update']);
-        Route::delete('/{place}', [MemoryController::class, 'destroy']);
-    });
-});
-
-
-//**      Ahed Controllers      **//
-//* * Optimized * */
-Route::middleware(['UserIsAuthorized'])->prefix('ahed')->group(function () {
-    Route::apiResource('/needies', NeediesController::class);
-    Route::get('/urgent-needies', [NeediesController::class, 'urgentIndex']);
-    Route::get('/needies-with-ids', [NeediesController::class, 'getNeediesWithIDs']);
-    Route::post('/needies/add-images/{id}', [NeediesController::class, 'addAssociatedImages']);
-    Route::post('/needies/remove-image/{id}', [NeediesController::class, 'removeAssociatedImage']);
-    Route::apiResource('/onlinetransactions', OnlineTransactionsController::class);
-    Route::apiResource('/offlinetransactions', OfflineTransactionsController::class);
-    Route::get('/ahedachievement/{id}', [UserController::class, 'getAhedAchievementRecords']);
-});
-
-
-
-//**      Admin Controllers      **//
-Route::middleware(['UserIsAuthorized', 'Bindings'])->prefix('admin')->group(function () {
-    //* * Optimized * */
-    Route::get('/', [AdminController::class, 'generalAdminDashboard']);
-    //**      Ahed      **//
-    //* * Optimized * */
-    Route::get('/pending-needies', [AdminController::class, 'getPendingNeedies']);
-    Route::post('/ahed/approve/{id}', [AdminController::class, 'approve']);
-    Route::post('/ahed/disapprove/{id}', [AdminController::class, 'disapprove']);
-    Route::patch('/ahed/collect', [AdminController::class, 'collectOfflineTransaction']);
     //**      Ataa      **//
-    //* * Optimized * */
-    Route::apiResource('/ataa/prize', AtaaPrizeController::class);
-    Route::patch('/ataa/prize/{id}/activate', [AtaaPrizeController::class, 'activate']);
-    Route::patch('/ataa/prize/{id}/deactivate', [AtaaPrizeController::class, 'deactivate']);
-    Route::apiResource('/ataa/badge', AtaaBadgeController::class);
-    Route::patch('/ataa/badge/{id}/activate', [AtaaBadgeController::class, 'activate']);
-    Route::patch('/ataa/badge/{id}/deactivate', [AtaaBadgeController::class, 'deactivate']);
-    Route::get('/ataa/achievement', [AdminController::class, 'getAtaaAchievements']);
-    Route::post('/ataa/freeze-achievement', [AdminController::class, 'freezeUserAtaaAchievements']);
-    Route::post('/ataa/defreeze-achievement', [AdminController::class, 'defreezeUserAtaaAchievements']);
-    //**      Ban      **//
-    Route::get('/ban', [AdminController::class, 'getUserBans']);
-    Route::post('/ban', [AdminController::class, 'addUserBan']);
-    Route::patch('/ban/activate/{userBan}', [AdminController::class, 'activateBan']);
-    Route::patch('/ban/deactivate/{userBan}', [AdminController::class, 'deactivateBan']);
-    //**      Import      **//
-    //* * Not Optimized * */
-    Route::post('/importCSV', [AdminController::class, 'importCSV']);
+    Route::group(['prefix' => 'ataa', 'middleware' => ['Bindings']], function () {
+        Route::group(['prefix' => 'markers'], function () {
+            Route::get('/', [FoodSharingMarkersController::class, 'index']);
+            Route::get('/{foodSharingMarker}', [FoodSharingMarkersController::class, 'show']);
+            Route::post('/', [FoodSharingMarkersController::class, 'store']);
+            Route::patch('/{foodSharingMarker}', [FoodSharingMarkersController::class, 'update']);
+            Route::delete('/{foodSharingMarker}', [FoodSharingMarkersController::class, 'destroy']);
+            Route::post('/{foodSharingMarker}/collect', [FoodSharingMarkersController::class, 'collect']);
+        });
+        Route::get('/achievement', [AtaaAchievementController::class, 'show'])->name('anonymous');
+        Route::get('/prizes', [AtaaPrizeController::class, 'getAcquired']);
+        Route::get('/badges', [AtaaBadgeController::class, 'getAcquired']);
+    });
+
+    //**      Memory Wall      **//
+    Route::group(['prefix' => 'memorywall', 'middleware' => ['Bindings']], function () {
+        //**memories middleware in the controller **//
+        Route::group(['prefix' => 'memories'], function () {
+            Route::get('/', [MemoryController::class, 'index'])->name('public');
+            Route::get('/top', [MemoryController::class, 'getTopMemories'])->name('public');
+            Route::get('/{memory}', [MemoryController::class, 'show']);
+            Route::post('/', [MemoryController::class, 'store']);
+            Route::patch('/{memory}', [MemoryController::class, 'update']);
+            Route::delete('/{memory}', [MemoryController::class, 'destroy']);
+            Route::post('/{memory}/like', [LikesController::class, 'store']);
+            Route::delete('/{memory}/unlike', [LikesController::class, 'destroy']);
+        });
+
+        Route::group(['prefix' => 'likes'], function () {
+            Route::get('/', [LikesController::class, 'index'])->name('public');
+        });
+    });
+
+    //**      Breed Me      **//
+    Route::group(['prefix' => 'breedme', 'middleware' => ['Bindings']], function () {
+        Route::apiResource('pets', PetController::class);
+        Route::get('/filterByType', [PetController::class, 'filterByType']);
+
+        Route::apiResource('consultations', ConsultationController::class);
+        Route::apiResource('comments', ConsultationCommentController::class);
+        Route::apiResource('requests', AdoptionRequestController::class);
+
+        Route::post('myRequests', [AdoptionRequestController::class, 'getRequests']);
+        Route::post('sendRequest', [AdoptionRequestController::class, 'sendRequest']);
+
+        Route::apiResource('articles', PetsArticleController::class);
+
+
+        Route::group(['prefix' => 'places'], function () {
+            Route::get('/', [MemoryController::class, 'index'])->name('public');
+            Route::get('/{place}', [MemoryController::class, 'show']);
+            Route::post('/', [MemoryController::class, 'store']);
+            Route::patch('/{place}', [MemoryController::class, 'update']);
+            Route::delete('/{place}', [MemoryController::class, 'destroy']);
+        });
+    });
+    //**      Ahed      **//
+    Route::group(['prefix' => 'ahed', 'middleware' => ['Bindings']], function () {
+        Route::apiResource('/needies', NeediesController::class);
+        Route::get('/urgent-needies', [NeediesController::class, 'urgentIndex']);
+        Route::get('/needies-with-ids', [NeediesController::class, 'getNeediesWithIDs']);
+        Route::post('/needies/add-images/{id}', [NeediesController::class, 'addAssociatedImages']);
+        Route::post('/needies/remove-image/{id}', [NeediesController::class, 'removeAssociatedImage']);
+        Route::apiResource('/onlinetransactions', OnlineTransactionsController::class);
+        Route::apiResource('/offlinetransactions', OfflineTransactionsController::class);
+        Route::get('/ahedachievement/{id}', [UserController::class, 'getAhedAchievementRecords']);
+    });
+
+    //**      Admin Controllers      **//
+    Route::group(['prefix' => 'admin', 'middleware' => ['Bindings']], function () {
+        //* * Optimized * */
+        Route::get('/', [AdminController::class, 'generalAdminDashboard']);
+        //**      Ahed      **//
+        //* * Optimized * */
+        Route::get('/pending-needies', [AdminController::class, 'getPendingNeedies']);
+        Route::post('/ahed/approve/{id}', [AdminController::class, 'approve']);
+        Route::post('/ahed/disapprove/{id}', [AdminController::class, 'disapprove']);
+        Route::patch('/ahed/collect', [AdminController::class, 'collectOfflineTransaction']);
+        //**      Ataa      **//
+        //* * Optimized * */
+        Route::apiResource('/ataa/prize', AtaaPrizeController::class);
+        Route::patch('/ataa/prize/{id}/activate', [AtaaPrizeController::class, 'activate']);
+        Route::patch('/ataa/prize/{id}/deactivate', [AtaaPrizeController::class, 'deactivate']);
+        Route::apiResource('/ataa/badge', AtaaBadgeController::class);
+        Route::patch('/ataa/badge/{id}/activate', [AtaaBadgeController::class, 'activate']);
+        Route::patch('/ataa/badge/{id}/deactivate', [AtaaBadgeController::class, 'deactivate']);
+        Route::get('/ataa/achievement', [AdminController::class, 'getAtaaAchievements']);
+        Route::post('/ataa/freeze-achievement', [AdminController::class, 'freezeUserAtaaAchievements']);
+        Route::post('/ataa/defreeze-achievement', [AdminController::class, 'defreezeUserAtaaAchievements']);
+        //**      Ban      **//
+        Route::get('/ban', [AdminController::class, 'getUserBans']);
+        Route::post('/ban', [AdminController::class, 'addUserBan']);
+        Route::patch('/ban/activate/{userBan}', [AdminController::class, 'activateBan']);
+        Route::patch('/ban/deactivate/{userBan}', [AdminController::class, 'deactivateBan']);
+        //**      Import      **//
+        //* * Not Optimized * */
+        Route::post('/importCSV', [AdminController::class, 'importCSV']);
+    });
 });
+
+
+
+
+
+
+
+
+
+
+
 
 
 Route::post('/token/refresh', [TokensController::class, 'refresh']);

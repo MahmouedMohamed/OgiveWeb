@@ -33,7 +33,7 @@ class LanguageHandler
     public function handle(Request $request, Closure $next)
     {
         // read the language from the request header
-        $language = $request->header('Content-Language');
+        $language = strtolower($request->header('Content-Language'));
 
         // if the header is missed
         if (!$language) {
