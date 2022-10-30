@@ -50,7 +50,8 @@ class UserController extends BaseController
             }else{
                 $anonymousUser = AnonymousUser::create([
                     'id' => Str::uuid(),
-                    'device_id' => $request['deviceId']
+                    'device_id' => $request['deviceId'],
+                    'nationality' => $request['nationality']
                 ]);
             }
 

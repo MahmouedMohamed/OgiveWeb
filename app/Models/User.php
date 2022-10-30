@@ -145,29 +145,4 @@ class User extends BaseUserModel
 
         return null;
     }
-
-    public function setNationalityAttribute($text)
-    {
-        $this->attributes['nationality'] = Nationality::$value[$text];
-    }
-
-    public function getNationalityAttribute($value)
-    {
-        $source = app()->getLocale() === 'ar' ? 'text_ar' : 'text';
-        if ($value) {
-            return Nationality::$$source[$value];
-        }
-
-        return null;
-    }
-
-    public function getNationalityValue()
-    {
-        $source = app()->getLocale() === 'ar' ? 'value_ar' : 'value';
-        if ($this->nationality) {
-            return Nationality::$$source[$this->nationality];
-        }
-
-        return null;
-    }
 }

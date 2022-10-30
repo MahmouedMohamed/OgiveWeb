@@ -23,6 +23,7 @@ class AnonymousLoginRequest extends BaseRequest
     {
         return [
             'deviceId'=> ['required'],
+            'nationality' => ['required'],
             'appType'=> ['required'],
             'accessType' => ['required']
         ];

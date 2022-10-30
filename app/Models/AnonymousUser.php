@@ -18,7 +18,8 @@ class AnonymousUser extends BaseUserModel
      */
     protected $fillable = [
         'id',
-        'device_id'
+        'device_id',
+        'nationality'
     ];
 
     /**
