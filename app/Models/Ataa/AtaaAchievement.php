@@ -50,7 +50,7 @@ class AtaaAchievement extends Model
         $this->freezed = false;
         $this->save();
     }
-    public static function calculateThenGet(User $user, FoodSharingMarker $foodSharingMarker, String $method)
+    public static function calculateThenGet(BaseUserModel $user, FoodSharingMarker $foodSharingMarker, String $method)
     {
         $userAchievement = $user->ataaAchievement ?? $user->ataaAchievement()->create([
             'id'=> Str::uuid(),

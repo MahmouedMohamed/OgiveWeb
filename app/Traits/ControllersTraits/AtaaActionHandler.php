@@ -5,6 +5,7 @@ namespace App\Traits\ControllersTraits;
 use App\Jobs\AtaaAchievementCalculator;
 use App\Models\Ataa\AtaaPrize;
 use App\Models\Ataa\FoodSharingMarker;
+use App\Models\BaseUserModel;
 use App\Models\User;
 
 /**
@@ -12,11 +13,11 @@ use App\Models\User;
  */
 trait AtaaActionHandler
 {
-    public function handleMarkerCreated(User $user, FoodSharingMarker $foodSharingMarker)
+    public function handleMarkerCreated(BaseUserModel $user, FoodSharingMarker $foodSharingMarker)
     {
         AtaaAchievementCalculator::dispatch($user, $foodSharingMarker, 'Create');
     }
-    public function handleMarkerCollected(User $user, FoodSharingMarker $foodSharingMarker)
+    public function handleMarkerCollected(BaseUserModel $user, FoodSharingMarker $foodSharingMarker)
     {
         AtaaAchievementCalculator::dispatch($user, $foodSharingMarker, 'Collect');
     }
@@ -24,12 +25,12 @@ trait AtaaActionHandler
     {
         if ($foodSharingMarkerExists)
             return;
-        //TODO: if marker doesn't exists for 100 times for the same user
+        //TODO: if marker doesn't exists for 10 times for the same user
         //->
         //Ban this marker publisher for publishing again
         //TODO: Count
     }
-    public function handleMarkerDeleted($user)
+    public function handleMarkerDeleted(BaseUserModel $user)
     {
         $user->ataaAchievement->decreaseMarkersPosted();
         AtaaPrize::prizesReview($user);
