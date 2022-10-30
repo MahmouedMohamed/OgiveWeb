@@ -28,6 +28,7 @@ use App\Http\Controllers\api\Ataa\AtaaBadgeController;
 use App\Http\Controllers\api\Ahed\NeediesController;
 use App\Http\Controllers\api\Ahed\OfflineTransactionsController;
 use App\Http\Controllers\api\Ahed\OnlineTransactionsController;
+use App\Http\Controllers\api\OptionsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,6 +47,10 @@ Route::post('/anonymous-login', [UserController::class, 'anonymousLogin']);
 Route::post('/register', [UserController::class, 'register']);
 
 Route::group(['middleware' => ['UserIsAuthorized']], function () {
+    Route::group(['prefix' => 'options', 'as' => 'public'], function () {
+        Route::get('/nationalities', [OptionsController::class, 'nationalities']);
+    });
+
     Route::group(['prefix' => 'users'], function () {
         Route::patch('/{user}/profile/picture', [UserController::class, 'updateProfilePicture']);
         Route::patch('/{user}/profile/cover', [UserController::class, 'updateCoverPicture']);

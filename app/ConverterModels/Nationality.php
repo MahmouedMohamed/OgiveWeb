@@ -2,7 +2,7 @@
 
 namespace App\ConverterModels;
 
-class Nationality
+class Nationality extends BaseConvertorModel
 {
     public static $value = [
         'Egyptian' => 1,
