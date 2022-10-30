@@ -59,7 +59,7 @@ Route::group(['middleware' => ['UserIsAuthorized']], function () {
 
     //**      Ataa      **//
     Route::group(['prefix' => 'ataa', 'middleware' => ['Bindings']], function () {
-        Route::group(['prefix' => 'markers'], function () {
+        Route::group(['prefix' => 'markers', 'as' => 'anonymous'], function () {
             Route::get('/', [FoodSharingMarkersController::class, 'index']);
             Route::get('/{foodSharingMarker}', [FoodSharingMarkersController::class, 'show']);
             Route::post('/', [FoodSharingMarkersController::class, 'store']);
