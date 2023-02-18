@@ -4,6 +4,7 @@ namespace App\ConverterModels;
 
 class OwnerType
 {
+    //Class name => User, AnonymousUser
     public static $value = [
         'User' => 1,
         'AnonymousUser' => 2,
