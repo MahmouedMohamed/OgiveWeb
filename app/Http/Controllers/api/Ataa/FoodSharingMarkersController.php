@@ -91,7 +91,7 @@ class FoodSharingMarkersController extends BaseController
         try {
             $this->userIsAuthorized($request->user, 'create', FoodSharingMarker::class);
             //Create Food Sharing Marker
-            $foodSharingMarker = $request->user->foodSharingMarkers()->create([
+            $request->user->foodSharingMarkers()->create([
                 'id' => Str::uuid(),
                 'owner_type' => OwnerType::$value[class_basename($request->user)],
                 'latitude' => $request['latitude'],
@@ -103,8 +103,6 @@ class FoodSharingMarkersController extends BaseController
                 'collected' => 0,
                 'nationality' => $request->user->nationality
             ]);
-            FoodSharingMarkerCreated::dispatch($foodSharingMarker);
-            $this->handleMarkerCreated($request->user, $foodSharingMarker);
             return $this->sendResponse([], __('Ataa.FoodSharingMarkerCreationSuccessMessage'));
         } catch (UserNotFound $e) {
             return $this->sendError(__('General.UserNotFound'));

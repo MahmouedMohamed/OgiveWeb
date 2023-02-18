@@ -13,10 +13,6 @@ use App\Models\User;
  */
 trait AtaaActionHandler
 {
-    public function handleMarkerCreated(BaseUserModel $user, FoodSharingMarker $foodSharingMarker)
-    {
-        AtaaAchievementCalculator::dispatch($user, $foodSharingMarker, 'Create');
-    }
     public function handleMarkerCollected(BaseUserModel $user, FoodSharingMarker $foodSharingMarker)
     {
         AtaaAchievementCalculator::dispatch($user, $foodSharingMarker, 'Collect');
