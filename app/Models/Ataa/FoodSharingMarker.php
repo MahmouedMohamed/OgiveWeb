@@ -24,11 +24,6 @@ class FoodSharingMarker extends BaseModel
         'nationality', 'existed', 'collected_at'
     ];
 
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'owner_id');
-    }
-
     public function collect(bool $existed)
     {
         $this->collected = true;
@@ -86,5 +81,10 @@ class FoodSharingMarker extends BaseModel
         }
 
         return null;
+    }
+
+    public function user()
+    {
+        return $this->morphTo(__FUNCTION__, 'owner_type', 'owner_id');
     }
 }

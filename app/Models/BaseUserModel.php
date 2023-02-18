@@ -8,6 +8,7 @@ use App\Http\Resources\RoleResource;
 use App\Models\Ataa\FoodSharingMarker;
 use App\Models\Ataa\AtaaAchievement;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
@@ -65,11 +66,6 @@ class BaseUserModel extends AuthenticatableUser
         $this->accessTokens()->where('app_type', '=', $appType)->delete();
     }
 
-    public function foodSharingMarkers()
-    {
-        return $this->hasMany(FoodSharingMarker::class, 'owner_id')->orderBy('id', 'DESC');
-    }
-
     public function ataaAchievement()
     {
         return $this->hasOne(AtaaAchievement::class, 'owner_id');
@@ -105,5 +101,10 @@ class BaseUserModel extends AuthenticatableUser
         }
 
         return null;
+    }
+
+    public function foodSharingMarkers(): MorphMany
+    {
+        return $this->morphMany(FoodSharingMarker::class, 'user', 'owner_type', 'owner_id');
     }
 }
