@@ -26,6 +26,14 @@ trait NeedyValidator
             throw new NeedyNotFound();
         return $needy;
     }
+
+    public function needySelfLock(String $id)
+    {
+        $needy = Needy::lockForUpdate()->find($id);
+        if (!$needy)
+            throw new NeedyNotFound();
+        return $needy;
+    }
     /**
      * Returns If Needy approved or not.
      *

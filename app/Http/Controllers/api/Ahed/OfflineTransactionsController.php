@@ -45,7 +45,7 @@ class OfflineTransactionsController extends BaseController
         if ($validated->fails())
             return $this->sendError(__('General.InvalidData'), $validated->messages(), 400);
         try {
-            $needy = $this->needyExists(request()->input('needy'));
+            $needy = $this->needySelfLock(request()->input('needy'));
             $this->needyApproved($needy);
             $this->needyIsSatisfied($needy);
             if (request()->input('giver') != null) {
@@ -132,7 +132,7 @@ class OfflineTransactionsController extends BaseController
             $validated = $this->validateTransaction($request, 'update');
             if ($validated->fails())
                 return $this->sendError(__('General.InvalidData'), $validated->messages(), 400);
-            $needy = $this->needyExists(request()->input('needy'));
+            $needy = $this->needySelfLock(request()->input('needy'));
             $this->needyApproved($needy);
             $this->needyIsSatisfied($needy);
             $transaction->update([

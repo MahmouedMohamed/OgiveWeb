@@ -49,7 +49,7 @@ class OnlineTransactionsController extends BaseController
             return $this->sendError(__('General.InvalidData'), $validated->messages(), 400);   ///Invalid data.
         try {
             $user = $this->userExists(request()->input('giver'));
-            $needy = $this->needyExists(request()->input('needy'));
+            $needy = $this->needySelfLock(request()->input('needy'));
             $this->needyApproved($needy);
             $this->needyIsSatisfied($needy);
             $transaction = $user->onlinetransactions()->create([
