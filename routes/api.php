@@ -133,8 +133,8 @@ Route::group(['middleware' => ['UserIsAuthorized']], function () {
         //**      Ahed      **//
         //* * Optimized * */
         Route::get('/pending-needies', [AdminController::class, 'getPendingNeedies']);
-        Route::post('/ahed/approve/{id}', [AdminController::class, 'approve']);
-        Route::post('/ahed/disapprove/{id}', [AdminController::class, 'disapprove']);
+        Route::post('/ahed/approve/{needy}', [AdminController::class, 'approve']);
+        Route::post('/ahed/disapprove/{needy}', [AdminController::class, 'disapprove']);
         Route::patch('/ahed/collect', [AdminController::class, 'collectOfflineTransaction']);
         //**      Ataa      **//
         //* * Optimized * */
