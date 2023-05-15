@@ -3,16 +3,13 @@
 namespace App\Models\Ahed;
 
 use App\ConverterModels\CaseType;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-class Needy extends Model
+class Needy extends BaseModel
 {
-    use HasFactory;
-
     public $incrementing = false;
 
     protected $fillable = [
@@ -89,7 +86,8 @@ class Needy extends Model
 
     public function setTypeAttribute($text)
     {
-        $this->attributes['type'] = CaseType::$value[$text];
+        $source = app()->getLocale() === 'ar' ? 'value_ar' : 'value';
+        $this->attributes['type'] = CaseType::$$source[$text];
     }
 
     public function getTypeAttribute($value)
