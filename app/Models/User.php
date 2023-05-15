@@ -34,8 +34,7 @@ class User extends BaseUserModel
         'gender',
         'phone_number',
         'address',
-        'nationality',
-        'profile_id'
+        'nationality'
     ];
 
     /**

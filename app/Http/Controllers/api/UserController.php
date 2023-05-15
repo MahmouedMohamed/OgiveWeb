@@ -6,6 +6,7 @@ use App\ConverterModels\CaseType;
 use App\Exceptions\LoginParametersNotFound;
 use App\Exceptions\UserNotAuthorized;
 use App\Http\Requests\AnonymousLoginRequest;
+use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\UpdateImageRequest;
 use App\Http\Requests\UpdateProfileRequest;
@@ -47,7 +48,7 @@ class UserController extends BaseController
             $anonymousUser = AnonymousUser::where('device_id', '=', $request['deviceId'])->first();
             if ($anonymousUser) {
                 $this->userBanValidator($anonymousUser);
-            }else{
+            } else {
                 $anonymousUser = AnonymousUser::create([
                     'id' => Str::uuid(),
                     'device_id' => $request['deviceId'],
@@ -56,14 +57,14 @@ class UserController extends BaseController
             }
 
             $tokenDetails = $anonymousUser->createAccessToken($request['accessType'], $request['appType']);
-                $this->content['token'] =
-                    $tokenDetails['accessToken'];
-                $this->content['expiryDate'] =
-                    $tokenDetails['expiryDate'];
+            $this->content['token'] =
+                $tokenDetails['accessToken'];
+            $this->content['expiryDate'] =
+                $tokenDetails['expiryDate'];
 
-                $this->content['user'] = $anonymousUser;
+            $this->content['user'] = $anonymousUser;
 
-                return $this->sendResponse($this->content, __('General.DataRetrievedSuccessMessage'));
+            return $this->sendResponse($this->content, __('General.DataRetrievedSuccessMessage'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden($e->getMessage());
         }
@@ -87,8 +88,7 @@ class UserController extends BaseController
                     $tokenDetails['expiryDate'];
 
                 $this->content['user'] = UserResource::make($user);
-                $profile = Profile::findOrFail($user->profile_id);
-                $this->content['profile'] = ProfileResource::make($profile);
+                $this->content['profile'] = ProfileResource::make($user->profile);
                 return $this->sendResponse($this->content, __('General.DataRetrievedSuccessMessage'));
             } else {
                 return $this->sendError('The email or password is incorrect.');
@@ -105,17 +105,10 @@ class UserController extends BaseController
         return response()->json(['user' => Auth::user()]);
     }
 
+    //ToDo: Move to Job
     public function register(RegisterRequest $registerRequest)
     {
-        $profile = Profile::create([
-            'id' => Str::uuid()
-        ]);
-        $image = $registerRequest['image'];
-        if ($image != null) {
-            $imagePath = $image->store('users', 'public');
-            $profile->image = "/storage/" . $imagePath;
-            $profile->save();
-        }
+
         $user = User::create([
             'id' => Str::uuid(),
             'name' => request('name'),
@@ -126,8 +119,16 @@ class UserController extends BaseController
             'phone_number' => request('phone_number'),
             'address' => request('address'),
             'nationality' => request('nationality'),
-            'profile_id' => $profile->id
         ]);
+        $profile = $user->profile()->create([
+            'id' => Str::uuid()
+        ]);
+        $image = $registerRequest['image'];
+        if ($image != null) {
+            $imagePath = $image->store('users', 'public');
+            $profile->image = "/storage/" . $imagePath;
+            $profile->save();
+        }
         return $this->sendResponse(UserResource::make($user), 'User Created Successfully');
     }
 
@@ -196,7 +197,7 @@ class UserController extends BaseController
         if ($user->id != $request->user->id)
             return $this->sendForbidden('أنت لا تملك صلاحية تعديل هذا الملف الشخصي');  ///You aren\'t authorized to delete this transaction.
 
-        $profile = Profile::find($user->profile_id);
+        $profile = $user->profile;
         if ($profile->image == null) {
             $imagePath = $request['image']->store('users', 'public');
             $profile->image = "/storage/" . $imagePath;
@@ -220,7 +221,7 @@ class UserController extends BaseController
         if ($user->id != $request->user->id)
             return $this->sendForbidden('أنت لا تملك صلاحية تعديل هذا الملف الشخصي');  ///You aren\'t authorized to delete this transaction.
 
-        $profile = Profile::find($user->profile_id);
+        $profile = $user->profile;
         if ($profile->cover == null) {
             $imagePath = $request['image']->store('users', 'public');
             $profile->cover = "/storage/" . $imagePath;
@@ -244,7 +245,7 @@ class UserController extends BaseController
         if ($user->id != $request->user->id)
             return $this->sendForbidden('أنت لا تملك صلاحية تعديل هذا الملف الشخصي');  ///You aren\'t authorized to delete this transaction.
 
-        $profile = Profile::find($user->profile_id);
+        $profile = $user->profile;
         $profile->bio = $request['bio'] ?? $profile->bio;
         $user->phone_number = $request['phoneNumber'] ?? $user->phone_number;
         $user->address = $request['address'] ?? $user->address;
