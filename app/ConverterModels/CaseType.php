@@ -12,6 +12,14 @@ class CaseType
         'Finding a Cure' => 5,
     ];
 
+    public static $value_ar = [
+        'إيجاد مسكن مناسب' => 1,
+        'تحسين مستوي المعيشة' => 2,
+        'تجهيز لفرحة' => 3,
+        'سداد الديون' => 4,
+        'إيجاد علاج' => 5,
+    ];
+
     public static $text = [
         1 => 'Finding Better Place for Living',
         2 => 'Upgrading Standard of Living',
