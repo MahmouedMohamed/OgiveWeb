@@ -2,7 +2,6 @@
 
 namespace App\Observers;
 
-use App\Models\Ahed\Needy;
 use App\Models\Ahed\NeedyMedia;
 use Illuminate\Support\Facades\Cache;
 

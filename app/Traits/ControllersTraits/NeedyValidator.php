@@ -3,12 +3,9 @@
 namespace App\Traits\ControllersTraits;
 
 use App\Exceptions\NeedyIsSatisfied;
-use App\Exceptions\NeedyMediaNotFound;
 use App\Exceptions\NeedyNotApproved;
 use App\Exceptions\NeedyNotFound;
 use App\Models\Ahed\Needy;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 trait NeedyValidator
 {

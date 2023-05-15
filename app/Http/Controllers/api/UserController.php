@@ -50,7 +50,7 @@ class UserController extends BaseController
             return $this->sendResponse([
                 'token' => $tokenDetails['token'],
                 'expiryDate' => $tokenDetails['expiryDate'],
-                'user' => $anonymousUser
+                'user' => $anonymousUser,
             ], __('General.DataRetrievedSuccessMessage'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden($e->getMessage());
@@ -74,7 +74,7 @@ class UserController extends BaseController
                     'token' => $tokenDetails['token'],
                     'expiryDate' => $tokenDetails['expiryDate'],
                     'user' => UserResource::make($user),
-                    'profile' => ProfileResource::make($user->profile)
+                    'profile' => ProfileResource::make($user->profile),
                 ], __('General.DataRetrievedSuccessMessage'));
             } else {
                 return $this->sendError('The email or password is incorrect.');
@@ -110,7 +110,7 @@ class UserController extends BaseController
         $image = $registerRequest['image'];
         if ($image != null) {
             $imagePath = $image->store('users', 'public');
-            $profile->image = '/storage/' . $imagePath;
+            $profile->image = '/storage/'.$imagePath;
             $profile->save();
         }
 
@@ -146,7 +146,7 @@ class UserController extends BaseController
         $activeNeedies = $activeNeedies->where('satisfied', '=', 1)->groupBy('type');
 
         foreach (CaseType::$text as $key => $value) {
-            $data['NeediesHelpedWith' . str_replace(" ", "", $value)] = ($activeNeedies[$value] ?? collect([]))->count();
+            $data['NeediesHelpedWith'.str_replace(' ', '', $value)] = ($activeNeedies[$value] ?? collect([]))->count();
         }
 
         return $this->sendResponse(array_merge([
@@ -171,7 +171,7 @@ class UserController extends BaseController
         $profile = $user->profile;
         if ($profile->image == null) {
             $imagePath = $request['image']->store('users', 'public');
-            $profile->image = '/storage/' . $imagePath;
+            $profile->image = '/storage/'.$imagePath;
             $profile->save();
         } else {
             $imagePath = $request['image']->storeAs('public/users', last(explode('/', $profile->image)));
@@ -195,7 +195,7 @@ class UserController extends BaseController
         $profile = $user->profile;
         if ($profile->cover == null) {
             $imagePath = $request['image']->store('users', 'public');
-            $profile->cover = '/storage/' . $imagePath;
+            $profile->cover = '/storage/'.$imagePath;
             $profile->save();
         } else {
             $imagePath = $request['image']->storeAs('public/users', last(explode('/', $profile->cover)));

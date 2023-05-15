@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers\api\Ahed;
 
-use App\Exceptions\NeedyMediaNotFound;
 use App\Exceptions\NeedyNotFound;
 use App\Exceptions\UserNotAuthorized;
 use App\Exceptions\UserNotFound;
 use App\Http\Controllers\api\BaseController;
-use App\Http\Requests\AddNeedyImagesRequest;
 use App\Http\Requests\CreateNeedyRequest;
 use App\Http\Requests\NeedyImagesRequest;
 use App\Http\Requests\UpdateNeedyRequest;
@@ -22,8 +20,7 @@ use Illuminate\Support\Str;
 
 class NeediesController extends BaseController
 {
-    use UserValidator, NeedyValidator
-    ;
+    use UserValidator, NeedyValidator;
 
     /**
      * Display a listing of the only Approved Non-Urgent Needies.
@@ -170,7 +167,6 @@ class NeediesController extends BaseController
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\NeedyImagesRequest  $request
      * @param  App\Models\Ahed\Needy  $needy
      * @return \Illuminate\Http\Response
      */
