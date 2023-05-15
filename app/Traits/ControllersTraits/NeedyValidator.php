@@ -62,29 +62,4 @@ trait NeedyValidator
         }
 
     }
-
-    public function needyMediaExists(Needy $needy, $id)
-    {
-        $needyMedia = $needy->medias()->whereIn('id', [$id])->first();
-        if (! $needyMedia) {
-            throw new NeedyMediaNotFound();
-        }
-
-        return $needyMedia;
-    }
-
-    public function validateNeedy(Request $request, string $related)
-    {
-        switch ($related) {
-            case 'addImage':
-                $rules = [
-                    'images' => 'required',
-                    'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-                    'before' => 'required|boolean',
-                ];
-                break;
-        }
-
-        return Validator::make($request->all(), $rules);
-    }
 }

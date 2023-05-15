@@ -112,8 +112,8 @@ Route::group(['middleware' => ['UserIsAuthorized']], function () {
         Route::apiResource('/needies', NeediesController::class);
         Route::get('/urgent-needies', [NeediesController::class, 'urgentIndex']);
         Route::get('/needies-with-ids', [NeediesController::class, 'getNeediesWithIDs']);
-        Route::post('/needies/add-images/{id}', [NeediesController::class, 'addAssociatedImages']);
-        Route::post('/needies/remove-image/{id}', [NeediesController::class, 'removeAssociatedImage']);
+        Route::put('/needies/{needy}/add-images', [NeediesController::class, 'addAssociatedImages']);
+        Route::put('/needies/medias/{needyMedia}/remove-image/', [NeediesController::class, 'removeAssociatedImage']);
         Route::apiResource('/onlinetransactions', OnlineTransactionsController::class);
         Route::apiResource('/offlinetransactions', OfflineTransactionsController::class);
         Route::get('/ahedachievement/{id}', [UserController::class, 'getAhedAchievementRecords']);

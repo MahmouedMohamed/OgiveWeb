@@ -7,9 +7,12 @@ use App\Exceptions\NeedyNotFound;
 use App\Exceptions\UserNotAuthorized;
 use App\Exceptions\UserNotFound;
 use App\Http\Controllers\api\BaseController;
+use App\Http\Requests\AddNeedyImagesRequest;
 use App\Http\Requests\CreateNeedyRequest;
+use App\Http\Requests\NeedyImagesRequest;
 use App\Http\Requests\UpdateNeedyRequest;
 use App\Models\Ahed\Needy;
+use App\Models\Ahed\NeedyMedia;
 use App\Traits\ControllersTraits\NeedyValidator;
 use App\Traits\ControllersTraits\UserValidator;
 use Illuminate\Http\Request;
@@ -19,7 +22,8 @@ use Illuminate\Support\Str;
 
 class NeediesController extends BaseController
 {
-    use UserValidator, NeedyValidator;
+    use UserValidator, NeedyValidator
+    ;
 
     /**
      * Display a listing of the only Approved Non-Urgent Needies.
@@ -119,7 +123,7 @@ class NeediesController extends BaseController
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  App\Models\Ahed\Needy  $needy
      * @return \Illuminate\Http\Response
      */
     public function show(Needy $needy)
@@ -138,23 +142,14 @@ class NeediesController extends BaseController
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\CreateNeedyRequest  $request
-     * @param  int  $id
+     * @param  App\Models\Ahed\Needy  $needy
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateNeedyRequest $request, $id)
+    public function update(UpdateNeedyRequest $request, Needy $needy)
     {
         try {
-            //Check needy exists
-            $needy = $this->needyExists($id);
-            //Check user who is updating exists
-            $user = $this->userExists($request['userId']);
             //Check if current user can update
-            $this->userIsAuthorized($user, 'update', $needy);
-            //Validate Request
-            $validated = $this->validateNeedy($request, 'update');
-            if ($validated->fails()) {
-                return $this->sendError(__('General.InvalidData'), $validated->messages(), 400);
-            }
+            $this->userIsAuthorized($request->user, 'update', $needy);
             //Update
             $needy->update([
                 'name' => $request['name'],
@@ -167,10 +162,6 @@ class NeediesController extends BaseController
             ]);
 
             return $this->sendResponse([], __('Ahed.NeediesUpdateSuccessMessage'));
-        } catch (NeedyNotFound $e) {
-            return $this->sendError(__('Ahed.NeedyNotFound'));
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden(__('Ahed.NeediesUpdateForbiddenMessage'));
         }
@@ -179,23 +170,15 @@ class NeediesController extends BaseController
     /**
      * Update the specified resource in storage.
      *
-     * @param  int  $id
+     * @param  \App\Http\Requests\NeedyImagesRequest  $request
+     * @param  App\Models\Ahed\Needy  $needy
      * @return \Illuminate\Http\Response
      */
-    public function addAssociatedImages(Request $request, $id)
+    public function addAssociatedImages(NeedyImagesRequest $request, Needy $needy)
     {
         try {
-            //Check needy exists
-            $needy = $this->needyExists($id);
-            //Check user who is updating exists
-            $user = $this->userExists($request['userId']);
             //Check if current user can update
-            $this->userIsAuthorized($user, 'update', $needy);
-            //Validate Request
-            $validated = $this->validateNeedy($request, 'addImage');
-            if ($validated->fails()) {
-                return $this->sendError(__('General.InvalidData'), $validated->messages(), 400);
-            }
+            $this->userIsAuthorized($request->user, 'update', $needy);
             $images = $request['images'];
             $imagePaths = [];
             foreach ($images as $image) {
@@ -217,59 +200,40 @@ class NeediesController extends BaseController
     /**
      * Update the specified resource in storage.
      *
-     * @param  int  $id
+     * @param  App\Models\Ahed\Needy  $needy
+     * @param  App\Models\Ahed\NeedyMedia  $needyMedia
      * @return \Illuminate\Http\Response
      */
-    public function removeAssociatedImage(Request $request, $id)
+    public function removeAssociatedImage(Request $request, NeedyMedia $needyMedia)
     {
         try {
-            //Check needy exists
-            $needy = $this->needyExists($id);
-            //Check user who is updating exists
-            $user = $this->userExists($request['userId']);
             //Check if current user can update
-            $this->userIsAuthorized($user, 'update', $needy);
-            //Check needy media exists
-            $needyMedia = $this->needyMediaExists($needy, $request['imageId']);
+            $this->userIsAuthorized($request->user, 'update', $needyMedia->needy);
             Storage::delete('public/'.substr($needyMedia->path, 9));
             $needyMedia->delete();
 
             return $this->sendResponse([], __('Ahed.NeedyMediaDeleteSuccessMessage'));
-        } catch (NeedyNotFound $e) {
-            return $this->sendError(__('Ahed.NeedyNotFound'));
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden(__('Ahed.NeediesUpdateForbiddenMessage'));
-        } catch (NeedyMediaNotFound $e) {
-            return $this->sendError(__('Ahed.NeedyMediaNotFound'));
         }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  App\Models\Ahed\Needy  $needy
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, $id)
+    public function destroy(Request $request, Needy $needy)
     {
         try {
-            //Check needy exists
-            $needy = $this->needyExists($id);
-            //Check user who is updating exists
-            $user = $this->userExists($request['userId']);
             //Check if current user can update
-            $this->userIsAuthorized($user, 'delete', $needy);
+            $this->userIsAuthorized($request->user, 'delete', $needy);
             //Remove images from disk before deleting to save storage
             $needy->removeMedia();
             $needy->delete();
 
             return $this->sendResponse([], __('Ahed.NeediesDeleteSuccessMessage'));
-        } catch (NeedyNotFound $e) {
-            return $this->sendError(__('Ahed.NeedyNotFound'));
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden(__('Ahed.NeediesDeletionForbiddenMessage'));
         }

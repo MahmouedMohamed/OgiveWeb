@@ -15,7 +15,7 @@ class NeedyMedia extends Model
 
     protected $fillable = [
         'id',
-        'needy',
+        'needy_id',
         'path',
         'before',
     ];
