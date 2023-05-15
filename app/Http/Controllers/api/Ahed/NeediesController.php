@@ -31,20 +31,10 @@ class NeediesController extends BaseController
         return $this->sendResponse(
             Cache::remember('needies-' . $currentPage, 60 * 60 * 24, function () {
                 return
-                    Needy::join('users', 'users.id', 'needies.created_by')
-                    ->join('profiles', 'users.profile', 'profiles.id')
-                    ->select(
-                        'needies.*',
-                        'users.id as userId',
-                        'users.name as userName',
-                        'users.email_verified_at as userEmailVerifiedAt',
-                        'profiles.image as userImage'
-                    )
-                    ->latest('needies.created_at')
-                    ->with('mediasBefore:id,path,needy_id')
-                    ->with('mediasAfter:id,path,needy_id')
-                    ->where('approved', '=', 1)
+                    Needy::where('approved', '=', 1)
                     ->where('severity', '<', '7')
+                    ->latest('needies.created_at')
+                    ->with(['createdBy.profile', 'mediasBefore:id,path,needy_id', 'mediasAfter:id,path,needy_id'])
                     ->paginate(8);
             }),
             __('General.DataRetrievedSuccessMessage')
@@ -62,20 +52,10 @@ class NeediesController extends BaseController
         return $this->sendResponse(
             Cache::remember('urgentNeedies-' . $currentPage, 60 * 60 * 24, function () {
                 return
-                    Needy::join('users', 'users.id', 'needies.created_by')
-                    ->join('profiles', 'users.profile', 'profiles.id')
-                    ->select(
-                        'needies.*',
-                        'users.id as userId',
-                        'users.name as userName',
-                        'users.email_verified_at as userEmailVerifiedAt',
-                        'profiles.image as userImage'
-                    )
-                    ->latest('needies.created_at')
-                    ->with('mediasBefore:id,path,needy_id')
-                    ->with('mediasAfter:id,path,needy_id')
-                    ->where('approved', '=', 1)
+                    Needy::where('approved', '=', 1)
                     ->where('severity', '>=', '7')
+                    ->latest('needies.created_at')
+                    ->with(['createdBy.profile', 'mediasBefore:id,path,needy_id', 'mediasAfter:id,path,needy_id'])
                     ->paginate(8);
             }),
             __('General.DataRetrievedSuccessMessage')
@@ -90,9 +70,9 @@ class NeediesController extends BaseController
     {
         return $this->sendResponse(
             Needy::whereIn('id', $request['ids'])
-            ->where('approved', '=', 1)
-            ->latest('needies.created_at')
-            ->with(['createdBy.profile', 'mediasBefore:id,path,needy_id', 'mediasAfter:id,path,needy_id'])->get(),
+                ->where('approved', '=', 1)
+                ->latest('needies.created_at')
+                ->with(['createdBy.profile', 'mediasBefore:id,path,needy_id', 'mediasAfter:id,path,needy_id'])->get(),
             __('General.DataRetrievedSuccessMessage')
         );
     }

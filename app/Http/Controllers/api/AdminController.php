@@ -127,15 +127,13 @@ class AdminController extends BaseController
      * Approve Case.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param String $id
+     * @param Needy $needy
      * @return \Illuminate\Http\Response
      */
-    public function approve(Request $request, String $id)
+    public function approve(Request $request, Needy $needy)
     {
         try {
-            $user = $this->userExists($request['userId']);
-            $needy = $this->needyExists($id);
-            $this->userIsAuthorized($user, 'approve', $needy);
+            $this->userIsAuthorized($request->user, 'approve', $needy);
             $needy->approve();
             return $this->sendResponse([], 'Needy Approved Successfully!');
         } catch (UserNotFound $e) {
@@ -151,15 +149,13 @@ class AdminController extends BaseController
      * Disapprove Case.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param String $id
+     * @param Needy $needy
      * @return \Illuminate\Http\Response
      */
-    public function disapprove(Request $request, String $id)
+    public function disapprove(Request $request, Needy $needy)
     {
         try {
-            $user = $this->userExists($request['userId']);
-            $needy = $this->needyExists($id);
-            $this->userIsAuthorized($user, 'disapprove', $needy);
+            $this->userIsAuthorized($request->user, 'disapprove', $needy);
             $needy->disapprove();
             return $this->sendResponse([], 'Needy Disapprove Successfully!');
         } catch (UserNotFound $e) {
@@ -332,6 +328,7 @@ class AdminController extends BaseController
             return $this->sendForbidden('You aren\'t authorized to see these resources.');
         }
     }
+
     /**
      * Display a listing of all Needies.
      *
@@ -339,21 +336,12 @@ class AdminController extends BaseController
      */
     public function getPendingNeedies()
     {
-        return $this->sendResponse(Needy::join('users', 'users.id', 'needies.created_by')
-            ->join('profiles', 'users.profile_id', 'profiles.id')
-            ->select(
-                'needies.*',
-                'users.id as userId',
-                'users.name as userName',
-                'users.email_verified_at as userEmailVerifiedAt',
-                'profiles.image as userImage'
-            )
-            ->latest('needies.created_at')
-            ->with('mediasBefore:id,path,needy_id')
-            ->with('mediasAfter:id,path,needy_id')
-            ->where('approved', '=', 0)
+        return $this->sendResponse(
+            Needy::where('approved', '=', 0)
+            ->with(['createdBy.profile', 'mediasBefore:id,path,needy_id', 'mediasAfter:id,path,needy_id'])
             ->paginate(8), 'تم إسترجاع البيانات بنجاح');  ///Cases retrieved successfully.
     }
+
     public function importCSV(Request $request)
     {
         $validated = Validator::make($request->all(), [
