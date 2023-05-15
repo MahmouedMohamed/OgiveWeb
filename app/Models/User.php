@@ -129,7 +129,14 @@ class User extends BaseUserModel
     {
         return $this->hasMany(TimeCatcherTracking::class, 'tracker_id');
     }
-
+    public function account()
+    {
+        return $this->hasOne(UserAccount::class);
+    }
+    public function settings()
+    {
+        return $this->hasOne(UserSettings::class);
+    }
     public function setGenderAttribute($text)
     {
         $this->attributes['gender'] = Gender::$value[$text];
