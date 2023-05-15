@@ -11,27 +11,6 @@ use Illuminate\Http\Request;
 
 trait LoginValidator
 {
-
-    /**
-     * Returns If FoodSharingMarker exists or not.
-     *
-     * @param Request $request
-     * @return mixed
-     */
-    public function validateLoginParameters(Request $request)
-    {
-        if (!$request['accessType'])
-            throw new LoginParametersNotFound("Access Type");
-        if (!$request['appType'])
-            throw new LoginParametersNotFound("App Type");
-        if (!$request['email'])
-            throw new LoginParametersNotFound("Email");
-        if (!$request['password'])
-            throw new LoginParametersNotFound("Password");
-        if ($request['appType'] == 'TimeCatcher' && !$request['fcmToken'])
-            throw new LoginParametersNotFound('FCM Token');
-    }
-
     public function userBanValidator(BaseUserModel $user)
     {
         $loginBan = $user->bans()->where('active', '=', 1)->where('tag', '=', BanTypes::Login)->get()->first();

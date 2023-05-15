@@ -73,7 +73,6 @@ class UserController extends BaseController
     public function login(LoginRequest $request)
     {
         try {
-            $this->validateLoginParameters($request);
             if (Auth::attempt(['email' => $request['email'], 'password' => $request['password']])) {
                 $user = $this->getAuthenticatedUser();
                 $this->userBanValidator($user);
@@ -95,8 +94,6 @@ class UserController extends BaseController
             }
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden($e->getMessage());
-        } catch (LoginParametersNotFound $e) {
-            return $this->sendError("Parameter " . $e->getMessage() . " Not Specified");
         }
     }
 
