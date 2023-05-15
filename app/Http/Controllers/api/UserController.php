@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\api;
 
 use App\ConverterModels\CaseType;
-use App\Exceptions\LoginParametersNotFound;
 use App\Exceptions\UserNotAuthorized;
 use App\Http\Requests\AnonymousLoginRequest;
 use App\Http\Requests\LoginRequest;
@@ -16,13 +15,11 @@ use App\Models\Ahed\Needy;
 use App\Models\Ahed\OfflineTransaction;
 use App\Models\Ahed\OnlineTransaction;
 use App\Models\AnonymousUser;
-use App\Models\Profile;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
-use Illuminate\Http\Request;
 
 use App\Traits\ControllersTraits\LoginValidator;
 
