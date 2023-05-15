@@ -69,10 +69,6 @@ class FoodSharingMarkerPolicy
      */
     public function update(BaseUserModel $user, FoodSharingMarker $foodSharingMarker)
     {
-        // dd($user->id);
-        // dd($foodSharingMarker->user->id);
-        // dd(($this->hasAbility($user, AvailableAbilities::UpdateFoodSharingMarker)
-        // || $user == $foodSharingMarker->user));
         return ($this->hasAbility($user, AvailableAbilities::UpdateFoodSharingMarker)
             || $user->id == $foodSharingMarker->owner_id)
             && $this->hasNoBan($user, BanTypes::UpdateFoodSharingMarker);

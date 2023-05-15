@@ -15,7 +15,6 @@ class FoodSharingMarkerResource extends JsonResource
      */
     public function toArray($request)
     {
-        // dd(OwnerType::$value[class_basename(request()->user)] == 1);
         return [
             'id' => $this->id,
             'owner_id' => $this->owner_id,

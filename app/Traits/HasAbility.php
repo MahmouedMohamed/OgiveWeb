@@ -16,7 +16,7 @@ trait HasAbility
      * @return mixed
      */
     public function hasAbility(BaseUserModel $user, String $ability)
-    {dd();
+    {
         return $user->abilities()->contains($ability);
     }
 }
