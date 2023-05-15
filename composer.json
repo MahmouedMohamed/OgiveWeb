@@ -41,6 +41,11 @@
             "dont-discover": [
                 "laravel/telescope"
             ]
+        },
+        "hooks": {
+            "pre-commit": [
+                "vendor/bin/pint"
+            ]
         }
     },
     "autoload": {
