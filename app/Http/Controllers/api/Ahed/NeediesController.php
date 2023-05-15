@@ -32,7 +32,7 @@ class NeediesController extends BaseController
             Cache::remember('needies-' . $currentPage, 60 * 60 * 24, function () {
                 return
                     Needy::join('users', 'users.id', 'needies.created_by')
-                    ->join('profiles', 'users.profile_id', 'profiles.id')
+                    ->join('profiles', 'users.profile', 'profiles.id')
                     ->select(
                         'needies.*',
                         'users.id as userId',
@@ -63,7 +63,7 @@ class NeediesController extends BaseController
             Cache::remember('urgentNeedies-' . $currentPage, 60 * 60 * 24, function () {
                 return
                     Needy::join('users', 'users.id', 'needies.created_by')
-                    ->join('profiles', 'users.profile_id', 'profiles.id')
+                    ->join('profiles', 'users.profile', 'profiles.id')
                     ->select(
                         'needies.*',
                         'users.id as userId',
@@ -89,21 +89,10 @@ class NeediesController extends BaseController
     public function getNeediesWithIDs(Request $request)
     {
         return $this->sendResponse(
-            Needy::join('users', 'users.id', 'needies.created_by')
-                ->join('profiles', 'users.profile_id', 'profiles.id')
-                ->select(
-                    'needies.*',
-                    'users.id as userId',
-                    'users.name as userName',
-                    'users.email_verified_at as userEmailVerifiedAt',
-                    'profiles.image as userImage'
-                )
-                ->latest('needies.created_at')
-                ->with('mediasBefore:id,path,needy_id')
-                ->with('mediasAfter:id,path,needy_id')
-                ->where('approved', '=', 1)
-                ->whereIn('id', $request['ids'])
-                ->get(),
+            Needy::whereIn('id', $request['ids'])
+            ->where('approved', '=', 1)
+            ->latest('needies.created_at')
+            ->with(['createdBy.profile', 'mediasBefore:id,path,needy_id', 'mediasAfter:id,path,needy_id'])->get(),
             __('General.DataRetrievedSuccessMessage')
         );
     }
@@ -117,15 +106,14 @@ class NeediesController extends BaseController
     {
         try {
             //Validate Request
-            $user = $this->userExists($request['createdBy']);
-            $this->userIsAuthorized($user, 'create', Needy::class);
+            $this->userIsAuthorized($request->user, 'create', Needy::class);
             $images = $request['images'];
             $imagePaths = array();
             foreach ($images as $image) {
                 $imagePath = $image->store('uploads', 'public');
                 array_push($imagePaths, "/storage/" . $imagePath);
             }
-            $needy = $user->createdNeedies()->create([
+            $needy = $request->user->createdNeedies()->create([
                 'id' => Str::uuid(),
                 'name' => $request['name'],
                 'age' => $request['age'],
@@ -137,9 +125,7 @@ class NeediesController extends BaseController
             ]);
             $needy->updateUrl();
             $needy->addImages($imagePaths);
-            return $this->sendResponse([], __('Ahed.NeediesCreationSuccessMessage'));
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'));  ///User Not Found
+            return $this->sendResponse($needy, __('Ahed.NeediesCreationSuccessMessage'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden(__('Ahed.NeediesCreationBannedMessage'));
         }
@@ -151,23 +137,13 @@ class NeediesController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Needy $needy)
     {
         try {
-            $this->needyExists($id);
-            return $this->sendResponse(Needy::join('users', 'users.id', 'needies.created_by')
-                ->join('profiles', 'users.profile', 'profiles.id')
-                ->select(
-                    'needies.*',
-                    'users.id as userId',
-                    'users.name as userName',
-                    'users.email_verified_at as userEmailVerifiedAt',
-                    'profiles.image as userImage'
-                )
-                ->where('needies.id', '=', $id)
-                ->with('mediasBefore:id,path,needy')
-                ->with('mediasAfter:id,path,needy')
-                ->first(), __('General.DataRetrievedSuccessMessage')); ///Data Retrieved Successfully!
+            return $this->sendResponse(
+                $needy->with(['createdBy.profile', 'mediasBefore:id,path,needy_id', 'mediasAfter:id,path,needy_id'])->first(),
+                __('General.DataRetrievedSuccessMessage')
+            ); ///Data Retrieved Successfully!
         } catch (NeedyNotFound $e) {
             return $this->sendError(__('Ahed.NeedyNotFound'));   ///Case Not Found
         }
