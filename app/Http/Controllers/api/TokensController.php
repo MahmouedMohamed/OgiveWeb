@@ -22,16 +22,9 @@ class TokensController extends BaseController
         $nonceBin = sodium_base642bin($token[1], 5);
         $keyBin = sodium_base642bin($token[2], 5);
         $encodedUserData = (array) json_decode(sodium_crypto_secretbox_open($userData, $nonceBin, $keyBin));
-
-        $activeOauthAccessTokens = Cache::remember('oauthAccessTokens', 60 * 60 * 24, function () {
-            return OauthAccessToken::where('active', '=', 1)
-                ->get();
-        });
-
-        foreach ($activeOauthAccessTokens as $accessToken) {
-            if (Hash::check($encodedUserData['token'], $accessToken->access_token)) {
-                return $this->sendResponse($accessToken->refreshToken($accessToken->access_type, $accessToken->app_type),'Access Token Refreshed Successfully');
-            }
+        $accessToken = OauthAccessToken::find($encodedUserData['token_id'] ?? null);
+        if ($accessToken) {
+            return $this->sendResponse($accessToken->refreshToken($accessToken->access_type, $accessToken->app_type), 'Access Token Refreshed Successfully');
         }
         return $this->sendError('This access token can\'t be found');
     }

@@ -17,8 +17,6 @@ class CreateAccessTokensTable extends Migration
             $table->uuid('id');
             $table->primary('id');
             $table->string('user_id');
-            $table->text('access_token')->unique();
-            $table->text('scopes')->nullable();  //To Support Roles //2x Checks feature
             $table->string('app_type');
             $table->string('access_type');
             $table->boolean('active')->default(1);

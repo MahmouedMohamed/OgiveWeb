@@ -20,8 +20,6 @@ class OauthAccessToken extends Model
         'id',
         'owner_id',
         'owner_type',
-        'access_token',
-        'scopes',
         'app_type',
         'access_type',
         'active',
@@ -36,6 +34,11 @@ class OauthAccessToken extends Model
     protected $hidden = [
         'access_token',
     ];
+
+    protected $casts = [
+        'expires_at' => 'datetime'
+    ];
+
     public function user()
     {
         if ($this->owner_type == 1)

@@ -30,29 +30,26 @@ class BaseUserModel extends AuthenticatableUser
     public function createAccessToken($accessType, $appType)
     {
         $this->deleteRelatedAccessTokens($appType);
-        //Hash::make() -> saves only 60 chars to database
-        //TODO: Solve & extend to 255 chars
-        $accessToken = Str::random(60);
         $expiryDate = Carbon::now('GMT+2')->addMonth();
-        $this->accessTokens()->create([
+        $accessToken = $this->accessTokens()->create([
             'id' => Str::uuid(),
             'owner_type' => OwnerType::$value[class_basename($this)],
             'owner_id' => $this->id,
-            'access_token' => Hash::make($accessToken),
-            'scopes' => '[]',
             'app_type' => $appType,
             'access_type' => $accessType,
             'active' => 1,
             'expires_at' => $expiryDate,
-
         ]);
 
         //ToDo: Try to Add Roles
         $key = random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES);
         $nonce = random_bytes(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
 
-        $encryptedData['token'] = $accessToken;
-        $encryptedData['roles'] = $this->roles != null ? RoleResource::collection($this->roles) : null;
+        $encryptedData['token_id'] = $accessToken->id;
+        $encryptedData['owner_id'] = $this->id;
+        $encryptedData['owner_type'] = OwnerType::$value[class_basename($this)];
+        $encryptedData['app_type'] = $appType;
+        $encryptedData['access_type'] = $accessType;
         $encryptedData['expiryDate'] = $expiryDate;
 
         $cipherText = sodium_crypto_secretbox(json_encode($encryptedData), $nonce, $key);

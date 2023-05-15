@@ -4,11 +4,10 @@ namespace App\Http\Middleware;
 
 use App\Models\OauthAccessToken;
 use App\Traits\ApiResponse;
+use Carbon\Carbon;
 use Closure;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 
 class UserIsAuthorized
@@ -17,10 +16,10 @@ class UserIsAuthorized
 
     const PUBLIC_ROUTE_NAME = 'public';
 
-    public function isValidAccessToken($accessToken, $appType)
+    public function isValidAccessToken($accessToken = null, $appType)
     {
         //ToDo: Check if accessToken is specified for this appType
-        return $accessToken->active;
+        return $accessToken && $accessToken->active && $accessToken->expires_at->isAfter(Carbon::now());
     }
 
     public function allowedToAnonymous()
@@ -60,28 +59,17 @@ class UserIsAuthorized
                 $nonceBin = sodium_base642bin($token[1], 5);
                 $keyBin = sodium_base642bin($token[2], 5);
                 $encodedUserData = (array) json_decode(sodium_crypto_secretbox_open($userData, $nonceBin, $keyBin));
-
-                $activeOauthAccessTokens = Cache::remember('oauthAccessTokens', 60 * 60 * 24, function () {
-                    return OauthAccessToken::where('active', '=', 1)
-                        ->get();
-                });
-
-                foreach ($activeOauthAccessTokens as $accessToken) {
+                $accessToken = OauthAccessToken::find($encodedUserData['token_id'] ?? null);
+                if ($this->isValidAccessToken($accessToken, $accessToken->appType)) {
                     if (
-                        Hash::check($encodedUserData['token'], $accessToken->access_token)
+                        $accessToken->owner_type != 2 //anonymous
+                        || $this->allowedToAnonymous()
+                        || $this->allowedToPublic()
                     ) {
-                        if ($this->isValidAccessToken($accessToken, $accessToken->appType)) {
-                            if (
-                                $accessToken->owner_type != 2 //anonymous
-                                || $this->allowedToAnonymous()
-                                || $this->allowedToPublic()
-                            ) {
-                                request()->merge([
-                                    'user' => $accessToken->user
-                                ]);
-                                return $next($request);
-                            }
-                        }
+                        request()->merge([
+                            'user' => $accessToken->user
+                        ]);
+                        return $next($request);
                     }
                 }
             } else if ($this->allowedToPublic()) {
