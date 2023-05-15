@@ -37,7 +37,7 @@ class NeediesController extends BaseController
         return $this->sendResponse(
             Cache::remember('needies-'.$currentPage, 60 * 60 * 24, function () {
                 return
-                    Needy::where('approved', '=', 1)
+                    Needy::approved()
                         ->where('severity', '<', '7')
                         ->latest('needies.created_at')
                         ->with(['createdBy.profile', 'mediasBefore:id,path,needy_id', 'mediasAfter:id,path,needy_id'])
@@ -59,7 +59,7 @@ class NeediesController extends BaseController
         return $this->sendResponse(
             Cache::remember('urgentNeedies-'.$currentPage, 60 * 60 * 24, function () {
                 return
-                    Needy::where('approved', '=', 1)
+                    Needy::approved()
                         ->where('severity', '>=', '7')
                         ->latest('needies.created_at')
                         ->with(['createdBy.profile', 'mediasBefore:id,path,needy_id', 'mediasAfter:id,path,needy_id'])
@@ -78,7 +78,7 @@ class NeediesController extends BaseController
     {
         return $this->sendResponse(
             Needy::whereIn('id', $request['ids'])
-                ->where('approved', '=', 1)
+                ->approved()
                 ->latest('needies.created_at')
                 ->with(['createdBy.profile', 'mediasBefore:id,path,needy_id', 'mediasAfter:id,path,needy_id'])->get(),
             __('General.DataRetrievedSuccessMessage')

@@ -17,6 +17,7 @@ use App\Models\Ahed\OnlineTransaction;
 use App\Models\AnonymousUser;
 use App\Models\User;
 use App\Traits\ControllersTraits\LoginValidator;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -24,13 +25,6 @@ use Illuminate\Support\Str;
 class UserController extends BaseController
 {
     use LoginValidator;
-
-    private $content;
-
-    public function __construct()
-    {
-        $this->content = [];
-    }
 
     private function getAuthenticatedUser(): User
     {
@@ -52,14 +46,12 @@ class UserController extends BaseController
             }
 
             $tokenDetails = $anonymousUser->createAccessToken($request['accessType'], $request['appType']);
-            $this->content['token'] =
-                $tokenDetails['accessToken'];
-            $this->content['expiryDate'] =
-                $tokenDetails['expiryDate'];
 
-            $this->content['user'] = $anonymousUser;
-
-            return $this->sendResponse($this->content, __('General.DataRetrievedSuccessMessage'));
+            return $this->sendResponse([
+                'token' => $tokenDetails['token'],
+                'expiryDate' => $tokenDetails['expiryDate'],
+                'user' => $anonymousUser
+            ], __('General.DataRetrievedSuccessMessage'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden($e->getMessage());
         }
@@ -77,15 +69,13 @@ class UserController extends BaseController
                     ]);
                 }
                 $tokenDetails = $user->createAccessToken($request['accessType'], $request['appType']);
-                $this->content['token'] =
-                    $tokenDetails['accessToken'];
-                $this->content['expiryDate'] =
-                    $tokenDetails['expiryDate'];
 
-                $this->content['user'] = UserResource::make($user);
-                $this->content['profile'] = ProfileResource::make($user->profile);
-
-                return $this->sendResponse($this->content, __('General.DataRetrievedSuccessMessage'));
+                return $this->sendResponse([
+                    'token' => $tokenDetails['token'],
+                    'expiryDate' => $tokenDetails['expiryDate'],
+                    'user' => UserResource::make($user),
+                    'profile' => ProfileResource::make($user->profile)
+                ], __('General.DataRetrievedSuccessMessage'));
             } else {
                 return $this->sendError('The email or password is incorrect.');
             }
@@ -120,65 +110,51 @@ class UserController extends BaseController
         $image = $registerRequest['image'];
         if ($image != null) {
             $imagePath = $image->store('users', 'public');
-            $profile->image = '/storage/'.$imagePath;
+            $profile->image = '/storage/' . $imagePath;
             $profile->save();
         }
 
         return $this->sendResponse(UserResource::make($user), 'User Created Successfully');
     }
 
-    public function getAhedAchievementRecords($id)
+    public function getAhedAchievementRecords(Request $request)
     {
-        $user = User::find($id);
-        if ($user) {
-            ///Get Number of needies that user helped
-            $neediesApprovedForUser = Needy::where('createdBy', '=', $user->id)->where('approved', '=', '1')->get()->pluck('id')->unique()->toArray();
-            $offlineDonationsForUser = OfflineTransaction::where('giver', '=', $user->id)->where('collected', '=', '1')->get();
-            $onlineDonationsForUser = OnlineTransaction::where('giver', '=', $user->id)->get();
+        ///Get Number of needies that user helped
+        $neediesApprovedForUser = Needy::where('created_by', '=', $request->user->id)->approved()->get()->pluck('id')->unique()->toArray();
+        $offlineDonationsForUser = OfflineTransaction::where('giver', '=', $request->user->id)->where('collected', '=', '1')->get();
+        $onlineDonationsForUser = OnlineTransaction::where('giver', '=', $request->user->id)->get();
 
-            $neediesDonatedOfflineFor =
-                $offlineDonationsForUser->pluck('needy')->unique()->toArray();
-            $neediesDonatedOnlineFor =
-                $onlineDonationsForUser->pluck('needy')->unique()->toArray();
-            $neediesHelped = collect(array_merge($neediesApprovedForUser, $neediesDonatedOfflineFor, $neediesDonatedOnlineFor));
-            $this->content['NumberOfNeediesUserHelped'] = $neediesHelped->unique()->count();
+        $neediesDonatedOfflineFor =
+            $offlineDonationsForUser->pluck('needy')->unique()->toArray();
+        $neediesDonatedOnlineFor =
+            $onlineDonationsForUser->pluck('needy')->unique()->toArray();
+        $neediesHelped = collect(array_merge($neediesApprovedForUser, $neediesDonatedOfflineFor, $neediesDonatedOnlineFor));
 
-            ///Get Value of all transactions
-            $valueOfOfflineDonation = $offlineDonationsForUser
-                ->pluck('amount')->toArray();
-            $valueOfOnlineDonation = $onlineDonationsForUser
-                ->pluck('amount')->toArray();
-            $valueOfDonation = collect(array_merge($valueOfOfflineDonation, $valueOfOnlineDonation));
-            $this->content['ValueOfDonation'] = $valueOfDonation->sum();
-        }
+        ///Get Value of all transactions
+        $valueOfOfflineDonation = $offlineDonationsForUser
+            ->pluck('amount')->toArray();
+        $valueOfOnlineDonation = $onlineDonationsForUser
+            ->pluck('amount')->toArray();
+        $valueOfDonation = collect(array_merge($valueOfOfflineDonation, $valueOfOnlineDonation));
 
-        $activeNeedies = Needy::where('approved', '=', '1')->get();
+        $activeNeedies = Needy::approved()->get();
 
         ///All Needies satisfied
-        $neediesSatisfied = $activeNeedies->where('satisfied', '=', '1')->pluck('id')->unique()->count();
-        $this->content['NeediesSatisfied'] = $neediesSatisfied;
+        $neediesNotSatisfied = $activeNeedies->where('satisfied', '=', 0)->count();
+        $neediesSatisfied = $activeNeedies->where('satisfied', '=', 1)->count();
 
-        ///All Needies safisfied with إيجاد مسكن مناسب
-        $neediesFoundTheirNewHome = $activeNeedies->where('satisfied', '=', '1')->where('type', '=', CaseType::$text[1])->pluck('id')->unique()->count();
-        $this->content['NeediesFoundTheirNewHome'] = $neediesFoundTheirNewHome;
-        ///All Needies safisfied with تحسين مستوي المعيشة
-        $neediesUpgradedTheirStandardOfLiving = $activeNeedies->where('satisfied', '=', '1')->where('type', '=', CaseType::$text[2])->pluck('id')->unique()->count();
-        $this->content['NeediesUpgradedTheirStandardOfLiving'] = $neediesUpgradedTheirStandardOfLiving;
-        ///All Needies safisfied with تجهيز عرائس
-        $neediesHelpedToPrepareForPride = $activeNeedies->where('satisfied', '=', '1')->where('type', '=', CaseType::$text[3])->pluck('id')->unique()->count();
-        $this->content['NeediesHelpedToPrepareForPride'] = $neediesHelpedToPrepareForPride;
-        ///All Needies safisfied with ديون
-        $neediesHelpedToPayDept = $activeNeedies->where('satisfied', '=', '1')->where('type', '=', CaseType::$text[4])->pluck('id')->unique()->count();
-        $this->content['NeediesHelpedToPayDept'] = $neediesHelpedToPayDept;
-        ///All Needies safisfied with علاج
-        $neediesHelpedToCure = $activeNeedies->where('satisfied', '=', '1')->where('type', '=', CaseType::$text[5])->pluck('id')->unique()->count();
-        $this->content['NeediesHelpedToCure'] = $neediesHelpedToCure;
+        $activeNeedies = $activeNeedies->where('satisfied', '=', 1)->groupBy('type');
 
-        ///neediesNotSatisfied
-        $neediesNotSatisfied = Needy::where('satisfied', '=', '0')->get()->pluck('id')->unique()->count();
-        $this->content['NeediesNotSatisfied'] = $neediesNotSatisfied;
+        foreach (CaseType::$text as $key => $value) {
+            $data['NeediesHelpedWith' . str_replace(" ", "", $value)] = ($activeNeedies[$value] ?? collect([]))->count();
+        }
 
-        return $this->sendResponse($this->content, 'Achievement Records Returned Successfully');
+        return $this->sendResponse(array_merge([
+            'NumberOfNeediesUserHelped' => $neediesHelped->unique()->count(),
+            'ValueOfDonation' => $valueOfDonation->sum(),
+            'NeediesSatisfied' => $neediesSatisfied,
+            'NeediesNotSatisfied' => $neediesNotSatisfied,
+        ], $data), 'Achievement Records Returned Successfully');
     }
 
     /**
@@ -195,7 +171,7 @@ class UserController extends BaseController
         $profile = $user->profile;
         if ($profile->image == null) {
             $imagePath = $request['image']->store('users', 'public');
-            $profile->image = '/storage/'.$imagePath;
+            $profile->image = '/storage/' . $imagePath;
             $profile->save();
         } else {
             $imagePath = $request['image']->storeAs('public/users', last(explode('/', $profile->image)));
@@ -219,7 +195,7 @@ class UserController extends BaseController
         $profile = $user->profile;
         if ($profile->cover == null) {
             $imagePath = $request['image']->store('users', 'public');
-            $profile->cover = '/storage/'.$imagePath;
+            $profile->cover = '/storage/' . $imagePath;
             $profile->save();
         } else {
             $imagePath = $request['image']->storeAs('public/users', last(explode('/', $profile->cover)));

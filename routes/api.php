@@ -116,7 +116,7 @@ Route::group(['middleware' => ['UserIsAuthorized']], function () {
         Route::put('/needies/medias/{needyMedia}/remove-image/', [NeediesController::class, 'removeAssociatedImage']);
         Route::apiResource('/onlinetransactions', OnlineTransactionsController::class);
         Route::apiResource('/offlinetransactions', OfflineTransactionsController::class);
-        Route::get('/ahedachievement/{id}', [UserController::class, 'getAhedAchievementRecords']);
+        Route::get('/ahedachievement', [UserController::class, 'getAhedAchievementRecords']);
     });
 
     //**      Admin Controllers      **//

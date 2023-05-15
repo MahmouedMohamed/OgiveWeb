@@ -110,4 +110,14 @@ class Needy extends BaseModel
 
         return null;
     }
+
+    public function scopeApproved($query)
+    {
+        return $query->where('approved', '=', '1');
+    }
+
+    public function scopeSatisfied($query)
+    {
+        return $query->where('satisfied', '=', '1');
+    }
 }

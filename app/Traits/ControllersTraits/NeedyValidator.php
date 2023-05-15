@@ -12,21 +12,6 @@ use Illuminate\Support\Facades\Validator;
 
 trait NeedyValidator
 {
-    /**
-     * Returns If Needy exists or not.
-     *
-     * @return mixed
-     */
-    public function needyExists(string $id)
-    {
-        $needy = Needy::find($id);
-        if (! $needy) {
-            throw new NeedyNotFound();
-        }
-
-        return $needy;
-    }
-
     public function needySelfLock(string $id)
     {
         $needy = Needy::lockForUpdate()->find($id);
