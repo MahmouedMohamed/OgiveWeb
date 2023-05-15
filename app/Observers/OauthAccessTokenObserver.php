@@ -10,7 +10,6 @@ class OauthAccessTokenObserver
     /**
      * Handle the OauthAccessToken "created" event.
      *
-     * @param  \App\Models\OauthAccessToken  $oauthAccessToken
      * @return void
      */
     public function created(OauthAccessToken $oauthAccessToken)
@@ -21,7 +20,6 @@ class OauthAccessTokenObserver
     /**
      * Handle the OauthAccessToken "updated" event.
      *
-     * @param  \App\Models\OauthAccessToken  $oauthAccessToken
      * @return void
      */
     public function updated(OauthAccessToken $oauthAccessToken)
@@ -32,7 +30,6 @@ class OauthAccessTokenObserver
     /**
      * Handle the OauthAccessToken "deleted" event.
      *
-     * @param  \App\Models\OauthAccessToken  $oauthAccessToken
      * @return void
      */
     public function deleted(OauthAccessToken $oauthAccessToken)
@@ -43,7 +40,6 @@ class OauthAccessTokenObserver
     /**
      * Handle the OauthAccessToken "restored" event.
      *
-     * @param  \App\Models\OauthAccessToken  $oauthAccessToken
      * @return void
      */
     public function restored(OauthAccessToken $oauthAccessToken)
@@ -54,7 +50,6 @@ class OauthAccessTokenObserver
     /**
      * Handle the OauthAccessToken "force deleted" event.
      *
-     * @param  \App\Models\OauthAccessToken  $oauthAccessToken
      * @return void
      */
     public function forceDeleted(OauthAccessToken $oauthAccessToken)

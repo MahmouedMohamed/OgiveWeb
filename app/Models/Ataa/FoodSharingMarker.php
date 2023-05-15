@@ -7,9 +7,8 @@ use App\ConverterModels\FoodSharingMarkerType;
 use App\ConverterModels\Nationality;
 use App\ConverterModels\OwnerType;
 use App\Models\BaseModel;
-use App\Models\User;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class FoodSharingMarker extends BaseModel
 {
@@ -21,7 +20,7 @@ class FoodSharingMarker extends BaseModel
 
     protected $fillable = [
         'id', 'owner_type', 'latitude', 'longitude', 'type', 'description', 'quantity', 'priority', 'collected',
-        'nationality', 'existed', 'collected_at'
+        'nationality', 'existed', 'collected_at',
     ];
 
     public function collect(bool $existed)
@@ -31,6 +30,7 @@ class FoodSharingMarker extends BaseModel
         $this->collected_at = Carbon::now('GMT+2');
         $this->save();
     }
+
     public function setTypeAttribute($text)
     {
         $this->attributes['type'] = FoodSharingMarkerType::$value[$text];

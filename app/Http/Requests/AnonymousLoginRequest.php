@@ -22,10 +22,10 @@ class AnonymousLoginRequest extends BaseRequest
     public function rules()
     {
         return [
-            'deviceId'=> ['required'],
+            'deviceId' => ['required'],
             'nationality' => ['required'],
-            'appType'=> ['required'],
-            'accessType' => ['required']
+            'appType' => ['required'],
+            'accessType' => ['required'],
         ];
     }
 }

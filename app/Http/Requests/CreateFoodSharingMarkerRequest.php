@@ -31,7 +31,7 @@ class CreateFoodSharingMarkerRequest extends BaseRequest
             'type' => ['required', Rule::in(array_values(FoodSharingMarkerType::$text))],
             'description' => 'required|max:1024',
             'quantity' => 'required|integer|min:1|max:10',
-            'priority' => ['required', Rule::in(array_values(FoodSharingMarkerPriority::$value))]
+            'priority' => ['required', Rule::in(array_values(FoodSharingMarkerPriority::$value))],
         ];
     }
 }

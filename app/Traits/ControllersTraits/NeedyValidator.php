@@ -2,72 +2,78 @@
 
 namespace App\Traits\ControllersTraits;
 
-use App\Models\Ahed\Needy;
-use App\Exceptions\NeedyNotFound;
-use App\Exceptions\NeedyNotApproved;
 use App\Exceptions\NeedyIsSatisfied;
 use App\Exceptions\NeedyMediaNotFound;
+use App\Exceptions\NeedyNotApproved;
+use App\Exceptions\NeedyNotFound;
+use App\Models\Ahed\Needy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 trait NeedyValidator
 {
-
     /**
      * Returns If Needy exists or not.
      *
-     * @param String $id
      * @return mixed
      */
-    public function needyExists(String $id)
+    public function needyExists(string $id)
     {
         $needy = Needy::find($id);
-        if (!$needy)
+        if (! $needy) {
             throw new NeedyNotFound();
+        }
+
         return $needy;
     }
 
-    public function needySelfLock(String $id)
+    public function needySelfLock(string $id)
     {
         $needy = Needy::lockForUpdate()->find($id);
-        if (!$needy)
+        if (! $needy) {
             throw new NeedyNotFound();
+        }
+
         return $needy;
     }
+
     /**
      * Returns If Needy approved or not.
      *
-     * @param Needy $needy
      * @return mixed
      */
     public function needyApproved(Needy $needy)
     {
-        if (!$needy->approved)
+        if (! $needy->approved) {
             throw new NeedyNotApproved();
-        return;
+        }
+
     }
+
     /**
      * Returns If Needy satisfied or not.
      *
-     * @param Needy $needy
      * @return mixed
      */
     public function needyIsSatisfied(Needy $needy)
     {
-        if ($needy->satisfied)
+        if ($needy->satisfied) {
             throw new NeedyIsSatisfied();
-        return;
+        }
+
     }
 
     public function needyMediaExists(Needy $needy, $id)
     {
         $needyMedia = $needy->medias()->whereIn('id', [$id])->first();
-        if (!$needyMedia)
+        if (! $needyMedia) {
             throw new NeedyMediaNotFound();
+        }
+
         return $needyMedia;
     }
 
-    public function validateNeedy(Request $request, String $related)
+    public function validateNeedy(Request $request, string $related)
     {
         switch ($related) {
             case 'addImage':
@@ -78,6 +84,7 @@ trait NeedyValidator
                 ];
                 break;
         }
+
         return Validator::make($request->all(), $rules);
     }
 }

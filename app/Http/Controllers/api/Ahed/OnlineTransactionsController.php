@@ -2,22 +2,23 @@
 
 namespace App\Http\Controllers\api\Ahed;
 
-use App\Http\Controllers\api\BaseController;
 use App\Exceptions\NeedyIsSatisfied;
 use App\Exceptions\NeedyNotApproved;
 use App\Exceptions\NeedyNotFound;
 use App\Exceptions\OnlineTransactionNotFound;
 use App\Exceptions\UserNotAuthorized;
-use Illuminate\Http\Request;
 use App\Exceptions\UserNotFound;
-use App\Traits\ControllersTraits\UserValidator;
+use App\Http\Controllers\api\BaseController;
 use App\Traits\ControllersTraits\NeedyValidator;
 use App\Traits\ControllersTraits\OnlineTransactionValidator;
+use App\Traits\ControllersTraits\UserValidator;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class OnlineTransactionsController extends BaseController
 {
     use UserValidator, NeedyValidator, OnlineTransactionValidator;
+
     /**
      * Display a listing of the resource.
      *
@@ -27,6 +28,7 @@ class OnlineTransactionsController extends BaseController
     {
         try {
             $user = $this->userExists(request()->input('userId'));
+
             return $this->sendResponse($user->onlinetransactions, __('General.DataRetrievedSuccessMessage')); ///Transactions retrieved successfully.
         } catch (UserNotFound $e) {
             return $this->sendError(__('General.UserNotFound'));  ///User Not Found
@@ -36,7 +38,6 @@ class OnlineTransactionsController extends BaseController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -45,8 +46,9 @@ class OnlineTransactionsController extends BaseController
         //Make payment request /Success continue
         //Validate Request
         $validated = $this->validateTransaction($request);
-        if ($validated->fails())
-            return $this->sendError(__('General.InvalidData'), $validated->messages(), 400);   ///Invalid data.
+        if ($validated->fails()) {
+            return $this->sendError(__('General.InvalidData'), $validated->messages(), 400);
+        }   ///Invalid data.
         try {
             $user = $this->userExists(request()->input('giver'));
             $needy = $this->needySelfLock(request()->input('needy'));
@@ -56,11 +58,12 @@ class OnlineTransactionsController extends BaseController
                 'id' => Str::uuid(),
                 'needy_id' => $needy->id,
                 'amount' => $request['amount'],
-                'remaining' => $request['amount']
+                'remaining' => $request['amount'],
             ]);
             //TODO: implement transaction
             //TODO: if failed remove transaction
             $transaction->transferAmount($request['amount']);
+
             return $this->sendResponse([], __('Ahed.OnlineTransactionCreationSuccessMessage'));
         } catch (UserNotFound $e) {
             return $this->sendError(__('General.UserNotFound'));
@@ -76,7 +79,6 @@ class OnlineTransactionsController extends BaseController
     /**
      * Display the specified resource.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -89,6 +91,7 @@ class OnlineTransactionsController extends BaseController
             $user = $this->userExists($request['userId']);
             //Check if current user can show transaction
             $this->userIsAuthorized($user, 'view', $transaction);
+
             return $this->sendResponse($transaction, __('General.DataRetrievedSuccessMessage'));
         } catch (OnlineTransactionNotFound $e) {
             return $this->sendError(__('Ahed.TransactionNotFound'));
@@ -96,6 +99,7 @@ class OnlineTransactionsController extends BaseController
             return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             $e->report($user, 'UserAccessOnlineTransaction', $transaction);
+
             return $this->sendForbidden(__('Ahed.TransactionViewingBannedMessage'));
         }
     }
@@ -103,7 +107,6 @@ class OnlineTransactionsController extends BaseController
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */

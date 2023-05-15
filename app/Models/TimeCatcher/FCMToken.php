@@ -13,7 +13,7 @@ class FCMToken extends Model
     public $incrementing = false;
 
     protected $fillable = [
-        'id', 'token'
+        'id', 'token',
     ];
 
     public function user()

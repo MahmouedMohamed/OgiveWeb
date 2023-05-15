@@ -15,13 +15,11 @@ use App\Models\Ahed\Needy;
 use App\Models\Ahed\OfflineTransaction;
 use App\Models\Ahed\OnlineTransaction;
 use App\Models\AnonymousUser;
-use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Traits\ControllersTraits\LoginValidator;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-
-
-use App\Traits\ControllersTraits\LoginValidator;
 
 class UserController extends BaseController
 {
@@ -31,7 +29,7 @@ class UserController extends BaseController
 
     public function __construct()
     {
-        $this->content = array();
+        $this->content = [];
     }
 
     private function getAuthenticatedUser(): User
@@ -49,7 +47,7 @@ class UserController extends BaseController
                 $anonymousUser = AnonymousUser::create([
                     'id' => Str::uuid(),
                     'device_id' => $request['deviceId'],
-                    'nationality' => $request['nationality']
+                    'nationality' => $request['nationality'],
                 ]);
             }
 
@@ -73,10 +71,11 @@ class UserController extends BaseController
             if (Auth::attempt(['email' => $request['email'], 'password' => $request['password']])) {
                 $user = $this->getAuthenticatedUser();
                 $this->userBanValidator($user);
-                if ($request['appType'] == "TimeCatcher")
+                if ($request['appType'] == 'TimeCatcher') {
                     $user->fcmTokens()->create([
-                        'token' => request('fcmToken')
+                        'token' => request('fcmToken'),
                     ]);
+                }
                 $tokenDetails = $user->createAccessToken($request['accessType'], $request['appType']);
                 $this->content['token'] =
                     $tokenDetails['accessToken'];
@@ -85,6 +84,7 @@ class UserController extends BaseController
 
                 $this->content['user'] = UserResource::make($user);
                 $this->content['profile'] = ProfileResource::make($user->profile);
+
                 return $this->sendResponse($this->content, __('General.DataRetrievedSuccessMessage'));
             } else {
                 return $this->sendError('The email or password is incorrect.');
@@ -115,14 +115,15 @@ class UserController extends BaseController
             'nationality' => request('nationality'),
         ]);
         $profile = $user->profile()->create([
-            'id' => Str::uuid()
+            'id' => Str::uuid(),
         ]);
         $image = $registerRequest['image'];
         if ($image != null) {
             $imagePath = $image->store('users', 'public');
-            $profile->image = "/storage/" . $imagePath;
+            $profile->image = '/storage/'.$imagePath;
             $profile->save();
         }
+
         return $this->sendResponse(UserResource::make($user), 'User Created Successfully');
     }
 
@@ -176,29 +177,30 @@ class UserController extends BaseController
         ///neediesNotSatisfied
         $neediesNotSatisfied = Needy::where('satisfied', '=', '0')->get()->pluck('id')->unique()->count();
         $this->content['NeediesNotSatisfied'] = $neediesNotSatisfied;
+
         return $this->sendResponse($this->content, 'Achievement Records Returned Successfully');
     }
 
     /**
      * Update Profile Picture.
      *
-     * @param  \App\Http\Requests\UpdateImageRequest  $request
-     * @param  \App\Models\User $user
      * @return \Illuminate\Http\Response
      */
     public function updateProfilePicture(UpdateImageRequest $request, User $user)
     {
-        if ($user->id != $request->user->id)
-            return $this->sendForbidden('أنت لا تملك صلاحية تعديل هذا الملف الشخصي');  ///You aren\'t authorized to delete this transaction.
+        if ($user->id != $request->user->id) {
+            return $this->sendForbidden('أنت لا تملك صلاحية تعديل هذا الملف الشخصي');
+        }  ///You aren\'t authorized to delete this transaction.
 
         $profile = $user->profile;
         if ($profile->image == null) {
             $imagePath = $request['image']->store('users', 'public');
-            $profile->image = "/storage/" . $imagePath;
+            $profile->image = '/storage/'.$imagePath;
             $profile->save();
         } else {
             $imagePath = $request['image']->storeAs('public/users', last(explode('/', $profile->image)));
         }
+
         return $this->sendResponse($profile->image, 'تم إضافة الصورة بنجاح');    ///Image Updated Successfully!
 
     }
@@ -206,23 +208,23 @@ class UserController extends BaseController
     /**
      * Update Cover Picture.
      *
-     * @param  \App\Http\Requests\UpdateImageRequest  $request
-     * @param  \App\Models\User $user
      * @return \Illuminate\Http\Response
      */
     public function updateCoverPicture(UpdateImageRequest $request, User $user)
     {
-        if ($user->id != $request->user->id)
-            return $this->sendForbidden('أنت لا تملك صلاحية تعديل هذا الملف الشخصي');  ///You aren\'t authorized to delete this transaction.
+        if ($user->id != $request->user->id) {
+            return $this->sendForbidden('أنت لا تملك صلاحية تعديل هذا الملف الشخصي');
+        }  ///You aren\'t authorized to delete this transaction.
 
         $profile = $user->profile;
         if ($profile->cover == null) {
             $imagePath = $request['image']->store('users', 'public');
-            $profile->cover = "/storage/" . $imagePath;
+            $profile->cover = '/storage/'.$imagePath;
             $profile->save();
         } else {
             $imagePath = $request['image']->storeAs('public/users', last(explode('/', $profile->cover)));
         }
+
         return $this->sendResponse($profile->cover, 'تم إضافة الصورة بنجاح');    ///Image Updated Successfully!
 
     }
@@ -230,14 +232,13 @@ class UserController extends BaseController
     /**
      * Update Information.
      *
-     * @param  \App\Http\Requests\UpdateProfileRequest  $request
-     * @param  \App\Models\User $user
      * @return \Illuminate\Http\Response
      */
     public function updateinformation(UpdateProfileRequest $request, User $user)
     {
-        if ($user->id != $request->user->id)
-            return $this->sendForbidden('أنت لا تملك صلاحية تعديل هذا الملف الشخصي');  ///You aren\'t authorized to delete this transaction.
+        if ($user->id != $request->user->id) {
+            return $this->sendForbidden('أنت لا تملك صلاحية تعديل هذا الملف الشخصي');
+        }  ///You aren\'t authorized to delete this transaction.
 
         $profile = $user->profile;
         $profile->bio = $request['bio'] ?? $profile->bio;
@@ -246,6 +247,7 @@ class UserController extends BaseController
         $user->nationality = $request['nationality'] ?? $user->nationality;
         $profile->save();
         $user->save();
+
         return $this->sendResponse(UserResource::make($user), 'تم تغيير بياناتك بنجاح');    ///Image Updated Successfully!
     }
 }

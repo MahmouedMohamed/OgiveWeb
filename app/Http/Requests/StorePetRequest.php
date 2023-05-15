@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
 use App\ConverterModels\PetType;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class StorePetRequest extends FormRequest
@@ -32,9 +32,10 @@ class StorePetRequest extends FormRequest
             'sex' => 'required|in:male,female',
             'type' => ['required', Rule::in(array_values(PetType::$text))],
             'notes' => 'max:1024',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048e'
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048e',
         ];
     }
+
     public function messages()
     {
         return [

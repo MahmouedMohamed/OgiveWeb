@@ -25,7 +25,7 @@ class CollectFoodSharingMarkerRequest extends FormRequest
     public function rules()
     {
         return [
-            'exists' => ['required', Rule::in([0, 1])]
+            'exists' => ['required', Rule::in([0, 1])],
         ];
     }
 }

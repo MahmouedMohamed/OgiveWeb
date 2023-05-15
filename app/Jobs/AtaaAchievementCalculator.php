@@ -18,14 +18,17 @@ class AtaaAchievementCalculator implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable;
 
     protected $user;
+
     protected $foodSharingMarker;
+
     protected $method;
+
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(BaseUserModel $user, FoodSharingMarker $foodSharingMarker, String $method)
+    public function __construct(BaseUserModel $user, FoodSharingMarker $foodSharingMarker, string $method)
     {
         $this->user = $user;
         $this->foodSharingMarker = $foodSharingMarker;
@@ -40,7 +43,7 @@ class AtaaAchievementCalculator implements ShouldQueue
     public function handle()
     {
         $userAchievement = AtaaAchievement::calculateThenGet($this->user, $this->foodSharingMarker, $this->method);
-        if(OwnerType::$value[class_basename($this->user)] == 1){
+        if (OwnerType::$value[class_basename($this->user)] == 1) {
             $prizesNotAcquired = AtaaPrize::notAcquiredByUser($this->user);
             //If Empty -> no previous prizes || user acquired all -> Auto Create new one with higher value
             if ($prizesNotAcquired->isEmpty()) {

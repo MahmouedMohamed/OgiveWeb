@@ -7,5 +7,5 @@ return [
     'NotImplemented' => 'غير معرفة',
     'UserBanNotFound' => 'العنصر غير موجود',
     'InvalidAccess' => 'أنت لا تملك الصلاحية الكافية',
-    'ValidationFailure' => 'خطأ في البيانات'
+    'ValidationFailure' => 'خطأ في البيانات',
 ];

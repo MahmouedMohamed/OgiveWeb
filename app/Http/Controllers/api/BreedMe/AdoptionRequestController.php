@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\api\BreedMe;
 
 use App\Http\Controllers\api\BaseController;
-
 use App\Models\BreedMe\AdoptionRequest;
 use Illuminate\Http\Request;
 
@@ -20,9 +19,9 @@ class AdoptionRequestController extends BaseController
         $user_id = $request['user_id'];
         $requests = AdoptionRequest::where('pet_id', $pet_id)->where('user_id', $user_id)->get();
         if ($requests->isEmpty()) {
-            return $this->sendError("No Requests found");
+            return $this->sendError('No Requests found');
         } else {
-            return $this->sendResponse($requests, "Requests are Retrieved Successfully");
+            return $this->sendResponse($requests, 'Requests are Retrieved Successfully');
         }
     }
 
@@ -33,13 +32,12 @@ class AdoptionRequestController extends BaseController
      */
     public function create()
     {
-        return $this->sendError("Not Implemented");
+        return $this->sendError('Not Implemented');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function sendRequest(Request $request)
@@ -63,6 +61,7 @@ class AdoptionRequestController extends BaseController
         $adoptionRequest->experience = $request['experience'];
         $adoptionRequest->accepted_terms = $request['accepted_terms'];
         $adoptionRequest->save();
+
         return $this->sendResponse([], 'Request is sent successfully.');
     }
 
@@ -76,9 +75,9 @@ class AdoptionRequestController extends BaseController
     {
         $request = AdoptionRequest::find($id);
         if ($request) {
-            return $this->sendResponse($request, "Request is retrieved Successfully");
+            return $this->sendResponse($request, 'Request is retrieved Successfully');
         } else {
-            return $this->sendError("Request not found");
+            return $this->sendError('Request not found');
         }
     }
 
@@ -90,13 +89,12 @@ class AdoptionRequestController extends BaseController
      */
     public function edit(AdoptionRequest $adoptionRequest)
     {
-        return $this->sendError("Not Implemented");
+        return $this->sendError('Not Implemented');
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\AdoptionRequest  $adoptionRequest
      * @return \Illuminate\Http\Response
      */
@@ -111,6 +109,7 @@ class AdoptionRequestController extends BaseController
         $adoptionRequest->experience = $request['experience'];
         $adoptionRequest->accepted_terms = $request['accepted_terms'];
         $adoptionRequest->save();
+
         return $this->sendResponse([], 'Request is updated successfully.');
     }
 
@@ -125,9 +124,10 @@ class AdoptionRequestController extends BaseController
         $request = AdoptionRequest::find($id);
         if ($request) {
             $request->delete();
-            return $this->sendResponse([], "Request is deleted Successfully");
+
+            return $this->sendResponse([], 'Request is deleted Successfully');
         } else {
-            return $this->sendError("Request not found");
+            return $this->sendError('Request not found');
         }
     }
 }

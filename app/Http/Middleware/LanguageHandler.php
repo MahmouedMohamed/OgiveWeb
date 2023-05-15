@@ -4,8 +4,8 @@ namespace App\Http\Middleware;
 
 use App\Traits\ApiResponse;
 use Closure;
-use Illuminate\Http\Request;
 use Illuminate\Foundation\Application;
+use Illuminate\Http\Request;
 
 class LanguageHandler
 {
@@ -15,8 +15,6 @@ class LanguageHandler
 
     /**
      * Localization constructor.
-     *
-     * @param \Illuminate\Foundation\Application $app
      */
     public function __construct(Application $app)
     {
@@ -26,7 +24,6 @@ class LanguageHandler
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
@@ -36,19 +33,20 @@ class LanguageHandler
         $language = strtolower($request->header('Content-Language'));
 
         // if the header is missed
-        if (!$language) {
+        if (! $language) {
             // take the default local language
             $language = $this->app->config->get('app.locale');
         }
 
         // check the languages defined is supported
-        if (!array_key_exists($language, $this->app->config->get('app.supported_languages'))) {
+        if (! array_key_exists($language, $this->app->config->get('app.supported_languages'))) {
             // respond with error
             return $this->sendForbidden('Language not supported.');
         }
 
         // set the local language
         $this->app->setLocale($language);
+
         return $next($request);
     }
 }

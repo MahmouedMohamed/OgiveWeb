@@ -23,10 +23,10 @@ class AtaaBadgeSeeder extends Seeder
         ];
         foreach ($availableBadges as $badge) {
             AtaaBadge::create([
-                'id'=> Str::uuid(),
+                'id' => Str::uuid(),
                 'name' => $badge['name'],
                 'image' => $badge['image'],
-                'description' => $badge['description']
+                'description' => $badge['description'],
             ]);
         }
     }

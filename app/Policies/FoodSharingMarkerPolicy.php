@@ -3,13 +3,13 @@
 namespace App\Policies;
 
 use App\Models\Ataa\FoodSharingMarker;
-use App\Models\User;
-use App\Models\BanTypes;
-use Illuminate\Auth\Access\HandlesAuthorization;
 use App\Models\AvailableAbilities;
+use App\Models\BanTypes;
 use App\Models\BaseUserModel;
-use App\Traits\HasNoBan;
+use App\Models\User;
 use App\Traits\HasAbility;
+use App\Traits\HasNoBan;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class FoodSharingMarkerPolicy
 {
@@ -18,7 +18,6 @@ class FoodSharingMarkerPolicy
     /**
      * Determine whether the user can view any models.
      *
-     * @param  \App\Models\BaseUserModel  $user
      * @return mixed
      */
     public function viewAny(BaseUserModel $user)
@@ -29,7 +28,6 @@ class FoodSharingMarkerPolicy
     /**
      * Determine whether the user can view the model.
      *
-     * @param  \App\Models\BaseUserModel  $user
      * @param  \App\Models\FoodSharingMarker  $foodSharingMarker
      * @return mixed
      */
@@ -41,7 +39,6 @@ class FoodSharingMarkerPolicy
     /**
      * Determine whether the user can create models.
      *
-     * @param  \App\Models\BaseUserModel  $user
      * @return mixed
      */
     public function create(BaseUserModel $user)
@@ -52,7 +49,6 @@ class FoodSharingMarkerPolicy
     /**
      * Determine whether the user can create models.
      *
-     * @param  \App\Models\BaseUserModel  $user
      * @return mixed
      */
     public function collect(BaseUserModel $user)
@@ -63,7 +59,6 @@ class FoodSharingMarkerPolicy
     /**
      * Determine whether the user can update the model.
      *
-     * @param  \App\Models\BaseUserModel  $user
      * @param  \App\Models\FoodSharingMarker  $foodSharingMarker
      * @return mixed
      */
@@ -77,7 +72,6 @@ class FoodSharingMarkerPolicy
     /**
      * Determine whether the user can delete the model.
      *
-     * @param  \App\Models\BaseUserModel  $user
      * @param  \App\Models\FoodSharingMarker  $foodSharingMarker
      * @return mixed
      */
@@ -90,7 +84,6 @@ class FoodSharingMarkerPolicy
     /**
      * Determine whether the user can restore the model.
      *
-     * @param  \App\Models\BaseUserModel  $user
      * @param  \App\Models\FoodSharingMarker  $foodSharingMarker
      * @return mixed
      */
@@ -102,7 +95,6 @@ class FoodSharingMarkerPolicy
     /**
      * Determine whether the user can permanently delete the model.
      *
-     * @param  \App\Models\BaseUserModel  $user
      * @param  \App\Models\FoodSharingMarker  $foodSharingMarker
      * @return mixed
      */

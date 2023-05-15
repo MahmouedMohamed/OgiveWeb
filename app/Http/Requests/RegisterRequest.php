@@ -4,7 +4,6 @@ namespace App\Http\Requests;
 
 use App\ConverterModels\Gender;
 use App\ConverterModels\Nationality;
-use App\Http\Requests\BaseRequest;
 use Illuminate\Validation\Rule;
 
 class RegisterRequest extends BaseRequest

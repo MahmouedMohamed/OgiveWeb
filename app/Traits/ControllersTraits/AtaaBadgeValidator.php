@@ -9,18 +9,18 @@ use Illuminate\Support\Facades\Validator;
 
 trait AtaaBadgeValidator
 {
-
     /**
      * Returns If Online Transaction exists or not.
      *
-     * @param String $id
      * @return mixed
      */
-    public function badgeExists(String $id)
+    public function badgeExists(string $id)
     {
         $badge = AtaaBadge::find($id);
-        if (!$badge)
+        if (! $badge) {
             throw new AtaaBadgeNotFound();
+        }
+
         return $badge;
     }
 
@@ -31,8 +31,9 @@ trait AtaaBadgeValidator
             'name' => 'required',
             'arabic_name' => 'required',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'description' => 'required|string'
+            'description' => 'required|string',
         ];
+
         return Validator::make($request->all(), $rules);
     }
 }

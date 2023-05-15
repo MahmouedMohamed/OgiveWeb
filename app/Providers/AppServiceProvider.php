@@ -7,22 +7,19 @@ use App\Models\Ahed\NeedyMedia;
 use App\Models\Ahed\OfflineTransaction;
 use App\Models\Ahed\OnlineTransaction;
 use App\Models\AnonymousUser;
-use App\Observers\NeediesObserver;
-use App\Observers\NeediesMediasObserver;
-
 use App\Models\Ataa\FoodSharingMarker;
-use App\Observers\FoodSharingMarkersObserver;
-
 use App\Models\BreedMe\Pet;
 use App\Models\OauthAccessToken;
 use App\Models\User;
+use App\Observers\FoodSharingMarkersObserver;
+use App\Observers\NeediesMediasObserver;
+use App\Observers\NeediesObserver;
 use App\Observers\OauthAccessTokenObserver;
 use App\Observers\OfflineTransactionObserver;
 use App\Observers\OnlineTransactionObserver;
 use App\Observers\PetsObserver;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
-
 
 class AppServiceProvider extends ServiceProvider
 {

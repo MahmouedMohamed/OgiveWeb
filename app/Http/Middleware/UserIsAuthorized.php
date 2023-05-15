@@ -16,7 +16,7 @@ class UserIsAuthorized
 
     const PUBLIC_ROUTE_NAME = 'public';
 
-    public function isValidAccessToken($accessToken = null, $appType)
+    public function isValidAccessToken($accessToken, $appType)
     {
         //ToDo: Check if accessToken is specified for this appType
         return $accessToken && $accessToken->active && $accessToken->expires_at->isAfter(Carbon::now());
@@ -30,8 +30,10 @@ class UserIsAuthorized
                 return true;
             }
         }
+
         return false;
     }
+
     public function allowedToPublic()
     {
         $routeNames = explode('.', Route::currentRouteName());
@@ -40,13 +42,13 @@ class UserIsAuthorized
                 return true;
             }
         }
+
         return false;
     }
+
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
      * @return mixed
      */
     public function handle(Request $request, Closure $next)
@@ -67,17 +69,19 @@ class UserIsAuthorized
                         || $this->allowedToPublic()
                     ) {
                         request()->merge([
-                            'user' => $accessToken->user
+                            'user' => $accessToken->user,
                         ]);
+
                         return $next($request);
                     }
                 }
-            } else if ($this->allowedToPublic()) {
+            } elseif ($this->allowedToPublic()) {
                 return $next($request);
             }
         } catch (Exception $ex) {
             return $this->sendForbidden('Invalid Access token');
         }
+
         return $this->sendForbidden(__('General.InvalidAccess'));
     }
 }

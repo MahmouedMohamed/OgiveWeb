@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers\api\Ataa;
 
-use App\Http\Controllers\api\BaseController;
 use App\Exceptions\UserNotAuthorized;
 use App\Exceptions\UserNotFound;
+use App\Http\Controllers\api\BaseController;
 use App\Models\Ataa\AtaaAchievement;
-use Illuminate\Http\Request;
 use App\Traits\ControllersTraits\UserValidator;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class AtaaAchievementController extends BaseController
 {
     use UserValidator;
+
     /**
      * Display the specified resource.
-     * @param  \Illuminate\Http\Request  $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function show(Request $request)
@@ -50,15 +51,17 @@ class AtaaAchievementController extends BaseController
                 'markers_collected' => $markersCollected,
                 'markers_posted' => $markersPosted,
                 'current_level' => $highestPrizeAcquired,
-                'latest_badge' => $latestBadgeAcquired
+                'latest_badge' => $latestBadgeAcquired,
             ];
 
             return $this->sendResponse($response, __('General.DataRetrievedSuccessMessage'));
         } catch (UserNotFound $e) {
             return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
-            if ($user->ataaAchievement)
+            if ($user->ataaAchievement) {
                 $e->report($request->user, 'AccessAtaaAchievement', $user->ataaAchievement);
+            }
+
             return $this->sendForbidden(__('Ataa.ShowAchievementForbidden'));
         }
     }

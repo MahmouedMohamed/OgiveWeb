@@ -23,7 +23,7 @@ class OauthAccessToken extends Model
         'app_type',
         'access_type',
         'active',
-        'expires_at'
+        'expires_at',
     ];
 
     /**
@@ -36,15 +36,18 @@ class OauthAccessToken extends Model
     ];
 
     protected $casts = [
-        'expires_at' => 'datetime'
+        'expires_at' => 'datetime',
     ];
 
     public function user()
     {
-        if ($this->owner_type == 1)
+        if ($this->owner_type == 1) {
             return $this->belongsTo(User::class, 'owner_id');
+        }
+
         return $this->belongsTo(AnonymousUser::class, 'owner_id');
     }
+
     public function refreshToken($accessType, $appType)
     {
         return $this->user->createAccessToken($accessType, $appType);

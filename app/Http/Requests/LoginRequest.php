@@ -28,7 +28,7 @@ class LoginRequest extends BaseRequest
             'appType' => ['required', Rule::in(['Ahed', 'Ataa', 'TimeCatcher'])],
             'email' => ['required', 'email'],
             'password' => ['required', 'confirmed'],
-            'fcmToken' => ['required_if:appType,TimeCatcher']
+            'fcmToken' => ['required_if:appType,TimeCatcher'],
         ];
     }
 }

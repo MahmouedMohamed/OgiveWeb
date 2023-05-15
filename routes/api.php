@@ -1,34 +1,28 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-
 use App\Http\Controllers\api\AdminController;
-use App\Http\Controllers\api\UserController;
-use App\Http\Controllers\api\TokensController;
-
-/* Breed Me */
-use App\Http\Controllers\api\BreedMe\AdoptionRequestController;
-use App\Http\Controllers\api\BreedMe\ConsultationCommentController;
-use App\Http\Controllers\api\BreedMe\ConsultationController;
-use App\Http\Controllers\api\BreedMe\PetController;
-use App\Http\Controllers\api\BreedMe\PetsArticleController;
-use App\Http\Controllers\api\BreedMe\PlaceController;
-
-/* Memory Wall */
-use App\Http\Controllers\api\MemoryWall\MemoryController;
-use App\Http\Controllers\api\MemoryWall\LikesController;
-
-/* Ataa */
-use App\Http\Controllers\api\Ataa\FoodSharingMarkersController;
-use App\Http\Controllers\api\Ataa\AtaaAchievementController;
-use App\Http\Controllers\api\Ataa\AtaaPrizeController;
-use App\Http\Controllers\api\Ataa\AtaaBadgeController;
-
-/* Ahed */
 use App\Http\Controllers\api\Ahed\NeediesController;
 use App\Http\Controllers\api\Ahed\OfflineTransactionsController;
 use App\Http\Controllers\api\Ahed\OnlineTransactionsController;
+/* Breed Me */
+use App\Http\Controllers\api\Ataa\AtaaAchievementController;
+use App\Http\Controllers\api\Ataa\AtaaBadgeController;
+use App\Http\Controllers\api\Ataa\AtaaPrizeController;
+use App\Http\Controllers\api\Ataa\FoodSharingMarkersController;
+use App\Http\Controllers\api\BreedMe\AdoptionRequestController;
+/* Memory Wall */
+use App\Http\Controllers\api\BreedMe\ConsultationCommentController;
+use App\Http\Controllers\api\BreedMe\ConsultationController;
+/* Ataa */
+use App\Http\Controllers\api\BreedMe\PetController;
+use App\Http\Controllers\api\BreedMe\PetsArticleController;
+use App\Http\Controllers\api\MemoryWall\LikesController;
+use App\Http\Controllers\api\MemoryWall\MemoryController;
+/* Ahed */
 use App\Http\Controllers\api\OptionsController;
+use App\Http\Controllers\api\TokensController;
+use App\Http\Controllers\api\UserController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -105,7 +99,6 @@ Route::group(['middleware' => ['UserIsAuthorized']], function () {
 
         Route::apiResource('articles', PetsArticleController::class);
 
-
         Route::group(['prefix' => 'places'], function () {
             Route::get('/', [MemoryController::class, 'index'])->name('public');
             Route::get('/{place}', [MemoryController::class, 'show']);
@@ -157,17 +150,5 @@ Route::group(['middleware' => ['UserIsAuthorized']], function () {
         Route::post('/importCSV', [AdminController::class, 'importCSV']);
     });
 });
-
-
-
-
-
-
-
-
-
-
-
-
 
 Route::post('/token/refresh', [TokensController::class, 'refresh']);

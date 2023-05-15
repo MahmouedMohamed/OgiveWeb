@@ -3,12 +3,12 @@
 namespace App\Policies;
 
 use App\Models\Ahed\Needy;
-use App\Models\User;
-use App\Models\BanTypes;
-use Illuminate\Auth\Access\HandlesAuthorization;
 use App\Models\AvailableAbilities;
-use App\Traits\HasNoBan;
+use App\Models\BanTypes;
+use App\Models\User;
 use App\Traits\HasAbility;
+use App\Traits\HasNoBan;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class NeedyPolicy
 {
@@ -17,7 +17,6 @@ class NeedyPolicy
     /**
      * Determine whether the user can approve.
      *
-     * @param  \App\Models\User  $user
      * @return mixed
      */
     public function approve(User $user)
@@ -25,10 +24,10 @@ class NeedyPolicy
         return $this->hasAbility($user, AvailableAbilities::ApproveNeedy)
             && $this->hasNoBan($user, BanTypes::ApproveNeedy);
     }
+
     /**
      * Determine whether the user can disapprove.
      *
-     * @param  \App\Models\User  $user
      * @return mixed
      */
     public function disapprove(User $user)
@@ -36,10 +35,10 @@ class NeedyPolicy
         return $this->hasAbility($user, AvailableAbilities::DisapproveNeedy)
             && $this->hasNoBan($user, BanTypes::DisapproveNeedy);
     }
+
     /**
      * Determine whether the user can view any models.
      *
-     * @param  \App\Models\User  $user
      * @return mixed
      */
     public function viewAny(User $user)
@@ -50,7 +49,6 @@ class NeedyPolicy
     /**
      * Determine whether the user can view the model.
      *
-     * @param  \App\Models\User  $user
      * @param  \App\Models\Needy  $needy
      * @return mixed
      */
@@ -62,7 +60,6 @@ class NeedyPolicy
     /**
      * Determine whether the user can create models.
      *
-     * @param  \App\Models\User  $user
      * @return mixed
      */
     public function create(User $user)
@@ -73,7 +70,6 @@ class NeedyPolicy
     /**
      * Determine whether the user can update the model.
      *
-     * @param  \App\Models\User  $user
      * @param  \App\Models\Needy  $needy
      * @return mixed
      */
@@ -87,7 +83,6 @@ class NeedyPolicy
     /**
      * Determine whether the user can delete the model.
      *
-     * @param  \App\Models\User  $user
      * @param  \App\Models\Needy  $needy
      * @return mixed
      */
@@ -101,7 +96,6 @@ class NeedyPolicy
     /**
      * Determine whether the user can restore the model.
      *
-     * @param  \App\Models\User  $user
      * @param  \App\Models\Needy  $needy
      * @return mixed
      */
@@ -113,7 +107,6 @@ class NeedyPolicy
     /**
      * Determine whether the user can permanently delete the model.
      *
-     * @param  \App\Models\User  $user
      * @param  \App\Models\Needy  $needy
      * @return mixed
      */

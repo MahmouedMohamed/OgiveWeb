@@ -4,15 +4,13 @@ namespace App\Models;
 
 use App\ConverterModels\Nationality;
 use App\ConverterModels\OwnerType;
-use App\Http\Resources\RoleResource;
-use App\Models\Ataa\FoodSharingMarker;
 use App\Models\Ataa\AtaaAchievement;
+use App\Models\Ataa\FoodSharingMarker;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Hash;
 
 class BaseUserModel extends AuthenticatableUser
 {
@@ -53,7 +51,7 @@ class BaseUserModel extends AuthenticatableUser
         $encryptedData['expiryDate'] = $expiryDate;
 
         $cipherText = sodium_crypto_secretbox(json_encode($encryptedData), $nonce, $key);
-        $accessToken = sodium_bin2base64($cipherText, 5) . '.' . sodium_bin2base64($nonce, 5) . '.' . sodium_bin2base64($key, 5);
+        $accessToken = sodium_bin2base64($cipherText, 5).'.'.sodium_bin2base64($nonce, 5).'.'.sodium_bin2base64($key, 5);
 
         return ['accessToken' => $accessToken, 'expiryDate' => $expiryDate];
     }

@@ -24,5 +24,5 @@ return [
     'TransactionViewingBannedMessage' => 'You aren\'t authorized to show this transaction',
     'TransactionUpdateForbiddenMessage' => 'you aren\'t authorized to update this transaction',
     'TransactionDeletionForbiddenMessage' => 'you aren\'t authorized to delete this transaction',
-    'TransactionNeedySatisfiedMessage' => 'Case already satisfied, Kindly check another one'
+    'TransactionNeedySatisfiedMessage' => 'Case already satisfied, Kindly check another one',
 ];

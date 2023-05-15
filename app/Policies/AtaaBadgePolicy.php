@@ -3,12 +3,12 @@
 namespace App\Policies;
 
 use App\Models\Ataa\AtaaBadge;
-use App\Models\User;
-use App\Models\BanTypes;
-use Illuminate\Auth\Access\HandlesAuthorization;
-use App\Traits\HasNoBan;
-use App\Traits\HasAbility;
 use App\Models\AvailableAbilities;
+use App\Models\BanTypes;
+use App\Models\User;
+use App\Traits\HasAbility;
+use App\Traits\HasNoBan;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class AtaaBadgePolicy
 {
@@ -17,7 +17,6 @@ class AtaaBadgePolicy
     /**
      * Determine whether the user can view any models.
      *
-     * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function viewAny(User $user)
@@ -28,7 +27,6 @@ class AtaaBadgePolicy
     /**
      * Determine whether the user can view the model.
      *
-     * @param  \App\Models\User  $user
      * @param  \App\Models\AtaaBadge  $ataaBadge
      * @return \Illuminate\Auth\Access\Response|bool
      */
@@ -40,7 +38,6 @@ class AtaaBadgePolicy
     /**
      * Determine whether the user can create models.
      *
-     * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function create(User $user)
@@ -52,7 +49,6 @@ class AtaaBadgePolicy
     /**
      * Determine whether the user can update the model.
      *
-     * @param  \App\Models\User  $user
      * @param  \App\Models\AtaaBadge  $ataaBadge
      * @return \Illuminate\Auth\Access\Response|bool
      */
@@ -61,10 +57,10 @@ class AtaaBadgePolicy
         return $this->hasAbility($user, AvailableAbilities::UpdateAtaaBadge)
             && $this->hasNoBan($user, BanTypes::UpdateAtaaBadge);
     }
+
     /**
      * Determine whether the user can activate the model.
      *
-     * @param  \App\Models\User  $user
      * @param  \App\Models\AtaaBadge  $ataaBadge
      * @return mixed
      */
@@ -77,7 +73,6 @@ class AtaaBadgePolicy
     /**
      * Determine whether the user can activate the model.
      *
-     * @param  \App\Models\User  $user
      * @param  \App\Models\AtaaBadge  $ataaBadge
      * @return mixed
      */
@@ -86,10 +81,10 @@ class AtaaBadgePolicy
         return $this->hasAbility($user, AvailableAbilities::DeactivateAtaaBadge)
             && $this->hasNoBan($user, BanTypes::DeactivateAtaaBadge);
     }
+
     /**
      * Determine whether the user can delete the model.
      *
-     * @param  \App\Models\User  $user
      * @param  \App\Models\AtaaBadge  $ataaBadge
      * @return \Illuminate\Auth\Access\Response|bool
      */
@@ -102,7 +97,6 @@ class AtaaBadgePolicy
     /**
      * Determine whether the user can restore the model.
      *
-     * @param  \App\Models\User  $user
      * @param  \App\Models\AtaaBadge  $ataaBadge
      * @return \Illuminate\Auth\Access\Response|bool
      */
@@ -114,7 +108,6 @@ class AtaaBadgePolicy
     /**
      * Determine whether the user can permanently delete the model.
      *
-     * @param  \App\Models\User  $user
      * @param  \App\Models\AtaaBadge  $ataaBadge
      * @return \Illuminate\Auth\Access\Response|bool
      */

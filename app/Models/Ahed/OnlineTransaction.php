@@ -19,20 +19,23 @@ class OnlineTransaction extends Model
         'amount',
         'remaining',
     ];
+
     public function giver()
     {
         return $this->belongsTo(User::class);
     }
+
     public function needy()
     {
         return $this->belongsTo(Needy::class, 'needy_id', 'id');
     }
+
     public function transferAmount($amount)
     {
         $needy = $this->needy;
         if ($needy->satisfied) {
             $this->remaining = $amount;
-        } else if ($needy->need <= $needy->collected + $amount) {
+        } elseif ($needy->need <= $needy->collected + $amount) {
             $this->remaining = $needy->collected + $amount - $needy->need;
             $needy->collected = $needy->need;
             $needy->satisfied = 1;

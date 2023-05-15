@@ -13,13 +13,14 @@ class Consultation extends Model
     public $incrementing = false;
 
     protected $fillable = [
-        'id', 'user_id', 'description', 'image'
+        'id', 'user_id', 'description', 'image',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
+
     public function comments()
     {
         return $this->hasMany(ConsultationComment::class);

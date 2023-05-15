@@ -24,6 +24,7 @@ class FoodSharingMarkerFactory extends Factory
     public function definition()
     {
         $user = User::inRandomOrder()->first();
+
         return [
             'id' => Str::uuid(),
             'user_id' => $user->id,

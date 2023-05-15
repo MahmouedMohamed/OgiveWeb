@@ -16,6 +16,7 @@ class ConsultationController extends BaseController
     public function index()
     {
         $consultations = Consultation::all();
+
         return $this->sendResponse($consultations, 'Consultations are retrieved successfully.');
     }
 
@@ -26,13 +27,12 @@ class ConsultationController extends BaseController
      */
     public function create()
     {
-        return $this->sendError("Not Implemented");
+        return $this->sendError('Not Implemented');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -47,8 +47,9 @@ class ConsultationController extends BaseController
             $consultation->image = $imagePath;
         }
         $consultation->user_id = $request['user_id'];
-        $consultation->description =$request['description'];
+        $consultation->description = $request['description'];
         $consultation->save();
+
         return $this->sendResponse([], 'The Consultation is  added successfully.');
     }
 
@@ -61,9 +62,9 @@ class ConsultationController extends BaseController
     public function show($id)
     {
         $consultation = Consultation::find($id);
-        if($consultation){
-            return $this->sendResponse($consultation,'The Consultation is retrieved successfully');
-        }else{
+        if ($consultation) {
+            return $this->sendResponse($consultation, 'The Consultation is retrieved successfully');
+        } else {
             return $this->sendError('The Consultation not found.');
         }
 
@@ -77,13 +78,12 @@ class ConsultationController extends BaseController
      */
     public function edit(Consultation $consultation)
     {
-        return $this->sendError("Not Implemented");
+        return $this->sendError('Not Implemented');
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Consultation  $consultation
      * @return \Illuminate\Http\Response
      */
@@ -92,10 +92,11 @@ class ConsultationController extends BaseController
         $consultation = Consultation::find($consultation->id);
         $consultation->description = $request['description'];
         if ($request->hasFile('image')) {
-            $imagePath = $request['image']->store('uploads','public');
+            $imagePath = $request['image']->store('uploads', 'public');
             $consultation->image = $imagePath;
         }
         $consultation->save();
+
         return $this->sendResponse([], 'The Consultation is updated successfully.');
 
     }
@@ -113,6 +114,7 @@ class ConsultationController extends BaseController
             $consultation->delete();
             // Storage::delete('public/uploads'); // Change it to delete the image from public
             $consultation->delete();
+
             return $this->sendResponse([], 'The Consultation is deleted successfully.');
         } else {
             return $this->sendError('The Consultation not found.');

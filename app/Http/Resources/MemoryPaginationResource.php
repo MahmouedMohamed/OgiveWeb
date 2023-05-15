@@ -6,7 +6,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class MemoryPaginationResource extends JsonResource
 {
-
     public function __construct(private $data)
     {
     }
@@ -28,7 +27,7 @@ class MemoryPaginationResource extends JsonResource
                 'age' => $item->age,
                 'brief' => $item->brief,
                 'life_story' => $item->life_story,
-                'image' => url()->current() . $item->image,
+                'image' => url()->current().$item->image,
                 'nationality' => $item->nationality,
                 'created_by' => UserResource::make($item->author),
                 'updated_at' => $item->updated_at,
@@ -36,13 +35,14 @@ class MemoryPaginationResource extends JsonResource
                 'number_of_likes' => $item->numberOfLikes,
             ];
         });
+
         return [
             'data' => $data,
             'total' => $this->data->total(),
             'path' => $this->data->path(),
             'per_page' => $this->data->perPage(),
             'next_page_url' => $this->data->nextPageUrl(),
-            'prev_page_url' =>  $this->data->previousPageUrl(),
+            'prev_page_url' => $this->data->previousPageUrl(),
         ];
     }
 }

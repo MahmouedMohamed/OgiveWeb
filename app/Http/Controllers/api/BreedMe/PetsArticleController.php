@@ -3,9 +3,7 @@
 namespace App\Http\Controllers\api\BreedMe;
 
 use App\Http\Controllers\api\BaseController;
-
 use App\Models\BreedMe\PetsArticle;
-use Faker\Provider\Base;
 use Illuminate\Http\Request;
 
 class PetsArticleController extends BaseController
@@ -18,7 +16,8 @@ class PetsArticleController extends BaseController
     public function index()
     {
         $articles = PetsArticle::all();
-        return $this->sendResponse($articles, "Articles are retrieved Successfully");
+
+        return $this->sendResponse($articles, 'Articles are retrieved Successfully');
     }
 
     /**
@@ -28,13 +27,12 @@ class PetsArticleController extends BaseController
      */
     public function create()
     {
-        return $this->sendError("Not Implemented");
+        return $this->sendError('Not Implemented');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -47,7 +45,8 @@ class PetsArticleController extends BaseController
             $article->image = $imagePath;
         }
         $article->save();
-        return $this->sendResponse([], "Article is added Successfully");
+
+        return $this->sendResponse([], 'Article is added Successfully');
     }
 
     /**
@@ -60,9 +59,9 @@ class PetsArticleController extends BaseController
     {
         $article = PetsArticle::find($id);
         if ($article) {
-            return $this->sendResponse($article, "Article is retrieved Successfully");
+            return $this->sendResponse($article, 'Article is retrieved Successfully');
         } else {
-            return $this->sendError("No Article Found");
+            return $this->sendError('No Article Found');
         }
     }
 
@@ -74,17 +73,16 @@ class PetsArticleController extends BaseController
      */
     public function edit(PetsArticle $petsArticle)
     {
-        return $this->sendError("Not Implemented");
+        return $this->sendError('Not Implemented');
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\PetsArticle  $petsArticle
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,  $id)
+    public function update(Request $request, $id)
     {
         //As an admin I can edit article
         $article = PetsArticle::find($id);
@@ -96,9 +94,10 @@ class PetsArticleController extends BaseController
                 $article->image = $imagePath;
             }
             $article->save();
-            return $this->sendResponse([], "Article is updated Successfully");
+
+            return $this->sendResponse([], 'Article is updated Successfully');
         } else {
-            return $this->sendError("No Article Found");
+            return $this->sendError('No Article Found');
         }
     }
 
@@ -114,9 +113,9 @@ class PetsArticleController extends BaseController
         if ($article) {
             $article->delete();
             //Delete The image
-            return $this->sendResponse([], "Article is deleted Successfully");
+            return $this->sendResponse([], 'Article is deleted Successfully');
         } else {
-            return $this->sendError("No Article Found");
+            return $this->sendError('No Article Found');
         }
     }
 }

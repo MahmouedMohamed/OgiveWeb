@@ -13,13 +13,15 @@ class AdoptionRequest extends Model
     public $incrementing = false;
 
     protected $fillable = [
-        'id','user_id', 'pet_id', 'phone_number', 'address',
+        'id', 'user_id', 'pet_id', 'phone_number', 'address',
         'adoption_place', 'experience', 'accepted_terms',
     ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
     }
+
     public function pet()
     {
         return $this->belongsTo(Pet::class);

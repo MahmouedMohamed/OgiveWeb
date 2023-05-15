@@ -20,7 +20,7 @@ class RolesAbilitiesSeeder extends Seeder
         $availableRoles = ['Admin', 'Ahed Admin', 'Ataa Admin'];
         foreach ($availableRoles as $role) {
             $addedRole = Role::firstOrCreate([
-                'name' => $role
+                'name' => $role,
             ], [
                 'id' => Str::uuid(),
                 'name' => $role,
@@ -29,7 +29,7 @@ class RolesAbilitiesSeeder extends Seeder
             $availableAbilities = AvailableAbilities::getAll($role);
             foreach ($availableAbilities as $ability) {
                 $addedAbility = Ability::firstOrCreate([
-                    'name' => $ability
+                    'name' => $ability,
                 ], [
                     'id' => Str::uuid(),
                     'name' => $ability,

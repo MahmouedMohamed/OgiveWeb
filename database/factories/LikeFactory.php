@@ -2,11 +2,9 @@
 
 namespace Database\Factories;
 
-use App\Models\User;
-
 use App\Models\Like;
 use App\Models\MemoryWall\Memory;
-use Carbon\Carbon;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LikeFactory extends Factory
@@ -27,6 +25,7 @@ class LikeFactory extends Factory
     {
         $user = User::inRandomOrder()->first();
         $memory = Memory::inRandomOrder()->first();
+
         return [
             'userId' => $user,
             'memoryId' => $memory,

@@ -3,10 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Ability;
-use App\Models\AvailableAbilities;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
-use Illuminate\Support\Arr;
 
 class AbilityFactory extends Factory
 {

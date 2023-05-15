@@ -23,7 +23,7 @@ class UsersTableSeeder extends Seeder
             'gender' => 'female',
             'phone_number' => '012',
             'address' => '1',
-            'password' => "12345678",
+            'password' => '12345678',
         ]);
         DB::table('users')->insert([
             'id' => Str::uuid(),
@@ -33,7 +33,7 @@ class UsersTableSeeder extends Seeder
             'gender' => 'male',
             'phone_number' => '0123456789',
             'address' => 'Here',
-            'password' => "12345678",
+            'password' => '12345678',
         ]);
     }
 }

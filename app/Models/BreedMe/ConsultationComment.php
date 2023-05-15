@@ -15,13 +15,14 @@ class ConsultationComment extends Model
     protected $table = 'consultations_comments';
 
     protected $fillable = [
-        'id', 'user_id', 'consultation_id', 'text'
+        'id', 'user_id', 'consultation_id', 'text',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
+
     public function consultation()
     {
         return $this->belongsTo(Consultation::class);

@@ -4,11 +4,11 @@ namespace App\Policies;
 
 use App\Models\Ataa\AtaaPrize;
 use App\Models\AvailableAbilities;
-use App\Models\User;
 use App\Models\BanTypes;
-use Illuminate\Auth\Access\HandlesAuthorization;
-use App\Traits\HasNoBan;
+use App\Models\User;
 use App\Traits\HasAbility;
+use App\Traits\HasNoBan;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class AtaaPrizePolicy
 {
@@ -17,7 +17,6 @@ class AtaaPrizePolicy
     /**
      * Determine whether the user can view any models.
      *
-     * @param  \App\Models\User  $user
      * @return mixed
      */
     public function viewAny(User $user)
@@ -28,7 +27,6 @@ class AtaaPrizePolicy
     /**
      * Determine whether the user can view the model.
      *
-     * @param  \App\Models\User  $user
      * @param  \App\Models\AtaaPrize  $ataaPrize
      * @return mixed
      */
@@ -40,7 +38,6 @@ class AtaaPrizePolicy
     /**
      * Determine whether the user can create models.
      *
-     * @param  \App\Models\User  $user
      * @return mixed
      */
     public function create(User $user)
@@ -52,7 +49,6 @@ class AtaaPrizePolicy
     /**
      * Determine whether the user can update the model.
      *
-     * @param  \App\Models\User  $user
      * @param  \App\Models\AtaaPrize  $ataaPrize
      * @return mixed
      */
@@ -65,7 +61,6 @@ class AtaaPrizePolicy
     /**
      * Determine whether the user can activate the model.
      *
-     * @param  \App\Models\User  $user
      * @param  \App\Models\AtaaPrize  $ataaPrize
      * @return mixed
      */
@@ -78,7 +73,6 @@ class AtaaPrizePolicy
     /**
      * Determine whether the user can activate the model.
      *
-     * @param  \App\Models\User  $user
      * @param  \App\Models\AtaaPrize  $ataaPrize
      * @return mixed
      */
@@ -91,7 +85,6 @@ class AtaaPrizePolicy
     /**
      * Determine whether the user can delete the model.
      *
-     * @param  \App\Models\User  $user
      * @param  \App\Models\AtaaPrize  $ataaPrize
      * @return mixed
      */
@@ -104,7 +97,6 @@ class AtaaPrizePolicy
     /**
      * Determine whether the user can restore the model.
      *
-     * @param  \App\Models\User  $user
      * @param  \App\Models\AtaaPrize  $ataaPrize
      * @return mixed
      */
@@ -116,7 +108,6 @@ class AtaaPrizePolicy
     /**
      * Determine whether the user can permanently delete the model.
      *
-     * @param  \App\Models\User  $user
      * @param  \App\Models\AtaaPrize  $ataaPrize
      * @return mixed
      */

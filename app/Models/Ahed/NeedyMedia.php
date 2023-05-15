@@ -19,6 +19,7 @@ class NeedyMedia extends Model
         'path',
         'before',
     ];
+
     public function needy()
     {
         return $this->belongsTo(Needy::class);

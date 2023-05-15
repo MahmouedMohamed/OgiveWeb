@@ -22,14 +22,16 @@ class TimeCatcherTracking extends Model
         'tracked_id',
         'point_x',
         'point_y',
-        'range_in_meter'
+        'range_in_meter',
     ];
 
-    public function tracker(){
+    public function tracker()
+    {
         return $this->belongsTo(User::class, 'tracker_id');
     }
 
-    public function tracked(){
-        return $this->belongsTo(User::class,'tracked_id');
+    public function tracked()
+    {
+        return $this->belongsTo(User::class, 'tracked_id');
     }
 }

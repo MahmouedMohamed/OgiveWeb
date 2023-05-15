@@ -4,10 +4,8 @@ namespace App\Http\Controllers\api\BreedMe;
 
 use App\ConverterModels\PlaceType;
 use App\Http\Controllers\api\BaseController;
-
 use App\Models\BreedMe\Place;
 use Illuminate\Http\Request;
-use Spatie\QueryBuilder\QueryBuilder;
 
 class PlaceController extends BaseController
 {
@@ -34,13 +32,12 @@ class PlaceController extends BaseController
      */
     public function create()
     {
-        return $this->sendError("Not Implemented");
+        return $this->sendError('Not Implemented');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -55,7 +52,8 @@ class PlaceController extends BaseController
         $place->rate = $request['rate'];
         $place->address = $request['address'];
         $place->save();
-        return $this->sendResponse($place, "The Place is added Successfully");
+
+        return $this->sendResponse($place, 'The Place is added Successfully');
     }
 
     /**
@@ -83,13 +81,12 @@ class PlaceController extends BaseController
      */
     public function edit(Place $place)
     {
-        return $this->sendError("Not Implemented");
+        return $this->sendError('Not Implemented');
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Place  $place
      * @return \Illuminate\Http\Response
      */
@@ -105,7 +102,8 @@ class PlaceController extends BaseController
         $place->rate = $request['rate'];
         $place->address = $request['address'];
         $place->save();
-        return $this->sendResponse($place, "The Place is updates Successfully");
+
+        return $this->sendResponse($place, 'The Place is updates Successfully');
     }
 
     /**
@@ -119,6 +117,7 @@ class PlaceController extends BaseController
         $place = Place::find($id);
         if ($place) {
             $place->delete();
+
             return $this->sendResponse([], 'Place is deleted Successfully');
         } else {
             return $this->sendError('Place is not found');

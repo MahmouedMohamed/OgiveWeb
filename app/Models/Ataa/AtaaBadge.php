@@ -13,17 +13,20 @@ class AtaaBadge extends Model
     public $incrementing = false;
 
     protected $fillable = [
-        'id','name', 'image', 'description', 'active','arabic_name'
+        'id', 'name', 'image', 'description', 'active', 'arabic_name',
     ];
+
     public function winners()
     {
         return $this->belongsToMany(User::class, 'user_ataa_acquired_badges', 'badge_id', 'user_id')->withTimestamps();
     }
+
     public function activate()
     {
         $this->active = true;
         $this->save();
     }
+
     public function deactivate()
     {
         $this->active = false;

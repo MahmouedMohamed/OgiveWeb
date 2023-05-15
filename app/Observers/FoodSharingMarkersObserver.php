@@ -20,6 +20,7 @@ class FoodSharingMarkersObserver
         FoodSharingMarkerCreated::dispatch($foodSharingMarker);
         // dd($foodSharingMarker->user);
         AtaaAchievementCalculator::dispatch($foodSharingMarker->user, $foodSharingMarker, 'Create');
+
         return Cache::forget('foodsharingmarkers');
     }
 

@@ -9,20 +9,21 @@ use Illuminate\Support\Facades\Validator;
 
 trait OnlineTransactionValidator
 {
-
     /**
      * Returns If Online Transaction exists or not.
      *
-     * @param String $id
      * @return mixed
      */
-    public function onlineTransactionExists(String $id)
+    public function onlineTransactionExists(string $id)
     {
         $onlineTransaction = OnlineTransaction::find($id);
-        if (!$onlineTransaction)
+        if (! $onlineTransaction) {
             throw new OnlineTransactionNotFound();
+        }
+
         return $onlineTransaction;
     }
+
     public function validateTransaction(Request $request)
     {
         $rules = [
@@ -30,6 +31,7 @@ trait OnlineTransactionValidator
             'needy' => 'required|max:255',
             'amount' => 'required|numeric|min:1',
         ];
+
         return Validator::make($request->all(), $rules);
     }
 }

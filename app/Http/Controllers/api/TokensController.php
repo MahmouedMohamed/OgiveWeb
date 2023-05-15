@@ -4,15 +4,12 @@ namespace App\Http\Controllers\api;
 
 use App\Models\OauthAccessToken;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Hash;
 
 class TokensController extends BaseController
 {
     /**
      * Refresh the specified token.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function refresh(Request $request)
@@ -26,6 +23,7 @@ class TokensController extends BaseController
         if ($accessToken) {
             return $this->sendResponse($accessToken->refreshToken($accessToken->access_type, $accessToken->app_type), 'Access Token Refreshed Successfully');
         }
+
         return $this->sendError('This access token can\'t be found');
     }
 }

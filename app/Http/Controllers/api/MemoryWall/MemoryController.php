@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers\api\MemoryWall;
 
-use App\Exceptions\MemoryNotFound;
-use App\Http\Controllers\api\BaseController;
 use App\Exceptions\UserNotAuthorized;
-use App\Exceptions\UserNotFound;
+use App\Http\Controllers\api\BaseController;
 use App\Http\Requests\CreateMemoryRequest;
 use App\Http\Requests\UpdateMemoryRequest;
 use App\Http\Resources\MemoryPaginationResource;
@@ -13,7 +11,6 @@ use App\Http\Resources\MemoryResource;
 use App\Models\MemoryWall\Memory;
 use App\Traits\ControllersTraits\MemoryValidator;
 use App\Traits\ControllersTraits\UserValidator;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -26,7 +23,6 @@ class MemoryController extends BaseController
     /**
      * Display a listing of the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
@@ -34,6 +30,7 @@ class MemoryController extends BaseController
         try {
             if ($request->user) {
                 $this->userIsAuthorized($request->user, 'viewAny', Memory::class);
+
                 return $this->sendResponse(
                     new MemoryPaginationResource(
                         Memory::select(
@@ -48,7 +45,7 @@ class MemoryController extends BaseController
                                 'image',
                                 'created_at',
                                 'created_by',
-                                DB::raw('exists(select 1 from `likes` li where li.memory_id = id and li.user_id = \'' . $request->user->id . '\' limit 1) as liked')
+                                DB::raw('exists(select 1 from `likes` li where li.memory_id = id and li.user_id = \''.$request->user->id.'\' limit 1) as liked'),
                             ]
                         )->with('author')->withCount('likes as numberOfLikes')
                             ->where('nationality', '=', $request->user->getNationalityValue())
@@ -57,6 +54,7 @@ class MemoryController extends BaseController
                     __('MemoryWall.MemoryIndexSuccess')
                 );
             }
+
             return $this->sendResponse(
                 new MemoryPaginationResource(
                     Memory::select(
@@ -87,7 +85,6 @@ class MemoryController extends BaseController
     /**
      * Display a listing of the top resources.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function getTopMemories(Request $request)
@@ -113,10 +110,10 @@ class MemoryController extends BaseController
             __('MemoryWall.MemoryIndexSuccess')
         );
     }
+
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\CreateMemoryRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(CreateMemoryRequest $request)
@@ -131,9 +128,10 @@ class MemoryController extends BaseController
                 'death_date' => $request['deathDate'],
                 'brief' => $request['brief'],
                 'life_story' => $request['lifeStory'],
-                'image' => '/storage/' . $imagePath,
+                'image' => '/storage/'.$imagePath,
                 'nationality' => $request->user->nationality,
             ]);
+
             return $this->sendResponse(MemoryResource::make($memory), __('MemoryWall.MemoryCreationSuccessMessage')); ///Thank You For Your Contribution!
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden(__('MemoryWall.MemoryCreationBannedMessage'));
@@ -143,19 +141,16 @@ class MemoryController extends BaseController
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\MemoryWall\Memory  $memory
      * @return \Illuminate\Http\Response
      */
     public function show(Memory $memory)
     {
-        return $this->sendResponse(MemoryResource::make($memory), "");
+        return $this->sendResponse(MemoryResource::make($memory), '');
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateMemoryRequest  $request
-     * @param  \App\Models\MemoryWall\Memory  $memory
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateMemoryRequest $request, Memory $memory)
@@ -163,7 +158,7 @@ class MemoryController extends BaseController
         try {
             $this->userIsAuthorized($request->user, 'update', $memory);
             if ($request['image']) {
-                Storage::delete('public/' . substr($memory->image, 9));
+                Storage::delete('public/'.substr($memory->image, 9));
                 $imagePath = $request['image']->store('memories', 'public');
             }
             $memory->update([
@@ -172,9 +167,10 @@ class MemoryController extends BaseController
                 'death_date' => $request['deathDate'] ?? $memory->deathDate,
                 'brief' => $request['brief'] ?? $memory->brief,
                 'life_story' => $request['lifeStory'] ?? $memory->lifeStory,
-                'image' => $request['image'] ? '/storage/' . $imagePath : $memory->image,
+                'image' => $request['image'] ? '/storage/'.$imagePath : $memory->image,
                 'nationality' => $request->user->nationality,
             ]);
+
             return $this->sendResponse(MemoryResource::make($memory), __('MemoryWall.MemoryUpdateSuccessMessage'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden(__('MemoryWall.MemoryUpdateForbiddenMessage'));
@@ -184,17 +180,17 @@ class MemoryController extends BaseController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  Request  $request
-     * @param  \App\Models\MemoryWall\Memory  $memory
      * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request, Memory $memory)
     {
         try {
             $this->userIsAuthorized($request->user, 'delete', $memory);
-            if ($memory->image)
-                Storage::delete('public/' . substr($memory->image, 9));
+            if ($memory->image) {
+                Storage::delete('public/'.substr($memory->image, 9));
+            }
             $memory->delete();
+
             return $this->sendResponse([], __('MemoryWall.MemoryDeleteSuccessMessage'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden(__('MemoryWall.MemoryDeletionForbiddenMessage'));

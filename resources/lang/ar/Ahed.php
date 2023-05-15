@@ -24,5 +24,5 @@ return [
     'TransactionViewingBannedMessage' => 'أنت لا تملك صلاحية عرض هذا التعامل',
     'TransactionUpdateForbiddenMessage' => 'أنت لا تملك صلاحية تعديل ذلك التعامل',
     'TransactionDeletionForbiddenMessage' => 'أنت لا تملك صلاحية إزالة ذلك التعامل',
-    'TransactionNeedySatisfiedMessage' => 'تم جمع اللازم لتلك الحالة، من فضلك تفقد حالة أخري'
+    'TransactionNeedySatisfiedMessage' => 'تم جمع اللازم لتلك الحالة، من فضلك تفقد حالة أخري',
 ];

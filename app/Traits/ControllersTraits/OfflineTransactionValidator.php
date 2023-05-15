@@ -11,21 +11,22 @@ use Illuminate\Validation\Rule;
 
 trait OfflineTransactionValidator
 {
-
     /**
      * Returns If Offline Transaction exists or not.
      *
-     * @param String $id
      * @return mixed
      */
-    public function offlineTransactionExists(String $id)
+    public function offlineTransactionExists(string $id)
     {
         $offlineTransaction = OfflineTransaction::find($id);
-        if (!$offlineTransaction)
+        if (! $offlineTransaction) {
             throw new OfflineTransactionNotFound();
+        }
+
         return $offlineTransaction;
     }
-    public function validateTransaction(Request $request, String $related)
+
+    public function validateTransaction(Request $request, string $related)
     {
         $rules = null;
         switch ($related) {
@@ -52,6 +53,7 @@ trait OfflineTransactionValidator
                 ];
                 break;
         }
+
         return Validator::make($request->all(), $rules);
     }
 }

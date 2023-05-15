@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Ability;
 
 class Role extends Model
 {
@@ -16,7 +15,7 @@ class Role extends Model
 
     public function abilities()
     {
-        return $this->belongsToMany(Ability::class,'ability_role')->withTimestamps();
+        return $this->belongsToMany(Ability::class, 'ability_role')->withTimestamps();
     }
 
     public function allowTo($ability)

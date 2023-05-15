@@ -16,7 +16,6 @@ return [
     'ShowAchievementForbidden' => 'You aren\'t authorized to show this achievement',
     'AchievementNotFound' => 'This element can\'t be found',
 
-
     'BadgeCreationSuccessMessage' => 'Badge Created Successfully',
     'BadgeUpdateSuccessMessage' => 'Badge Updated Successfully',
     'BadgeDeleteSuccessMessage' => 'Badge Deleted Successfully',

@@ -18,9 +18,10 @@ class BaseModel extends Model
             $model = static::where('id', '=', $value)->first();
         }
         if (empty($model)) {
-            $projectName = explode("\\", $this::class)[2]; //All Models would be App/Model/ProjectName/ModelName
-            if ($projectName == class_basename($this))
-                throw (new ModelNotFoundException("General", class_basename($this)));
+            $projectName = explode('\\', $this::class)[2]; //All Models would be App/Model/ProjectName/ModelName
+            if ($projectName == class_basename($this)) {
+                throw (new ModelNotFoundException('General', class_basename($this)));
+            }
 
             throw (new ModelNotFoundException($projectName, class_basename($this)));
         }

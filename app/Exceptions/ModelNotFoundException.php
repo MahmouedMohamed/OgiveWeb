@@ -13,11 +13,12 @@ class ModelNotFoundException extends Exception
 
     private $model;
 
-    public function __construct(String $projectName, String $model)
+    public function __construct(string $projectName, string $model)
     {
         $this->projectName = $projectName;
         $this->model = $model;
     }
+
     /**
      * Report the exception.
      *
@@ -36,6 +37,6 @@ class ModelNotFoundException extends Exception
      */
     public function render()
     {
-        return $this->sendError(__($this->projectName . '.' . $this->model . 'NotFound'));
+        return $this->sendError(__($this->projectName.'.'.$this->model.'NotFound'));
     }
 }

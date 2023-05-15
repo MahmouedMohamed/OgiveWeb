@@ -2,38 +2,37 @@
 
 namespace App\Traits\ControllersTraits;
 
-use App\Models\Ataa\FoodSharingMarker;
-use App\Exceptions\FoodSharingMarkerNotFound;
 use App\Exceptions\FoodSharingMarkerIsCollected;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Http\Request;
+use App\Exceptions\FoodSharingMarkerNotFound;
+use App\Models\Ataa\FoodSharingMarker;
 
 trait FoodSharingMarkerValidator
 {
-
     /**
      * Returns If FoodSharingMarker exists or not.
      *
-     * @param String $id
      * @return mixed
      */
-    public function foodSharingMarkerExists(String $id)
+    public function foodSharingMarkerExists(string $id)
     {
         $foodSharingMarker = FoodSharingMarker::find($id);
-        if (!$foodSharingMarker)
+        if (! $foodSharingMarker) {
             throw new FoodSharingMarkerNotFound();
+        }
+
         return $foodSharingMarker;
     }
+
     /**
      * Returns If FoodSharingMarker is collected or not.
      *
-     * @param FoodSharingMarker $foodSharingMarker
      * @return mixed
      */
     public function foodSharingMarkerIsCollected(FoodSharingMarker $foodSharingMarker)
     {
-        if ($foodSharingMarker->collected == 1)
+        if ($foodSharingMarker->collected == 1) {
             throw new FoodSharingMarkerIsCollected();
-        return;
+        }
+
     }
 }

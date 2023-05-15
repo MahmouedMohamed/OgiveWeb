@@ -22,7 +22,7 @@ class MemoryResource extends JsonResource
             'age' => $this->age,
             'brief' => $this->brief,
             'life_story' => $this->life_story,
-            'image' => url()->current() . $this->image,
+            'image' => url()->current().$this->image,
             'nationality' => $this->nationality,
             'created_by' => UserResource::make($this->author),
             'updated_at' => $this->updated_at,

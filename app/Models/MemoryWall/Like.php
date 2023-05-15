@@ -25,14 +25,17 @@ class Like extends Model
 
         return $query;
     }
+
     public function memory()
     {
         return $this->belongsTo(Memory::class, 'memory_id');
     }
+
     public function user()
     {
         return $this->belongsTo(User::class);
     }
+
     public function setTypeAttribute($text)
     {
         $this->attributes['type'] = LikeType::$value[$text];

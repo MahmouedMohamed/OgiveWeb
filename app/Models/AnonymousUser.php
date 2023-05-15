@@ -2,15 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-
 class AnonymousUser extends BaseUserModel
 {
-
     protected $table = 'anonymous_users';
 
     public $incrementing = false;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -19,7 +16,7 @@ class AnonymousUser extends BaseUserModel
     protected $fillable = [
         'id',
         'device_id',
-        'nationality'
+        'nationality',
     ];
 
     /**

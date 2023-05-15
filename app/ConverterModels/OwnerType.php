@@ -17,6 +17,6 @@ class OwnerType
 
     public static $text_ar = [
         1 => 'مستخدم حقيقي',
-        2 => 'مستخدم وهمي'
+        2 => 'مستخدم وهمي',
     ];
 }

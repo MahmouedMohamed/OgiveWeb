@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-
 class UserBan extends BaseModel
 {
     public $incrementing = false;
@@ -13,21 +12,25 @@ class UserBan extends BaseModel
         'tag',
         'active',
         'start_at',
-        'end_at'
+        'end_at',
     ];
+
     public function bannedUser()
     {
         return $this->belongsTo(User::class, 'banned_user');
     }
+
     public function banCreator()
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+
     public function activate()
     {
         $this->active = true;
         $this->save();
     }
+
     public function deactivate()
     {
         $this->active = false;

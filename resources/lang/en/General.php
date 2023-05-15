@@ -7,5 +7,5 @@ return [
     'NotImplemented' => 'Not Implemented',
     'UserBanNotFound' => 'User Ban Cannot be Found',
     'InvalidAccess' => 'Invalid Access',
-    'ValidationFailure' => 'Invalid Data'
+    'ValidationFailure' => 'Invalid Data',
 ];

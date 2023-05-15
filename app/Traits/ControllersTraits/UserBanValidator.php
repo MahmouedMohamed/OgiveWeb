@@ -12,8 +12,9 @@ trait UserBanValidator
         $rules = [
             'tag' => 'required',
             'start_at' => 'date',
-            'end_at' => 'date|after:from'
+            'end_at' => 'date|after:from',
         ];
+
         return Validator::make($request->all(), $rules);
     }
 }
