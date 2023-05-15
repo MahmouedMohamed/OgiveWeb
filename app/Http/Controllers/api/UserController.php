@@ -70,7 +70,7 @@ class UserController extends BaseController
         }
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
         try {
             $this->validateLoginParameters($request);
