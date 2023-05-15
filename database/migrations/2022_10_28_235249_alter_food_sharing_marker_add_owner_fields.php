@@ -14,6 +14,7 @@ class AlterFoodSharingMarkerAddOwnerFields extends Migration
     public function up()
     {
         Schema::table('food_sharing_markers', function (Blueprint $table) {
+            $table->dropForeign('food_sharing_markers_user_id_foreign');
             $table->dropColumn('user_id');
         });
         Schema::table('food_sharing_markers', function (Blueprint $table) {

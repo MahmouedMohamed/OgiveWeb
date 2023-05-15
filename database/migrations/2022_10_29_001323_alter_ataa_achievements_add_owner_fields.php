@@ -14,10 +14,12 @@ class AlterAtaaAchievementsAddOwnerFields extends Migration
     public function up()
     {
         Schema::table('ataa_achievements', function (Blueprint $table) {
+            $table->dropForeign('ataa_achievements_user_id_foreign');
             $table->dropColumn('user_id');
         });
         Schema::table('ataa_achievements', function (Blueprint $table) {
             $table->string('owner_id')->after('id');
+            $table->tinyInteger('owner_type')->after('owner_id');
         });
     }
 
@@ -30,6 +32,7 @@ class AlterAtaaAchievementsAddOwnerFields extends Migration
     {
         Schema::table('ataa_achievements', function (Blueprint $table) {
             $table->dropColumn('owner_id');
+            $table->dropColumn('owner_type');
         });
         Schema::table('ataa_achievements', function (Blueprint $table) {
             $table->string('user_id');

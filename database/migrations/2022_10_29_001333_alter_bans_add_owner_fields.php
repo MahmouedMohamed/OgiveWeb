@@ -14,8 +14,12 @@ class AlterBansAddOwnerFields extends Migration
     public function up()
     {
         Schema::table('user_bans', function (Blueprint $table) {
-            $table->dropConstrainedForeignId('banned_user');
-            $table->string('banned_user')->after('id');
+            $table->dropForeign('user_bans_banned_user_foreign');
+            $table->dropColumn('banned_user');
+        });
+        Schema::table('user_bans', function (Blueprint $table) {
+            $table->string('banned_id')->after('id');
+            $table->tinyInteger('banned_type')->after('banned_id');
         });
     }
 
@@ -26,6 +30,10 @@ class AlterBansAddOwnerFields extends Migration
      */
     public function down()
     {
+        Schema::table('user_bans', function (Blueprint $table) {
+            $table->dropColumn('banned_id');
+            $table->dropColumn('banned_type');
+        });
         Schema::table('user_bans', function (Blueprint $table) {
             $table->string('banned_user')->after('id');
             $table->foreign('banned_user')

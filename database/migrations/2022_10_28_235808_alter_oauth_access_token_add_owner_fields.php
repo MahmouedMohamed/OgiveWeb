@@ -14,6 +14,7 @@ class AlterOauthAccessTokenAddOwnerFields extends Migration
     public function up()
     {
         Schema::table('oauth_access_tokens', function (Blueprint $table) {
+            $table->dropForeign('oauth_access_tokens_user_id_foreign');
             $table->dropColumn('user_id');
         });
         Schema::table('oauth_access_tokens', function (Blueprint $table) {
