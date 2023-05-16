@@ -6,7 +6,6 @@ use App\ConverterModels\CaseType;
 use App\Models\BaseModel;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class Needy extends BaseModel
 {
