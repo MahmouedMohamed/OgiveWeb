@@ -33,9 +33,9 @@ trait UserValidator
      * @param  mixed  $model
      * @return mixed
      */
-    public function userIsAuthorized(BaseUserModel $user, string $action, $model)
+    public function userIsAuthorized(BaseUserModel $user, string $action, $args)
     {
-        if (! $user->can($action, $model)) {
+        if (! $user->can($action, $args)) {
             throw new UserNotAuthorized();
         }
 

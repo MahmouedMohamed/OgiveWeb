@@ -7,17 +7,18 @@ use App\Exceptions\NotSupportedType;
 use App\Exceptions\OfflineTransactionNotFound;
 use App\Exceptions\UserNotAuthorized;
 use App\Exceptions\UserNotFound;
+use App\Http\Requests\CreateUserBanRequest;
 use App\Models\Ahed\Needy;
 use App\Models\Ahed\OfflineTransaction;
 use App\Models\Ahed\OnlineTransaction;
 use App\Models\Ataa\AtaaAchievement;
+use App\Models\BaseUserModel;
 use App\Models\BreedMe\Pet;
 use App\Models\OauthAccessToken;
 use App\Models\User;
 use App\Models\UserBan;
 use App\Traits\ControllersTraits\NeedyValidator;
 use App\Traits\ControllersTraits\OfflineTransactionValidator;
-use App\Traits\ControllersTraits\UserBanValidator;
 use App\Traits\ControllersTraits\UserValidator;
 use Carbon\Carbon;
 use Exception;
@@ -27,7 +28,7 @@ use Illuminate\Support\Str;
 
 class AdminController extends BaseController
 {
-    use UserValidator, NeedyValidator, OfflineTransactionValidator, UserBanValidator;
+    use UserValidator, NeedyValidator, OfflineTransactionValidator;
 
     /**
      * Dashboard.
@@ -234,17 +235,15 @@ class AdminController extends BaseController
     /**
      * Get User Bans.
      *
+     * @param  App\Models\BaseUserModel  $bannedUser
      * @return \Illuminate\Http\Response
      */
-    public function getUserBans(Request $request)
+    public function getUserBans(Request $request, User $bannedUser)
     {
         try {
-            $user = $this->userExists($request['userId']);
-            $this->userIsAuthorized($user, 'viewAny', UserBan::class);
+            $this->userIsAuthorized($request->user, 'viewAny', UserBan::class);
 
-            return $this->sendResponse(UserBan::all(), 'User Bans Retrieved Successfully');
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'));
+            return $this->sendResponse($bannedUser->bans, 'User Bans Retrieved Successfully');
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden('You aren\'t authorized to see these resources.');
         }
@@ -293,24 +292,16 @@ class AdminController extends BaseController
     /**
      * Add User Ban.
      *
+     * @param  App\Models\BaseUserModel  $bannedUser
      * @return \Illuminate\Http\Response
      */
-    public function addUserBan(Request $request)
+    public function addUserBan(CreateUserBanRequest $request, User $bannedUser)
     {
         try {
-            $admin = $this->userExists($request['userId']);
-            $bannedUser = $this->userExists($request['bannedUser']);
             //Check if current user can Deactivate User Ban
-            if (! $admin->can('create', [UserBan::class, $bannedUser])) {
-                return $this->sendForbidden('You aren\'t authorized to create the ban.');
-            }
-            $validated = $this->validateUserBan($request);
-            if ($validated->fails()) {
-                return $this->sendError(__('General.InvalidData'), $validated->messages(), 400);
-            }
+            $this->userIsAuthorized($request->user, 'create', [UserBan::class, $bannedUser]);
             //TODO: Extend Ban if already exists & Active?
-            $admin->createdBans()->create([
-                'id' => Str::uuid(),
+            $request->user->createdBans()->create([
                 'banned_user' => $bannedUser->id,
                 'tag' => $request['tag'],
                 'active' => $request['startAt'] != null ? ($request['startAt'] <= Carbon::now('GMT+2') ? 1 : 0) : 1,

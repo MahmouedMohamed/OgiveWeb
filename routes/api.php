@@ -141,8 +141,8 @@ Route::group(['middleware' => ['UserIsAuthorized']], function () {
         Route::post('/ataa/freeze-achievement', [AdminController::class, 'freezeUserAtaaAchievements']);
         Route::post('/ataa/defreeze-achievement', [AdminController::class, 'defreezeUserAtaaAchievements']);
         //**      Ban      **//
-        Route::get('/ban', [AdminController::class, 'getUserBans']);
-        Route::post('/ban', [AdminController::class, 'addUserBan']);
+        Route::get('/users/{bannedUser}/ban', [AdminController::class, 'getUserBans']);
+        Route::post('/users/{bannedUser}/ban', [AdminController::class, 'addUserBan']);
         Route::patch('/ban/activate/{userBan}', [AdminController::class, 'activateBan']);
         Route::patch('/ban/deactivate/{userBan}', [AdminController::class, 'deactivateBan']);
         //**      Import      **//
