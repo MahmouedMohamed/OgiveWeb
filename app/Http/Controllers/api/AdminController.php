@@ -12,7 +12,6 @@ use App\Models\Ahed\Needy;
 use App\Models\Ahed\OfflineTransaction;
 use App\Models\Ahed\OnlineTransaction;
 use App\Models\Ataa\AtaaAchievement;
-use App\Models\BaseUserModel;
 use App\Models\BreedMe\Pet;
 use App\Models\OauthAccessToken;
 use App\Models\User;
@@ -24,7 +23,6 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
 
 class AdminController extends BaseController
 {
