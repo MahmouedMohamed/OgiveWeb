@@ -15,6 +15,7 @@ trait UserValidator
      * @param  string  $id
      * @return mixed
      */
+    //ToDo: Remove when not needed
     public function userExists($id)
     {
         $user = User::find($id);
