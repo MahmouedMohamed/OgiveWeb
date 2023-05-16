@@ -55,14 +55,14 @@ class AdminController extends BaseController
                 ->orderBy('count', 'ASC')
                 ->get();
 
-            $numberOfActiveUsersGroupedByAccessType = OauthAccessToken::selectRaw('count(*) as count, accessType')
-                ->groupBy('accessType')
+            $numberOfActiveUsersGroupedByAccessType = OauthAccessToken::selectRaw('count(*) as count, access_type')
+                ->groupBy('access_type')
                 ->where('active', '=', 1)
                 ->orderBy('count', 'ASC')
                 ->get();
 
-            $numberOfActiveUsersGroupedByAppType = OauthAccessToken::selectRaw('count(*) as count, appType')
-                ->groupBy('appType')
+            $numberOfActiveUsersGroupedByAppType = OauthAccessToken::selectRaw('count(*) as count, app_type')
+                ->groupBy('app_type')
                 ->where('active', '=', 1)
                 ->orderBy('count', 'ASC')
                 ->get();
