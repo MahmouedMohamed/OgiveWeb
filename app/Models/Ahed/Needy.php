@@ -81,7 +81,6 @@ class Needy extends BaseModel
     {
         foreach ($imagePaths as $imagePath) {
             $this->medias()->create([
-                'id' => Str::uuid(),
                 'path' => $imagePath,
                 'before' => $before,
             ]);

@@ -2,13 +2,11 @@
 
 namespace App\Models\Ataa;
 
+use App\Models\BaseModel;
 use App\Models\BaseUserModel;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 
-class AtaaAchievement extends Model
+class AtaaAchievement extends BaseModel
 {
     use HasFactory;
 
@@ -60,7 +58,6 @@ class AtaaAchievement extends Model
     public static function calculateThenGet(BaseUserModel $user, FoodSharingMarker $foodSharingMarker, string $method)
     {
         $userAchievement = $user->ataaAchievement ?? $user->ataaAchievement()->create([
-            'id' => Str::uuid(),
             'markers_collected' => 0,
             'markers_posted' => 0,
         ]);

@@ -39,7 +39,6 @@ class UserController extends BaseController
                 $this->userBanValidator($anonymousUser);
             } else {
                 $anonymousUser = AnonymousUser::create([
-                    'id' => Str::uuid(),
                     'device_id' => $request['deviceId'],
                     'nationality' => $request['nationality'],
                 ]);
@@ -71,7 +70,7 @@ class UserController extends BaseController
                 $tokenDetails = $user->createAccessToken($request['accessType'], $request['appType']);
 
                 return $this->sendResponse([
-                    'token' => $tokenDetails['token'],
+                    'token' => $tokenDetails['accessToken'],
                     'expiryDate' => $tokenDetails['expiryDate'],
                     'user' => UserResource::make($user),
                     'profile' => ProfileResource::make($user->profile),
@@ -92,9 +91,7 @@ class UserController extends BaseController
     //ToDo: Move to Job
     public function register(RegisterRequest $registerRequest)
     {
-
         $user = User::create([
-            'id' => Str::uuid(),
             'name' => request('name'),
             'user_name' => request('user_name'),
             'email' => request('email'),
@@ -104,9 +101,8 @@ class UserController extends BaseController
             'address' => request('address'),
             'nationality' => request('nationality'),
         ]);
-        $profile = $user->profile()->create([
-            'id' => Str::uuid(),
-        ]);
+        $profile = $user->profile()->create([]);
+        $user->account()->create([]);
         $image = $registerRequest['image'];
         if ($image != null) {
             $imagePath = $image->store('users', 'public');

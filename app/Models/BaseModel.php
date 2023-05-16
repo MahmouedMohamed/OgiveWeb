@@ -6,10 +6,19 @@ use App\Exceptions\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Ramsey\Uuid\Uuid;
+use Illuminate\Support\Str;
 
 class BaseModel extends Model
 {
     use HasFactory;
+
+    protected static function booted()
+    {
+        parent::booted();
+        static::creating(function ($query) {
+            $query->id = Str::uuid();
+        });
+    }
 
     public function resolveRouteBinding($value, $field = null)
     {

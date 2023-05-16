@@ -122,7 +122,6 @@ class MemoryController extends BaseController
             $this->userIsAuthorized($request->user, 'create', Memory::class);
             $imagePath = $request['image']->store('memories', 'public');
             $memory = $request->user->memories()->create([
-                'id' => Str::uuid(),
                 'person_name' => $request['personName'],
                 'birth_date' => $request['birthDate'],
                 'death_date' => $request['deathDate'],

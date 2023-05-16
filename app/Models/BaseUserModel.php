@@ -30,7 +30,6 @@ class BaseUserModel extends AuthenticatableUser
         $this->deleteRelatedAccessTokens($appType);
         $expiryDate = Carbon::now('GMT+2')->addMonth();
         $accessToken = $this->accessTokens()->create([
-            'id' => Str::uuid(),
             'owner_type' => OwnerType::$value[class_basename($this)],
             'owner_id' => $this->id,
             'app_type' => $appType,
