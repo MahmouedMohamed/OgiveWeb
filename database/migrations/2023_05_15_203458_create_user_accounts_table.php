@@ -17,7 +17,7 @@ class CreateUserAccountsTable extends Migration
             $table->uuid('id');
             $table->primary('id');
             $table->string('user_id');
-            $table->unsignedBigInteger('balance');
+            $table->unsignedBigInteger('balance')->default(0);
             $table->timestamps();
             $table->foreign('user_id')
                 ->references('id')
