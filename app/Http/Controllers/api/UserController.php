@@ -102,6 +102,7 @@ class UserController extends BaseController
         ]);
         $profile = $user->profile()->create([]);
         $user->account()->create([]);
+        $user->settings()->create([]);
         $image = $registerRequest['image'];
         if ($image != null) {
             $imagePath = $image->store('users', 'public');
