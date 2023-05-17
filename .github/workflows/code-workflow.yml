@@ -76,6 +76,8 @@ jobs:
     - name: Install composer dependencies
       run: |
         composer install --no-scripts
+    - name: Generate Key
+      run: php artisan key:generate
     - name: Run Tests
       run: php artisan test
       continue-on-error: false
