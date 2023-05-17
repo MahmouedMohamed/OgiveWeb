@@ -1,4 +1,4 @@
-name: Ogive CodeStyle
+name: Ogive Workflow
 
 on:
   workflow_dispatch:
@@ -15,7 +15,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    if: (github.ref == 'refs/heads/master' || github.ref == 'refs/head/dev')
     timeout-minutes: 30
     steps:
     - name: Checkout Code
@@ -53,7 +52,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    if: (github.ref == 'refs/heads/master' || github.ref == 'refs/head/dev')
     timeout-minutes: 30
     steps:
     - name: Checkout Code
@@ -78,6 +76,10 @@ jobs:
     - name: Install composer dependencies
       run: |
         composer install --no-scripts
+    - name: Copy .env
+      run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+    - name: Generate Key
+      run: php artisan key:generate
     - name: Run Tests
       run: php artisan test
       continue-on-error: false
