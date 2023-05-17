@@ -13,6 +13,7 @@ concurrency:
 jobs:
   Pint:
     runs-on: ubuntu-latest
+    if: (github.ref == 'refs/heads/dev')
     permissions:
       contents: write
     timeout-minutes: 30
@@ -50,6 +51,7 @@ jobs:
 
   Test:
     runs-on: ubuntu-latest
+    if: (github.ref == 'refs/heads/dev')
     permissions:
       contents: write
     timeout-minutes: 30
