@@ -3,8 +3,11 @@
 namespace App\Traits\ControllersTraits;
 
 use App\Exceptions\UserNotAuthorized;
+
 use App\Exceptions\UserNotFound;
+
 use App\Models\BaseUserModel;
+
 use App\Models\User;
 
 trait UserValidator
