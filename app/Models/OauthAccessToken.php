@@ -3,23 +3,26 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class OauthAccessToken extends Model
+class OauthAccessToken extends BaseModel
 {
     use HasFactory;
+
+    public $incrementing = false;
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'access_token',
-        'scopes',
-        'appType',
-        'accessType',
+        'id',
+        'owner_id',
+        'owner_type',
+        'app_type',
+        'access_type',
         'active',
-        'expires_at'
+        'expires_at',
     ];
 
     /**
@@ -29,15 +32,23 @@ class OauthAccessToken extends Model
      */
     protected $hidden = [
         'access_token',
-        // 'password',
-        // 'remember_token',
     ];
+
+    protected $casts = [
+        'expires_at' => 'datetime',
+    ];
+
     public function user()
     {
-        return $this->belongsTo(User::class);
+        if ($this->owner_type == 1) {
+            return $this->belongsTo(User::class, 'owner_id');
+        }
+
+        return $this->belongsTo(AnonymousUser::class, 'owner_id');
     }
-    public function refresh()
+
+    public function refreshToken($accessType, $appType)
     {
-        return $this->user->createAccessToken();
+        return $this->user->createAccessToken($accessType, $appType);
     }
 }

@@ -3,12 +3,13 @@
 namespace App\Policies;
 
 use App\Models\Ataa\AtaaAchievement;
-use App\Models\User;
-use Illuminate\Auth\Access\HandlesAuthorization;
 use App\Models\AvailableAbilities;
 use App\Models\BanTypes;
+use App\Models\BaseUserModel;
+use App\Models\User;
 use App\Traits\HasAbility;
 use App\Traits\HasNoBan;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class AtaaAchievementPolicy
 {
@@ -17,38 +18,32 @@ class AtaaAchievementPolicy
     /**
      * Determine whether the user can view any models.
      *
-     * @param  \App\Models\User  $user
      * @return mixed
      */
-    public function viewAny(User $user)
+    public function viewAny(BaseUserModel $user)
     {
-        //
+        return $this->hasAbility($user, AvailableAbilities::ViewAtaaAchievement)
+            && $this->hasNoBan($user, BanTypes::ViewAtaaAchievement);
     }
 
     /**
      * Determine whether the user can view the model.
      *
-     * @param  \App\Models\User  $user
      * @param  \App\Models\AtaaAchievement  $ataaAchievement
      * @return mixed
      */
-    public function view(User $user, AtaaAchievement $ataaAchievement)
+    public function view(BaseUserModel $user, AtaaAchievement $ataaAchievement)
     {
-        // dd($ataaAchievement->user -> id);
-        // dd($user -> id);
-        // if ($ataaAchievement)
-            return (($user->id == $ataaAchievement->user->id) || ($this->hasAbility($user, AvailableAbilities::ViewAtaaAchievement)
-                && $this->hasNoBan($user, BanTypes::ViewAtaaAchievement)));
-        // return true;
+        return ($user->id == $ataaAchievement->owner_id) || ($this->hasAbility($user, AvailableAbilities::ViewAtaaAchievement)
+            && $this->hasNoBan($user, BanTypes::ViewAtaaAchievement));
     }
 
     /**
      * Determine whether the user can create models.
      *
-     * @param  \App\Models\User  $user
      * @return mixed
      */
-    public function create(User $user)
+    public function create(BaseUserModel $user)
     {
         //
     }
@@ -56,11 +51,10 @@ class AtaaAchievementPolicy
     /**
      * Determine whether the user can update the model.
      *
-     * @param  \App\Models\User  $user
      * @param  \App\Models\AtaaAchievement  $ataaAchievement
      * @return mixed
      */
-    public function update(User $user, AtaaAchievement $ataaAchievement)
+    public function update(BaseUserModel $user, AtaaAchievement $ataaAchievement)
     {
         //
     }
@@ -68,11 +62,10 @@ class AtaaAchievementPolicy
     /**
      * Determine whether the user can freeze the model.
      *
-     * @param  \App\Models\User  $user
      * @param  \App\Models\AtaaAchievement  $ataaAchievement
      * @return mixed
      */
-    public function freeze(User $user, AtaaAchievement $ataaAchievement)
+    public function freeze(BaseUserModel $user, AtaaAchievement $ataaAchievement)
     {
         return $this->hasAbility($user, AvailableAbilities::FreezeAtaaAchievement)
             && $this->hasNoBan($user, BanTypes::FreezeAtaaAchievement);
@@ -81,11 +74,10 @@ class AtaaAchievementPolicy
     /**
      * Determine whether the user can defreeze the model.
      *
-     * @param  \App\Models\User  $user
      * @param  \App\Models\AtaaAchievement  $ataaAchievement
      * @return mixed
      */
-    public function defreeze(User $user, AtaaAchievement $ataaAchievement)
+    public function defreeze(BaseUserModel $user, AtaaAchievement $ataaAchievement)
     {
         return $this->hasAbility($user, AvailableAbilities::DefreezeAtaaAchievement)
             && $this->hasNoBan($user, BanTypes::DefreezeAtaaAchievement);
@@ -94,11 +86,10 @@ class AtaaAchievementPolicy
     /**
      * Determine whether the user can delete the model.
      *
-     * @param  \App\Models\User  $user
      * @param  \App\Models\AtaaAchievement  $ataaAchievement
      * @return mixed
      */
-    public function delete(User $user, AtaaAchievement $ataaAchievement)
+    public function delete(BaseUserModel $user, AtaaAchievement $ataaAchievement)
     {
         //
     }
@@ -106,7 +97,7 @@ class AtaaAchievementPolicy
     /**
      * Determine whether the user can restore the model.
      *
-     * @param  \App\Models\User  $user
+     * @param  \App\Models\BaseUserModel  $user
      * @param  \App\Models\AtaaAchievement  $ataaAchievement
      * @return mixed
      */
@@ -118,7 +109,7 @@ class AtaaAchievementPolicy
     /**
      * Determine whether the user can permanently delete the model.
      *
-     * @param  \App\Models\User  $user
+     * @param  \App\Models\BaseUserModel  $user
      * @param  \App\Models\AtaaAchievement  $ataaAchievement
      * @return mixed
      */

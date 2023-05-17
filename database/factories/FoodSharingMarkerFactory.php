@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\FoodSharingMarker;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class FoodSharingMarkerFactory extends Factory
 {
@@ -23,18 +24,20 @@ class FoodSharingMarkerFactory extends Factory
     public function definition()
     {
         $user = User::inRandomOrder()->first();
+
         return [
+            'id' => Str::uuid(),
             'user_id' => $user->id,
-            'type'=>'Food',
-            'description'=>$this->faker->text(5000),
-            'quantity'=>$this->faker->numberBetween(1,10),
-            'priority'=>$this->faker->numberBetween(1,10),
-            'latitude'=>$this->faker->numberBetween(1,90),
-            'longitude'=>$this->faker->numberBetween(1,90),
-            'existed'=>0,
-            'nationality'=>$user->nationality,
-            'created_at'=>$this->faker->dateTimeBetween('-4 week','now'),
-            'updated_at'=>$this->faker->dateTimeBetween('-4 week','now'),
+            'type' => 'Food',
+            'description' => $this->faker->text(5000),
+            'quantity' => $this->faker->numberBetween(1, 10),
+            'priority' => $this->faker->numberBetween(1, 10),
+            'latitude' => $this->faker->numberBetween(1, 90),
+            'longitude' => $this->faker->numberBetween(1, 90),
+            'existed' => 0,
+            'nationality' => $user->nationality,
+            'created_at' => $this->faker->dateTimeBetween('-4 week', 'now'),
+            'updated_at' => $this->faker->dateTimeBetween('-4 week', 'now'),
         ];
     }
 }

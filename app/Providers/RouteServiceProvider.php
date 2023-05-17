@@ -63,6 +63,7 @@ class RouteServiceProvider extends ServiceProvider
                         'Err_Flag' => true,
                         'message' => 'Too Many Attempts, Please Try Again Later.',
                     ];
+
                     return response()->json($response, 429);
                 });
         });

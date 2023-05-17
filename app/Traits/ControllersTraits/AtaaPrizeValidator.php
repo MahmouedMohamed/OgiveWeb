@@ -5,25 +5,23 @@ namespace App\Traits\ControllersTraits;
 use App\Exceptions\AtaaPrizeCreationActionNotFound;
 use App\Exceptions\AtaaPrizeNotFound;
 use App\Models\Ataa\AtaaPrize;
-use App\Traits\ValidatorLanguagesSupport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 trait AtaaPrizeValidator
 {
-    use ValidatorLanguagesSupport;
-
     /**
      * Returns If Online Transaction exists or not.
      *
-     * @param String $id
      * @return mixed
      */
-    public function prizeExists(String $id)
+    public function prizeExists(string $id)
     {
         $prize = AtaaPrize::find($id);
-        if (!$prize)
+        if (! $prize) {
             throw new AtaaPrizeNotFound();
+        }
+
         return $prize;
     }
 
@@ -33,8 +31,9 @@ trait AtaaPrizeValidator
         if ($sameLevelPrize) {
             //Check if admin want to replace or shift
             $adminChosenAction = $request['action'];
-            if ($adminChosenAction == null || ($adminChosenAction != 'replace' && $adminChosenAction != 'shift'))
+            if ($adminChosenAction == null || ($adminChosenAction != 'replace' && $adminChosenAction != 'shift')) {
                 throw new AtaaPrizeCreationActionNotFound();
+            }
             if ($adminChosenAction == 'replace') {
                 //replace => deactivate the old prize, create the new
                 $sameLevelPrize->deactivate();
@@ -45,12 +44,13 @@ trait AtaaPrizeValidator
                     //update their level
                     $prize->increaseLevel();
                     //update their name if they are auto filled
-                    if (str_contains($prize['name'], 'Level'))
+                    if (str_contains($prize['name'], 'Level')) {
                         $prize->updateName();
+                    }
                 }
             }
         }
-        return;
+
     }
 
     public function validatePrize(Request $request)
@@ -58,6 +58,7 @@ trait AtaaPrizeValidator
         $rules = [
             'userId' => 'required',
             'name' => 'required',
+            'arabic_name' => 'required',
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'required_markers_collected' => 'required|integer|min:0',
             'required_markers_posted' => 'required|integer|min:0',
@@ -65,9 +66,7 @@ trait AtaaPrizeValidator
             'to' => 'date|after:from',
             'level' => 'required|integer|min:1',
         ];
-        $messages = [];
-        if ($request['language'] != null)
-            $messages = $this->getValidatorMessagesBasedOnLanguage($request['language']);
-        return Validator::make($request->all(), $rules, $messages);
+
+        return Validator::make($request->all(), $rules);
     }
 }

@@ -4,35 +4,54 @@ namespace App\Http\Controllers\api\BreedMe;
 
 use App\Exceptions\UserNotAuthorized;
 use App\Exceptions\UserNotFound;
-use App\Helpers\ResponseHandler;
 use App\Http\Controllers\api\BaseController;
+use App\Http\Requests\StorePetRequest;
 use App\Models\BreedMe\Pet;
 use App\Models\User;
 use App\Traits\ControllersTraits\PetValidator;
 use App\Traits\ControllersTraits\UserValidator;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class PetController extends BaseController
 {
     use UserValidator, PetValidator;
+
     /**
      * Display a listing of the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {
+        // return $pets = Pet::Type('Cat')->get();
+        // return $pets = Pet::Filter(['type' => 'Dog'])->get();
         try {
-            $responseHandler = new ResponseHandler($request['language']);
             $user = $this->userExists($request['userId']);
             $this->userIsAuthorized($user, 'viewAny', Pet::class);
             $currentPage = request()->get('page', 1);
+            if ($request['type']) {
+                return $this->sendResponse(
+                    Pet::join('users', 'users.id', 'pets.created_by')
+                        ->join('profiles', 'users.profile_id', 'profiles.id')
+                        ->select(
+                            'pets.*',
+                            'users.id as userId',
+                            'users.name as userName',
+                            'users.email_verified_at as userEmailVerifiedAt',
+                            'profiles.image as userImage'
+                        )
+                        ->Type($request['type'])
+                        ->latest('pets.created_at')
+                        ->paginate(8),
+                    ''
+                );
+            }
+
             return $this->sendResponse(
-                Pet::join('users', 'users.id', 'pets.createdBy')
-                    ->join('profiles', 'users.profile', 'profiles.id')
+                Pet::join('users', 'users.id', 'pets.created_by')
+                    ->join('profiles', 'users.profile_id', 'profiles.id')
                     ->select(
                         'pets.*',
                         'users.id as userId',
@@ -40,15 +59,15 @@ class PetController extends BaseController
                         'users.email_verified_at as userEmailVerifiedAt',
                         'profiles.image as userImage'
                     )
-                    ->where('pets.nationality', '=', $user->nationality)
+                    ->where('pets.nationality', '=', $user->getNationalityValue())
                     ->latest('pets.created_at')
                     ->paginate(8),
                 ''
             );  ///Cases retrieved successfully.
         } catch (UserNotFound $e) {
-            return $this->sendError($responseHandler->words['UserNotFound']);
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
-            return $this->sendForbidden($responseHandler->words['PetViewingBannedMessage']);
+            return $this->sendForbidden(__('BreedMe.PetViewingBannedMessage'));
         }
     }
 
@@ -56,36 +75,39 @@ class PetController extends BaseController
      * Store a newly created resource in storage.
      *
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\StorePetRequest  $storePetRequest
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StorePetRequest $storePetRequest)
     {
         try {
-            $responseHandler = new ResponseHandler($request['language']);
-            $user = $this->userExists($request['createdBy']);
+            $user = $this->userExists($storePetRequest['createdBy']);
             //Validate Request
-            $validated = $this->validatePet($request, 'store');
-            if ($validated->fails()) {
-                return $this->sendError($responseHandler->words['InvalidData'], $validated->messages(), 400);   ///Invalid data
-            }
+            // $validated = $this->validatePet($request, 'store');
+            // if ($validated->fails()) {
+            //     return $this->sendError(__('General.InvalidData'), $validated->messages(), 400);   ///Invalid data
+            // }
             $this->userIsAuthorized($user, 'create', Pet::class);
-            $imagePath = $request['image']->store('pets', 'public');
+            $imagePath = $storePetRequest['image']->store('pets', 'public');
             $user->pets()->create([
-                'name' => $request['name'],
-                'age' => $request['age'],
-                'sex' => $request['sex'],
-                'type' => $request['type'],
-                'notes' => $request['notes'],
-                'image' => "/storage/" . $imagePath,
-                'nationality' => $user->nationality,
+                'name' => $storePetRequest['name'],
+                'age' => $storePetRequest['age'],
+                'sex' => $storePetRequest['sex'],
+                'type' => $storePetRequest['type'],
+                'breed' => $storePetRequest['breed'],
+                'notes' => $storePetRequest['notes'],
+                'image' => '/storage/'.$imagePath,
+                // 'nationality' => $user->nationality,
+                'nationality' => $storePetRequest['nationality'],
                 'status' => true,
+                'id' => Str::uuid(),
             ]);
-            return $this->sendResponse([], $responseHandler->words['PetCreationSuccessMessage']); ///Thank You For Your Contribution!
+
+            return $this->sendResponse([], __('BreedMe.PetCreationSuccessMessage')); ///Thank You For Your Contribution!
         } catch (UserNotFound $e) {
-            return $this->sendError($responseHandler->words['UserNotFound']);
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
-            return $this->sendForbidden($responseHandler->words['PetCreationBannedMessage']);
+            return $this->sendForbidden(__('BreedMe.PetCreationBannedMessage'));
         }
     }
 
@@ -103,30 +125,32 @@ class PetController extends BaseController
         if (is_null($pet)) {
             return $this->sendError('Pet not found.');
         }
+
         return $this->sendResponse($pet, 'Pet retrieved successfully.');
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Pet  $pet
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Pet $pet)
     {
+        return $pet;
+
         // $data=$request->all();
         $this->authorize('update', $pet);
         // if (!empty($request['user_id'])) {
         //     $user = User::find(request()->input('user_id'));
         //     if (!$user) {
-        //         return $this->sendError('User Not Found');
+        //         return $this->sendError(__('General.UserNotFound));
         //     }
         // }
         $pet = Pet::find($pet->id);
         if ($request->hasFile('image')) {
             $imagePath = $request['image']->store('uploads', 'public');
-            $pet->image = "/storage/" . $imagePath;
+            $pet->image = '/storage/'.$imagePath;
         }
         // $pet->user_id = $request['user_id'];
         $pet->name = $request['name'];
@@ -136,6 +160,7 @@ class PetController extends BaseController
         $pet->notes = $request['notes'];
 
         $pet->save();
+
         return response()->json([], 200);
     }
 
@@ -152,6 +177,7 @@ class PetController extends BaseController
             $pet->delete();
             Storage::delete('public/uploads'); // Change it to delete the image from public
             $pet->delete();
+
             return $this->sendResponse([], 'Pet deleted successfully.');
         } else {
             return $this->sendError('Pet not found.');

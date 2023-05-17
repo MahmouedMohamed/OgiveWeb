@@ -2,32 +2,30 @@
 
 namespace App\Traits\ControllersTraits;
 
-use App\Models\BreedMe\Pet;
 use App\Exceptions\PetNotFound;
 use App\Models\BreedMe\AvailablePetTypes;
-use App\Traits\ValidatorLanguagesSupport;
-use Illuminate\Support\Facades\Validator;
+use App\Models\BreedMe\Pet;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 trait PetValidator
 {
-    use ValidatorLanguagesSupport;
-
     /**
      * Returns If Pet exists or not.
      *
-     * @param String $id
      * @return mixed
      */
-    public function PetExists(String $id)
+    public function PetExists(string $id)
     {
         $Pet = Pet::find($id);
-        if (!$Pet)
+        if (! $Pet) {
             throw new PetNotFound();
+        }
+
         return $Pet;
     }
 
-    public function validatePet(Request $request, String $related)
+    public function validatePet(Request $request, string $related)
     {
         $rules = null;
         $availablePetTypes = new AvailablePetTypes();
@@ -38,9 +36,9 @@ trait PetValidator
                     'name' => 'required|max:255',
                     'age' => 'required|integer|max:100',
                     'sex' => 'required|in:male,female',
-                    'type' => 'required|in:' . $availablePetTypes->toString(),
+                    'type' => 'required|in:'.$availablePetTypes->toString(),
                     'notes' => 'max:1024',
-                    'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048e'
+                    'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048e',
                 ];
                 break;
             case 'update':
@@ -49,15 +47,13 @@ trait PetValidator
                     'name' => 'required|max:255',
                     'age' => 'required|integer|max:100',
                     'sex' => 'required|in:male,female',
-                    'type' => 'required|in:' . $availablePetTypes->toString(),
+                    'type' => 'required|in:'.$availablePetTypes->toString(),
                     'notes' => 'max:1024',
-                    'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048e'
+                    'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048e',
                 ];
                 break;
         }
-        $messages = [];
-        if ($request['language'] != null)
-            $messages = $this->getValidatorMessagesBasedOnLanguage($request['language']);
-        return Validator::make($request->all(), $rules, $messages);
+
+        return Validator::make($request->all(), $rules);
     }
 }

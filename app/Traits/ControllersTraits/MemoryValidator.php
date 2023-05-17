@@ -2,31 +2,30 @@
 
 namespace App\Traits\ControllersTraits;
 
-use App\Models\MemoryWall\Memory;
 use App\Exceptions\MemoryNotFound;
-use App\Traits\ValidatorLanguagesSupport;
-use Illuminate\Support\Facades\Validator;
+use App\Models\MemoryWall\Memory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 trait MemoryValidator
 {
-    use ValidatorLanguagesSupport;
-
     /**
      * Returns If Memory exists or not.
      *
-     * @param String $id
+     * @param  string  $id
      * @return mixed
      */
-    public function memoryExists(String $id)
+    public function memoryExists($id)
     {
         $memory = Memory::find($id);
-        if (!$memory)
+        if (! $memory) {
             throw new MemoryNotFound();
+        }
+
         return $memory;
     }
 
-    public function validateMemory(Request $request, String $related)
+    public function validateMemory(Request $request, string $related)
     {
         $rules = null;
         switch ($related) {
@@ -52,9 +51,7 @@ trait MemoryValidator
                 ];
                 break;
         }
-        $messages = [];
-        if ($request['language'] != null)
-            $messages = $this->getValidatorMessagesBasedOnLanguage($request['language']);
-        return Validator::make($request->all(), $rules, $messages);
+
+        return Validator::make($request->all(), $rules);
     }
 }

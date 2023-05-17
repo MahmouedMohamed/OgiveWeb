@@ -2,40 +2,39 @@
 
 namespace App\Traits\ControllersTraits;
 
+use App\ConverterModels\CaseType;
 use App\Exceptions\OfflineTransactionNotFound;
-use App\Models\Ahed\CaseType;
 use App\Models\Ahed\OfflineTransaction;
-use App\Traits\ValidatorLanguagesSupport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 trait OfflineTransactionValidator
 {
-    use ValidatorLanguagesSupport;
-
     /**
      * Returns If Offline Transaction exists or not.
      *
-     * @param String $id
      * @return mixed
      */
-    public function offlineTransactionExists(String $id)
+    public function offlineTransactionExists(string $id)
     {
         $offlineTransaction = OfflineTransaction::find($id);
-        if (!$offlineTransaction)
+        if (! $offlineTransaction) {
             throw new OfflineTransactionNotFound();
+        }
+
         return $offlineTransaction;
     }
-    public function validateTransaction(Request $request, String $related)
+
+    public function validateTransaction(Request $request, string $related)
     {
         $rules = null;
-        $caseType = new CaseType();
         switch ($related) {
             case 'store':
                 $rules = [
                     'needy' => 'required|max:255|exists:needies,id',
                     'amount' => 'required|numeric|min:1',
-                    'preferredSection' => 'required|in:' . $caseType->toString(),
+                    'preferredSection' => ['required', Rule::in(array_values(CaseType::$text_ar))],
                     'address' => 'required',
                     'phoneNumber' => 'required',
                     'startCollectDate' => 'required|date|before:endCollectDate',
@@ -46,7 +45,7 @@ trait OfflineTransactionValidator
                 $rules = [
                     'needy' => 'required|max:255|exists:needies,id',
                     'amount' => 'required|numeric|min:1',
-                    'preferredSection' => 'required|in:' . $caseType->toString(),
+                    'preferredSection' => ['required', Rule::in(array_values(CaseType::$text_ar))],
                     'address' => 'required',
                     'phoneNumber' => 'required',
                     'startCollectDate' => 'required|date|before:endCollectDate',
@@ -54,9 +53,7 @@ trait OfflineTransactionValidator
                 ];
                 break;
         }
-        $messages = [];
-        if ($request['language'] != null)
-            $messages = $this->getValidatorMessagesBasedOnLanguage($request['language']);
-        return Validator::make($request->all(), $rules, $messages);
+
+        return Validator::make($request->all(), $rules);
     }
 }

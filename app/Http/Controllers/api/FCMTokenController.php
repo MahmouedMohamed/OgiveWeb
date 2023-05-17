@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Http\Controllers\api\BaseController;
 use App\Models\TimeCatcher\FCMToken;
 use Illuminate\Http\Request;
 
@@ -15,18 +14,17 @@ class FCMTokenController extends BaseController
      */
     public function index()
     {
-        //
+        return $this->sendError('Not Implemented');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        //
+        return $this->sendError('Not Implemented');
     }
 
     /**
@@ -37,19 +35,18 @@ class FCMTokenController extends BaseController
      */
     public function show(FCMToken $fCMToken)
     {
-        //
+        return $this->sendError('Not Implemented');
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\FCMToken  $fCMToken
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, FCMToken $fCMToken)
     {
-        //
+        return $this->sendError('Not Implemented');
     }
 
     /**
@@ -60,6 +57,6 @@ class FCMTokenController extends BaseController
      */
     public function destroy(FCMToken $fCMToken)
     {
-        //
+        return $this->sendError('Not Implemented');
     }
 }

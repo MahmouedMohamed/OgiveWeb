@@ -2,6 +2,8 @@
 
 namespace App\Observers;
 
+use App\Events\FoodSharingMarkerCreated;
+use App\Jobs\AtaaAchievementCalculator;
 use App\Models\Ataa\FoodSharingMarker;
 use Illuminate\Support\Facades\Cache;
 
@@ -15,6 +17,10 @@ class FoodSharingMarkersObserver
      */
     public function created(FoodSharingMarker $foodSharingMarker)
     {
+        FoodSharingMarkerCreated::dispatch($foodSharingMarker);
+        // dd($foodSharingMarker->user);
+        AtaaAchievementCalculator::dispatch($foodSharingMarker->user, $foodSharingMarker, 'Create');
+
         return Cache::forget('foodsharingmarkers');
     }
 

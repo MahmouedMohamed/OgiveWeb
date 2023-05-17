@@ -14,7 +14,8 @@ class CreateUsersTable extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->uuid('id');
+            $table->primary('id');
             $table->string('name');
             $table->string('user_name')->unique();
             $table->string('email')->unique();
@@ -22,12 +23,16 @@ class CreateUsersTable extends Migration
             $table->string('phone_number')->nullable();
             $table->string('address')->nullable();
             $table->string('nationality');
-            $table->unsignedBigInteger('profile')->nullable();
+            $table->string('profile_id');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->foreign('profile')->references('id')->on('profiles')->onDelete('cascade');
             $table->rememberToken();
             $table->timestamps();
+            $table->foreign('profile_id')
+                ->references('id')
+                ->on('profiles')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 

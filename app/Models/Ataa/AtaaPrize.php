@@ -7,39 +7,49 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class AtaaPrize extends Model
 {
     use HasFactory;
+
+    public $incrementing = false;
+
     protected $fillable = [
-        'createdBy', 'name', 'image', 'required_markers_collected',
+        'id', 'created_by', 'name', 'image', 'required_markers_collected',
         'required_markers_posted', 'from', 'to',
-        'level', 'active'
+        'level', 'active', 'arabic_name',
     ];
+
     public function winners()
     {
         return $this->belongsToMany(User::class, 'user_ataa_acquired_prizes', 'prize_id', 'user_id')->withTimestamps();
     }
+
     public function activate()
     {
         $this->active = true;
         $this->save();
     }
+
     public function deactivate()
     {
         $this->active = false;
         $this->save();
     }
+
     public function increaseLevel()
     {
         $this->level = $this->level + 1;
         $this->save();
     }
+
     public function updateName()
     {
-        $this->name = "Level " . $this->level . " Prize";
+        $this->name = 'Level '.$this->level.' Prize';
         $this->save();
     }
+
     //Returns Active Prizes Not Acquired By User "Same Level Checker"
     public static function notAcquiredByUser(User $user)
     {
@@ -55,11 +65,14 @@ class AtaaPrize extends Model
             )
             ->get();
     }
+
     public static function seedHigherPrize(AtaaPrize $highestAtaaPrize)
     {
         return AtaaPrize::create([
-            'createdBy' => null,
-            'name' =>  "Level " . (((int) $highestAtaaPrize['level']) + 1) . " Prize",
+            'id' => Str::uuid(),
+            'created_by' => null,
+            'name' => 'Level '.(((int) $highestAtaaPrize['level']) + 1).' Prize',
+            'arabic_name' => 'جائزة مستوي '.(((int) $highestAtaaPrize['level']) + 1),
             'image' => null,
             'required_markers_collected' => $highestAtaaPrize['required_markers_collected'] + 10,
             'required_markers_posted' => $highestAtaaPrize['required_markers_posted'] + 10,
@@ -68,13 +81,16 @@ class AtaaPrize extends Model
             'level' => $highestAtaaPrize['level'] + 1,
         ]);
     }
-    public static function initiatePrize(String $method)
+
+    public static function initiatePrize(string $method)
     {
         switch ($method) {
             case 'Create':
                 AtaaPrize::create([
-                    'createdBy' => null,
-                    'name' =>  "Level 1 Prize",
+                    'id' => Str::uuid(),
+                    'created_by' => null,
+                    'name' => 'Level 1 Prize',
+                    'arabic_name' => 'جائزة مستوي 1',
                     'image' => null,
                     'required_markers_collected' => 0,
                     'required_markers_posted' => 5,
@@ -85,8 +101,9 @@ class AtaaPrize extends Model
                 break;
             case 'Collect':
                 AtaaPrize::create([
-                    'createdBy' => null,
-                    'name' =>  "Level 1 Prize",
+                    'id' => Str::uuid(),
+                    'created_by' => null,
+                    'name' => 'Level 1 Prize',
                     'image' => null,
                     'required_markers_collected' => 5,
                     'required_markers_posted' => 0,
@@ -99,6 +116,7 @@ class AtaaPrize extends Model
                 break;
         }
     }
+
     public static function prizesReview(User $user)
     {
         //Get won prize by user where required is bigger than achieved after modification
@@ -110,6 +128,6 @@ class AtaaPrize extends Model
                 '=',
                 'user_ataa_acquired_prizes.prize_id'
             )->where('required_markers_posted', '>', $user->ataaAchievement->markers_posted)
-            ->delete();
+                ->delete();
     }
 }

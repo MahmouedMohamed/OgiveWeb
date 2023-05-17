@@ -2,35 +2,30 @@
 
 namespace App\Http\Controllers\api\Ataa;
 
-use App\Http\Controllers\api\BaseController;
-use App\Exceptions\AtaaAchievementNotFound;
 use App\Exceptions\UserNotAuthorized;
 use App\Exceptions\UserNotFound;
+use App\Http\Controllers\api\BaseController;
 use App\Models\Ataa\AtaaAchievement;
-use Illuminate\Http\Request;
-use App\Helpers\ResponseHandler;
-use App\Traits\ControllersTraits\AtaaAchievementValidator;
 use App\Traits\ControllersTraits\UserValidator;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class AtaaAchievementController extends BaseController
 {
-    use UserValidator, AtaaAchievementValidator;
+    use UserValidator;
+
     /**
      * Display the specified resource.
-     * @param  \Illuminate\Http\Request  $request
-     * @param  String  $userId
+     *
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, String $userId)
+    public function show(Request $request)
     {
         try {
-            $responseHandler = new ResponseHandler($request['language']);
             //Check User exists
-            $user = $this->userExists($userId);
-            $requesterUser = $this->userExists($request['requesterId']);
+            $user = $request->user;
             //if Ataa Achievement is null -> Create one with this user to return a results
-            $this->userIsAuthorized($requesterUser, 'view', $user->ataaAchievement ?? ((new AtaaAchievement())->user()->associate($user)));
+            $this->userIsAuthorized($user, 'view', $user->ataaAchievement ?? ((new AtaaAchievement())->user()->associate($user)));
 
             $markersCollected = $user->ataaAchievement->markers_collected ?? 0;
             $markersPosted = $user->ataaAchievement->markers_posted ?? 0;
@@ -56,18 +51,18 @@ class AtaaAchievementController extends BaseController
                 'markers_collected' => $markersCollected,
                 'markers_posted' => $markersPosted,
                 'current_level' => $highestPrizeAcquired,
-                'latest_badge' => $latestBadgeAcquired
+                'latest_badge' => $latestBadgeAcquired,
             ];
 
-            return $this->sendResponse($response, 'User Achievement Returned Successfully');
+            return $this->sendResponse($response, __('General.DataRetrievedSuccessMessage'));
         } catch (UserNotFound $e) {
-            return $this->sendError($responseHandler->words['UserNotFound']);
-        } catch (AtaaAchievementNotFound $e) {
-            return $this->sendError($responseHandler->words['AchievementNotFound']);
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
-            if ($user->ataaAchievement)
-                $e->report($requesterUser, 'AccessAtaaAchievement', $user->ataaAchievement);
-            return $this->sendForbidden($responseHandler->words['ShowAchievementForbidden']);
+            if ($user->ataaAchievement) {
+                $e->report($request->user, 'AccessAtaaAchievement', $user->ataaAchievement);
+            }
+
+            return $this->sendForbidden(__('Ataa.ShowAchievementForbidden'));
         }
     }
 }

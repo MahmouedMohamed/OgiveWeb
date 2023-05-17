@@ -4,8 +4,8 @@ namespace Database\Factories;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 class UserFactory extends Factory
 {
@@ -24,20 +24,22 @@ class UserFactory extends Factory
     public function definition()
     {
         $availableNationalities = ['Australia', 'Palestine', 'Syria', 'USA', 'Egypt'];
-        $availableGender = ['male','female'];
+        $availableGender = ['male', 'female'];
         $userName = $this->faker->unique()->name.'2';
+
         return [
+            'id' => Str::uuid(),
             'name' => $this->faker->name,
             'user_name' => $userName,
-            'gender'=> Arr::random($availableGender),
+            'gender' => Arr::random($availableGender),
             'phone_number' => $this->faker->phoneNumber(),
             'email' => "$userName@ogive.com",
             // 'email' => $this->faker->unique()->safeEmail,
             'email_verified_at' => now(),
-            "nationality" => Arr::random($availableNationalities),
+            'nationality' => Arr::random($availableNationalities),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
-            'created_at' => $this->faker->dateTimeBetween('-5 years','now')
+            'created_at' => $this->faker->dateTimeBetween('-5 years', 'now'),
         ];
     }
 }

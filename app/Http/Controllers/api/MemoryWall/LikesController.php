@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\api\MemoryWall;
 
-use App\Exceptions\MemoryNotFound;
-use App\Http\Controllers\api\BaseController;
 use App\Exceptions\UserNotAuthorized;
-use App\Exceptions\UserNotFound;
-use App\Helpers\ResponseHandler;
+use App\Http\Controllers\api\BaseController;
+use App\Http\Requests\CreateLikeRequest;
+use App\Http\Resources\LikePaginationResource;
 use App\Models\MemoryWall\Like;
+use App\Models\MemoryWall\Memory;
 use App\Traits\ControllersTraits\MemoryValidator;
 use App\Traits\ControllersTraits\UserValidator;
 use Illuminate\Http\Request;
@@ -15,63 +15,55 @@ use Illuminate\Http\Request;
 class LikesController extends BaseController
 {
     use UserValidator, MemoryValidator;
+
     /**
      * Display a listing of the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {
         try {
-            $responseHandler = new ResponseHandler($request['language']);
-            $user = $this->userExists($request['userId']);
-            $this->userIsAuthorized($user, 'viewAny', Like::class);
+            $this->userIsAuthorized($request->user, 'viewAny', Like::class);
+
             return $this->sendResponse(
-                $user->likes()->with('memory')->select(
-                    [
-                        'userId',
-                        'memoryId'
-                    ]
-                )
-                    ->paginate(8),
+                new LikePaginationResource(
+                    $request->user->likes()->with('memory')
+                        ->paginate(8)
+                ),
                 ''
             );
-        } catch (UserNotFound $e) {
-            return $this->sendError($responseHandler->words['UserNotFound']);
         } catch (UserNotAuthorized $e) {
-            return $this->sendForbidden($responseHandler->words['LikeViewingBannedMessage']);
+            return $this->sendForbidden(__('MemoryWall.LikeViewingBannedMessage'));
         }
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateLikeRequest $request, Memory $memory)
     {
         try {
-            $responseHandler = new ResponseHandler($request['language']);
-            $user = $this->userExists($request['userId']);
-            $memory = $this->memoryExists($request['memoryId']);
-            $this->userIsAuthorized($user, 'create', Like::class);
-            $like = Like::where('userId', '=', $user->id)
-                ->where('memoryId', '=', $memory->id)
+            $this->userIsAuthorized($request->user, 'create', Like::class);
+            $like = Like::where('user_id', '=', $request->user->id)
+                ->where('memory_id', '=', $memory->id)
                 ->first();
-            if (!$like) {
-                $user->likes()->create([
-                    'memoryId' => $memory->id
+            if (! $like) {
+                $request->user->likes()->create([
+                    'memory_id' => $memory->id,
                 ]);
+            } else {
+                $like->update(['type' => $request->type]);
             }
-            return $this->sendResponse([], $responseHandler->words['LikeCreationSuccessMessage']); ///Thank You For Your Contribution!
-        } catch (UserNotFound $e) {
-            return $this->sendError($responseHandler->words['UserNotFound']);
-        } catch (MemoryNotFound $e) {
-            return $this->sendError($responseHandler->words['MemoryNotFound']);
+
+            return $this->sendResponse(
+                [],
+                __('MemoryWall.LikeCreationSuccessMessage'),
+            );
         } catch (UserNotAuthorized $e) {
-            return $this->sendForbidden($responseHandler->words['LikeCreationBannedMessage']);
+            return $this->sendForbidden(__('MemoryWall.LikeCreationBannedMessage'));
         }
     }
 
@@ -79,10 +71,9 @@ class LikesController extends BaseController
      * Display the specified resource.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(int $id)
+    public function show(Like $like)
     {
         return $this->sendError('Not Implemented', '', 404);
     }
@@ -90,11 +81,9 @@ class LikesController extends BaseController
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, int $id)
+    public function update(Request $request, string $id)
     {
         return $this->sendError('Not Implemented', '', 404);
     }
@@ -102,29 +91,24 @@ class LikesController extends BaseController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  Request  $request
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, int $id)
+    public function destroy(Request $request, Memory $memory)
     {
         try {
-            $responseHandler = new ResponseHandler($request['language']);
-            $memory = $this->memoryExists($id);
-            $user = $this->userExists($request['userId']);
-            $like = Like::where('userId', '=', $user->id)
-                ->where('memoryId', '=', $memory->id);
+            $like = Like::where('user_id', '=', $request->user->id)
+                ->where('memory_id', '=', $memory->id);
             if ($like->first() != null) {
-                $this->userIsAuthorized($user, 'delete', $like->first());
+                $this->userIsAuthorized($request->user, 'delete', $like->first());
                 $like->delete();
             }
-            return $this->sendResponse([], $responseHandler->words['LikeDeleteSuccessMessage']);  ///Needy Updated Successfully!
-        } catch (MemoryNotFound $e) {
-            return $this->sendError($responseHandler->words['MemoryNotFound']);
-        } catch (UserNotFound $e) {
-            return $this->sendError($responseHandler->words['UserNotFound']);
+
+            return $this->sendResponse(
+                [],
+                __('MemoryWall.LikeDeleteSuccessMessage'),
+            );
         } catch (UserNotAuthorized $e) {
-            return $this->sendForbidden($responseHandler->words['LikeDeletionForbiddenMessage']);
+            return $this->sendForbidden(__('MemoryWall.LikeDeletionForbiddenMessage'));
         }
     }
 }

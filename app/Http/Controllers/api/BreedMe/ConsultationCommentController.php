@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\api\BreedMe;
 
 use App\Http\Controllers\api\BaseController;
-
 use App\Models\BreedMe\ConsultationComment;
 use Illuminate\Http\Request;
 
@@ -17,7 +16,8 @@ class ConsultationCommentController extends BaseController
     public function index()
     {
         $comments = ConsultationComment::all();
-        return $this->sendResponse($comments, "Comments are retrieved Successfully");
+
+        return $this->sendResponse($comments, 'Comments are retrieved Successfully');
     }
 
     /**
@@ -27,13 +27,12 @@ class ConsultationCommentController extends BaseController
      */
     public function create()
     {
-        //
+        return $this->sendError('Not Implemented');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -49,6 +48,7 @@ class ConsultationCommentController extends BaseController
         $comment->consultation_id = $request['consultation_id'];
         $comment->description = $request['description'];
         $comment->save();
+
         return $this->sendResponse([], 'Comment is  added successfully.');
     }
 
@@ -61,9 +61,9 @@ class ConsultationCommentController extends BaseController
     public function show($id)
     {
         $comment = ConsultationComment::find($id);
-        if($comment) {
+        if ($comment) {
             return $this->sendResponse($comment, 'The Comment is retrieved successfully');
-        }else {
+        } else {
             return $this->sendError('The Consultation not found.');
         }
     }
@@ -76,13 +76,12 @@ class ConsultationCommentController extends BaseController
      */
     public function edit(ConsultationComment $consultationComment)
     {
-        //
+        return $this->sendError('Not Implemented');
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\ConsultationComment  $consultationComment
      * @return \Illuminate\Http\Response
      */
@@ -98,6 +97,7 @@ class ConsultationCommentController extends BaseController
         $comment->consultation_id = $request['consultation_id'];
         $comment->description = $request['description'];
         $comment->save();
+
         return $this->sendResponse($comment, 'Comment is updated successfully.');
     }
 
@@ -110,10 +110,11 @@ class ConsultationCommentController extends BaseController
     public function destroy($id)
     {
         $comment = ConsultationComment::find($id);
-        if($comment) {
+        if ($comment) {
             $comment->delete();
+
             return $this->sendResponse([], 'The Comment is deleted successfully');
-        }else {
+        } else {
             return $this->sendError('The Consultation not found.');
         }
     }

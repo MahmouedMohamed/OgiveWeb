@@ -14,18 +14,22 @@ class CreateMemoryTable extends Migration
     public function up()
     {
         Schema::create('memories', function (Blueprint $table) {
-            $table->bigIncrements('id')->index();
-            $table->unsignedBigInteger('createdBy');
-            $table->string('personName');
-            $table->date('birthDate');
-            $table->date('deathDate');
-	        $table->string('brief',300);
-            $table->text('lifeStory');
+            $table->uuid('id');
+            $table->primary('id');
+            $table->string('created_by');
+            $table->string('person_name');
+            $table->date('birth_date');
+            $table->date('death_date');
+            $table->string('brief', 300);
+            $table->text('life_story');
             $table->string('image');
             $table->string('nationality');
             $table->timestamps();
-            $table->foreign('createdBy')->references('id')->on('users')->onDelete('cascade');
-
+            $table->foreign('created_by')
+                ->references('id')
+                ->on('users')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 

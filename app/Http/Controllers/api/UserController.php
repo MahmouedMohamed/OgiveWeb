@@ -2,58 +2,83 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Exceptions\LoginParametersNotFound;
+use App\ConverterModels\CaseType;
 use App\Exceptions\UserNotAuthorized;
-use App\Http\Controllers\API\BaseController as BaseController;
+use App\Http\Requests\AnonymousLoginRequest;
+use App\Http\Requests\LoginRequest;
+use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\UpdateImageRequest;
+use App\Http\Requests\UpdateProfileRequest;
+use App\Http\Resources\ProfileResource;
+use App\Http\Resources\UserResource;
 use App\Models\Ahed\Needy;
 use App\Models\Ahed\OfflineTransaction;
 use App\Models\Ahed\OnlineTransaction;
-use App\Models\Ahed\CaseType;
-use App\Models\Profile;
-use Illuminate\Support\Facades\Auth;
+use App\Models\AnonymousUser;
 use App\Models\User;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Hash;
-
-use Illuminate\Http\Request;
-
 use App\Traits\ControllersTraits\LoginValidator;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends BaseController
 {
     use LoginValidator;
-    public function __construct()
+
+    private function getAuthenticatedUser(): User
     {
-        $this->content = array();
+        return Auth::user();
     }
-    public function login(Request $request)
+
+    public function anonymousLogin(AnonymousLoginRequest $request)
     {
         try {
-            $this->validateLoginParameters($request);
-            if (Auth::attempt(['email' => $request['email'], 'password' => $request['password']])) {
-                $user = Auth::user();
-                $this->userBanValidator($user);
-                if ($request['appType'] == "TimeCatcher")
-                    $user->fcmTokens()->create([
-                        'token' => request('fcmToken')
-                    ]);
-                $tokenDetails = $user->createAccessToken($request['accessType'], $request['appType']);
-                $this->content['token'] =
-                    $tokenDetails['accessToken'];
-                $this->content['expiryDate'] =
-                    $tokenDetails['expiryDate'];
+            $anonymousUser = AnonymousUser::where('device_id', '=', $request['deviceId'])->first();
+            if ($anonymousUser) {
+                $this->userBanValidator($anonymousUser);
+            } else {
+                $anonymousUser = AnonymousUser::create([
+                    'device_id' => $request['deviceId'],
+                    'nationality' => $request['nationality'],
+                ]);
+            }
 
-                $this->content['user'] = Auth::user();
-                $profile = Profile::findOrFail(Auth::user()->profile);
-                $this->content['profile'] = $profile;
-                return $this->sendResponse($this->content, 'Data Retrieved Successfully');
+            $tokenDetails = $anonymousUser->createAccessToken($request['accessType'], $request['appType']);
+
+            return $this->sendResponse([
+                'token' => $tokenDetails['token'],
+                'expiryDate' => $tokenDetails['expiryDate'],
+                'user' => $anonymousUser,
+            ], __('General.DataRetrievedSuccessMessage'));
+        } catch (UserNotAuthorized $e) {
+            return $this->sendForbidden($e->getMessage());
+        }
+    }
+
+    public function login(LoginRequest $request)
+    {
+        try {
+            if (Auth::attempt(['email' => $request['email'], 'password' => $request['password']])) {
+                $user = $this->getAuthenticatedUser();
+                $this->userBanValidator($user);
+                if ($request['appType'] == 'TimeCatcher') {
+                    $user->fcmTokens()->create([
+                        'token' => request('fcmToken'),
+                    ]);
+                }
+                $tokenDetails = $user->createAccessToken($request['accessType'], $request['appType']);
+
+                return $this->sendResponse([
+                    'token' => $tokenDetails['accessToken'],
+                    'expiryDate' => $tokenDetails['expiryDate'],
+                    'user' => UserResource::make($user),
+                    'profile' => ProfileResource::make($user->profile),
+                ], __('General.DataRetrievedSuccessMessage'));
             } else {
                 return $this->sendError('The email or password is incorrect.');
             }
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden($e->getMessage());
-        } catch (LoginParametersNotFound $e) {
-            return $this->sendError("Parameter " . $e->getMessage() . " Not Specified");
         }
     }
 
@@ -62,21 +87,10 @@ class UserController extends BaseController
         return response()->json(['user' => Auth::user()]);
     }
 
-    public function register(Request $request)
+    //ToDo: Move to Job
+    public function register(RegisterRequest $registerRequest)
     {
-        $data = request()->all();
-        $validated = $this->validateUser($request);
-        if ($validated->fails()) {
-            return $this->sendError('Invalid data', $validated->messages(), 400);
-        }
-        $profile = Profile::create([]);
-        $image = $request['image'];
-        if ($image != null) {
-            $imagePath = $image->store('users', 'public');
-            $profile->image = "/storage/" . $imagePath;
-            $profile->save();
-        }
-        User::create([
+        $user = User::create([
             'name' => request('name'),
             'user_name' => request('user_name'),
             'email' => request('email'),
@@ -85,165 +99,127 @@ class UserController extends BaseController
             'phone_number' => request('phone_number'),
             'address' => request('address'),
             'nationality' => request('nationality'),
-            'profile' => $profile->id
         ]);
-        return $this->sendResponse('', 'User Created Successfully');
-    }
-
-    public function validateUser(Request $request)
-    {
-        return Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'user_name' => 'required|string|max:255|unique:users',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8',
-            'gender' => 'required|in:male,female',
-            //|regex:^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$
-            'phone_number' => 'required',
-            'address' => 'string|max:1024',
-            'image' => 'image',
-            'nationality' => 'required|string'
-        ], [
-            'required' => 'This field is required',
-            'min' => 'Invalid size, min size is :min',
-            'max' => 'Invalid size, max size is :max',
-            'integer' => 'Invalid type, only numbers are supported',
-            'in' => 'Invalid type, support values are :values',
-            'image' => 'Invalid type, only images are accepted',
-            'mimes' => 'Invalid type, supported types are :values',
-            'numeric' => 'Invalid type, only numbers are supported',
-        ]);
-    }
-
-    public function getAhedAchievementRecords($id)
-    {
-        $user = User::find($id);
-        if ($user) {
-            ///Get Number of needies that user helped
-            $neediesApprovedForUser = Needy::where('createdBy', '=', $user->id)->where('approved', '=', '1')->get()->pluck('id')->unique()->toArray();
-            $offlineDonationsForUser = OfflineTransaction::where('giver', '=', $user->id)->where('collected', '=', '1')->get();
-            $onlineDonationsForUser = OnlineTransaction::where('giver', '=', $user->id)->get();
-
-            $neediesDonatedOfflineFor =
-                $offlineDonationsForUser->pluck('needy')->unique()->toArray();
-            $neediesDonatedOnlineFor =
-                $onlineDonationsForUser->pluck('needy')->unique()->toArray();
-            $neediesHelped = collect(array_merge($neediesApprovedForUser, $neediesDonatedOfflineFor, $neediesDonatedOnlineFor));
-            $this->content['NumberOfNeediesUserHelped'] = $neediesHelped->unique()->count();
-
-            ///Get Value of all transactions
-            $valueOfOfflineDonation = $offlineDonationsForUser
-                ->pluck('amount')->toArray();
-            $valueOfOnlineDonation = $onlineDonationsForUser
-                ->pluck('amount')->toArray();
-            $valueOfDonation = collect(array_merge($valueOfOfflineDonation, $valueOfOnlineDonation));
-            $this->content['ValueOfDonation'] = $valueOfDonation->sum();
+        $profile = $user->profile()->create([]);
+        $user->account()->create([]);
+        $user->settings()->create([]);
+        $image = $registerRequest['image'];
+        if ($image != null) {
+            $imagePath = $image->store('users', 'public');
+            $profile->image = '/storage/'.$imagePath;
+            $profile->save();
         }
 
-        $activeNeedies = Needy::where('approved', '=', '1')->get();
+        return $this->sendResponse(UserResource::make($user), 'User Created Successfully');
+    }
+
+    public function getAhedAchievementRecords(Request $request)
+    {
+        ///Get Number of needies that user helped
+        $neediesApprovedForUser = Needy::where('created_by', '=', $request->user->id)->approved()->get()->pluck('id')->unique()->toArray();
+        $offlineDonationsForUser = OfflineTransaction::where('giver', '=', $request->user->id)->where('collected', '=', '1')->get();
+        $onlineDonationsForUser = OnlineTransaction::where('giver', '=', $request->user->id)->get();
+
+        $neediesDonatedOfflineFor =
+            $offlineDonationsForUser->pluck('needy')->unique()->toArray();
+        $neediesDonatedOnlineFor =
+            $onlineDonationsForUser->pluck('needy')->unique()->toArray();
+        $neediesHelped = collect(array_merge($neediesApprovedForUser, $neediesDonatedOfflineFor, $neediesDonatedOnlineFor));
+
+        ///Get Value of all transactions
+        $valueOfOfflineDonation = $offlineDonationsForUser
+            ->pluck('amount')->toArray();
+        $valueOfOnlineDonation = $onlineDonationsForUser
+            ->pluck('amount')->toArray();
+        $valueOfDonation = collect(array_merge($valueOfOfflineDonation, $valueOfOnlineDonation));
+
+        $activeNeedies = Needy::approved()->get();
 
         ///All Needies satisfied
-        $neediesSatisfied = $activeNeedies->where('satisfied', '=', '1')->pluck('id')->unique()->count();
-        $this->content['NeediesSatisfied'] = $neediesSatisfied;
+        $neediesNotSatisfied = $activeNeedies->where('satisfied', '=', 0)->count();
+        $neediesSatisfied = $activeNeedies->where('satisfied', '=', 1)->count();
 
-        $caseType = new CaseType();
-        ///All Needies safisfied with إيجاد مسكن مناسب
-        $neediesFoundTheirNewHome = $activeNeedies->where('satisfied', '=', '1')->where('type', '=', $caseType->types[0])->pluck('id')->unique()->count();
-        $this->content['NeediesFoundTheirNewHome'] = $neediesFoundTheirNewHome;
-        ///All Needies safisfied with تحسين مستوي المعيشة
-        $neediesUpgradedTheirStandardOfLiving = $activeNeedies->where('satisfied', '=', '1')->where('type', '=', $caseType->types[1])->pluck('id')->unique()->count();
-        $this->content['NeediesUpgradedTheirStandardOfLiving'] = $neediesUpgradedTheirStandardOfLiving;
-        ///All Needies safisfied with تجهيز عرائس
-        $neediesHelpedToPrepareForPride = $activeNeedies->where('satisfied', '=', '1')->where('type', '=', $caseType->types[2])->pluck('id')->unique()->count();
-        $this->content['NeediesHelpedToPrepareForPride'] = $neediesHelpedToPrepareForPride;
-        ///All Needies safisfied with ديون
-        $neediesHelpedToPayDept = $activeNeedies->where('satisfied', '=', '1')->where('type', '=', $caseType->types[3])->pluck('id')->unique()->count();
-        $this->content['NeediesHelpedToPayDept'] = $neediesHelpedToPayDept;
-        ///All Needies safisfied with علاج
-        $neediesHelpedToCure = $activeNeedies->where('satisfied', '=', '1')->where('type', '=', $caseType->types[4])->pluck('id')->unique()->count();
-        $this->content['NeediesHelpedToCure'] = $neediesHelpedToCure;
+        $activeNeedies = $activeNeedies->where('satisfied', '=', 1)->groupBy('type');
 
-        ///neediesNotSatisfied
-        $neediesNotSatisfied = Needy::where('satisfied', '=', '0')->get()->pluck('id')->unique()->count();
-        $this->content['NeediesNotSatisfied'] = $neediesNotSatisfied;
-        return $this->sendResponse($this->content, 'Achievement Records Returned Successfully');
+        foreach (CaseType::$text as $key => $value) {
+            $data['NeediesHelpedWith'.str_replace(' ', '', $value)] = ($activeNeedies[$value] ?? collect([]))->count();
+        }
+
+        return $this->sendResponse(array_merge([
+            'NumberOfNeediesUserHelped' => $neediesHelped->unique()->count(),
+            'ValueOfDonation' => $valueOfDonation->sum(),
+            'NeediesSatisfied' => $neediesSatisfied,
+            'NeediesNotSatisfied' => $neediesNotSatisfied,
+        ], $data), 'Achievement Records Returned Successfully');
     }
 
-    public function updateProfilePicture(Request $request, $id)
+    /**
+     * Update Profile Picture.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function updateProfilePicture(UpdateImageRequest $request, User $user)
     {
-        $user = User::find($id);
-        if ($user == null) {
-            return $this->sendError('المستخدم غير موجود'); ///Case Not Found
-        }
-        if ($request['userId'] != $id)
-            return $this->sendForbidden('أنت لا تملك صلاحية تعديل هذا الملف الشخصي');  ///You aren\'t authorized to delete this transaction.
+        if ($user->id != $request->user->id) {
+            return $this->sendForbidden('أنت لا تملك صلاحية تعديل هذا الملف الشخصي');
+        }  ///You aren\'t authorized to delete this transaction.
 
-        $validated = $this->validateImage($request);
-        if ($validated->fails())
-            return $this->sendError('Invalid data', $validated->messages(), 400);
-
-        $profile = Profile::find($user->profile);
+        $profile = $user->profile;
         if ($profile->image == null) {
             $imagePath = $request['image']->store('users', 'public');
-            $profile->image = "/storage/" . $imagePath;
+            $profile->image = '/storage/'.$imagePath;
             $profile->save();
         } else {
             $imagePath = $request['image']->storeAs('public/users', last(explode('/', $profile->image)));
         }
+
         return $this->sendResponse($profile->image, 'تم إضافة الصورة بنجاح');    ///Image Updated Successfully!
 
     }
 
-    public function updateCoverPicture(Request $request, $id)
+    /**
+     * Update Cover Picture.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function updateCoverPicture(UpdateImageRequest $request, User $user)
     {
-        $user = User::find($id);
-        if ($user == null) {
-            return $this->sendError('المستخدم غير موجود'); ///Case Not Found
-        }
-        if ($request['userId'] != $id)
-            return $this->sendForbidden('أنت لا تملك صلاحية تعديل هذا الملف الشخصي');  ///You aren\'t authorized to delete this transaction.
+        if ($user->id != $request->user->id) {
+            return $this->sendForbidden('أنت لا تملك صلاحية تعديل هذا الملف الشخصي');
+        }  ///You aren\'t authorized to delete this transaction.
 
-        $validated = $this->validateImage($request);
-        if ($validated->fails())
-            return $this->sendError('Invalid data', $validated->messages(), 400);
-
-        $profile = Profile::find($user->profile);
+        $profile = $user->profile;
         if ($profile->cover == null) {
             $imagePath = $request['image']->store('users', 'public');
-            $profile->cover = "/storage/" . $imagePath;
+            $profile->cover = '/storage/'.$imagePath;
             $profile->save();
         } else {
             $imagePath = $request['image']->storeAs('public/users', last(explode('/', $profile->cover)));
         }
+
         return $this->sendResponse($profile->cover, 'تم إضافة الصورة بنجاح');    ///Image Updated Successfully!
 
     }
-    public function updateinformation(Request $request, $id)
-    {
-        $user = User::find($id);
-        if ($user == null) {
-            return $this->sendError('المستخدم غير موجود'); ///Case Not Found
-        }
-        if ($request['userId'] != $id)
-            return $this->sendForbidden('أنت لا تملك صلاحية تعديل هذا الملف الشخصي');  ///You aren\'t authorized to delete this transaction.
 
-        $profile = Profile::find($user->profile);
-        $profile->bio = $request['bio'];
-        $user->phone_number = $request['phoneNumber'];
-        $user->address = $request['address'];
-        $user->nationality = $request['nationality'];
+    /**
+     * Update Information.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function updateinformation(UpdateProfileRequest $request, User $user)
+    {
+        if ($user->id != $request->user->id) {
+            return $this->sendForbidden('أنت لا تملك صلاحية تعديل هذا الملف الشخصي');
+        }  ///You aren\'t authorized to delete this transaction.
+
+        $profile = $user->profile;
+        $profile->bio = $request['bio'] ?? $profile->bio;
+        $user->phone_number = $request['phoneNumber'] ?? $user->phone_number;
+        $user->address = $request['address'] ?? $user->address;
+        $user->nationality = $request['nationality'] ?? $user->nationality;
         $profile->save();
         $user->save();
-        return $this->sendResponse([], 'تم تغيير بياناتك بنجاح');    ///Image Updated Successfully!
 
-    }
-    public function validateImage(Request $request)
-    {
-        $rules = [
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ];
-        return Validator::make($request->all(), $rules, [
-            'image' => 'قيمة خاطئة، يمكن قبول الصور فقط',
-        ]);
+        return $this->sendResponse(UserResource::make($user), 'تم تغيير بياناتك بنجاح');    ///Image Updated Successfully!
     }
 }

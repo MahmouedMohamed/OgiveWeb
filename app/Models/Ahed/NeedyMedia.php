@@ -2,18 +2,24 @@
 
 namespace App\Models\Ahed;
 
+use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class NeedyMedia extends Model
+class NeedyMedia extends BaseModel
 {
     use HasFactory;
+
+    public $incrementing = false;
+
     protected $table = 'needies_media';
+
     protected $fillable = [
-        'needy',
+        'id',
+        'needy_id',
         'path',
         'before',
     ];
+
     public function needy()
     {
         return $this->belongsTo(Needy::class);

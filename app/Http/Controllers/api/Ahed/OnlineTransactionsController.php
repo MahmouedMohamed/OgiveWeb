@@ -2,21 +2,23 @@
 
 namespace App\Http\Controllers\api\Ahed;
 
-use App\Http\Controllers\api\BaseController;
 use App\Exceptions\NeedyIsSatisfied;
 use App\Exceptions\NeedyNotApproved;
 use App\Exceptions\NeedyNotFound;
 use App\Exceptions\OnlineTransactionNotFound;
 use App\Exceptions\UserNotAuthorized;
-use Illuminate\Http\Request;
 use App\Exceptions\UserNotFound;
-use App\Traits\ControllersTraits\UserValidator;
+use App\Http\Controllers\api\BaseController;
 use App\Traits\ControllersTraits\NeedyValidator;
 use App\Traits\ControllersTraits\OnlineTransactionValidator;
+use App\Traits\ControllersTraits\UserValidator;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class OnlineTransactionsController extends BaseController
 {
     use UserValidator, NeedyValidator, OnlineTransactionValidator;
+
     /**
      * Display a listing of the resource.
      *
@@ -26,16 +28,16 @@ class OnlineTransactionsController extends BaseController
     {
         try {
             $user = $this->userExists(request()->input('userId'));
-            return $this->sendResponse($user->onlinetransactions, 'تم إسترجاع البيانات بنجاح'); ///Transactions retrieved successfully.
+
+            return $this->sendResponse($user->onlinetransactions, __('General.DataRetrievedSuccessMessage')); ///Transactions retrieved successfully.
         } catch (UserNotFound $e) {
-            return $this->sendError('المستخدم غير موجود');  ///User Not Found
+            return $this->sendError(__('General.UserNotFound'));  ///User Not Found
         }
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -44,36 +46,39 @@ class OnlineTransactionsController extends BaseController
         //Make payment request /Success continue
         //Validate Request
         $validated = $this->validateTransaction($request);
-        if ($validated->fails())
-            return $this->sendError('خطأ في البيانات', $validated->messages(), 400);   ///Invalid data.
+        if ($validated->fails()) {
+            return $this->sendError(__('General.InvalidData'), $validated->messages(), 400);
+        }   ///Invalid data.
         try {
             $user = $this->userExists(request()->input('giver'));
-            $needy = $this->needyExists(request()->input('needy'));
+            $needy = $this->needySelfLock(request()->input('needy'));
             $this->needyApproved($needy);
             $this->needyIsSatisfied($needy);
             $transaction = $user->onlinetransactions()->create([
-                'needy' => $needy->id,
+                'id' => Str::uuid(),
+                'needy_id' => $needy->id,
                 'amount' => $request['amount'],
-                'remaining' => $request['amount']
+                'remaining' => $request['amount'],
             ]);
+            //TODO: implement transaction
             //TODO: if failed remove transaction
             $transaction->transferAmount($request['amount']);
-            return $this->sendResponse([], 'شكراً لمساهمتك القيمة'); ///Thank You For Your Contribution!
+
+            return $this->sendResponse([], __('Ahed.OnlineTransactionCreationSuccessMessage'));
         } catch (UserNotFound $e) {
-            return $this->sendError('المستخدم غير موجود');  ///User Not Found
+            return $this->sendError(__('General.UserNotFound'));
         } catch (NeedyNotFound $e) {
-            return $this->sendError('الحالة غير موجودة');  ///Case Not Found
+            return $this->sendError(__('Ahed.NeedyNotFound'));
         } catch (NeedyNotApproved $e) {
-            return $this->sendError('من فضلك أنتظر لحين تأكيد الحالة', [], 403);    ///Kindly wait until Case is approved so you can donate.
+            return $this->sendError(__('Ahed.NeedyNotApproved'), [], 403);
         } catch (NeedyIsSatisfied $e) {
-            return $this->sendError('تم جمع اللازم لهذة الحالة، من فضلك تفقد حالة أخري', [], 403); ///Case already satisfied, Kindly check another one
+            return $this->sendError(__('Ahed.TransactionNeedySatisfiedMessage'), [], 403);
         }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -86,28 +91,29 @@ class OnlineTransactionsController extends BaseController
             $user = $this->userExists($request['userId']);
             //Check if current user can show transaction
             $this->userIsAuthorized($user, 'view', $transaction);
-            return $this->sendResponse($transaction, 'تم إسترجاع البيانات بنجاح');   ///Data Retrieved Successfully!
+
+            return $this->sendResponse($transaction, __('General.DataRetrievedSuccessMessage'));
         } catch (OnlineTransactionNotFound $e) {
-            return $this->sendError('هذا التعامل غير موجود');   ///Transaction Not Found
+            return $this->sendError(__('Ahed.TransactionNotFound'));
         } catch (UserNotFound $e) {
-            return $this->sendError('المستخدم غير موجود');  ///User Not Found
+            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             $e->report($user, 'UserAccessOnlineTransaction', $transaction);
-            return $this->sendForbidden('أنت لا تملك صلاحية عرض هذا التعامل');    ///You aren\'t authorized to show this transaction.
+
+            return $this->sendForbidden(__('Ahed.TransactionViewingBannedMessage'));
         }
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
         //Can't be done, money already transferred, transaction can only be deleted "cancelled"
-        return $this->sendError('Not Implemented', '', 404);
+        return $this->sendError(__('General.NotImplemented'), 404);
     }
 
     /**
@@ -121,6 +127,6 @@ class OnlineTransactionsController extends BaseController
         //cancellation process to be considered
         //Money guarantee back must be done before deletion
         //IF money already
-        return $this->sendError('Not Implemented', '', 404);
+        return $this->sendError(__('General.NotImplemented'), 404);
     }
 }

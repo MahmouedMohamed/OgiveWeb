@@ -4,19 +4,22 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Ability;
 
 class Role extends Model
 {
     use HasFactory;
-    protected $guarded=[];
+
+    public $incrementing = false;
+
+    protected $fillable = ['id', 'name', 'label'];
 
     public function abilities()
     {
-        return $this->belongsToMany(Ability::class);
+        return $this->belongsToMany(Ability::class, 'ability_role')->withTimestamps();
     }
 
-    public function allowTo($ability){
-        $this->abilities()->sync($ability,false);
+    public function allowTo($ability)
+    {
+        $this->abilities()->attach($ability);
     }
 }

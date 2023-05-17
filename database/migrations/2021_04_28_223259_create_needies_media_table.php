@@ -14,12 +14,17 @@ class CreateNeediesMediaTable extends Migration
     public function up()
     {
         Schema::create('needies_media', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('needy');
+            $table->uuid('id');
+            $table->primary('id');
+            $table->string('needy_id');
             $table->string('path');
             $table->boolean('before')->default(1);
             $table->timestamps();
-            $table->foreign('needy')->references('id')->on('needies')->onDelete('cascade');
+            $table->foreign('needy_id')
+                ->references('id')
+                ->on('needies')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 

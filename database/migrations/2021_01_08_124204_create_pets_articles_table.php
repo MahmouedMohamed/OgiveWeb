@@ -14,7 +14,8 @@ class CreatePetsArticlesTable extends Migration
     public function up()
     {
         Schema::create('pets_articles', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->uuid('id');
+            $table->primary('id');
             $table->string('title');
             $table->text('description');
             $table->string('image')->nullable();

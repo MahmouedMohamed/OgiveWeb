@@ -3,12 +3,13 @@
 namespace App\Policies;
 
 use App\Models\Ataa\FoodSharingMarker;
-use App\Models\User;
-use App\Models\BanTypes;
-use Illuminate\Auth\Access\HandlesAuthorization;
 use App\Models\AvailableAbilities;
-use App\Traits\HasNoBan;
+use App\Models\BanTypes;
+use App\Models\BaseUserModel;
+use App\Models\User;
 use App\Traits\HasAbility;
+use App\Traits\HasNoBan;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class FoodSharingMarkerPolicy
 {
@@ -17,10 +18,9 @@ class FoodSharingMarkerPolicy
     /**
      * Determine whether the user can view any models.
      *
-     * @param  \App\Models\User  $user
      * @return mixed
      */
-    public function viewAny(User $user)
+    public function viewAny(BaseUserModel $user)
     {
         return $this->hasNoBan($user, BanTypes::ViewFoodSharingMarker);
     }
@@ -28,11 +28,10 @@ class FoodSharingMarkerPolicy
     /**
      * Determine whether the user can view the model.
      *
-     * @param  \App\Models\User  $user
      * @param  \App\Models\FoodSharingMarker  $foodSharingMarker
      * @return mixed
      */
-    public function view(User $user, FoodSharingMarker $foodSharingMarker)
+    public function view(BaseUserModel $user, FoodSharingMarker $foodSharingMarker)
     {
         //
     }
@@ -40,10 +39,9 @@ class FoodSharingMarkerPolicy
     /**
      * Determine whether the user can create models.
      *
-     * @param  \App\Models\User  $user
      * @return mixed
      */
-    public function create(User $user)
+    public function create(BaseUserModel $user)
     {
         return $this->hasNoBan($user, BanTypes::CreateFoodSharingMarker);
     }
@@ -51,10 +49,9 @@ class FoodSharingMarkerPolicy
     /**
      * Determine whether the user can create models.
      *
-     * @param  \App\Models\User  $user
      * @return mixed
      */
-    public function collect(User $user)
+    public function collect(BaseUserModel $user)
     {
         return $this->hasNoBan($user, BanTypes::CollectFoodSharingMarker);
     }
@@ -62,42 +59,35 @@ class FoodSharingMarkerPolicy
     /**
      * Determine whether the user can update the model.
      *
-     * @param  \App\Models\User  $user
      * @param  \App\Models\FoodSharingMarker  $foodSharingMarker
      * @return mixed
      */
-    public function update(User $user, FoodSharingMarker $foodSharingMarker)
+    public function update(BaseUserModel $user, FoodSharingMarker $foodSharingMarker)
     {
-        // dd($user->id);
-        // dd($foodSharingMarker->user->id);
-        // dd(($this->hasAbility($user, AvailableAbilities::UpdateFoodSharingMarker)
-        // || $user == $foodSharingMarker->user));
         return ($this->hasAbility($user, AvailableAbilities::UpdateFoodSharingMarker)
-            || $user->id == $foodSharingMarker->user->id)
+            || $user->id == $foodSharingMarker->owner_id)
             && $this->hasNoBan($user, BanTypes::UpdateFoodSharingMarker);
     }
 
     /**
      * Determine whether the user can delete the model.
      *
-     * @param  \App\Models\User  $user
      * @param  \App\Models\FoodSharingMarker  $foodSharingMarker
      * @return mixed
      */
-    public function delete(User $user, FoodSharingMarker $foodSharingMarker)
+    public function delete(BaseUserModel $user, FoodSharingMarker $foodSharingMarker)
     {
-        return $user == $foodSharingMarker->user || $this->hasAbility($user, AvailableAbilities::DeleteFoodSharingMarker)
+        return $user->id == $foodSharingMarker->owner_id || $this->hasAbility($user, AvailableAbilities::DeleteFoodSharingMarker)
             && $this->hasNoBan($user, BanTypes::DeleteFoodSharingMarker);
     }
 
     /**
      * Determine whether the user can restore the model.
      *
-     * @param  \App\Models\User  $user
      * @param  \App\Models\FoodSharingMarker  $foodSharingMarker
      * @return mixed
      */
-    public function restore(User $user, FoodSharingMarker $foodSharingMarker)
+    public function restore(BaseUserModel $user, FoodSharingMarker $foodSharingMarker)
     {
         //
     }
@@ -105,11 +95,10 @@ class FoodSharingMarkerPolicy
     /**
      * Determine whether the user can permanently delete the model.
      *
-     * @param  \App\Models\User  $user
      * @param  \App\Models\FoodSharingMarker  $foodSharingMarker
      * @return mixed
      */
-    public function forceDelete(User $user, FoodSharingMarker $foodSharingMarker)
+    public function forceDelete(BaseUserModel $user, FoodSharingMarker $foodSharingMarker)
     {
         //
     }

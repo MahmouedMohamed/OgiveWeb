@@ -6,6 +6,7 @@ use App\Models\Ability;
 use App\Models\AvailableAbilities;
 use App\Models\Role;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class RolesAbilitiesSeeder extends Seeder
 {
@@ -18,14 +19,20 @@ class RolesAbilitiesSeeder extends Seeder
     {
         $availableRoles = ['Admin', 'Ahed Admin', 'Ataa Admin'];
         foreach ($availableRoles as $role) {
-            $addedRole = Role::create([
+            $addedRole = Role::firstOrCreate([
                 'name' => $role,
-                'label' => $role
+            ], [
+                'id' => Str::uuid(),
+                'name' => $role,
+                'label' => $role,
             ]);
             $availableAbilities = AvailableAbilities::getAll($role);
             foreach ($availableAbilities as $ability) {
                 $addedAbility = Ability::firstOrCreate([
-                    'name' => $ability
+                    'name' => $ability,
+                ], [
+                    'id' => Str::uuid(),
+                    'name' => $ability,
                 ]);
                 $addedRole->allowTo($addedAbility);
             }
