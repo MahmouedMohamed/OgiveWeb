@@ -25,7 +25,7 @@ class LoginRequest extends BaseRequest
     {
         return [
             'accessType' => ['required', Rule::in(['API'])],
-            'appType' => ['required', Rule::in(['Ahed', 'Ataa', 'TimeCatcher','BreedMe'])],
+            'appType' => ['required', Rule::in(['Ahed', 'Ataa', 'TimeCatcher', 'BreedMe'])],
             'email' => ['required', 'email'],
             'password' => ['required'],
             'fcmToken' => ['required_if:appType,TimeCatcher'],
