@@ -12,12 +12,13 @@ use App\Http\Controllers\api\BaseController;
 use App\Http\Requests\StoreOnlineTransactionRequest;
 use App\Models\Ahed\OnlineTransaction;
 use App\Traits\ControllersTraits\NeedyValidator;
+use App\Traits\ControllersTraits\UserValidator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class OnlineTransactionController extends BaseController
 {
-    use NeedyValidator;
+    use UserValidator, NeedyValidator;
 
     /**
      * Display a listing of the resource.
@@ -77,7 +78,9 @@ class OnlineTransactionController extends BaseController
             //Check if current user can show transaction
             $this->userIsAuthorized($request->user, 'view', $onlineTransaction);
 
-            return $this->sendResponse($onlineTransaction, __('General.DataRetrievedSuccessMessage'));
+            return $this->sendResponse($onlineTransaction->load(['needy' => function ($query) {
+                return $query->with(['mediasBefore:id,path,needy_id', 'mediasAfter:id,path,needy_id']);
+            }]), __('General.DataRetrievedSuccessMessage'));
         } catch (UserNotAuthorized $e) {
             $e->report($request->user, 'UserAccessOnlineTransaction', $onlineTransaction);
 

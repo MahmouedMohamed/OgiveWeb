@@ -95,7 +95,9 @@ class OfflineTransactionController extends BaseController
             //Check if current user can show transaction
             $this->userIsAuthorized($request->user, 'view', $offlineTransaction);
 
-            return $this->sendResponse($offlineTransaction, __('General.DataRetrievedSuccessMessage'));
+            return $this->sendResponse($offlineTransaction->load(['needy' => function ($query) {
+                return $query->with(['mediasBefore:id,path,needy_id', 'mediasAfter:id,path,needy_id']);
+            }]), __('General.DataRetrievedSuccessMessage'));
         } catch (OfflineTransactionNotFound $e) {
             return $this->sendError(__('Ahed.TransactionNotFound'));
         } catch (UserNotFound $e) {
