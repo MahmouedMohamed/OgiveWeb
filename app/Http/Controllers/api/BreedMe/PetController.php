@@ -48,10 +48,10 @@ class PetController extends BaseController
                     ''
                 );
             }
-
+            
             return $this->sendResponse(
                 Pet::join('users', 'users.id', 'pets.created_by')
-                    ->join('profiles', 'users.profile_id', 'profiles.id')
+                    ->join('profiles', 'profiles.user_id', 'users.id')
                     ->select(
                         'pets.*',
                         'users.id as userId',
@@ -121,6 +121,7 @@ class PetController extends BaseController
     {
 
         //  return new PetResource(Pet::findOrFail($id));
+        return $id;
         $pet = Pet::with('user')->find($id);
         if (is_null($pet)) {
             return $this->sendError('Pet not found.');
