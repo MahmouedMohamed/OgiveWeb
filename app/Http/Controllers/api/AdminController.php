@@ -23,7 +23,6 @@ use App\Traits\ControllersTraits\UserValidator;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class AdminController extends BaseController
 {
