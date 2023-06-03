@@ -137,12 +137,14 @@ Route::group(['middleware' => ['UserIsAuthorized']], function () {
         Route::patch('/ahed/offlinetransactions/{offlineTransaction}/collect', [AdminController::class, 'collectOfflineTransaction']);
         //**      Ataa      **//
         //* * Optimized * */
-        Route::apiResource('/ataa/prize', AtaaPrizeController::class);
-        Route::patch('/ataa/prize/{id}/activate', [AtaaPrizeController::class, 'activate']);
-        Route::patch('/ataa/prize/{id}/deactivate', [AtaaPrizeController::class, 'deactivate']);
-        Route::apiResource('/ataa/badge', AtaaBadgeController::class);
-        Route::patch('/ataa/badge/{id}/activate', [AtaaBadgeController::class, 'activate']);
-        Route::patch('/ataa/badge/{id}/deactivate', [AtaaBadgeController::class, 'deactivate']);
+        Route::get('/ataa/prizes', [AtaaPrizeController::class, 'index']);
+        Route::post('/ataa/prizes', [AtaaPrizeController::class, 'store']);
+        Route::patch('/ataa/prizes/{prize}/activate', [AtaaPrizeController::class, 'activate']);
+        Route::patch('/ataa/prizes/{prize}/deactivate', [AtaaPrizeController::class, 'deactivate']);
+        Route::get('/ataa/badges', [AtaaBadgeController::class, 'index']);
+        Route::post('/ataa/badges', [AtaaBadgeController::class, 'store']);
+        Route::patch('/ataa/badges/{badge}/activate', [AtaaBadgeController::class, 'activate']);
+        Route::patch('/ataa/badges/{badge}/deactivate', [AtaaBadgeController::class, 'deactivate']);
         Route::get('/ataa/achievement', [AdminController::class, 'getAtaaAchievements']);
         Route::post('/ataa/users/{user}/freeze-achievement', [AdminController::class, 'freezeUserAtaaAchievements']);
         Route::post('/ataa/users/{user}/defreeze-achievement', [AdminController::class, 'defreezeUserAtaaAchievements']);
