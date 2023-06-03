@@ -2,14 +2,11 @@
 
 namespace App\Models\Ahed;
 
+use App\Models\BaseModel;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class OnlineTransaction extends Model
+class OnlineTransaction extends BaseModel
 {
-    use HasFactory;
-
     public $incrementing = false;
 
     protected $fillable = [

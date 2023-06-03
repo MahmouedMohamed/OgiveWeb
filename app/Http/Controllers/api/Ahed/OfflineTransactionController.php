@@ -14,12 +14,13 @@ use App\Http\Requests\UpdateOfflineTransactionRequest;
 use App\Models\Ahed\OfflineTransaction;
 use App\Models\User;
 use App\Traits\ControllersTraits\NeedyValidator;
+use App\Traits\ControllersTraits\UserValidator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class OfflineTransactionController extends BaseController
 {
-    use NeedyValidator;
+    use UserValidator, NeedyValidator;
 
     /**
      * Display a listing of the resource.
@@ -85,6 +86,7 @@ class OfflineTransactionController extends BaseController
      * Display the specified resource.
      *
      * @param  App\Models\Ahed\OfflineTransaction  $offlineTransaction
+     *
      * @return \Illuminate\Http\Response
      */
     public function show(Request $request, OfflineTransaction $offlineTransaction)
@@ -109,6 +111,7 @@ class OfflineTransactionController extends BaseController
      * Update the specified resource in storage.
      *
      * @param  App\Models\Ahed\OfflineTransaction  $offlineTransaction
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateOfflineTransactionRequest $request, OfflineTransaction $offlineTransaction)
@@ -147,6 +150,7 @@ class OfflineTransactionController extends BaseController
      * Remove the specified resource from storage.
      *
      * @param  App\Models\Ahed\OfflineTransaction  $offlineTransaction
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request, OfflineTransaction $offlineTransaction)

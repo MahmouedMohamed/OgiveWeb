@@ -10,30 +10,25 @@ use App\Exceptions\UserNotAuthorized;
 use App\Exceptions\UserNotFound;
 use App\Http\Controllers\api\BaseController;
 use App\Http\Requests\StoreOnlineTransactionRequest;
+use App\Models\Ahed\OnlineTransaction;
 use App\Traits\ControllersTraits\NeedyValidator;
-use App\Traits\ControllersTraits\OnlineTransactionValidator;
-use App\Traits\ControllersTraits\UserValidator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class OnlineTransactionController extends BaseController
 {
-    use UserValidator, NeedyValidator, OnlineTransactionValidator;
+    use NeedyValidator;
 
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        try {
-            $user = $this->userExists(request()->input('userId'));
-
-            return $this->sendResponse($user->onlinetransactions, __('General.DataRetrievedSuccessMessage')); ///Transactions retrieved successfully.
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'));  ///User Not Found
-        }
+        return $this->sendResponse($request->user->onlinetransactions()->with(['needy' => function ($query) {
+            return $query->with(['mediasBefore:id,path,needy_id', 'mediasAfter:id,path,needy_id']);
+        }])->get(), __('General.DataRetrievedSuccessMessage'));
     }
 
     /**
@@ -46,11 +41,10 @@ class OnlineTransactionController extends BaseController
         //TODO: Receive Payment information "Card number, amount, expirydate, cvv, etc"
         //Make payment request /Success continue
         try {
-            $user = $this->userExists(request()->input('giver'));
             $needy = $this->needySelfLock(request()->input('needy'));
             $this->needyApproved($needy);
             $this->needyIsSatisfied($needy);
-            $transaction = $user->onlinetransactions()->create([
+            $transaction = $request->user->onlinetransactions()->create([
                 'id' => Str::uuid(),
                 'needy_id' => $needy->id,
                 'amount' => $request['amount'],
@@ -61,8 +55,6 @@ class OnlineTransactionController extends BaseController
             $transaction->transferAmount($request['amount']);
 
             return $this->sendResponse([], __('Ahed.OnlineTransactionCreationSuccessMessage'));
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'));
         } catch (NeedyNotFound $e) {
             return $this->sendError(__('Ahed.NeedyNotFound'));
         } catch (NeedyNotApproved $e) {
@@ -75,26 +67,19 @@ class OnlineTransactionController extends BaseController
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  App\Models\Ahed\OnlineTransaction  $onlineTransaction
+     *
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, $id)
+    public function show(Request $request, OnlineTransaction $onlineTransaction)
     {
         try {
-            //Check transaction exists
-            $transaction = $this->onlineTransactionExists($id);
-            //Check user who is updating exists
-            $user = $this->userExists($request['userId']);
             //Check if current user can show transaction
-            $this->userIsAuthorized($user, 'view', $transaction);
+            $this->userIsAuthorized($request->user, 'view', $onlineTransaction);
 
-            return $this->sendResponse($transaction, __('General.DataRetrievedSuccessMessage'));
-        } catch (OnlineTransactionNotFound $e) {
-            return $this->sendError(__('Ahed.TransactionNotFound'));
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'));
+            return $this->sendResponse($onlineTransaction, __('General.DataRetrievedSuccessMessage'));
         } catch (UserNotAuthorized $e) {
-            $e->report($user, 'UserAccessOnlineTransaction', $transaction);
+            $e->report($request->user, 'UserAccessOnlineTransaction', $onlineTransaction);
 
             return $this->sendForbidden(__('Ahed.TransactionViewingBannedMessage'));
         }
@@ -103,10 +88,11 @@ class OnlineTransactionController extends BaseController
     /**
      * Update the specified resource in storage.
      *
-     * @param  int  $id
+     * @param  App\Models\Ahed\OnlineTransaction  $onlineTransaction
+     *
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, OnlineTransaction $onlineTransaction)
     {
         //Can't be done, money already transferred, transaction can only be deleted "cancelled"
         return $this->sendError(__('General.NotImplemented'), 404);
@@ -115,10 +101,11 @@ class OnlineTransactionController extends BaseController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  App\Models\Ahed\OnlineTransaction  $onlineTransaction
+     *
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(OnlineTransaction $onlineTransaction)
     {
         //cancellation process to be considered
         //Money guarantee back must be done before deletion

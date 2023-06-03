@@ -121,7 +121,7 @@ Route::group(['middleware' => ['UserIsAuthorized']], function () {
         Route::delete('/offlinetransactions/{offlineTransaction}', [OfflineTransactionController::class, 'destroy']);
         Route::get('/onlinetransactions', [OnlineTransactionController::class, 'index']);
         Route::post('/onlinetransactions', [OnlineTransactionController::class, 'store']);
-        Route::get('onlinetransactions/{onlineTransaction}', [OnlineTransactionController::class, 'show']);
+        Route::get('/onlinetransactions/{onlineTransaction}', [OnlineTransactionController::class, 'show']);
         Route::get('/ahedachievement', [UserController::class, 'getAhedAchievementRecords']);
     });
 

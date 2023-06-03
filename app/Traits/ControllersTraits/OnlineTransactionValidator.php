@@ -23,15 +23,4 @@ trait OnlineTransactionValidator
 
         return $onlineTransaction;
     }
-
-    public function validateTransaction(Request $request)
-    {
-        $rules = [
-            'giver' => 'required|exists:users,id',
-            'needy' => 'required|max:255',
-            'amount' => 'required|numeric|min:1',
-        ];
-
-        return Validator::make($request->all(), $rules);
-    }
 }

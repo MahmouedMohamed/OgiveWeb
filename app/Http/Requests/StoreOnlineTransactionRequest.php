@@ -22,7 +22,6 @@ class StoreOnlineTransactionRequest extends BaseRequest
     public function rules()
     {
         return [
-            'giver' => 'required|exists:users,id',
             'needy' => 'required|exists:needies,id',
             'amount' => 'required|numeric|min:1',
         ];
