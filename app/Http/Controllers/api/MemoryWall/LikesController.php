@@ -8,13 +8,12 @@ use App\Http\Requests\CreateLikeRequest;
 use App\Http\Resources\LikePaginationResource;
 use App\Models\MemoryWall\Like;
 use App\Models\MemoryWall\Memory;
-use App\Traits\ControllersTraits\MemoryValidator;
 use App\Traits\ControllersTraits\UserValidator;
 use Illuminate\Http\Request;
 
 class LikesController extends BaseController
 {
-    use UserValidator, MemoryValidator;
+    use UserValidator;
 
     /**
      * Display a listing of the resource.

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\api\Ataa;
 
 use App\Exceptions\UserNotAuthorized;
-use App\Exceptions\UserNotFound;
 use App\Http\Controllers\api\BaseController;
 use App\Http\Requests\StoreAtaaBadgeRequest;
 use App\Models\Ataa\AtaaBadge;
@@ -46,8 +45,6 @@ class AtaaBadgeController extends BaseController
                     ->get(),
                 __('General.DataRetrievedSuccessMessage')
             );
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden(__('Ataa.BadgeViewForbiddenMessage'));
         }
@@ -75,8 +72,6 @@ class AtaaBadgeController extends BaseController
                     ->get(),
                 __('General.DataRetrievedSuccessMessage')
             );
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden(__('Ataa.BadgeViewForbiddenMessage'));
         }

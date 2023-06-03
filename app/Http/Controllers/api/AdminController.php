@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Exceptions\NeedyNotFound;
 use App\Exceptions\NotSupportedType;
-use App\Exceptions\OfflineTransactionNotFound;
 use App\Exceptions\UserNotAuthorized;
-use App\Exceptions\UserNotFound;
 use App\Http\Requests\CreateUserBanRequest;
 use App\Http\Requests\ImportCSVRequest;
 use App\Models\Ahed\Needy;
@@ -34,72 +31,68 @@ class AdminController extends BaseController
      */
     public function generalAdminDashboard(Request $request)
     {
-        try {
-            //TODO: Check privilige
-            $numberOfUsers = User::count();
+        //TODO: Check privilige
+        $numberOfUsers = User::count();
 
-            //Get users created in the last 6 years
-            $numberOfJoinedUsersByYear = User::selectRaw('count(*) as count, YEAR(created_at) year')
-                ->where('created_at', '>=', Carbon::now()->subYears(6)->year)
-                ->groupBy('year')
-                ->orderBy('year', 'ASC')
-                ->get();
+        //Get users created in the last 6 years
+        $numberOfJoinedUsersByYear = User::selectRaw('count(*) as count, YEAR(created_at) year')
+            ->where('created_at', '>=', Carbon::now()->subYears(6)->year)
+            ->groupBy('year')
+            ->orderBy('year', 'ASC')
+            ->get();
 
-            $numberOfUsersGroupedByNationality = User::selectRaw('count(*) as count, nationality')
-                ->groupBy('nationality')
-                //take first 6 only
-                ->take(6)
-                ->orderBy('count', 'ASC')
-                ->get();
+        $numberOfUsersGroupedByNationality = User::selectRaw('count(*) as count, nationality')
+            ->groupBy('nationality')
+            //take first 6 only
+            ->take(6)
+            ->orderBy('count', 'ASC')
+            ->get();
 
-            $numberOfActiveUsersGroupedByAccessType = OauthAccessToken::selectRaw('count(*) as count, access_type')
-                ->groupBy('access_type')
-                ->where('active', '=', 1)
-                ->orderBy('count', 'ASC')
-                ->get();
+        $numberOfActiveUsersGroupedByAccessType = OauthAccessToken::selectRaw('count(*) as count, access_type')
+            ->groupBy('access_type')
+            ->where('active', '=', 1)
+            ->orderBy('count', 'ASC')
+            ->get();
 
-            $numberOfActiveUsersGroupedByAppType = OauthAccessToken::selectRaw('count(*) as count, app_type')
-                ->groupBy('app_type')
-                ->where('active', '=', 1)
-                ->orderBy('count', 'ASC')
-                ->get();
+        $numberOfActiveUsersGroupedByAppType = OauthAccessToken::selectRaw('count(*) as count, app_type')
+            ->groupBy('app_type')
+            ->where('active', '=', 1)
+            ->orderBy('count', 'ASC')
+            ->get();
 
-            //BreedMe Data
-            $pets = Pet::get();
+        //BreedMe Data
+        $pets = Pet::get();
 
-            //Ahed Data
-            $needies = Needy::select('id', 'satisfied')->get();
-            $numberOfNeedies = $needies->count();
-            $numberOfNeediesSatisfied = $needies->where('satisfied', '=', true)->count();
-            $offlineTransactions = OfflineTransaction::select('id', 'amount', 'collected')->get();
-            $onlineTransactions = OnlineTransaction::select('id', 'amount')->get();
-            $numberOfTransactions = $onlineTransactions->count() + $offlineTransactions->where('collected', '=', true)->count();
-            $givesCollected = $onlineTransactions->sum('amount') + $offlineTransactions->where('collected', '=', true)->sum('amount');
+        //Ahed Data
+        $needies = Needy::select('id', 'satisfied')->get();
+        $numberOfNeedies = $needies->count();
+        $numberOfNeediesSatisfied = $needies->where('satisfied', '=', true)->count();
+        $offlineTransactions = OfflineTransaction::select('id', 'amount', 'collected')->get();
+        $onlineTransactions = OnlineTransaction::select('id', 'amount')->get();
+        $numberOfTransactions = $onlineTransactions->count() + $offlineTransactions->where('collected', '=', true)->count();
+        $givesCollected = $onlineTransactions->sum('amount') + $offlineTransactions->where('collected', '=', true)->sum('amount');
 
-            //Ataa Data
+        //Ataa Data
 
-            //Finalize
-            return $this->sendResponse([
-                'General' => [
-                    'NumberOfActiveUsers' => $numberOfUsers,
-                    'NumberOfActiveUsersGroupedByAccessType' => $numberOfActiveUsersGroupedByAccessType,
-                    'NumberOfActiveUsersGroupedByAppType' => $numberOfActiveUsersGroupedByAppType,
-                    'NumberOfJoinedUsersByYear' => $numberOfJoinedUsersByYear,
-                    'NumberOfUsersGroupedByNationality' => $numberOfUsersGroupedByNationality,
-                ],
-                'Ahed' => [
-                    'NumberOfNeedies' => $numberOfNeedies,
-                    'NumberOfNeediesSatisfied' => $numberOfNeediesSatisfied,
-                    'NumberOfTransactions' => $numberOfTransactions,
-                    'NumberOfGives' => $givesCollected,
-                ],
-                'BreedMe' => [
-                    'NumberOfPets' => $pets->count(),
-                ],
-            ], __('General.DataRetrievedSuccessMessage'));
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'));
-        }
+        //Finalize
+        return $this->sendResponse([
+            'General' => [
+                'NumberOfActiveUsers' => $numberOfUsers,
+                'NumberOfActiveUsersGroupedByAccessType' => $numberOfActiveUsersGroupedByAccessType,
+                'NumberOfActiveUsersGroupedByAppType' => $numberOfActiveUsersGroupedByAppType,
+                'NumberOfJoinedUsersByYear' => $numberOfJoinedUsersByYear,
+                'NumberOfUsersGroupedByNationality' => $numberOfUsersGroupedByNationality,
+            ],
+            'Ahed' => [
+                'NumberOfNeedies' => $numberOfNeedies,
+                'NumberOfNeediesSatisfied' => $numberOfNeediesSatisfied,
+                'NumberOfTransactions' => $numberOfTransactions,
+                'NumberOfGives' => $givesCollected,
+            ],
+            'BreedMe' => [
+                'NumberOfPets' => $pets->count(),
+            ],
+        ], __('General.DataRetrievedSuccessMessage'));
     }
 
     /**
@@ -113,8 +106,6 @@ class AdminController extends BaseController
             $this->userIsAuthorized($request->user, 'viewAny', AtaaAchievement::class);
 
             return $this->sendResponse(AtaaAchievement::all(), 'Data Retrieved Successfully');
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden('You aren\'t authorized to show these resources.');
         }
@@ -132,12 +123,8 @@ class AdminController extends BaseController
             $needy->approve();
 
             return $this->sendResponse([], 'Needy Approved Successfully!');
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden('You aren\'t authorized to approve this needy.');
-        } catch (NeedyNotFound $e) {
-            return $this->sendError('Needy Not Found');
         }
     }
 
@@ -153,12 +140,8 @@ class AdminController extends BaseController
             $needy->disapprove();
 
             return $this->sendResponse([], 'Needy Disapprove Successfully!');
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden('You aren\'t authorized to disapprove this needy.');
-        } catch (NeedyNotFound $e) {
-            return $this->sendError('Needy Not Found');
         }
     }
 
@@ -175,12 +158,8 @@ class AdminController extends BaseController
             $offlineTransaction->collect();
 
             return $this->sendResponse([], 'Transaction Collected Successfully!');
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden('You aren\'t authorized to collect this transaction.');
-        } catch (OfflineTransactionNotFound $e) {
-            return $this->sendError('Transaction Not Found');
         }
     }
 
@@ -196,8 +175,6 @@ class AdminController extends BaseController
             $user->ataaAchievement->freeze();
 
             return $this->sendResponse([], 'User Achievement Freezed Successfully!');
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden('You aren\'t authorized to freeze this user achievement.');
         }
@@ -215,8 +192,6 @@ class AdminController extends BaseController
             $user->ataaAchievement->defreeze();
 
             return $this->sendResponse([], 'User Achievement Defreezed Successfully!');
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden('You aren\'t authorized to defreeze this user achievement.');
         }
@@ -251,8 +226,6 @@ class AdminController extends BaseController
             $userBan->activate();
 
             return $this->sendResponse('', 'User Ban Activated Successfully');
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden('You aren\'t authorized to see these resources.');
         }
@@ -270,8 +243,6 @@ class AdminController extends BaseController
             $userBan->deactivate();
 
             return $this->sendResponse('', 'User Ban Deactivated Successfully');
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden('You aren\'t authorized to see these resources.');
         }
@@ -298,8 +269,6 @@ class AdminController extends BaseController
             ]);
 
             return $this->sendResponse('', 'User Ban Created Successfully');
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden('You aren\'t authorized to see these resources.');
         }
@@ -315,7 +284,9 @@ class AdminController extends BaseController
         return $this->sendResponse(
             Needy::where('approved', '=', 0)
                 ->with(['createdBy.profile', 'mediasBefore:id,path,needy_id', 'mediasAfter:id,path,needy_id'])
-                ->paginate(8), 'تم إسترجاع البيانات بنجاح');  ///Cases retrieved successfully.
+                ->paginate(8),
+            'تم إسترجاع البيانات بنجاح'
+        );  ///Cases retrieved successfully.
     }
 
     //ToDo: Use Excel Package
@@ -330,11 +301,11 @@ class AdminController extends BaseController
                     $users = collect([]);
                     $needies = collect([]);
                     while ($csvLine = fgetcsv($file)) {
-                        if (! ($users->pluck('id')->has($csvLine[0]))) {
+                        if (!($users->pluck('id')->has($csvLine[0]))) {
                             $user = $this->userExists($csvLine[0]);
                             $users->push($user);
                         }
-                        if (! ($needies->pluck('id')->has($csvLine[1]))) {
+                        if (!($needies->pluck('id')->has($csvLine[1]))) {
                             $needy = $this->userExists($csvLine[1]);
                             $needies->push($needy);
                         }
@@ -356,10 +327,6 @@ class AdminController extends BaseController
             return $this->sendResponse('', 'CSV Imported Successfully');
         } catch (NotSupportedType $e) {
             return $this->sendError('This type isn\'t supported');
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'));
-        } catch (NeedyNotFound $e) {
-            return $this->sendError('Needy Not Found');
         } catch (Exception $e) {
             return $this->sendError('Something went wrong', [], 400);
         }

@@ -7,9 +7,7 @@ use App\Events\FoodSharingMarkerCollected;
 use App\Events\FoodSharingMarkerDeleted;
 use App\Events\FoodSharingMarkerUpdated;
 use App\Exceptions\FoodSharingMarkerIsCollected;
-use App\Exceptions\FoodSharingMarkerNotFound;
 use App\Exceptions\UserNotAuthorized;
-use App\Exceptions\UserNotFound;
 use App\Http\Controllers\api\BaseController;
 use App\Http\Requests\CollectFoodSharingMarkerRequest;
 use App\Http\Requests\CreateFoodSharingMarkerRequest;
@@ -104,8 +102,6 @@ class FoodSharingMarkersController extends BaseController
             ]);
 
             return $this->sendResponse([], __('Ataa.FoodSharingMarkerCreationSuccessMessage'));
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden(__('Ataa.FoodSharingMarkerCreationBannedMessage'));
         }
@@ -131,12 +127,8 @@ class FoodSharingMarkersController extends BaseController
             }
 
             return $this->sendResponse([], __('Ataa.FoodSharingMarkerSuccessCollectNoExist'));
-        } catch (FoodSharingMarkerNotFound $e) {
-            return $this->sendError(__('Ataa.FoodSharingMarkerNotFound'));
         } catch (FoodSharingMarkerIsCollected $e) {
             return $this->sendError(__('Ataa.FoodSharingMarkerAlreadyCollected'));
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'));
         }
     }
 

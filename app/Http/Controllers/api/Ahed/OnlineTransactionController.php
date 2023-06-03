@@ -4,7 +4,6 @@ namespace App\Http\Controllers\api\Ahed;
 
 use App\Exceptions\NeedyIsSatisfied;
 use App\Exceptions\NeedyNotApproved;
-use App\Exceptions\NeedyNotFound;
 use App\Exceptions\UserNotAuthorized;
 use App\Http\Controllers\api\BaseController;
 use App\Http\Requests\StoreOnlineTransactionRequest;
@@ -54,8 +53,6 @@ class OnlineTransactionController extends BaseController
             $transaction->transferAmount($request['amount']);
 
             return $this->sendResponse([], __('Ahed.OnlineTransactionCreationSuccessMessage'));
-        } catch (NeedyNotFound $e) {
-            return $this->sendError(__('Ahed.NeedyNotFound'));
         } catch (NeedyNotApproved $e) {
             return $this->sendError(__('Ahed.NeedyNotApproved'), [], 403);
         } catch (NeedyIsSatisfied $e) {

@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers\api\Ahed;
 
-use App\Exceptions\NeedyNotFound;
 use App\Exceptions\UserNotAuthorized;
-use App\Exceptions\UserNotFound;
 use App\Http\Controllers\api\BaseController;
 use App\Http\Requests\CreateNeedyRequest;
 use App\Http\Requests\NeedyImagesRequest;
@@ -32,13 +30,13 @@ class NeedyController extends BaseController
         $currentPage = request()->get('page', 1);
 
         return $this->sendResponse(
-            Cache::remember('needies-'.$currentPage, 60 * 60 * 24, function () {
+            Cache::remember('needies-' . $currentPage, 60 * 60 * 24, function () {
                 return
                     Needy::approved()
-                        ->where('severity', '<', '7')
-                        ->latest('needies.created_at')
-                        ->with(['createdBy.profile', 'mediasBefore:id,path,needy_id', 'mediasAfter:id,path,needy_id'])
-                        ->paginate(8);
+                    ->where('severity', '<', '7')
+                    ->latest('needies.created_at')
+                    ->with(['createdBy.profile', 'mediasBefore:id,path,needy_id', 'mediasAfter:id,path,needy_id'])
+                    ->paginate(8);
             }),
             __('General.DataRetrievedSuccessMessage')
         );
@@ -54,13 +52,13 @@ class NeedyController extends BaseController
         $currentPage = request()->get('page', 1);
 
         return $this->sendResponse(
-            Cache::remember('urgentNeedies-'.$currentPage, 60 * 60 * 24, function () {
+            Cache::remember('urgentNeedies-' . $currentPage, 60 * 60 * 24, function () {
                 return
                     Needy::approved()
-                        ->where('severity', '>=', '7')
-                        ->latest('needies.created_at')
-                        ->with(['createdBy.profile', 'mediasBefore:id,path,needy_id', 'mediasAfter:id,path,needy_id'])
-                        ->paginate(8);
+                    ->where('severity', '>=', '7')
+                    ->latest('needies.created_at')
+                    ->with(['createdBy.profile', 'mediasBefore:id,path,needy_id', 'mediasAfter:id,path,needy_id'])
+                    ->paginate(8);
             }),
             __('General.DataRetrievedSuccessMessage')
         );
@@ -96,7 +94,7 @@ class NeedyController extends BaseController
             $imagePaths = [];
             foreach ($images as $image) {
                 $imagePath = $image->store('uploads', 'public');
-                array_push($imagePaths, '/storage/'.$imagePath);
+                array_push($imagePaths, '/storage/' . $imagePath);
             }
             $needy = $request->user->createdNeedies()->create([
                 'id' => Str::uuid(),
@@ -125,14 +123,10 @@ class NeedyController extends BaseController
      */
     public function show(Needy $needy)
     {
-        try {
-            return $this->sendResponse(
-                $needy->with(['createdBy.profile', 'mediasBefore:id,path,needy_id', 'mediasAfter:id,path,needy_id'])->first(),
-                __('General.DataRetrievedSuccessMessage')
-            ); ///Data Retrieved Successfully!
-        } catch (NeedyNotFound $e) {
-            return $this->sendError(__('Ahed.NeedyNotFound'));   ///Case Not Found
-        }
+        return $this->sendResponse(
+            $needy->with(['createdBy.profile', 'mediasBefore:id,path,needy_id', 'mediasAfter:id,path,needy_id'])->first(),
+            __('General.DataRetrievedSuccessMessage')
+        ); ///Data Retrieved Successfully!
     }
 
     /**
@@ -179,15 +173,11 @@ class NeedyController extends BaseController
             $imagePaths = [];
             foreach ($images as $image) {
                 $imagePath = $image->store('uploads', 'public');
-                array_push($imagePaths, '/storage/'.$imagePath);
+                array_push($imagePaths, '/storage/' . $imagePath);
             }
             $needy->addImages($imagePaths, $request['before']);
 
             return $this->sendResponse([], __('Ahed.NeedyMediaCreationSuccessMessage'));
-        } catch (NeedyNotFound $e) {
-            return $this->sendError(__('Ahed.NeedyNotFound'));
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden(__('Ahed.NeediesUpdateForbiddenMessage'));
         }
@@ -205,7 +195,7 @@ class NeedyController extends BaseController
         try {
             //Check if current user can update
             $this->userIsAuthorized($request->user, 'update', $needyMedia->needy);
-            Storage::delete('public/'.substr($needyMedia->path, 9));
+            Storage::delete('public/' . substr($needyMedia->path, 9));
             $needyMedia->delete();
 
             return $this->sendResponse([], __('Ahed.NeedyMediaDeleteSuccessMessage'));

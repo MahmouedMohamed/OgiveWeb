@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\api\Ataa;
 
 use App\Exceptions\UserNotAuthorized;
-use App\Exceptions\UserNotFound;
 use App\Http\Controllers\api\BaseController;
 use App\Models\Ataa\AtaaAchievement;
 use App\Traits\ControllersTraits\UserValidator;
@@ -55,8 +54,6 @@ class AtaaAchievementController extends BaseController
             ];
 
             return $this->sendResponse($response, __('General.DataRetrievedSuccessMessage'));
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             if ($user->ataaAchievement) {
                 $e->report($request->user, 'AccessAtaaAchievement', $user->ataaAchievement);

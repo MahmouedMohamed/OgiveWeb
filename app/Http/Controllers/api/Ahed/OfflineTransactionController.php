@@ -4,10 +4,7 @@ namespace App\Http\Controllers\api\Ahed;
 
 use App\Exceptions\NeedyIsSatisfied;
 use App\Exceptions\NeedyNotApproved;
-use App\Exceptions\NeedyNotFound;
-use App\Exceptions\OfflineTransactionNotFound;
 use App\Exceptions\UserNotAuthorized;
-use App\Exceptions\UserNotFound;
 use App\Http\Controllers\api\BaseController;
 use App\Http\Requests\StoreOfflineTransactionRequest;
 use App\Http\Requests\UpdateOfflineTransactionRequest;
@@ -73,8 +70,6 @@ class OfflineTransactionController extends BaseController
             }
 
             return $this->sendResponse([], __('Ahed.OfflineTransactionCreationSuccessMessage'));
-        } catch (NeedyNotFound $e) {
-            return $this->sendError(__('Ahed.NeedyNotFound'));
         } catch (NeedyNotApproved $e) {
             return $this->sendError(__('Ahed.NeedyNotApproved'), [], 403);
         } catch (NeedyIsSatisfied $e) {
@@ -97,10 +92,6 @@ class OfflineTransactionController extends BaseController
             return $this->sendResponse($offlineTransaction->load(['needy' => function ($query) {
                 return $query->with(['mediasBefore:id,path,needy_id', 'mediasAfter:id,path,needy_id']);
             }]), __('General.DataRetrievedSuccessMessage'));
-        } catch (OfflineTransactionNotFound $e) {
-            return $this->sendError(__('Ahed.TransactionNotFound'));
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             $e->report($request->user, 'UserAccessOfflineTransaction', $offlineTransaction);
 
@@ -137,8 +128,6 @@ class OfflineTransactionController extends BaseController
             $e->report($request->user, 'UserUpdateOfflineTransaction', $offlineTransaction);
 
             return $this->sendForbidden(__('Ahed.TransactionUpdateForbiddenMessage'));
-        } catch (NeedyNotFound $e) {
-            return $this->sendError(__('Ahed.NeedyNotFound'));
         } catch (NeedyNotApproved $e) {
             return $this->sendError(__('Ahed.NeedyNotApproved'), [], 403);
         } catch (NeedyIsSatisfied $e) {
