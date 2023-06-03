@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-class NeediesController extends BaseController
+class NeedyController extends BaseController
 {
     use UserValidator, NeedyValidator;
 

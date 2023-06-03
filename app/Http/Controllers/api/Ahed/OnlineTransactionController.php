@@ -9,13 +9,14 @@ use App\Exceptions\OnlineTransactionNotFound;
 use App\Exceptions\UserNotAuthorized;
 use App\Exceptions\UserNotFound;
 use App\Http\Controllers\api\BaseController;
+use App\Http\Requests\StoreOnlineTransactionRequest;
 use App\Traits\ControllersTraits\NeedyValidator;
 use App\Traits\ControllersTraits\OnlineTransactionValidator;
 use App\Traits\ControllersTraits\UserValidator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-class OnlineTransactionsController extends BaseController
+class OnlineTransactionController extends BaseController
 {
     use UserValidator, NeedyValidator, OnlineTransactionValidator;
 
@@ -40,15 +41,10 @@ class OnlineTransactionsController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreOnlineTransactionRequest $request)
     {
         //TODO: Receive Payment information "Card number, amount, expirydate, cvv, etc"
         //Make payment request /Success continue
-        //Validate Request
-        $validated = $this->validateTransaction($request);
-        if ($validated->fails()) {
-            return $this->sendError(__('General.InvalidData'), $validated->messages(), 400);
-        }   ///Invalid data.
         try {
             $user = $this->userExists(request()->input('giver'));
             $needy = $this->needySelfLock(request()->input('needy'));

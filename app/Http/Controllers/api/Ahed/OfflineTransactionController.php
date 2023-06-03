@@ -9,6 +9,7 @@ use App\Exceptions\OfflineTransactionNotFound;
 use App\Exceptions\UserNotAuthorized;
 use App\Exceptions\UserNotFound;
 use App\Http\Controllers\api\BaseController;
+use App\Http\Requests\StoreOfflineTransactionRequest;
 use App\Models\Ahed\OfflineTransaction;
 use App\Traits\ControllersTraits\NeedyValidator;
 use App\Traits\ControllersTraits\OfflineTransactionValidator;
@@ -16,7 +17,7 @@ use App\Traits\ControllersTraits\UserValidator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-class OfflineTransactionsController extends BaseController
+class OfflineTransactionController extends BaseController
 {
     use UserValidator, NeedyValidator, OfflineTransactionValidator;
 
@@ -41,18 +42,13 @@ class OfflineTransactionsController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreOfflineTransactionRequest $request)
     {
-        $validated = $this->validateTransaction($request, 'store');
-        if ($validated->fails()) {
-            return $this->sendError(__('General.InvalidData'), $validated->messages(), 400);
-        }
         try {
             $needy = $this->needySelfLock(request()->input('needy'));
             $this->needyApproved($needy);
             $this->needyIsSatisfied($needy);
-            if (request()->input('giver') != null) {
-                $user = $this->userExists(request()->input('giver'));
+            if ($request['giver'] != null) {
                 $user->offlineTransactions()->create([
                     'id' => Str::uuid(),
                     'needy_id' => $needy->id,

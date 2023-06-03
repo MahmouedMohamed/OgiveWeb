@@ -1,9 +1,9 @@
 <?php
 
 use App\Http\Controllers\api\AdminController;
-use App\Http\Controllers\api\Ahed\NeediesController;
-use App\Http\Controllers\api\Ahed\OfflineTransactionsController;
-use App\Http\Controllers\api\Ahed\OnlineTransactionsController;
+use App\Http\Controllers\api\Ahed\NeedyController;
+use App\Http\Controllers\api\Ahed\OfflineTransactionController;
+use App\Http\Controllers\api\Ahed\OnlineTransactionController;
 /* Breed Me */
 use App\Http\Controllers\api\Ataa\AtaaAchievementController;
 use App\Http\Controllers\api\Ataa\AtaaBadgeController;
@@ -109,13 +109,19 @@ Route::group(['middleware' => ['UserIsAuthorized']], function () {
     });
     //**      Ahed      **//
     Route::group(['prefix' => 'ahed', 'middleware' => ['Bindings']], function () {
-        Route::apiResource('/needies', NeediesController::class);
-        Route::get('/urgent-needies', [NeediesController::class, 'urgentIndex']);
-        Route::get('/needies-with-ids', [NeediesController::class, 'getNeediesWithIDs']);
-        Route::put('/needies/{needy}/add-images', [NeediesController::class, 'addAssociatedImages']);
-        Route::put('/needies/medias/{needyMedia}/remove-image/', [NeediesController::class, 'removeAssociatedImage']);
-        Route::apiResource('/onlinetransactions', OnlineTransactionsController::class);
-        Route::apiResource('/offlinetransactions', OfflineTransactionsController::class);
+        Route::apiResource('/needies', NeedyController::class);
+        Route::get('/urgent-needies', [NeedyController::class, 'urgentIndex']);
+        Route::get('/needies-with-ids', [NeedyController::class, 'getNeediesWithIDs']);
+        Route::put('/needies/{needy}/add-images', [NeedyController::class, 'addAssociatedImages']);
+        Route::put('/needies/medias/{needyMedia}/remove-image/', [NeedyController::class, 'removeAssociatedImage']);
+        Route::get('users/{user}/offlinetransactions', [OfflineTransactionController::class, 'index']);
+        Route::get('users/{user}/offlinetransactions', [OfflineTransactionController::class, 'store']);
+        Route::get('users/{user}/offlinetransactions/{offlineTransaction}', [OfflineTransactionController::class, 'show']);
+        Route::get('users/{user}/onlinetransactions', [OnlineTransactionController::class, 'index']);
+        Route::get('users/{user}/onlinetransactions', [OnlineTransactionController::class, 'store']);
+        Route::get('users/{user}/onlinetransactions/{onlineTransaction}', [OnlineTransactionController::class, 'show']);
+        // Route::apiResource('/onlinetransactions', OnlineTransactionsController::class);
+        // Route::apiResource('/offlinetransactions', OfflineTransactionsController::class);
         Route::get('/ahedachievement', [UserController::class, 'getAhedAchievementRecords']);
     });
 
@@ -138,8 +144,8 @@ Route::group(['middleware' => ['UserIsAuthorized']], function () {
         Route::patch('/ataa/badge/{id}/activate', [AtaaBadgeController::class, 'activate']);
         Route::patch('/ataa/badge/{id}/deactivate', [AtaaBadgeController::class, 'deactivate']);
         Route::get('/ataa/achievement', [AdminController::class, 'getAtaaAchievements']);
-        Route::post('/ataa/freeze-achievement', [AdminController::class, 'freezeUserAtaaAchievements']);
-        Route::post('/ataa/defreeze-achievement', [AdminController::class, 'defreezeUserAtaaAchievements']);
+        Route::post('/ataa/users/{user}/freeze-achievement', [AdminController::class, 'freezeUserAtaaAchievements']);
+        Route::post('/ataa/users/{user}/defreeze-achievement', [AdminController::class, 'defreezeUserAtaaAchievements']);
         //**      Ban      **//
         Route::get('/users/{bannedUser}/ban', [AdminController::class, 'getUserBans']);
         Route::post('/users/{bannedUser}/ban', [AdminController::class, 'addUserBan']);
