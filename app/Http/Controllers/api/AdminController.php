@@ -112,9 +112,7 @@ class AdminController extends BaseController
     public function getAtaaAchievements(Request $request)
     {
         try {
-            $user = $this->userExists($request['userId']);
-            $this->userIsAuthorized($user, 'viewAny', AtaaAchievement::class);
-
+            $this->userIsAuthorized($request->user, 'viewAny', AtaaAchievement::class);
             return $this->sendResponse(AtaaAchievement::all(), 'Data Retrieved Successfully');
         } catch (UserNotFound $e) {
             return $this->sendError(__('General.UserNotFound'));
@@ -168,15 +166,15 @@ class AdminController extends BaseController
     /**
      * Collect offline transaction.
      *
+     * @param App\Models\Ahed\OfflineTransaction $offlineTransaction
+     *
      * @return \Illuminate\Http\Response
      */
-    public function collectOfflineTransaction(Request $request)
+    public function collectOfflineTransaction(Request $request, OfflineTransaction $offlineTransaction)
     {
         try {
-            $user = $this->userExists($request['userId']);
-            $offlinetransaction = $this->offlineTransactionExists($request['transactionId']);
-            $this->userIsAuthorized($user, 'collect', $offlinetransaction);
-            $offlinetransaction->collect();
+            $this->userIsAuthorized($request->user, 'collect', $offlineTransaction);
+            $offlineTransaction->collect();
 
             return $this->sendResponse([], 'Transaction Collected Successfully!');
         } catch (UserNotFound $e) {

@@ -10,8 +10,6 @@ use Ramsey\Uuid\Uuid;
 
 class BaseModel extends Model
 {
-    use HasFactory;
-
     protected static function booted()
     {
         parent::booted();

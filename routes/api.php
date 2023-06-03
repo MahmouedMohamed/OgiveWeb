@@ -128,7 +128,7 @@ Route::group(['middleware' => ['UserIsAuthorized']], function () {
         Route::get('/pending-needies', [AdminController::class, 'getPendingNeedies']);
         Route::post('/ahed/approve/{needy}', [AdminController::class, 'approve']);
         Route::post('/ahed/disapprove/{needy}', [AdminController::class, 'disapprove']);
-        Route::patch('/ahed/collect', [AdminController::class, 'collectOfflineTransaction']);
+        Route::patch('/ahed/offlinetransactions/{offlineTransaction}/collect', [AdminController::class, 'collectOfflineTransaction']);
         //**      Ataa      **//
         //* * Optimized * */
         Route::apiResource('/ataa/prize', AtaaPrizeController::class);
