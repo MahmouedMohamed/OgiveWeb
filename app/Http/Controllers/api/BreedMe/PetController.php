@@ -48,7 +48,7 @@ class PetController extends BaseController
                     ''
                 );
             }
-            
+
             return $this->sendResponse(
                 Pet::join('users', 'users.id', 'pets.created_by')
                     ->join('profiles', 'profiles.user_id', 'users.id')
