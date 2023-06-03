@@ -301,11 +301,11 @@ class AdminController extends BaseController
                     $users = collect([]);
                     $needies = collect([]);
                     while ($csvLine = fgetcsv($file)) {
-                        if (!($users->pluck('id')->has($csvLine[0]))) {
+                        if (! ($users->pluck('id')->has($csvLine[0]))) {
                             $user = $this->userExists($csvLine[0]);
                             $users->push($user);
                         }
-                        if (!($needies->pluck('id')->has($csvLine[1]))) {
+                        if (! ($needies->pluck('id')->has($csvLine[1]))) {
                             $needy = $this->userExists($csvLine[1]);
                             $needies->push($needy);
                         }

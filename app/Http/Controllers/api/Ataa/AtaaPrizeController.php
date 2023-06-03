@@ -118,6 +118,7 @@ class AtaaPrizeController extends BaseController
                 'active' => $request['from'] ? ($request['from'] <= Carbon::now('GMT+2') ? 1 : 0) : 1,
             ]);
             DB::commit();
+
             return $this->sendResponse([], __('Ataa.PrizeCreationSuccessMessage'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden(__('Ataa.PrizeCreateForbiddenMessage'));

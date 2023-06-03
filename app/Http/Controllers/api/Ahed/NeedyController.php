@@ -30,13 +30,13 @@ class NeedyController extends BaseController
         $currentPage = request()->get('page', 1);
 
         return $this->sendResponse(
-            Cache::remember('needies-' . $currentPage, 60 * 60 * 24, function () {
+            Cache::remember('needies-'.$currentPage, 60 * 60 * 24, function () {
                 return
                     Needy::approved()
-                    ->where('severity', '<', '7')
-                    ->latest('needies.created_at')
-                    ->with(['createdBy.profile', 'mediasBefore:id,path,needy_id', 'mediasAfter:id,path,needy_id'])
-                    ->paginate(8);
+                        ->where('severity', '<', '7')
+                        ->latest('needies.created_at')
+                        ->with(['createdBy.profile', 'mediasBefore:id,path,needy_id', 'mediasAfter:id,path,needy_id'])
+                        ->paginate(8);
             }),
             __('General.DataRetrievedSuccessMessage')
         );
@@ -52,13 +52,13 @@ class NeedyController extends BaseController
         $currentPage = request()->get('page', 1);
 
         return $this->sendResponse(
-            Cache::remember('urgentNeedies-' . $currentPage, 60 * 60 * 24, function () {
+            Cache::remember('urgentNeedies-'.$currentPage, 60 * 60 * 24, function () {
                 return
                     Needy::approved()
-                    ->where('severity', '>=', '7')
-                    ->latest('needies.created_at')
-                    ->with(['createdBy.profile', 'mediasBefore:id,path,needy_id', 'mediasAfter:id,path,needy_id'])
-                    ->paginate(8);
+                        ->where('severity', '>=', '7')
+                        ->latest('needies.created_at')
+                        ->with(['createdBy.profile', 'mediasBefore:id,path,needy_id', 'mediasAfter:id,path,needy_id'])
+                        ->paginate(8);
             }),
             __('General.DataRetrievedSuccessMessage')
         );
@@ -94,7 +94,7 @@ class NeedyController extends BaseController
             $imagePaths = [];
             foreach ($images as $image) {
                 $imagePath = $image->store('uploads', 'public');
-                array_push($imagePaths, '/storage/' . $imagePath);
+                array_push($imagePaths, '/storage/'.$imagePath);
             }
             $needy = $request->user->createdNeedies()->create([
                 'id' => Str::uuid(),
@@ -173,7 +173,7 @@ class NeedyController extends BaseController
             $imagePaths = [];
             foreach ($images as $image) {
                 $imagePath = $image->store('uploads', 'public');
-                array_push($imagePaths, '/storage/' . $imagePath);
+                array_push($imagePaths, '/storage/'.$imagePath);
             }
             $needy->addImages($imagePaths, $request['before']);
 
@@ -195,7 +195,7 @@ class NeedyController extends BaseController
         try {
             //Check if current user can update
             $this->userIsAuthorized($request->user, 'update', $needyMedia->needy);
-            Storage::delete('public/' . substr($needyMedia->path, 9));
+            Storage::delete('public/'.substr($needyMedia->path, 9));
             $needyMedia->delete();
 
             return $this->sendResponse([], __('Ahed.NeedyMediaDeleteSuccessMessage'));
