@@ -4,8 +4,6 @@ namespace App\Models\Ahed;
 
 use App\Models\BaseModel;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
 class OfflineTransaction extends BaseModel
 {
