@@ -8,6 +8,7 @@ use App\Exceptions\OfflineTransactionNotFound;
 use App\Exceptions\UserNotAuthorized;
 use App\Exceptions\UserNotFound;
 use App\Http\Requests\CreateUserBanRequest;
+use App\Http\Requests\ImportCSVRequest;
 use App\Models\Ahed\Needy;
 use App\Models\Ahed\OfflineTransaction;
 use App\Models\Ahed\OnlineTransaction;
@@ -326,15 +327,8 @@ class AdminController extends BaseController
                 ->paginate(8), 'تم إسترجاع البيانات بنجاح');  ///Cases retrieved successfully.
     }
 
-    public function importCSV(Request $request)
+    public function importCSV(ImportCSVRequest $request)
     {
-        $validated = Validator::make($request->all(), [
-            'type' => 'required',
-            'file' => 'required|mimes:csv,txt',
-        ]);
-        if ($validated->fails()) {
-            return $this->sendError(__('General.InvalidData'), $validated->messages(), 400);
-        }
         $now = Carbon::now()->toDateTimeString();
         try {
             switch ($request['type']) {
