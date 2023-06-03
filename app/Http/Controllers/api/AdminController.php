@@ -36,7 +36,6 @@ class AdminController extends BaseController
     public function generalAdminDashboard(Request $request)
     {
         try {
-            $user = User::find($request['userId']);
             //TODO: Check privilige
             $numberOfUsers = User::count();
 
@@ -191,12 +190,10 @@ class AdminController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function freezeUserAtaaAchievements(Request $request)
+    public function freezeUserAtaaAchievements(Request $request, User $user)
     {
         try {
-            $user = $this->userExists($request['userId']);
-            $admin = $this->userExists($request['adminId']);
-            $this->userIsAuthorized($admin, 'freeze', $user->ataaAchievement);
+            $this->userIsAuthorized($request->user, 'freeze', $user->ataaAchievement);
             $user->ataaAchievement->freeze();
 
             return $this->sendResponse([], 'User Achievement Freezed Successfully!');
@@ -212,12 +209,10 @@ class AdminController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function defreezeUserAtaaAchievements(Request $request)
+    public function defreezeUserAtaaAchievements(Request $request, User $user)
     {
         try {
-            $user = $this->userExists($request['userId']);
-            $admin = $this->userExists($request['adminId']);
-            $this->userIsAuthorized($admin, 'defreeze', $user->ataaAchievement);
+            $this->userIsAuthorized($request->user, 'defreeze', $user->ataaAchievement);
             $user->ataaAchievement->defreeze();
 
             return $this->sendResponse([], 'User Achievement Defreezed Successfully!');
@@ -253,8 +248,7 @@ class AdminController extends BaseController
     public function activateBan(Request $request, UserBan $userBan)
     {
         try {
-            $user = $this->userExists($request['userId']);
-            $this->userIsAuthorized($user, 'activate', $userBan);
+            $this->userIsAuthorized($request->user, 'activate', $userBan);
             $userBan->activate();
 
             return $this->sendResponse('', 'User Ban Activated Successfully');
@@ -273,8 +267,7 @@ class AdminController extends BaseController
     public function deactivateBan(Request $request, UserBan $userBan)
     {
         try {
-            $user = $this->userExists($request['userId']);
-            $this->userIsAuthorized($user, 'deactivate', $userBan);
+            $this->userIsAuthorized($request->user, 'deactivate', $userBan);
             $userBan->deactivate();
 
             return $this->sendResponse('', 'User Ban Deactivated Successfully');
@@ -326,6 +319,7 @@ class AdminController extends BaseController
                 ->paginate(8), 'تم إسترجاع البيانات بنجاح');  ///Cases retrieved successfully.
     }
 
+    //ToDo: Use Excel Package
     public function importCSV(ImportCSVRequest $request)
     {
         $now = Carbon::now()->toDateTimeString();
