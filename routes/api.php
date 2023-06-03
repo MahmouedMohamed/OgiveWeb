@@ -114,14 +114,12 @@ Route::group(['middleware' => ['UserIsAuthorized']], function () {
         Route::get('/needies-with-ids', [NeedyController::class, 'getNeediesWithIDs']);
         Route::put('/needies/{needy}/add-images', [NeedyController::class, 'addAssociatedImages']);
         Route::put('/needies/medias/{needyMedia}/remove-image/', [NeedyController::class, 'removeAssociatedImage']);
-        Route::get('users/{user}/offlinetransactions', [OfflineTransactionController::class, 'index']);
-        Route::get('users/{user}/offlinetransactions', [OfflineTransactionController::class, 'store']);
-        Route::get('users/{user}/offlinetransactions/{offlineTransaction}', [OfflineTransactionController::class, 'show']);
-        Route::get('users/{user}/onlinetransactions', [OnlineTransactionController::class, 'index']);
-        Route::get('users/{user}/onlinetransactions', [OnlineTransactionController::class, 'store']);
-        Route::get('users/{user}/onlinetransactions/{onlineTransaction}', [OnlineTransactionController::class, 'show']);
-        // Route::apiResource('/onlinetransactions', OnlineTransactionsController::class);
-        // Route::apiResource('/offlinetransactions', OfflineTransactionsController::class);
+        Route::get('/offlinetransactions', [OfflineTransactionController::class, 'index']);
+        Route::post('offlinetransactions', [OfflineTransactionController::class, 'store']);
+        Route::get('/offlinetransactions/{offlineTransaction}', [OfflineTransactionController::class, 'show']);
+        Route::get('/onlinetransactions', [OnlineTransactionController::class, 'index']);
+        Route::post('/onlinetransactions', [OnlineTransactionController::class, 'store']);
+        Route::get('onlinetransactions/{onlineTransaction}', [OnlineTransactionController::class, 'show']);
         Route::get('/ahedachievement', [UserController::class, 'getAhedAchievementRecords']);
     });
 
