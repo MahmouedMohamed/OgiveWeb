@@ -18,7 +18,6 @@ use App\Models\OauthAccessToken;
 use App\Models\User;
 use App\Models\UserBan;
 use App\Traits\ControllersTraits\NeedyValidator;
-use App\Traits\ControllersTraits\OfflineTransactionValidator;
 use App\Traits\ControllersTraits\UserValidator;
 use Carbon\Carbon;
 use Exception;
@@ -26,7 +25,7 @@ use Illuminate\Http\Request;
 
 class AdminController extends BaseController
 {
-    use UserValidator, NeedyValidator, OfflineTransactionValidator;
+    use UserValidator, NeedyValidator;
 
     /**
      * Dashboard.

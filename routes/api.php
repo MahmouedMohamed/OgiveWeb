@@ -117,6 +117,8 @@ Route::group(['middleware' => ['UserIsAuthorized']], function () {
         Route::get('/offlinetransactions', [OfflineTransactionController::class, 'index']);
         Route::post('offlinetransactions', [OfflineTransactionController::class, 'store']);
         Route::get('/offlinetransactions/{offlineTransaction}', [OfflineTransactionController::class, 'show']);
+        Route::put('/offlinetransactions/{offlineTransaction}', [OfflineTransactionController::class, 'update']);
+        Route::delete('/offlinetransactions/{offlineTransaction}', [OfflineTransactionController::class, 'destroy']);
         Route::get('/onlinetransactions', [OnlineTransactionController::class, 'index']);
         Route::post('/onlinetransactions', [OnlineTransactionController::class, 'store']);
         Route::get('onlinetransactions/{onlineTransaction}', [OnlineTransactionController::class, 'show']);

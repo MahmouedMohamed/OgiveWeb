@@ -25,4 +25,5 @@ return [
     'TransactionUpdateForbiddenMessage' => 'أنت لا تملك صلاحية تعديل ذلك التعامل',
     'TransactionDeletionForbiddenMessage' => 'أنت لا تملك صلاحية إزالة ذلك التعامل',
     'TransactionNeedySatisfiedMessage' => 'تم جمع اللازم لتلك الحالة، من فضلك تفقد حالة أخري',
+    'OfflineTransactionNotFound' => 'هذه المعاملة غير موجودة',
 ];
