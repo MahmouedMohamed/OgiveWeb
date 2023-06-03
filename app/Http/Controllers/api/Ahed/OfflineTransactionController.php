@@ -86,7 +86,6 @@ class OfflineTransactionController extends BaseController
      * Display the specified resource.
      *
      * @param  App\Models\Ahed\OfflineTransaction  $offlineTransaction
-     *
      * @return \Illuminate\Http\Response
      */
     public function show(Request $request, OfflineTransaction $offlineTransaction)
@@ -113,7 +112,6 @@ class OfflineTransactionController extends BaseController
      * Update the specified resource in storage.
      *
      * @param  App\Models\Ahed\OfflineTransaction  $offlineTransaction
-     *
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateOfflineTransactionRequest $request, OfflineTransaction $offlineTransaction)
@@ -152,7 +150,6 @@ class OfflineTransactionController extends BaseController
      * Remove the specified resource from storage.
      *
      * @param  App\Models\Ahed\OfflineTransaction  $offlineTransaction
-     *
      * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request, OfflineTransaction $offlineTransaction)

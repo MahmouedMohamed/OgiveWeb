@@ -5,9 +5,7 @@ namespace App\Http\Controllers\api\Ahed;
 use App\Exceptions\NeedyIsSatisfied;
 use App\Exceptions\NeedyNotApproved;
 use App\Exceptions\NeedyNotFound;
-use App\Exceptions\OnlineTransactionNotFound;
 use App\Exceptions\UserNotAuthorized;
-use App\Exceptions\UserNotFound;
 use App\Http\Controllers\api\BaseController;
 use App\Http\Requests\StoreOnlineTransactionRequest;
 use App\Models\Ahed\OnlineTransaction;
@@ -69,7 +67,6 @@ class OnlineTransactionController extends BaseController
      * Display the specified resource.
      *
      * @param  App\Models\Ahed\OnlineTransaction  $onlineTransaction
-     *
      * @return \Illuminate\Http\Response
      */
     public function show(Request $request, OnlineTransaction $onlineTransaction)
@@ -92,7 +89,6 @@ class OnlineTransactionController extends BaseController
      * Update the specified resource in storage.
      *
      * @param  App\Models\Ahed\OnlineTransaction  $onlineTransaction
-     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, OnlineTransaction $onlineTransaction)
@@ -105,7 +101,6 @@ class OnlineTransactionController extends BaseController
      * Remove the specified resource from storage.
      *
      * @param  App\Models\Ahed\OnlineTransaction  $onlineTransaction
-     *
      * @return \Illuminate\Http\Response
      */
     public function destroy(OnlineTransaction $onlineTransaction)

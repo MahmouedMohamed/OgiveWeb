@@ -4,8 +4,6 @@ namespace App\Traits\ControllersTraits;
 
 use App\Exceptions\OnlineTransactionNotFound;
 use App\Models\Ahed\OnlineTransaction;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 trait OnlineTransactionValidator
 {
