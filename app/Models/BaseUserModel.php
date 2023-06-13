@@ -56,7 +56,7 @@ class BaseUserModel extends AuthenticatableUser
 
     public function deleteRelatedAccessTokens($appType)
     {
-        $this->accessTokens()->where('app_type', '=', $appType)->delete();
+        $this->accessTokens()->where('app_type', '=', $appType)->update(['active' => false]);
     }
 
     public function ataaAchievement()
