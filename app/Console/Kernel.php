@@ -28,17 +28,16 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->job(new UserBanActivatorJob())->daily();
-        // $schedule->job(new UserBanDeactivatorJob())->daily();
-        // $schedule->job(new AtaaPrizeActivatorJob())->daily();
-        // $schedule->job(new AtaaPrizeDeactivatorJob())->daily();
-        // $schedule->job(new AccessTokenDeactivatorJob())->daily();
-        $schedule->job(new UserBanActivatorJob())->everyMinute();
-        $schedule->job(new UserBanDeactivatorJob())->everyMinute();
-        $schedule->job(new AtaaPrizeActivatorJob())->everyMinute();
-        $schedule->job(new AtaaPrizeDeactivatorJob())->everyMinute();
-        $schedule->job(new AccessTokenDeactivatorJob())->everyMinute();
-        // $schedule->command('inspire')->hourly();
+        $schedule->job(new UserBanActivatorJob())->daily();
+        $schedule->job(new UserBanDeactivatorJob())->daily();
+        $schedule->job(new AtaaPrizeActivatorJob())->daily();
+        $schedule->job(new AtaaPrizeDeactivatorJob())->daily();
+        $schedule->job(new AccessTokenDeactivatorJob())->daily();
+        // $schedule->job(new UserBanActivatorJob())->everyMinute();
+        // $schedule->job(new UserBanDeactivatorJob())->everyMinute();
+        // $schedule->job(new AtaaPrizeActivatorJob())->everyMinute();
+        // $schedule->job(new AtaaPrizeDeactivatorJob())->everyMinute();
+        // $schedule->job(new AccessTokenDeactivatorJob())->everyMinute();
     }
 
     /**
