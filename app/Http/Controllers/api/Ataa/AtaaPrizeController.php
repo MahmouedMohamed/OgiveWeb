@@ -111,11 +111,11 @@ class AtaaPrizeController extends BaseController
                 'image' => $imagePath,
                 'required_markers_collected' => $request['required_markers_collected'],
                 'required_markers_posted' => $request['required_markers_posted'],
-                'from' => $request['from'] ?? Carbon::now('GMT+2'),
+                'from' => $request['from'] ?? Carbon::now(),
                 'to' => $request['to'],
                 'level' => $request['level'],
                 //Has From? then compare -> less than then active, o.w wait for sql event to activate it || active
-                'active' => $request['from'] ? ($request['from'] <= Carbon::now('GMT+2') ? 1 : 0) : 1,
+                'active' => $request['from'] ? ($request['from'] <= Carbon::now() ? 1 : 0) : 1,
             ]);
             DB::commit();
 

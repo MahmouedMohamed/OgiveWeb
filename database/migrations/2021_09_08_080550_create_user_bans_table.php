@@ -19,8 +19,8 @@ class CreateUserBansTable extends Migration
             $table->string('banned_user');
             $table->string('tag');
             $table->boolean('active')->default(1);
-            $table->dateTime('start_at');
-            $table->dateTime('end_at')->nullable(); //null -> Infinity
+            $table->date('start_at');
+            $table->date('end_at')->nullable(); //null -> Infinity
             $table->string('created_by')->nullable();
             $table->timestamps();
             $table->foreign('banned_user')
