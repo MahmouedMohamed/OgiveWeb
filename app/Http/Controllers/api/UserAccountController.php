@@ -28,7 +28,7 @@ class UserAccountController extends BaseController
             }
             //ToDo: Make Bank Account Transaction
             $account->decrement('balance', $request['amount']);
-            return $this->sendResponse($account, __('General.UserAccountDepositSuccessMessage'));
+            return $this->sendResponse($account, __('General.UserAccountWithdrawalSuccessMessage'));
         } catch (Exception $e) {
             return $this->sendError($e->getMessage());
         }
