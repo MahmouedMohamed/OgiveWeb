@@ -13,6 +13,7 @@ class UserAccountController extends BaseController
         try {
             //ToDo: Make Bank Account Transaction
             $request->user->account()->increment('balance', $request['amount']);
+
             return $this->sendResponse($request->user->account, __('General.UserAccountDepositSuccessMessage'));
         } catch (Exception $e) {
             return $this->sendError($e->getMessage());
@@ -23,11 +24,12 @@ class UserAccountController extends BaseController
     {
         try {
             $account = $request->user->account;
-            if($request['amount'] > $account->balance){
+            if ($request['amount'] > $account->balance) {
                 return $this->sendError(__('General.UserAccountWithdrawalNoBalanceErrorMessage'));
             }
             //ToDo: Make Bank Account Transaction
             $account->decrement('balance', $request['amount']);
+
             return $this->sendResponse($account, __('General.UserAccountWithdrawalSuccessMessage'));
         } catch (Exception $e) {
             return $this->sendError($e->getMessage());
