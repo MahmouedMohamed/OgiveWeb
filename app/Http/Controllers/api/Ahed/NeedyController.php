@@ -75,6 +75,7 @@ class NeedyController extends BaseController
     {
         return $this->sendResponse(
             Needy::whereIn('id', $request['ids'])
+                ->notSatisfied()
                 ->approved()
                 ->latest('needies.created_at')
                 ->with(['createdBy.profile', 'mediasBefore:id,path,needy_id', 'mediasAfter:id,path,needy_id'])->get(),
