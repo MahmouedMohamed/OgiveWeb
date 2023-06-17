@@ -17,7 +17,7 @@ class ProfileResource extends JsonResource
         return [
             'id' => $this->id,
             'bio' => $this->bio,
-            'image' => url()->current().$this->image,
+            'image' => asset($this->image),
             'cover' => url()->current().$this->cover,
         ];
     }

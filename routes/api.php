@@ -40,6 +40,28 @@ Route::post('/login', [UserController::class, 'login']);
 Route::post('/anonymous-login', [UserController::class, 'anonymousLogin']);
 Route::post('/register', [UserController::class, 'register']);
 
+   //**      Breed Me      **//
+Route::group(['prefix' => 'breedme', 'middleware' => ['Bindings']], function () {
+    Route::apiResource('pets', PetController::class);
+    Route::get('/filterByType', [PetController::class, 'filterByType']);
+
+    Route::apiResource('consultations', ConsultationController::class);
+    Route::apiResource('comments', ConsultationCommentController::class);
+    Route::apiResource('requests', AdoptionRequestController::class);
+
+    Route::post('myRequests', [AdoptionRequestController::class, 'getRequests']);
+    Route::post('sendRequest', [AdoptionRequestController::class, 'sendRequest']);
+
+    Route::apiResource('articles', PetsArticleController::class);
+
+    Route::group(['prefix' => 'places'], function () {
+        Route::get('/', [MemoryController::class, 'index'])->name('public');
+        Route::get('/{place}', [MemoryController::class, 'show']);
+        Route::post('/', [MemoryController::class, 'store']);
+        Route::patch('/{place}', [MemoryController::class, 'update']);
+        Route::delete('/{place}', [MemoryController::class, 'destroy']);
+    });
+});
 Route::group(['middleware' => ['UserIsAuthorized']], function () {
     Route::group(['prefix' => 'options', 'as' => 'public'], function () {
         Route::get('/nationalities', [OptionsController::class, 'nationalities']);
@@ -85,28 +107,7 @@ Route::group(['middleware' => ['UserIsAuthorized']], function () {
         });
     });
 
-    //**      Breed Me      **//
-    Route::group(['prefix' => 'breedme', 'middleware' => ['Bindings']], function () {
-        Route::apiResource('pets', PetController::class);
-        Route::get('/filterByType', [PetController::class, 'filterByType']);
-
-        Route::apiResource('consultations', ConsultationController::class);
-        Route::apiResource('comments', ConsultationCommentController::class);
-        Route::apiResource('requests', AdoptionRequestController::class);
-
-        Route::post('myRequests', [AdoptionRequestController::class, 'getRequests']);
-        Route::post('sendRequest', [AdoptionRequestController::class, 'sendRequest']);
-
-        Route::apiResource('articles', PetsArticleController::class);
-
-        Route::group(['prefix' => 'places'], function () {
-            Route::get('/', [MemoryController::class, 'index'])->name('public');
-            Route::get('/{place}', [MemoryController::class, 'show']);
-            Route::post('/', [MemoryController::class, 'store']);
-            Route::patch('/{place}', [MemoryController::class, 'update']);
-            Route::delete('/{place}', [MemoryController::class, 'destroy']);
-        });
-    });
+ 
     //**      Ahed      **//
     Route::group(['prefix' => 'ahed', 'middleware' => ['Bindings']], function () {
         Route::apiResource('/needies', NeedyController::class);
