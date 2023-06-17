@@ -15,6 +15,7 @@ class OnlineTransaction extends BaseModel
         'needy_id',
         'amount',
         'remaining',
+        'fulfilled_by_auto_donation',
     ];
 
     public function giver()
