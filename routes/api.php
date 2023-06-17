@@ -54,8 +54,7 @@ Route::group(['middleware' => ['UserIsAuthorized']], function () {
         Route::post('/account/deposit', [UserAccountController::class, 'deposit']);
         Route::post('/account/withdrawal', [UserAccountController::class, 'withdrawal']);
         Route::get('/settings', [UserSettingsController::class, 'show']);
-        Route::post('/settings', [UserSettingsController::class, 'storeOrUpdate']);
-        Route::put('/settings', [UserSettingsController::class, 'storeOrUpdate']);
+        Route::put('/settings', [UserSettingsController::class, 'update']);
     });
 
     //**      Ataa      **//

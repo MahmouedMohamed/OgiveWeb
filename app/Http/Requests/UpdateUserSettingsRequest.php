@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-class UserSettingsRequest extends BaseRequest
+class UpdateUserSettingsRequest extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,6 +24,8 @@ class UserSettingsRequest extends BaseRequest
         return [
             'auto_donate' => 'nullable|boolean',
             'auto_donate_on_severity' => 'nullable|integer|min:1|max:10',
+            'min_amount_per_needy_for_auto_donation' => 'nullable|decimal|min:1',
+            'max_amount_per_needy_for_auto_donation' => 'nullable|decimal|min:1',
         ];
     }
 }

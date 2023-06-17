@@ -2,10 +2,7 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Http\Requests\UserAccountDepositRequest;
-use App\Http\Requests\UserAccountWithdrawalRequest;
-use App\Http\Requests\UserSettingsRequest;
-use App\Models\UserSettings;
+use App\Http\Requests\UpdateUserSettingsRequest;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -20,13 +17,15 @@ class UserSettingsController extends BaseController
         }
     }
 
-    public function storeOrUpdate(UserSettingsRequest $request)
+    public function update(UpdateUserSettingsRequest $request)
     {
         try {
-            $settings = $request->user->settings;
-            $settings = UserSettings::updateOrCreate(['id' => $settings->id], [
+            $settings = $request->user->settings?? $request->user->settings()->create([]);
+            $settings = $settings->update([
                 'auto_donate' => $request['auto_donate'] ?? $settings->auto_donate,
                 'auto_donate_on_severity' => $request['auto_donate_on_severity'] ?? $settings->auto_donate_on_severity,
+                'min_amount_per_needy_for_auto_donation' => $request['min_amount_per_needy_for_auto_donation'] ?? $settings->min_amount_per_needy_for_auto_donation,
+                'max_amount_per_needy_for_auto_donation' => $request['max_amount_per_needy_for_auto_donation'] ?? $settings->max_amount_per_needy_for_auto_donation,
             ]);
 
             return $this->sendResponse($settings, __('General.UserSettingsSuccessMessage'));
