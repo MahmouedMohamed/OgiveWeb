@@ -264,7 +264,7 @@ class AdminController extends BaseController
                 'banned_user' => $bannedUser->id,
                 'tag' => $request['tag'],
                 'active' => $request['startAt'] != null ? ($request['startAt'] <= Carbon::now('GMT+2') ? 1 : 0) : 1,
-                'start_at' => $request['startAt'] ?? Carbon::now('GMT+2'),
+                'start_at' => $request['startAt'] ?? Carbon::now(),
                 'end_at' => $request['endAt'] ?? null,
             ]);
 

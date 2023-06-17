@@ -27,7 +27,7 @@ class BaseUserModel extends AuthenticatableUser
     public function createAccessToken($accessType, $appType)
     {
         $this->deleteRelatedAccessTokens($appType);
-        $expiryDate = Carbon::now('GMT+2')->addMonth();
+        $expiryDate = Carbon::now()->addMonth()->startOfDay();
         $accessToken = $this->accessTokens()->create([
             'owner_type' => OwnerType::$value[class_basename($this)],
             'owner_id' => $this->id,
@@ -56,7 +56,7 @@ class BaseUserModel extends AuthenticatableUser
 
     public function deleteRelatedAccessTokens($appType)
     {
-        $this->accessTokens()->where('app_type', '=', $appType)->delete();
+        $this->accessTokens()->where('app_type', '=', $appType)->update(['active' => false]);
     }
 
     public function ataaAchievement()

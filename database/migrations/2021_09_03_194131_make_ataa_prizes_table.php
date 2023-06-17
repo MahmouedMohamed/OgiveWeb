@@ -22,8 +22,8 @@ class MakeAtaaPrizesTable extends Migration
             $table->string('image')->nullable(); //if money would be nullable
             $table->integer('required_markers_collected')->default(0);
             $table->integer('required_markers_posted')->default(0);
-            $table->dateTime('from')->default(DB::raw('CURRENT_TIMESTAMP'));
-            $table->dateTime('to')->nullable(); //Can be null cause it can be forever
+            $table->date('from')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->date('to')->nullable(); //Can be null cause it can be forever
             $table->integer('level');
             $table->boolean('active')->default(1);
             //nullable -> Can Be auto created

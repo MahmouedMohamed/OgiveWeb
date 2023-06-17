@@ -21,6 +21,7 @@ use App\Http\Controllers\api\MemoryWall\MemoryController;
 /* Ahed */
 use App\Http\Controllers\api\OptionsController;
 use App\Http\Controllers\api\TokensController;
+use App\Http\Controllers\api\UserAccountController;
 use App\Http\Controllers\api\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -71,6 +72,8 @@ Route::group(['middleware' => ['UserIsAuthorized']], function () {
         Route::patch('/{user}/profile/picture', [UserController::class, 'updateProfilePicture']);
         Route::patch('/{user}/profile/cover', [UserController::class, 'updateCoverPicture']);
         Route::patch('/{user}/profile/information', [UserController::class, 'updateinformation']);
+        Route::post('/account/deposit', [UserAccountController::class, 'deposit']);
+        Route::post('/account/withdrawal', [UserAccountController::class, 'withdrawal']);
     });
 
     //**      Ataa      **//
@@ -128,27 +131,26 @@ Route::group(['middleware' => ['UserIsAuthorized']], function () {
 
     //**      Admin Controllers      **//
     Route::group(['prefix' => 'admin', 'middleware' => ['Bindings']], function () {
-        //* * Optimized * */
         Route::get('/', [AdminController::class, 'generalAdminDashboard']);
         //**      Ahed      **//
-        //* * Optimized * */
         Route::get('/pending-needies', [AdminController::class, 'getPendingNeedies']);
         Route::post('/ahed/approve/{needy}', [AdminController::class, 'approve']);
         Route::post('/ahed/disapprove/{needy}', [AdminController::class, 'disapprove']);
         Route::patch('/ahed/offlinetransactions/{offlineTransaction}/collect', [AdminController::class, 'collectOfflineTransaction']);
         //**      Ataa      **//
-        //* * Optimized * */
-        Route::get('/ataa/prizes', [AtaaPrizeController::class, 'index']);
-        Route::post('/ataa/prizes', [AtaaPrizeController::class, 'store']);
-        Route::patch('/ataa/prizes/{prize}/activate', [AtaaPrizeController::class, 'activate']);
-        Route::patch('/ataa/prizes/{prize}/deactivate', [AtaaPrizeController::class, 'deactivate']);
-        Route::get('/ataa/badges', [AtaaBadgeController::class, 'index']);
-        Route::post('/ataa/badges', [AtaaBadgeController::class, 'store']);
-        Route::patch('/ataa/badges/{badge}/activate', [AtaaBadgeController::class, 'activate']);
-        Route::patch('/ataa/badges/{badge}/deactivate', [AtaaBadgeController::class, 'deactivate']);
-        Route::get('/ataa/achievement', [AdminController::class, 'getAtaaAchievements']);
-        Route::post('/ataa/users/{user}/freeze-achievement', [AdminController::class, 'freezeUserAtaaAchievements']);
-        Route::post('/ataa/users/{user}/defreeze-achievement', [AdminController::class, 'defreezeUserAtaaAchievements']);
+        Route::group(['prefix' => 'ataa'], function () {
+            Route::get('/prizes', [AtaaPrizeController::class, 'index']);
+            Route::post('/prizes', [AtaaPrizeController::class, 'store']);
+            Route::patch('/prizes/{prize}/activate', [AtaaPrizeController::class, 'activate']);
+            Route::patch('/prizes/{prize}/deactivate', [AtaaPrizeController::class, 'deactivate']);
+            Route::get('/badges', [AtaaBadgeController::class, 'index']);
+            Route::post('/badges', [AtaaBadgeController::class, 'store']);
+            Route::patch('/badges/{badge}/activate', [AtaaBadgeController::class, 'activate']);
+            Route::patch('/badges/{badge}/deactivate', [AtaaBadgeController::class, 'deactivate']);
+            Route::get('/achievement', [AdminController::class, 'getAtaaAchievements']);
+            Route::post('/users/{user}/freeze-achievement', [AdminController::class, 'freezeUserAtaaAchievements']);
+            Route::post('/users/{user}/defreeze-achievement', [AdminController::class, 'defreezeUserAtaaAchievements']);
+        });
         //**      Ban      **//
         Route::get('/users/{bannedUser}/ban', [AdminController::class, 'getUserBans']);
         Route::post('/users/{bannedUser}/ban', [AdminController::class, 'addUserBan']);
