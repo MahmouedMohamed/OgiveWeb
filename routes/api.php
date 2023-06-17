@@ -23,6 +23,7 @@ use App\Http\Controllers\api\OptionsController;
 use App\Http\Controllers\api\TokensController;
 use App\Http\Controllers\api\UserAccountController;
 use App\Http\Controllers\api\UserController;
+use App\Http\Controllers\api\UserSettingsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -52,6 +53,9 @@ Route::group(['middleware' => ['UserIsAuthorized']], function () {
         Route::patch('/{user}/profile/information', [UserController::class, 'updateinformation']);
         Route::post('/account/deposit', [UserAccountController::class, 'deposit']);
         Route::post('/account/withdrawal', [UserAccountController::class, 'withdrawal']);
+        Route::get('/settings', [UserSettingsController::class, 'show']);
+        Route::post('/settings', [UserSettingsController::class, 'storeOrUpdate']);
+        Route::put('/settings', [UserSettingsController::class, 'storeOrUpdate']);
     });
 
     //**      Ataa      **//

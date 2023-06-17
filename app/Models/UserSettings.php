@@ -6,7 +6,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class UserSettings extends BaseModel
 {
-    use HasFactory;
+    public $incrementing = false;
+
+    protected $fillable = [
+        'id',
+        'auto_donate',
+        'auto_donate_on_severity',
+    ];
+
+    protected $casts = [
+        'auto_donate' => 'boolean'
+    ];
 
     public function user()
     {
