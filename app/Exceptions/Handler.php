@@ -40,8 +40,8 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
-        $this->renderable(function(MethodNotAllowedHttpException $ex){
-            return $this->sendError("Method Not Allowed", code: 405);
+        $this->renderable(function (MethodNotAllowedHttpException $ex) {
+            return $this->sendError('Method Not Allowed', code: 405);
         });
     }
 }
