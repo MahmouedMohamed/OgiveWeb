@@ -21,6 +21,7 @@ class CreateUserSettingsTable extends Migration
             $table->integer('auto_donate_on_severity')->default(1);
             $table->double('min_amount_per_needy_for_auto_donation')->default(1);
             $table->double('max_amount_per_needy_for_auto_donation')->default(100);
+            $table->boolean('allow_multiple_donation_for_same_needy')->default(true);
             $table->timestampTz('latest_auto_donation_time')->nullable();
             $table->timestamps();
             $table->foreign('user_id')

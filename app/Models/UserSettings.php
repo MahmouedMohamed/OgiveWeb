@@ -14,6 +14,8 @@ class UserSettings extends BaseModel
         'auto_donate_on_severity',
         'min_amount_per_needy_for_auto_donation',
         'max_amount_per_needy_for_auto_donation',
+        'allow_multiple_donation_for_same_needy',
+        'latest_auto_donation_time',
     ];
 
     protected $casts = [
