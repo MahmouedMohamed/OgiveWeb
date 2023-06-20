@@ -118,4 +118,9 @@ class Needy extends BaseModel
     {
         return $query->where('satisfied', '=', '1');
     }
+
+    public function scopeNotSatisfied($query)
+    {
+        return $query->where('satisfied', '=', 0);
+    }
 }

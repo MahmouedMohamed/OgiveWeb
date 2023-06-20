@@ -21,6 +21,7 @@ class OfflineTransaction extends BaseModel
         'end_collect_date',
         'selected_date',
         'collected',
+        'fulfilled_by_auto_donation',
     ];
 
     public function giver()
