@@ -42,7 +42,7 @@ Route::post('/login', [UserController::class, 'login']);
 Route::post('/anonymous-login', [UserController::class, 'anonymousLogin']);
 Route::post('/register', [UserController::class, 'register']);
 
-   //**      Breed Me      **//
+//**      Breed Me      **//
 Route::group(['prefix' => 'breedme', 'middleware' => ['Bindings']], function () {
     Route::apiResource('pets', PetController::class);
     Route::get('/filterByType', [PetController::class, 'filterByType']);
@@ -113,7 +113,6 @@ Route::group(['middleware' => ['UserIsAuthorized']], function () {
         });
     });
 
- 
     //**      Ahed      **//
     Route::group(['prefix' => 'ahed', 'middleware' => ['Bindings']], function () {
         Route::apiResource('/needies', NeedyController::class);
