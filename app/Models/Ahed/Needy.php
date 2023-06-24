@@ -27,6 +27,11 @@ class Needy extends BaseModel
         'url',
     ];
 
+    protected $casts = [
+        'satisfied' => 'boolean',
+        'approved' => 'boolean'
+    ];
+
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by');

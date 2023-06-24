@@ -24,6 +24,10 @@ class OfflineTransaction extends BaseModel
         'fulfilled_by_auto_donation',
     ];
 
+    protected $casts = [
+        'collected' => 'boolean'
+    ];
+
     public function giver()
     {
         return $this->belongsTo(User::class);
