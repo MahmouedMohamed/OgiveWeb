@@ -115,8 +115,12 @@ Route::group(['middleware' => ['UserIsAuthorized']], function () {
 
     //**      Ahed      **//
     Route::group(['prefix' => 'ahed', 'middleware' => ['Bindings']], function () {
-        Route::apiResource('/needies', NeedyController::class);
-        Route::get('/urgent-needies', [NeedyController::class, 'urgentIndex']);
+        Route::get('/urgent-needies', [NeedyController::class, 'urgentIndex'])->name('public');
+        Route::get('/needies', [NeedyController::class, 'index'])->name('public');
+        Route::get('/needies/{needy}', [NeedyController::class, 'show'])->name('public');
+        Route::post('/needies', [NeedyController::class, 'store']);
+        Route::put('/needies/{needy}', [NeedyController::class, 'update']);
+        Route::delete('/needies/{needy}', [NeedyController::class, 'destroy']);
         Route::get('/needies-with-ids', [NeedyController::class, 'getNeediesWithIDs']);
         Route::put('/needies/{needy}/add-images', [NeedyController::class, 'addAssociatedImages']);
         Route::put('/needies/medias/{needyMedia}/remove-image/', [NeedyController::class, 'removeAssociatedImage']);
