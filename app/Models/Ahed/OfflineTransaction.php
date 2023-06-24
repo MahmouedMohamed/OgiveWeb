@@ -25,7 +25,7 @@ class OfflineTransaction extends BaseModel
     ];
 
     protected $casts = [
-        'collected' => 'boolean'
+        'collected' => 'boolean',
     ];
 
     public function giver()
