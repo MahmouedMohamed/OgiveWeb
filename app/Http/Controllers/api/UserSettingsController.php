@@ -20,7 +20,7 @@ class UserSettingsController extends BaseController
     public function update(UpdateUserSettingsRequest $request)
     {
         try {
-            $settings = $request->user->settings?? $request->user->settings()->create([]);
+            $settings = $request->user->settings ?? $request->user->settings()->create([]);
             $settings = $settings->update([
                 'auto_donate' => $request['auto_donate'] ?? $settings->auto_donate,
                 'auto_donate_on_severity' => $request['auto_donate_on_severity'] ?? $settings->auto_donate_on_severity,

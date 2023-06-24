@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-
 class UserSettings extends BaseModel
 {
     public $incrementing = false;
@@ -19,7 +17,7 @@ class UserSettings extends BaseModel
     ];
 
     protected $casts = [
-        'auto_donate' => 'boolean'
+        'auto_donate' => 'boolean',
     ];
 
     protected $attributes = [

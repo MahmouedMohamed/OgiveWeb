@@ -15,6 +15,7 @@ use App\Models\Ahed\Needy;
 use App\Models\Ahed\OfflineTransaction;
 use App\Models\Ahed\OnlineTransaction;
 use App\Models\AnonymousUser;
+use App\Models\Profile;
 use App\Models\User;
 use App\Traits\ControllersTraits\LoginValidator;
 use Illuminate\Http\Request;
@@ -60,6 +61,7 @@ class UserController extends BaseController
         try {
             if (Auth::attempt(['email' => $request['email'], 'password' => $request['password']])) {
                 $user = $this->getAuthenticatedUser();
+                $profile = Profile::where('user_id', $user->id)->first();
                 $this->userBanValidator($user);
                 if ($request['appType'] == 'TimeCatcher') {
                     $user->fcmTokens()->create([

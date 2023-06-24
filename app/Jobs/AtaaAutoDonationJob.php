@@ -5,17 +5,16 @@ namespace App\Jobs;
 use App\Models\Ahed\Needy;
 use App\Models\Ahed\OnlineTransaction;
 use App\Models\User;
+use App\Models\UserAccount;
+use App\Models\UserSettings;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use App\Models\UserAccount;
-use App\Models\UserSettings;
 use Illuminate\Support\Str;
 
 class AtaaAutoDonationJob implements ShouldQueue
@@ -78,7 +77,7 @@ class AtaaAutoDonationJob implements ShouldQueue
                 ) {
                     $alreadyDonatedForNeedy =
                         $user->onlinetransactions->where('needy_id', '=', $needyId)->isNotEmpty();
-                    if (!$user->settings->allow_multiple_donation_for_same_needy && $alreadyDonatedForNeedy) {
+                    if (! $user->settings->allow_multiple_donation_for_same_needy && $alreadyDonatedForNeedy) {
                         continue;
                     }
                     $affordableAmount = $user->account->balance > $user->settings->max_amount_per_needy_for_auto_donation ?
@@ -95,28 +94,26 @@ class AtaaAutoDonationJob implements ShouldQueue
                         'amount' => $amount,
                         'remaining' => 0,
                         'fulfilled_by_auto_donation' => true,
-                        'created_at'  => Carbon::now(),
-                        'updated_at' => Carbon::now()
+                        'created_at' => Carbon::now(),
+                        'updated_at' => Carbon::now(),
                     ];
 
                     $userAccounts[$user->account->id] = $user->account->getAttributes();
                     $userAccounts[$user->account->id]['balance'] = $user->account->balance - $amount;
                     $userAccounts[$user->account->id]['updated_at'] = Carbon::now();
 
-
                     $userSettings[$user->settings->id] = $user->settings->getAttributes();
                     $userSettings[$user->settings->id]['latest_auto_donation_time'] = Carbon::now();
                     $userSettings[$user->settings->id]['updated_at'] = Carbon::now();
 
-
                     $usersAvailableForAutoDonation->forget($userId);
 
-                    $needies[$needyId]['collected'] +=  $amount;
+                    $needies[$needyId]['collected'] += $amount;
 
                     //Move to Next Needy if current satisfied
                     if ($needy->collected + ($transactions[$needyId]['amount'] ?? 0) >= $needy->need) {
-                        $needies[$needyId]['satisfied'] =  true;
-                        $needies[$needyId]['updated_at'] =  Carbon::now();
+                        $needies[$needyId]['satisfied'] = true;
+                        $needies[$needyId]['updated_at'] = Carbon::now();
                         break;
                     }
                 }

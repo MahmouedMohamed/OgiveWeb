@@ -28,8 +28,9 @@ class PetController extends BaseController
         // return $pets = Pet::Type('Cat')->get();
         // return $pets = Pet::Filter(['type' => 'Dog'])->get();
         try {
-            $user = $this->userExists($request['userId']);
-            $this->userIsAuthorized($user, 'viewAny', Pet::class);
+            //below REMOVED user id paramter
+            // $user = $this->userExists($request['userId']);
+            // $this->userIsAuthorized($user, 'viewAny', Pet::class);
             $currentPage = request()->get('page', 1);
             if ($request['type']) {
                 return $this->sendResponse(
@@ -59,7 +60,7 @@ class PetController extends BaseController
                         'users.email_verified_at as userEmailVerifiedAt',
                         'profiles.image as userImage'
                     )
-                    ->where('pets.nationality', '=', $user->getNationalityValue())
+                    // ->where('pets.nationality', '=', $user->getNationalityValue())
                     ->latest('pets.created_at')
                     ->paginate(8),
                 ''
