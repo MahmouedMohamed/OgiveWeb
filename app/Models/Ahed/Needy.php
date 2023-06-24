@@ -29,7 +29,7 @@ class Needy extends BaseModel
 
     protected $casts = [
         'satisfied' => 'boolean',
-        'approved' => 'boolean'
+        'approved' => 'boolean',
     ];
 
     public function createdBy()
