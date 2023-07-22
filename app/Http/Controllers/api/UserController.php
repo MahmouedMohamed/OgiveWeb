@@ -219,6 +219,7 @@ class UserController extends BaseController
         $user->phone_number = $request['phoneNumber'] ?? $user->phone_number;
         $user->address = $request['address'] ?? $user->address;
         $user->nationality = $request['nationality'] ?? $user->nationality;
+        $user->name = $request['name'] ?? $user->name;
         $profile->save();
         $user->save();
 
