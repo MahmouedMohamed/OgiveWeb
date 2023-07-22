@@ -24,7 +24,7 @@ class LoginRequest extends BaseRequest
     public function rules()
     {
         return [
-            'accessType' => ['required', Rule::in(['API'])],
+            'accessType' => ['required', Rule::in(['API', 'Application'])],
             'appType' => ['required', Rule::in(['Ahed', 'Ataa', 'TimeCatcher', 'BreedMe'])],
             'email' => ['required', 'email'],
             'password' => ['required'],
