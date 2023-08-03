@@ -86,7 +86,7 @@ class AtaaAutoDonationJob implements ShouldQueue
                     $amount = $needy->need - $needy->collected > $affordableAmount ?
                         $affordableAmount : $needy->need - $needy->collected;
 
-                    $transactions[$needyId]['amount'] = $transactions[$needyId]['amount'] ?? 0 + $amount;
+                    $transactions[$needyId]['amount'] = ($transactions[$needyId]['amount'] ?? 0) + $amount;
                     $transactions[$needyId]['values'][] = [
                         'id' => Str::uuid(),
                         'giver' => $userId,
