@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Jobs\AccessTokenDeactivatorJob;
+use App\Jobs\AtaaAutoDonationJob;
 use App\Jobs\AtaaPrizeActivatorJob;
 use App\Jobs\AtaaPrizeDeactivatorJob;
 use App\Jobs\UserBanActivatorJob;
@@ -33,11 +34,15 @@ class Kernel extends ConsoleKernel
         $schedule->job(new AtaaPrizeActivatorJob())->daily();
         $schedule->job(new AtaaPrizeDeactivatorJob())->daily();
         $schedule->job(new AccessTokenDeactivatorJob())->daily();
+        $schedule->job(new AtaaAutoDonationJob())->everyFifteenMinutes();
+
+        // For Debugging
         // $schedule->job(new UserBanActivatorJob())->everyMinute();
         // $schedule->job(new UserBanDeactivatorJob())->everyMinute();
         // $schedule->job(new AtaaPrizeActivatorJob())->everyMinute();
         // $schedule->job(new AtaaPrizeDeactivatorJob())->everyMinute();
         // $schedule->job(new AccessTokenDeactivatorJob())->everyMinute();
+        // $schedule->job(new AtaaAutoDonationJob())->everyMinute();
     }
 
     /**
