@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Listeners\AutoDonationSMSNotificationListener;
 use App\Models\Ahed\Needy;
 use App\Models\Ahed\OnlineTransaction;
 use App\Models\User;
@@ -51,16 +52,16 @@ class AtaaAutoDonationJob implements ShouldQueue
                 });
         })->with(['onlinetransactions' => function ($query) {
             $query->where('fulfilled_by_auto_donation', '=', true);
-        }])->get()->keyBy('id');
+        }, 'account', 'settings'])->get()->keyBy('id');
         if ($usersAvailableForAutoDonation->isEmpty()) {
-            return;
+            $this->delete();
         }
         /** @var Collection $neediesReadyForDonation */
         $neediesReadyForDonation = Needy::approved()
             ->notSatisfied()
             ->orderBy('severity', 'DESC')->get()->keyBy('id');
         if ($neediesReadyForDonation->isEmpty()) {
-            return;
+            $this->delete();
         }
 
         /** @var array $transactions */
@@ -89,7 +90,7 @@ class AtaaAutoDonationJob implements ShouldQueue
                     $transactions[$needyId]['amount'] = ($transactions[$needyId]['amount'] ?? 0) + $amount;
                     $transactions[$needyId]['values'][] = [
                         'id' => Str::uuid(),
-                        'giver' => $userId,
+                        'giver_id' => $userId,
                         'needy_id' => $needyId,
                         'amount' => $amount,
                         'remaining' => 0,
@@ -109,11 +110,11 @@ class AtaaAutoDonationJob implements ShouldQueue
                     $usersAvailableForAutoDonation->forget($userId);
 
                     $needies[$needyId]['collected'] += $amount;
+                    $needies[$needyId]['updated_at'] = Carbon::now();
 
                     //Move to Next Needy if current satisfied
                     if ($needy->collected + ($transactions[$needyId]['amount'] ?? 0) >= $needy->need) {
                         $needies[$needyId]['satisfied'] = true;
-                        $needies[$needyId]['updated_at'] = Carbon::now();
                         break;
                     }
                 }
@@ -128,5 +129,6 @@ class AtaaAutoDonationJob implements ShouldQueue
         UserSettings::upsert($userSettings, ['id'], ['latest_auto_donation_time', 'updated_at']);
         Needy::upsert($needies, array_keys($needies), ['collected', 'satisfied', 'updated_at']);
         DB::commit();
+        AutoDonationSMSNotificationSenderJob::dispatch($transactionsToBeAdded);
     }
 }
