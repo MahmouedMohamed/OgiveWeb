@@ -310,8 +310,8 @@ class AdminController extends BaseController
                             $needies->push($needy);
                         }
                         $onlineTransactions[] = [
-                            'giver' => $csvLine[0],
-                            'needy' => $csvLine[1],
+                            'giver_id' => $csvLine[0],
+                            'needy_id' => $csvLine[1],
                             'amount' => $csvLine[2],
                             'remaining' => $csvLine[3],
                             'created_at' => $now,
