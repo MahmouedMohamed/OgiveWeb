@@ -2,7 +2,6 @@
 
 namespace App\Jobs;
 
-use App\Listeners\AutoDonationSMSNotificationListener;
 use App\Models\Ahed\Needy;
 use App\Models\Ahed\OnlineTransaction;
 use App\Models\User;

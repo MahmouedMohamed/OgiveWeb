@@ -2,11 +2,8 @@
 
 namespace App\Jobs;
 
-use App\Models\Ahed\Needy;
 use App\Models\Ahed\OnlineTransaction;
-use App\Models\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -39,11 +36,11 @@ class AutoDonationSMSNotificationSenderJob implements ShouldQueue
         foreach ($transactions as $transaction) {
             Log::info(
                 'Message',
-                ['number' => $transaction->giver->phone_number, 'message' => 'Thank you ' . $transaction->giver->name .
-                    ' For Donating Amount: ' . $transaction->amount .
-                    ' For Case: ' . $transaction->needy->name .
-                    '\n' .
-                    'You can find the case details from here: ' . $transaction->needy->url]
+                ['number' => $transaction->giver->phone_number, 'message' => 'Thank you '.$transaction->giver->name.
+                    ' For Donating Amount: '.$transaction->amount.
+                    ' For Case: '.$transaction->needy->name.
+                    '\n'.
+                    'You can find the case details from here: '.$transaction->needy->url]
             );
         }
     }
