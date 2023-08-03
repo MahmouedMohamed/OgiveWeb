@@ -119,8 +119,8 @@ class UserController extends BaseController
     {
         ///Get Number of needies that user helped
         $neediesApprovedForUser = Needy::where('created_by', '=', $request->user->id)->approved()->get()->pluck('id')->unique()->toArray();
-        $offlineDonationsForUser = OfflineTransaction::where('giver', '=', $request->user->id)->where('collected', '=', '1')->get();
-        $onlineDonationsForUser = OnlineTransaction::where('giver', '=', $request->user->id)->get();
+        $offlineDonationsForUser = OfflineTransaction::where('giver_id', '=', $request->user->id)->where('collected', '=', '1')->get();
+        $onlineDonationsForUser = OnlineTransaction::where('giver_id', '=', $request->user->id)->get();
 
         $neediesDonatedOfflineFor =
             $offlineDonationsForUser->pluck('needy')->unique()->toArray();

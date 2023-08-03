@@ -11,7 +11,7 @@ class OnlineTransaction extends BaseModel
 
     protected $fillable = [
         'id',
-        'giver',
+        'giver_id',
         'needy_id',
         'amount',
         'remaining',
@@ -24,7 +24,7 @@ class OnlineTransaction extends BaseModel
 
     public function giver()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'giver_id', 'id');
     }
 
     public function needy()

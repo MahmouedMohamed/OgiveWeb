@@ -11,7 +11,7 @@ class OfflineTransaction extends BaseModel
 
     protected $fillable = [
         'id',
-        'giver',
+        'giver_id',
         'needy_id',
         'amount',
         'preferred_section',
@@ -30,7 +30,7 @@ class OfflineTransaction extends BaseModel
 
     public function giver()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'giver_id', 'id');
     }
 
     public function needy()
