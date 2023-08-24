@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers\api\Ataa;
 
-use App\Exceptions\AtaaBadgeNotFound;
 use App\Exceptions\UserNotAuthorized;
-use App\Exceptions\UserNotFound;
 use App\Http\Controllers\api\BaseController;
+use App\Http\Requests\StoreAtaaBadgeRequest;
 use App\Models\Ataa\AtaaBadge;
-use App\Traits\ControllersTraits\AtaaBadgeValidator;
 use App\Traits\ControllersTraits\UserValidator;
 use Exception;
 use Illuminate\Http\Request;
@@ -16,7 +14,7 @@ use Illuminate\Support\Str;
 
 class AtaaBadgeController extends BaseController
 {
-    use UserValidator, AtaaBadgeValidator;
+    use UserValidator;
 
     /**
      * Display a listing of the resource Acquired By User.
@@ -47,8 +45,6 @@ class AtaaBadgeController extends BaseController
                     ->get(),
                 __('General.DataRetrievedSuccessMessage')
             );
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden(__('Ataa.BadgeViewForbiddenMessage'));
         }
@@ -62,12 +58,11 @@ class AtaaBadgeController extends BaseController
     public function index(Request $request)
     {
         try {
-            $user = $this->userExists($request['userId']);
-            $this->userIsAuthorized($user, 'viewAny', AtaaBadge::class);
+            $this->userIsAuthorized($request->user, 'viewAny', AtaaBadge::class);
 
             return $this->sendResponse(
                 AtaaBadge::select(
-                    'id as ataaBadgeId',
+                    'id',
                     'name',
                     'arabic_name',
                     'image',
@@ -77,8 +72,6 @@ class AtaaBadgeController extends BaseController
                     ->get(),
                 __('General.DataRetrievedSuccessMessage')
             );
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden(__('Ataa.BadgeViewForbiddenMessage'));
         }
@@ -89,21 +82,16 @@ class AtaaBadgeController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreAtaaBadgeRequest $request)
     {
         try {
-            $admin = $this->userExists($request['userId']);
-            $this->userIsAuthorized($admin, 'create', AtaaBadge::class);
-            $validated = $this->validateBadge($request);
-            if ($validated->fails()) {
-                return $this->sendError(__('General.InvalidData'), $validated->messages(), 400);
-            }
+            $this->userIsAuthorized($request->user, 'create', AtaaBadge::class);
             $imagePath = null;
             if ($request['image']) {
                 $imagePath = $request['image']->store('ataa_badges', 'public');
                 $imagePath = '/storage/'.$imagePath;
             }
-            AtaaBadge::create([
+            $badge = AtaaBadge::create([
                 'id' => Str::uuid(),
                 'name' => $request['name'],
                 'arabic_name' => $request['arabic_name'],
@@ -112,9 +100,7 @@ class AtaaBadgeController extends BaseController
                 'active' => $request['active'] ? $request['active'] : 1,
             ]);
 
-            return $this->sendResponse([], __('Ataa.BadgeCreationSuccessMessage'));
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'));
+            return $this->sendResponse($badge, __('Ataa.BadgeCreationSuccessMessage'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden(__('Ataa.BadgeCreateForbiddenMessage'));
         } catch (Exception $e) {
@@ -125,22 +111,16 @@ class AtaaBadgeController extends BaseController
     /**
      * Activate Badge.
      *
-     * @param  int  $id
+     * @param  App\Models\Ataa\AtaaBadge  $badge
      * @return \Illuminate\Http\Response
      */
-    public function activate(Request $request, $id)
+    public function activate(Request $request, AtaaBadge $badge)
     {
         try {
-            $user = $this->userExists($request['userId']);
-            $badge = $this->badgeExists($id);
-            $this->userIsAuthorized($user, 'activate', $badge);
+            $this->userIsAuthorized($request->user, 'activate', $badge);
             $badge->activate();
 
             return $this->sendResponse([], __('Ataa.BadgeActivateSuccessMessage'));
-        } catch (AtaaBadgeNotFound $e) {
-            return $this->sendError(__('Ataa.BadgeNotFound'));
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden(__('Ataa.BadgeActivateForbiddenMessage'));
         }
@@ -149,22 +129,16 @@ class AtaaBadgeController extends BaseController
     /**
      * Deactivate Badge.
      *
-     * @param  int  $id
+     * @param  App\Models\Ataa\AtaaBadge  $badge
      * @return \Illuminate\Http\Response
      */
-    public function deactivate(Request $request, $id)
+    public function deactivate(Request $request, AtaaBadge $badge)
     {
         try {
-            $user = $this->userExists($request['userId']);
-            $badge = $this->badgeExists($id);
-            $this->userIsAuthorized($user, 'deactivate', $badge);
+            $this->userIsAuthorized($request->user, 'deactivate', $badge);
             $badge->deactivate();
 
             return $this->sendResponse([], __('Ataa.BadgeDeactivateSuccessMessage'));
-        } catch (AtaaBadgeNotFound $e) {
-            return $this->sendError(__('Ataa.BadgeNotFound'));
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden(__('Ataa.BadgeDeactivateForbiddenMessage'));
         }

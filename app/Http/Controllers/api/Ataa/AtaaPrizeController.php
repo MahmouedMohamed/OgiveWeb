@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers\api\Ataa;
 
-use App\Exceptions\AtaaPrizeCreationActionNotFound;
-use App\Exceptions\AtaaPrizeNotFound;
 use App\Exceptions\UserNotAuthorized;
-use App\Exceptions\UserNotFound;
 use App\Http\Controllers\api\BaseController;
+use App\Http\Requests\StoreAtaaPrizeRequest;
 use App\Models\Ataa\AtaaPrize;
 use App\Traits\ControllersTraits\AtaaPrizeValidator;
 use App\Traits\ControllersTraits\UserValidator;
@@ -66,12 +64,11 @@ class AtaaPrizeController extends BaseController
     public function index(Request $request)
     {
         try {
-            $user = $this->userExists($request['userId']);
-            $this->userIsAuthorized($user, 'viewAny', AtaaPrize::class);
+            $this->userIsAuthorized($request->user, 'viewAny', AtaaPrize::class);
 
             return $this->sendResponse(
                 AtaaPrize::select(
-                    'id as ataaPrizeId',
+                    'id',
                     'name',
                     'arabic_name',
                     'image',
@@ -85,8 +82,6 @@ class AtaaPrizeController extends BaseController
                     ->get(),
                 __('General.DataRetrievedSuccessMessage')
             );
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden(__('Ataa.PrizeViewForbiddenMessage'));
         }
@@ -97,16 +92,12 @@ class AtaaPrizeController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreAtaaPrizeRequest $request)
     {
         try {
-            $admin = $this->userExists($request['userId']);
-            $this->userIsAuthorized($admin, 'create', AtaaPrize::class);
-            $validated = $this->validatePrize($request);
-            if ($validated->fails()) {
-                return $this->sendError(__('General.InvalidData'), $validated->messages(), 400);
-            }
-            $this->preCreationPrizeChecker($request);
+            $this->userIsAuthorized($request->user, 'create', AtaaPrize::class);
+            DB::beginTransaction();
+            $this->preCreationPrizeChecker($request['level'], $request['action']);
             $imagePath = null;
             if ($request['image']) {
                 $imagePath = $request['image']->store('ataa_prizes', 'public');
@@ -120,20 +111,17 @@ class AtaaPrizeController extends BaseController
                 'image' => $imagePath,
                 'required_markers_collected' => $request['required_markers_collected'],
                 'required_markers_posted' => $request['required_markers_posted'],
-                'from' => $request['from'] ?? Carbon::now('GMT+2'),
+                'from' => $request['from'] ?? Carbon::now(),
                 'to' => $request['to'],
                 'level' => $request['level'],
                 //Has From? then compare -> less than then active, o.w wait for sql event to activate it || active
-                'active' => $request['from'] ? ($request['from'] <= Carbon::now('GMT+2') ? 1 : 0) : 1,
+                'active' => $request['from'] ? ($request['from'] <= Carbon::now() ? 1 : 0) : 1,
             ]);
+            DB::commit();
 
             return $this->sendResponse([], __('Ataa.PrizeCreationSuccessMessage'));
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden(__('Ataa.PrizeCreateForbiddenMessage'));
-        } catch (AtaaPrizeCreationActionNotFound $e) {
-            return $this->sendError(__('General.InvalidData'), $validated->messages(), 400);
         } catch (Exception $e) {
             return $this->sendError('Something went wrong', [], 500);
         }
@@ -142,22 +130,16 @@ class AtaaPrizeController extends BaseController
     /**
      * Activate Prize.
      *
-     * @param  int  $id
+     * @param  App\Models\Ataa\AtaaPrize  $prize
      * @return \Illuminate\Http\Response
      */
-    public function activate(Request $request, $id)
+    public function activate(Request $request, AtaaPrize $prize)
     {
         try {
-            $user = $this->userExists($request['userId']);
-            $prize = $this->prizeExists($id);
-            $this->userIsAuthorized($user, 'activate', $prize);
+            $this->userIsAuthorized($request->user, 'activate', $prize);
             $prize->activate();
 
             return $this->sendResponse([], __('Ataa.PrizeActivateSuccessMessage'));
-        } catch (AtaaPrizeNotFound $e) {
-            return $this->sendError(__('Ataa.PrizeNotFound'));
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden(__('Ataa.PrizeActivateForbiddenMessage'));
         }
@@ -166,22 +148,16 @@ class AtaaPrizeController extends BaseController
     /**
      * Deactivate Prize.
      *
-     * @param  int  $id
+     * @param  App\Models\Ataa\AtaaPrize  $prize
      * @return \Illuminate\Http\Response
      */
-    public function deactivate(Request $request, $id)
+    public function deactivate(Request $request, AtaaPrize $prize)
     {
         try {
-            $user = $this->userExists($request['userId']);
-            $prize = $this->prizeExists($id);
-            $this->userIsAuthorized($user, 'deactivate', $prize);
+            $this->userIsAuthorized($request->user, 'deactivate', $prize);
             $prize->deactivate();
 
             return $this->sendResponse([], __('Ataa.PrizeDeactivateSuccessMessage'));
-        } catch (AtaaPrizeNotFound $e) {
-            return $this->sendError(__('Ataa.PrizeNotFound'));
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden(__('Ataa.PrizeDeactivateForbiddenMessage'));
         }

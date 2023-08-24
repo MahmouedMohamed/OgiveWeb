@@ -44,7 +44,7 @@ class OfflineTransactionPolicy
     public function view(User $user, OfflineTransaction $offlineTransaction)
     {
         return ($this->hasAbility($user, AvailableAbilities::ViewOfflineTransaction)
-            || $user->id == $offlineTransaction->giver)
+            || $user->id == $offlineTransaction->giver_id)
             && $this->hasNoBan($user, BanTypes::ViewOfflineTransaction);
     }
 
@@ -67,7 +67,7 @@ class OfflineTransactionPolicy
     public function update(User $user, OfflineTransaction $offlineTransaction)
     {
         return ($this->hasAbility($user, AvailableAbilities::UpdateOfflineTransaction)
-            || $user->id == $offlineTransaction->giver)
+            || $user->id == $offlineTransaction->giver_id)
             && $this->hasNoBan($user, BanTypes::UpdateOfflineTransaction) &&
             $offlineTransaction->selectedDate == null &&
             ! ($offlineTransaction->collected);
@@ -82,7 +82,7 @@ class OfflineTransactionPolicy
     public function delete(User $user, OfflineTransaction $offlineTransaction)
     {
         return ($this->hasAbility($user, AvailableAbilities::DeleteOfflineTransaction)
-            || $user->id == $offlineTransaction->giver)
+            || $user->id == $offlineTransaction->giver_id)
             && $this->hasNoBan($user, BanTypes::DeleteOfflineTransaction) &&
             $offlineTransaction->selectedDate == null &&
             ! ($offlineTransaction->collected);

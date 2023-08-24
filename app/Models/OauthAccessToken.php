@@ -35,7 +35,7 @@ class OauthAccessToken extends BaseModel
     ];
 
     protected $casts = [
-        'expires_at' => 'datetime',
+        'expires_at' => 'date',
     ];
 
     public function user()

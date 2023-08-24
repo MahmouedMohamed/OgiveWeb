@@ -1,0 +1,12 @@
+1- Move Every Validation to Requests
+2- Use Resources in Return to remove any unneeded Response entries
+*3- Complete User Account Functionality
+*4- Complete User Settings & Notifying Functionality
+5- Remove PetNotFound, UserNotFound Exceptions From System and Breed Me When Sherouk Finalize Functionalities
+6- Add Test Cases
+*7- Use Jobs in Notifying, Auto Donations
+*8- Put the remaining of online transaction to user account if he wants to withdrawal
+*9- Dispatch Ataa Auto Donation Job every 15 min
+*10- Dispatch Slice Ataa Auto Donation Job per User when Settings turn to Auto Donate => Observer (Settings) => Listener (Dispatch Job)
+*11- Listener => Send SMS when Transaction from Auto Donation is Made
+12-

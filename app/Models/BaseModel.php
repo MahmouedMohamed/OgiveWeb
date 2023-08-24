@@ -3,15 +3,12 @@
 namespace App\Models;
 
 use App\Exceptions\ModelNotFoundException;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Ramsey\Uuid\Uuid;
 
 class BaseModel extends Model
 {
-    use HasFactory;
-
     protected static function booted()
     {
         parent::booted();

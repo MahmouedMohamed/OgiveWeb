@@ -28,13 +28,14 @@ class PetController extends BaseController
         // return $pets = Pet::Type('Cat')->get();
         // return $pets = Pet::Filter(['type' => 'Dog'])->get();
         try {
-            $user = $this->userExists($request['userId']);
-            $this->userIsAuthorized($user, 'viewAny', Pet::class);
+            //below REMOVED user id paramter
+            // $user = $this->userExists($request['userId']);
+            // $this->userIsAuthorized($user, 'viewAny', Pet::class);
             $currentPage = request()->get('page', 1);
             if ($request['type']) {
                 return $this->sendResponse(
                     Pet::join('users', 'users.id', 'pets.created_by')
-                        ->join('profiles', 'users.profile_id', 'profiles.id')
+                        ->join('profiles', 'profiles.user_id', 'users.id')
                         ->select(
                             'pets.*',
                             'users.id as userId',
@@ -51,7 +52,7 @@ class PetController extends BaseController
 
             return $this->sendResponse(
                 Pet::join('users', 'users.id', 'pets.created_by')
-                    ->join('profiles', 'users.profile_id', 'profiles.id')
+                    ->join('profiles', 'profiles.user_id', 'users.id')
                     ->select(
                         'pets.*',
                         'users.id as userId',
@@ -59,7 +60,7 @@ class PetController extends BaseController
                         'users.email_verified_at as userEmailVerifiedAt',
                         'profiles.image as userImage'
                     )
-                    ->where('pets.nationality', '=', $user->getNationalityValue())
+                    // ->where('pets.nationality', '=', $user->getNationalityValue())
                     ->latest('pets.created_at')
                     ->paginate(8),
                 ''
@@ -121,6 +122,7 @@ class PetController extends BaseController
     {
 
         //  return new PetResource(Pet::findOrFail($id));
+        // return $id;
         $pet = Pet::with('user')->find($id);
         if (is_null($pet)) {
             return $this->sendError('Pet not found.');
