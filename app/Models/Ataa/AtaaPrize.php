@@ -76,8 +76,8 @@ class AtaaPrize extends Model
             'image' => null,
             'required_markers_collected' => $highestAtaaPrize['required_markers_collected'] + 10,
             'required_markers_posted' => $highestAtaaPrize['required_markers_posted'] + 10,
-            'from' => Carbon::now('GMT+2'),
-            'to' => Carbon::now('GMT+2')->add(10, 'day'),
+            'from' => Carbon::now(),
+            'to' => Carbon::now()->addDays(10),
             'level' => $highestAtaaPrize['level'] + 1,
         ]);
     }
@@ -94,8 +94,8 @@ class AtaaPrize extends Model
                     'image' => null,
                     'required_markers_collected' => 0,
                     'required_markers_posted' => 5,
-                    'from' => Carbon::now('GMT+2'),
-                    'to' => Carbon::now('GMT+2')->add(10, 'day'),
+                    'from' => Carbon::now(),
+                    'to' => Carbon::now()->addDays(10),
                     'level' => 1,
                 ]);
                 break;
@@ -107,8 +107,8 @@ class AtaaPrize extends Model
                     'image' => null,
                     'required_markers_collected' => 5,
                     'required_markers_posted' => 0,
-                    'from' => Carbon::now('GMT+2'),
-                    'to' => Carbon::now('GMT+2')->add(10, 'day'),
+                    'from' => Carbon::now(),
+                    'to' => Carbon::now()->addDays(10),
                     'level' => 1,
                 ]);
                 break;

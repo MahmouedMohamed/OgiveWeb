@@ -96,12 +96,12 @@ class User extends BaseUserModel
 
     public function onlinetransactions()
     {
-        return $this->hasMany(OnlineTransaction::class, 'giver');
+        return $this->hasMany(OnlineTransaction::class, 'giver_id');
     }
 
     public function offlinetransactions()
     {
-        return $this->hasMany(OfflineTransaction::class, 'giver');
+        return $this->hasMany(OfflineTransaction::class, 'giver_id');
     }
 
     public function createdBans()

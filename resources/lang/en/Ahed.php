@@ -25,4 +25,6 @@ return [
     'TransactionUpdateForbiddenMessage' => 'you aren\'t authorized to update this transaction',
     'TransactionDeletionForbiddenMessage' => 'you aren\'t authorized to delete this transaction',
     'TransactionNeedySatisfiedMessage' => 'Case already satisfied, Kindly check another one',
+    'OfflineTransactionNotFound' => 'This Transaction can\'t be found',
+    'OnlineTransactionNotFound' => 'This Transaction can\'t be found',
 ];

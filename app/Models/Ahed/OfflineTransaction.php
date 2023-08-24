@@ -2,19 +2,16 @@
 
 namespace App\Models\Ahed;
 
+use App\Models\BaseModel;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class OfflineTransaction extends Model
+class OfflineTransaction extends BaseModel
 {
-    use HasFactory;
-
     public $incrementing = false;
 
     protected $fillable = [
         'id',
-        'giver',
+        'giver_id',
         'needy_id',
         'amount',
         'preferred_section',
@@ -24,11 +21,16 @@ class OfflineTransaction extends Model
         'end_collect_date',
         'selected_date',
         'collected',
+        'fulfilled_by_auto_donation',
+    ];
+
+    protected $casts = [
+        'collected' => 'boolean',
     ];
 
     public function giver()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'giver_id', 'id');
     }
 
     public function needy()
