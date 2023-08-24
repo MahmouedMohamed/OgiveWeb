@@ -14,8 +14,8 @@ function Login() {
         const user = {
             email: email,
             password: password,
-            accessType: "token",
-            appType: "mobile"
+            accessType: "API",
+            appType: "BreedMe"
         };
         axios.post(`/api/login`, user)
             .then(res => {

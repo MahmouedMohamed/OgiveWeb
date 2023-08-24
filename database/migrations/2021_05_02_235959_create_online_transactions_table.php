@@ -16,12 +16,12 @@ class CreateOnlineTransactionsTable extends Migration
         Schema::create('online_transactions', function (Blueprint $table) {
             $table->uuid('id');
             $table->primary('id');
-            $table->string('giver');
+            $table->string('giver_id');
             $table->string('needy_id');
             $table->double('amount');
             $table->double('remaining');
             $table->timestamps();
-            $table->foreign('giver')
+            $table->foreign('giver_id')
                 ->references('id')
                 ->on('users')
                 ->onUpdate('cascade')

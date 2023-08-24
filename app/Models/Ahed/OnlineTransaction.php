@@ -2,27 +2,29 @@
 
 namespace App\Models\Ahed;
 
+use App\Models\BaseModel;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class OnlineTransaction extends Model
+class OnlineTransaction extends BaseModel
 {
-    use HasFactory;
-
     public $incrementing = false;
 
     protected $fillable = [
         'id',
-        'giver',
+        'giver_id',
         'needy_id',
         'amount',
         'remaining',
+        'fulfilled_by_auto_donation',
+    ];
+
+    protected $casts = [
+        'collected' => 'boolean',
     ];
 
     public function giver()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'giver_id', 'id');
     }
 
     public function needy()

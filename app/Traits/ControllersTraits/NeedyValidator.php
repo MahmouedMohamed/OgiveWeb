@@ -4,19 +4,13 @@ namespace App\Traits\ControllersTraits;
 
 use App\Exceptions\NeedyIsSatisfied;
 use App\Exceptions\NeedyNotApproved;
-use App\Exceptions\NeedyNotFound;
 use App\Models\Ahed\Needy;
 
 trait NeedyValidator
 {
     public function needySelfLock(string $id)
     {
-        $needy = Needy::lockForUpdate()->find($id);
-        if (! $needy) {
-            throw new NeedyNotFound();
-        }
-
-        return $needy;
+        return Needy::lockForUpdate()->find($id);
     }
 
     /**

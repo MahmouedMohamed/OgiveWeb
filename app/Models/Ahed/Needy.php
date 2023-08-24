@@ -27,6 +27,11 @@ class Needy extends BaseModel
         'url',
     ];
 
+    protected $casts = [
+        'satisfied' => 'boolean',
+        'approved' => 'boolean',
+    ];
+
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by');
@@ -117,5 +122,10 @@ class Needy extends BaseModel
     public function scopeSatisfied($query)
     {
         return $query->where('satisfied', '=', '1');
+    }
+
+    public function scopeNotSatisfied($query)
+    {
+        return $query->where('satisfied', '=', 0);
     }
 }

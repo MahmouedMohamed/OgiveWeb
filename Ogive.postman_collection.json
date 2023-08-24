@@ -1,25 +1,200 @@
 {
 	"info": {
-		"_postman_id": "74070228-9b43-4ec9-a851-0f7a800d9859",
+		"_postman_id": "45c9ce62-623b-4d40-a31a-d1e44b0d7939",
 		"name": "Ogive",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20932932"
 	},
 	"item": [
 		{
 			"name": "Admin",
 			"item": [
 				{
-					"name": "Ahed",
+					"name": "User Bans",
 					"item": [
 						{
-							"name": "Approve Needy",
+							"name": "Get Users Bans",
 							"request": {
 								"auth": {
 									"type": "bearer",
 									"bearer": [
 										{
 											"key": "token",
-											"value": "emmXNoHeggEv4PXW3EYmLs7AdZjX8OAt6gfPS69ltOEIfUacRBSQW9PSZhF1",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/admin/users/f33016d9-8636-40ed-9b09-ea10c8b94da9/ban",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"users",
+										"f33016d9-8636-40ed-9b09-ea10c8b94da9",
+										"ban"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add User Ban",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "tag",
+											"value": "login_ban",
+											"type": "text"
+										},
+										{
+											"key": "endAt",
+											"value": "2022-09-10 15:36:00",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/api/admin/users/f33016d9-8636-40ed-9b09-ea10c8b94da9/ban",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"users",
+										"f33016d9-8636-40ed-9b09-ea10c8b94da9",
+										"ban"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Activate User Ban",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "VTiYn1flYMcFCSftDOKMhUwv5KrBV3npaxmrGbveJ1Fa3vmHjGkeKUu1IOVx",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "_method",
+											"value": "patch",
+											"type": "text"
+										},
+										{
+											"key": "userId",
+											"value": "359b460e-3e28-4b19-9661-7be4c5e0291a",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/api/admin/ban/activate/e1e9701e-241f-474e-b3b7-04adc8d1413b",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"ban",
+										"activate",
+										"e1e9701e-241f-474e-b3b7-04adc8d1413b"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Deactivate User Ban",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "VTiYn1flYMcFCSftDOKMhUwv5KrBV3npaxmrGbveJ1Fa3vmHjGkeKUu1IOVx",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "_method",
+											"value": "patch",
+											"type": "text"
+										},
+										{
+											"key": "userId",
+											"value": "359b460e-3e28-4b19-9661-7be4c5e0291a",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/api/admin/ban/deactivate/e1e9701e-241f-474e-b3b7-04adc8d1413b",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"ban",
+										"deactivate",
+										"e1e9701e-241f-474e-b3b7-04adc8d1413b"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Ahed",
+					"item": [
+						{
+							"name": "Disapprove Needy",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "VTiYn1flYMcFCSftDOKMhUwv5KrBV3npaxmrGbveJ1Fa3vmHjGkeKUu1IOVx",
 											"type": "string"
 										}
 									]
@@ -31,71 +206,111 @@
 									"formdata": [
 										{
 											"key": "userId",
-											"value": "1",
+											"value": "359b460e-3e28-4b19-9661-7be4c5e0291a",
 											"type": "text"
 										}
 									]
 								},
 								"url": {
-									"raw": "http://192.168.1.5:8000/api/admin/ahed/approve/26",
-									"protocol": "http",
+									"raw": "{{base_url}}/api/admin/ahed/disapprove/30e7750a-a694-4fbb-976e-b9b297339c0f",
 									"host": [
-										"192",
-										"168",
-										"1",
-										"5"
+										"{{base_url}}"
 									],
-									"port": "8000",
-									"path": [
-										"api",
-										"admin",
-										"ahed",
-										"approve",
-										"26"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Disapprove Needy",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "userId",
-											"value": "2",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "http://192.168.1.6:8000/api/admin/ahed/disapprove/3",
-									"protocol": "http",
-									"host": [
-										"192",
-										"168",
-										"1",
-										"6"
-									],
-									"port": "8000",
 									"path": [
 										"api",
 										"admin",
 										"ahed",
 										"disapprove",
-										"3"
+										"30e7750a-a694-4fbb-976e-b9b297339c0f"
 									]
 								}
 							},
 							"response": []
 						},
 						{
-							"name": "Collect Offline Transaction",
+							"name": "Get Pending Needies",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								}
+							},
 							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/admin/pending-needies",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"pending-needies"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Approve Needy",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/admin/ahed/approve/13691b08-69ce-4255-8798-3e45f809f274",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"ahed",
+										"approve",
+										"13691b08-69ce-4255-8798-3e45f809f274"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Collect",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "VTiYn1flYMcFCSftDOKMhUwv5KrBV3npaxmrGbveJ1Fa3vmHjGkeKUu1IOVx",
+											"type": "string"
+										}
+									]
+								},
 								"method": "POST",
 								"header": [],
 								"body": {
@@ -103,12 +318,12 @@
 									"formdata": [
 										{
 											"key": "transactionId",
-											"value": "4",
+											"value": "be9af992-5274-4c46-b958-d5edbd1d06af",
 											"type": "text"
 										},
 										{
 											"key": "userId",
-											"value": "1",
+											"value": "359b460e-3e28-4b19-9661-7be4c5e0291a",
 											"type": "text"
 										},
 										{
@@ -119,15 +334,10 @@
 									]
 								},
 								"url": {
-									"raw": "http://192.168.1.6:8000/api/admin/ahed/collect",
-									"protocol": "http",
+									"raw": "{{base_url}}/api/admin/ahed/collect",
 									"host": [
-										"192",
-										"168",
-										"1",
-										"6"
+										"{{base_url}}"
 									],
-									"port": "8000",
 									"path": [
 										"api",
 										"admin",
@@ -144,657 +354,268 @@
 					"name": "Ataa",
 					"item": [
 						{
-							"name": "Prize",
-							"item": [
-								{
-									"name": "Delete Ataa Prize",
-									"request": {
-										"method": "DELETE",
-										"header": [],
-										"url": {
-											"raw": "http://192.168.1.6:8000/api/admin/ataa/prize/1?userId=1",
-											"protocol": "http",
-											"host": [
-												"192",
-												"168",
-												"1",
-												"6"
-											],
-											"port": "8000",
-											"path": [
-												"api",
-												"admin",
-												"ataa",
-												"prize",
-												"1"
-											],
-											"query": [
-												{
-													"key": "userId",
-													"value": "1"
-												}
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "Add Ataa Prize",
-									"request": {
-										"auth": {
-											"type": "bearer",
-											"bearer": [
-												{
-													"key": "token",
-													"value": "iPF5Xa9ml9eo7qmNXxga4SECBg7mTY9jViU55K6qbDil18W9cgxigrMegz47",
-													"type": "string"
-												}
-											]
-										},
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "formdata",
-											"formdata": [
-												{
-													"key": "userId",
-													"value": "2",
-													"type": "text"
-												},
-												{
-													"key": "name",
-													"value": "موبايل",
-													"type": "text"
-												},
-												{
-													"key": "required_markers_collected",
-													"value": "30",
-													"type": "text"
-												},
-												{
-													"key": "required_markers_posted",
-													"value": "5",
-													"type": "text"
-												},
-												{
-													"key": "from",
-													"value": "2021-09-03 00:15:36 ",
-													"type": "text"
-												},
-												{
-													"key": "level",
-													"value": "3",
-													"type": "text"
-												},
-												{
-													"key": "image",
-													"type": "file",
-													"src": "/C:/Users/mahmo/Downloads/237770967_4661313920583971_1251071157839299736_n.jpg"
-												},
-												{
-													"key": "action",
-													"value": "replace",
-													"type": "text"
-												}
-											]
-										},
-										"url": {
-											"raw": "http://192.168.1.139:8000/api/admin/ataa/prize",
-											"protocol": "http",
-											"host": [
-												"192",
-												"168",
-												"1",
-												"139"
-											],
-											"port": "8000",
-											"path": [
-												"api",
-												"admin",
-												"ataa",
-												"prize"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "Update Ataa Prize",
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "formdata",
-											"formdata": [
-												{
-													"key": "_method",
-													"value": "patch",
-													"type": "text"
-												},
-												{
-													"key": "userId",
-													"value": "1",
-													"type": "text"
-												},
-												{
-													"key": "name",
-													"value": "موبايل",
-													"type": "text"
-												},
-												{
-													"key": "required_markers_collected",
-													"value": "30",
-													"type": "text"
-												},
-												{
-													"key": "required_markers_posted",
-													"value": "5",
-													"type": "text"
-												},
-												{
-													"key": "from",
-													"value": "2021-09-03 00:15:36 ",
-													"type": "text"
-												},
-												{
-													"key": "level",
-													"value": "3",
-													"type": "text"
-												},
-												{
-													"key": "image",
-													"type": "file",
-													"src": "/C:/Users/mahmo/Downloads/237770967_4661313920583971_1251071157839299736_n.jpg"
-												},
-												{
-													"key": "action",
-													"value": "shift",
-													"type": "text"
-												}
-											]
-										},
-										"url": {
-											"raw": "http://192.168.1.6:8000/api/admin/ataa/prize/1",
-											"protocol": "http",
-											"host": [
-												"192",
-												"168",
-												"1",
-												"6"
-											],
-											"port": "8000",
-											"path": [
-												"api",
-												"admin",
-												"ataa",
-												"prize",
-												"1"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "Activate Ataa Prize",
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "formdata",
-											"formdata": [
-												{
-													"key": "_method",
-													"value": "patch",
-													"type": "text"
-												},
-												{
-													"key": "userId",
-													"value": "1",
-													"type": "text"
-												}
-											]
-										},
-										"url": {
-											"raw": "http://192.168.1.6:8000/api/admin/ataa/prize/1/activate",
-											"protocol": "http",
-											"host": [
-												"192",
-												"168",
-												"1",
-												"6"
-											],
-											"port": "8000",
-											"path": [
-												"api",
-												"admin",
-												"ataa",
-												"prize",
-												"1",
-												"activate"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "Deactivate Ataa Prize",
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "formdata",
-											"formdata": [
-												{
-													"key": "_method",
-													"value": "patch",
-													"type": "text"
-												},
-												{
-													"key": "userId",
-													"value": "1",
-													"type": "text"
-												}
-											]
-										},
-										"url": {
-											"raw": "http://192.168.1.6:8000/api/admin/ataa/prize/1/deactivate",
-											"protocol": "http",
-											"host": [
-												"192",
-												"168",
-												"1",
-												"6"
-											],
-											"port": "8000",
-											"path": [
-												"api",
-												"admin",
-												"ataa",
-												"prize",
-												"1",
-												"deactivate"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "Get Ataa Prize",
-									"protocolProfileBehavior": {
-										"disableBodyPruning": true
-									},
-									"request": {
-										"auth": {
-											"type": "bearer",
-											"bearer": [
-												{
-													"key": "token",
-													"value": "iPF5Xa9ml9eo7qmNXxga4SECBg7mTY9jViU55K6qbDil18W9cgxigrMegz47",
-													"type": "string"
-												}
-											]
-										},
-										"method": "GET",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\r\n    \"userId\" : 2\r\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "http://192.168.1.139:8000/api/admin/ataa/prize",
-											"protocol": "http",
-											"host": [
-												"192",
-												"168",
-												"1",
-												"139"
-											],
-											"port": "8000",
-											"path": [
-												"api",
-												"admin",
-												"ataa",
-												"prize"
-											]
-										}
-									},
-									"response": []
-								}
-							]
-						},
-						{
-							"name": "Badge",
-							"item": [
-								{
-									"name": "Delete Ataa Badge",
-									"request": {
-										"method": "DELETE",
-										"header": [],
-										"url": {
-											"raw": "http://192.168.1.6:8000/api/admin/ataa/badge/1?userId=1",
-											"protocol": "http",
-											"host": [
-												"192",
-												"168",
-												"1",
-												"6"
-											],
-											"port": "8000",
-											"path": [
-												"api",
-												"admin",
-												"ataa",
-												"badge",
-												"1"
-											],
-											"query": [
-												{
-													"key": "userId",
-													"value": "1"
-												}
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "Add Ataa Badge",
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "formdata",
-											"formdata": [
-												{
-													"key": "createdBy",
-													"value": "1",
-													"type": "text"
-												},
-												{
-													"key": "name",
-													"value": "موبايل",
-													"type": "text"
-												},
-												{
-													"key": "required_markers_collected",
-													"value": "30",
-													"type": "text"
-												},
-												{
-													"key": "required_markers_posted",
-													"value": "5",
-													"type": "text"
-												},
-												{
-													"key": "from",
-													"value": "2021-09-03 00:15:36 ",
-													"type": "text"
-												},
-												{
-													"key": "level",
-													"value": "3",
-													"type": "text"
-												},
-												{
-													"key": "image",
-													"type": "file",
-													"src": "/C:/Users/mahmo/Downloads/237770967_4661313920583971_1251071157839299736_n.jpg"
-												},
-												{
-													"key": "action",
-													"value": "shift",
-													"type": "text"
-												}
-											]
-										},
-										"url": {
-											"raw": "http://192.168.1.6:8000/api/admin/ataa/badge",
-											"protocol": "http",
-											"host": [
-												"192",
-												"168",
-												"1",
-												"6"
-											],
-											"port": "8000",
-											"path": [
-												"api",
-												"admin",
-												"ataa",
-												"badge"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "Update Ataa Badge",
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "formdata",
-											"formdata": [
-												{
-													"key": "_method",
-													"value": "patch",
-													"type": "text"
-												},
-												{
-													"key": "createdBy",
-													"value": "1",
-													"type": "text"
-												},
-												{
-													"key": "name",
-													"value": "موبايل",
-													"type": "text"
-												},
-												{
-													"key": "required_markers_collected",
-													"value": "30",
-													"type": "text"
-												},
-												{
-													"key": "required_markers_posted",
-													"value": "5",
-													"type": "text"
-												},
-												{
-													"key": "from",
-													"value": "2021-09-03 00:15:36 ",
-													"type": "text"
-												},
-												{
-													"key": "level",
-													"value": "3",
-													"type": "text"
-												},
-												{
-													"key": "image",
-													"type": "file",
-													"src": "/C:/Users/mahmo/Downloads/237770967_4661313920583971_1251071157839299736_n.jpg"
-												},
-												{
-													"key": "action",
-													"value": "shift",
-													"type": "text"
-												}
-											]
-										},
-										"url": {
-											"raw": "http://192.168.1.6:8000/api/admin/ataa/badge/1",
-											"protocol": "http",
-											"host": [
-												"192",
-												"168",
-												"1",
-												"6"
-											],
-											"port": "8000",
-											"path": [
-												"api",
-												"admin",
-												"ataa",
-												"badge",
-												"1"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "Activate Ataa Badge",
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "formdata",
-											"formdata": [
-												{
-													"key": "_method",
-													"value": "patch",
-													"type": "text"
-												},
-												{
-													"key": "userId",
-													"value": "1",
-													"type": "text"
-												}
-											]
-										},
-										"url": {
-											"raw": "http://192.168.1.6:8000/api/admin/ataa/badge/1/activate",
-											"protocol": "http",
-											"host": [
-												"192",
-												"168",
-												"1",
-												"6"
-											],
-											"port": "8000",
-											"path": [
-												"api",
-												"admin",
-												"ataa",
-												"badge",
-												"1",
-												"activate"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "Deactivate Ataa Badge",
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "formdata",
-											"formdata": [
-												{
-													"key": "_method",
-													"value": "patch",
-													"type": "text"
-												},
-												{
-													"key": "userId",
-													"value": "1",
-													"type": "text"
-												}
-											]
-										},
-										"url": {
-											"raw": "http://192.168.1.6:8000/api/admin/ataa/badge/1/deactivate",
-											"protocol": "http",
-											"host": [
-												"192",
-												"168",
-												"1",
-												"6"
-											],
-											"port": "8000",
-											"path": [
-												"api",
-												"admin",
-												"ataa",
-												"badge",
-												"1",
-												"deactivate"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "Get Ataa Badge",
-									"request": {
-										"method": "GET",
-										"header": [],
-										"url": {
-											"raw": "http://192.168.1.139:8000/api/admin/ataa/badge",
-											"protocol": "http",
-											"host": [
-												"192",
-												"168",
-												"1",
-												"139"
-											],
-											"port": "8000",
-											"path": [
-												"api",
-												"admin",
-												"ataa",
-												"badge"
-											]
-										}
-									},
-									"response": []
-								}
-							]
-						},
-						{
-							"name": "Freeze Ataa Achievment",
+							"name": "Get Ataa Prizes",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
 							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{base_url}}/api/admin/ataa/prizes",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"ataa",
+										"prizes"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Ataa Badges",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "MARKER COLLECTOR",
+											"type": "text"
+										},
+										{
+											"key": "arabic_name",
+											"value": "عربي",
+											"type": "text"
+										},
+										{
+											"key": "image",
+											"type": "file",
+											"src": "/C:/Users/Mahmoued Mohamed/Downloads/طارق اسامه عبدالمنعم ابوالمجد_id_back.png"
+										},
+										{
+											"key": "description",
+											"value": "This Badge is acquired by hitting 25 Markers",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/api/admin/ataa/badges",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"ataa",
+										"badges"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Ataa Achievements",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{base_url}}/api/admin/ataa/achievement",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"ataa",
+										"achievement"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add Ataa Badge",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
 								"method": "POST",
 								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
 										{
-											"key": "userId",
-											"value": "2",
+											"key": "name",
+											"value": "MARKER COLLECTOR",
 											"type": "text"
 										},
 										{
-											"key": "adminId",
-											"value": "1",
+											"key": "arabic_name",
+											"value": "عربي",
+											"type": "text"
+										},
+										{
+											"key": "image",
+											"type": "file",
+											"src": "/C:/Users/Mahmoued Mohamed/Downloads/طارق اسامه عبدالمنعم ابوالمجد_id_front.png"
+										},
+										{
+											"key": "description",
+											"value": "This Badge is acquired by hitting 25 Markers",
 											"type": "text"
 										}
 									]
 								},
 								"url": {
-									"raw": "http://192.168.1.5:8000/api/ahed/admin/ataa/freezeachievment",
-									"protocol": "http",
+									"raw": "{{base_url}}/api/admin/ataa/badges",
 									"host": [
-										"192",
-										"168",
-										"1",
-										"5"
+										"{{base_url}}"
 									],
-									"port": "8000",
 									"path": [
 										"api",
-										"ahed",
 										"admin",
 										"ataa",
-										"freezeachievment"
+										"badges"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add Ataa Prize",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Language",
+										"value": "ar",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "موبايل",
+											"type": "text"
+										},
+										{
+											"key": "arabic_name",
+											"value": "موبايل",
+											"type": "text"
+										},
+										{
+											"key": "required_markers_collected",
+											"value": "30",
+											"type": "text"
+										},
+										{
+											"key": "required_markers_posted",
+											"value": "5",
+											"type": "text"
+										},
+										{
+											"key": "from",
+											"value": "2021-09-03 00:15:36 ",
+											"type": "text"
+										},
+										{
+											"key": "level",
+											"value": "3",
+											"type": "text"
+										},
+										{
+											"key": "image",
+											"type": "file",
+											"src": "/C:/Users/Mahmoued Mohamed/Downloads/طارق اسامه عبدالمنعم ابوالمجد_id_back.png"
+										},
+										{
+											"key": "action",
+											"value": "shift",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/api/admin/ataa/prizes",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"ataa",
+										"prizes"
 									]
 								}
 							},
@@ -803,6 +624,16 @@
 						{
 							"name": "Defreeze Ataa Achievment",
 							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "VTiYn1flYMcFCSftDOKMhUwv5KrBV3npaxmrGbveJ1Fa3vmHjGkeKUu1IOVx",
+											"type": "string"
+										}
+									]
+								},
 								"method": "POST",
 								"header": [],
 								"body": {
@@ -810,173 +641,45 @@
 									"formdata": [
 										{
 											"key": "userId",
-											"value": "2",
+											"value": "359b460e-3e28-4b19-9661-7be4c5e0291a",
 											"type": "text"
 										},
 										{
 											"key": "adminId",
-											"value": "1",
+											"value": "359b460e-3e28-4b19-9661-7be4c5e0291a",
 											"type": "text"
 										}
 									]
 								},
 								"url": {
-									"raw": "http://192.168.1.5:8000/api/ahed/admin/ataa/defreezeachievment",
+									"raw": "http://192.168.1.51:8000/api/admin/ataa/defreeze-achievement",
 									"protocol": "http",
 									"host": [
 										"192",
 										"168",
 										"1",
-										"5"
+										"51"
 									],
 									"port": "8000",
 									"path": [
 										"api",
-										"ahed",
 										"admin",
 										"ataa",
-										"defreezeachievment"
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "Ban",
-					"item": [
-						{
-							"name": "Activate User Ban",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "_method",
-											"value": "patch",
-											"type": "text"
-										},
-										{
-											"key": "userId",
-											"value": "1",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "http://192.168.1.6:8000/api/admin/ban/activate/1",
-									"protocol": "http",
-									"host": [
-										"192",
-										"168",
-										"1",
-										"6"
-									],
-									"port": "8000",
-									"path": [
-										"api",
-										"admin",
-										"ban",
-										"activate",
-										"1"
+										"defreeze-achievement"
 									]
 								}
 							},
 							"response": []
 						},
 						{
-							"name": "Deactivate User Ban",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "_method",
-											"value": "patch",
-											"type": "text"
-										},
-										{
-											"key": "userId",
-											"value": "1",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "http://192.168.1.6:8000/api/admin/ban/deactivate/1",
-									"protocol": "http",
-									"host": [
-										"192",
-										"168",
-										"1",
-										"6"
-									],
-									"port": "8000",
-									"path": [
-										"api",
-										"admin",
-										"ban",
-										"deactivate",
-										"1"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Get User Ban",
+							"name": "Freeze Ataa Achievment",
 							"request": {
 								"auth": {
 									"type": "bearer",
 									"bearer": [
 										{
 											"key": "token",
-											"value": "J32EPgkTSDfAEQxOMXej70iQ6brfDyqGGFr2ilyTw9dYeAl5049MslX1QVsg",
-											"type": "string"
-										}
-									]
-								},
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://192.168.1.3:8000/api/admin/ban?userId=1",
-									"protocol": "http",
-									"host": [
-										"192",
-										"168",
-										"1",
-										"3"
-									],
-									"port": "8000",
-									"path": [
-										"api",
-										"admin",
-										"ban"
-									],
-									"query": [
-										{
-											"key": "userId",
-											"value": "1"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Add User Ban",
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "emmXNoHeggEv4PXW3EYmLs7AdZjX8OAt6gfPS69ltOEIfUacRBSQW9PSZhF1",
+											"value": "VTiYn1flYMcFCSftDOKMhUwv5KrBV3npaxmrGbveJ1Fa3vmHjGkeKUu1IOVx",
 											"type": "string"
 										}
 									]
@@ -988,40 +691,159 @@
 									"formdata": [
 										{
 											"key": "userId",
-											"value": "1",
+											"value": "359b460e-3e28-4b19-9661-7be4c5e0291a",
 											"type": "text"
 										},
 										{
-											"key": "bannedUser",
-											"value": "2",
-											"type": "text"
-										},
-										{
-											"key": "tag",
-											"value": "login_ban",
-											"type": "text"
-										},
-										{
-											"key": "endAt",
-											"value": "2021-09-10 15:36:00",
+											"key": "adminId",
+											"value": "359b460e-3e28-4b19-9661-7be4c5e0291a",
 											"type": "text"
 										}
 									]
 								},
 								"url": {
-									"raw": "http://192.168.1.5:8000/api/admin/ban",
+									"raw": "http://192.168.1.51:8000/api/admin/ataa/freeze-achievement",
 									"protocol": "http",
 									"host": [
 										"192",
 										"168",
 										"1",
-										"5"
+										"51"
 									],
 									"port": "8000",
 									"path": [
 										"api",
 										"admin",
-										"ban"
+										"ataa",
+										"freeze-achievement"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Activate Ataa Prize",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/admin/ataa/prizes/987ce3d1-0f71-4c7f-a51d-eb7e1914ce21/activate",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"ataa",
+										"prizes",
+										"987ce3d1-0f71-4c7f-a51d-eb7e1914ce21",
+										"activate"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Deactivate Ataa Prize",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/admin/ataa/prizes/987ce3d1-0f71-4c7f-a51d-eb7e1914ce21/deactivate",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"ataa",
+										"prizes",
+										"987ce3d1-0f71-4c7f-a51d-eb7e1914ce21",
+										"deactivate"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Activate Ataa Badge",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/admin/ataa/badges/c8d83460-3d4f-497f-8bc9-177e4ab656c1/activate",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"ataa",
+										"badges",
+										"c8d83460-3d4f-497f-8bc9-177e4ab656c1",
+										"activate"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Deactivate Ataa Badge",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/admin/ataa/badges/c8d83460-3d4f-497f-8bc9-177e4ab656c1/deactivate",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"ataa",
+										"badges",
+										"c8d83460-3d4f-497f-8bc9-177e4ab656c1",
+										"deactivate"
 									]
 								}
 							},
@@ -1031,864 +853,27 @@
 				},
 				{
 					"name": "Dashboard Data",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
 						"auth": {
 							"type": "bearer",
 							"bearer": [
 								{
 									"key": "token",
-									"value": "iPF5Xa9ml9eo7qmNXxga4SECBg7mTY9jViU55K6qbDil18W9cgxigrMegz47",
+									"value": "{{token}}",
 									"type": "string"
 								}
 							]
 						},
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "userId",
-									"value": "1",
-									"type": "text"
-								}
-							]
-						},
 						"url": {
-							"raw": "http://192.168.1.139:8000/api/admin?userId=2",
-							"protocol": "http",
+							"raw": "{{base_url}}/api/admin",
 							"host": [
-								"192",
-								"168",
-								"1",
-								"139"
+								"{{base_url}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"admin"
-							],
-							"query": [
-								{
-									"key": "userId",
-									"value": "2"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "import CSV",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "emmXNoHeggEv4PXW3EYmLs7AdZjX8OAt6gfPS69ltOEIfUacRBSQW9PSZhF1",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "userId",
-									"value": "1",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "http://192.168.1.139:8000/api/admin/importCSV",
-							"protocol": "http",
-							"host": [
-								"192",
-								"168",
-								"1",
-								"139"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"admin",
-								"importCSV"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Ataa",
-			"item": [
-				{
-					"name": "Ataa Achievement",
-					"item": [
-						{
-							"name": "Get User Achievments",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true,
-								"disabledSystemHeaders": {
-									"accept": true
-								}
-							},
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "iPF5Xa9ml9eo7qmNXxga4SECBg7mTY9jViU55K6qbDil18W9cgxigrMegz47",
-											"type": "string"
-										}
-									]
-								},
-								"method": "GET",
-								"header": [
-									{
-										"key": "Accept",
-										"type": "text",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"requesterId\" : 2,\r\n    \"language\": \"Ar\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "http://192.168.1.139:8000/api/ataa/achievement/2",
-									"protocol": "http",
-									"host": [
-										"192",
-										"168",
-										"1",
-										"139"
-									],
-									"port": "8000",
-									"path": [
-										"api",
-										"ataa",
-										"achievement",
-										"2"
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "Add Food Sharing Marker",
-					"protocolProfileBehavior": {
-						"disabledSystemHeaders": {
-							"accept": true
-						}
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "iPF5Xa9ml9eo7qmNXxga4SECBg7mTY9jViU55K6qbDil18W9cgxigrMegz47",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Accept",
-								"type": "text",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "language",
-									"value": "Ar",
-									"type": "text"
-								},
-								{
-									"key": "createdBy",
-									"value": "2",
-									"type": "text"
-								},
-								{
-									"key": "latitude",
-									"value": "1",
-									"type": "text"
-								},
-								{
-									"key": "longitude",
-									"value": "1",
-									"type": "text"
-								},
-								{
-									"key": "type",
-									"value": "Food",
-									"type": "text"
-								},
-								{
-									"key": "description",
-									"value": "هنا يوجد صلصة",
-									"type": "text"
-								},
-								{
-									"key": "quantity",
-									"value": "1",
-									"type": "text"
-								},
-								{
-									"key": "priority",
-									"value": "1",
-									"type": "text"
-								},
-								{
-									"key": "images",
-									"value": "1",
-									"type": "text",
-									"disabled": true
-								}
-							]
-						},
-						"url": {
-							"raw": "http://192.168.1.139:8000/api/ataa/markers",
-							"protocol": "http",
-							"host": [
-								"192",
-								"168",
-								"1",
-								"139"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"ataa",
-								"markers"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update Food Sharing Marker",
-					"protocolProfileBehavior": {
-						"disabledSystemHeaders": {
-							"accept": true
-						}
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "iPF5Xa9ml9eo7qmNXxga4SECBg7mTY9jViU55K6qbDil18W9cgxigrMegz47",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Accept",
-								"type": "text",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "_method",
-									"value": "patch",
-									"type": "text"
-								},
-								{
-									"key": "userId",
-									"value": "2",
-									"type": "text"
-								},
-								{
-									"key": "language",
-									"value": "Ar",
-									"type": "text"
-								},
-								{
-									"key": "latitude",
-									"value": "1",
-									"type": "text"
-								},
-								{
-									"key": "longitude",
-									"value": "1",
-									"type": "text"
-								},
-								{
-									"key": "type",
-									"value": "Food",
-									"type": "text"
-								},
-								{
-									"key": "description",
-									"value": "هنا يوجد صلصة",
-									"type": "text"
-								},
-								{
-									"key": "quantity",
-									"value": "1",
-									"type": "text"
-								},
-								{
-									"key": "priority",
-									"value": "1",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "http://192.168.1.139:8000/api/ataa/markers/66",
-							"protocol": "http",
-							"host": [
-								"192",
-								"168",
-								"1",
-								"139"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"ataa",
-								"markers",
-								"66"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete Food Sharing Marker",
-					"protocolProfileBehavior": {
-						"disabledSystemHeaders": {
-							"accept": true
-						}
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "iPF5Xa9ml9eo7qmNXxga4SECBg7mTY9jViU55K6qbDil18W9cgxigrMegz47",
-									"type": "string"
-								}
-							]
-						},
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Accept",
-								"type": "text",
-								"value": "application/json"
-							}
-						],
-						"url": {
-							"raw": "http://192.168.1.139:8000/api/ataa/markers/93?userId=2",
-							"protocol": "http",
-							"host": [
-								"192",
-								"168",
-								"1",
-								"139"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"ataa",
-								"markers",
-								"93"
-							],
-							"query": [
-								{
-									"key": "userId",
-									"value": "2"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Food Sharing Markers",
-					"protocolProfileBehavior": {
-						"disabledSystemHeaders": {
-							"accept": true
-						}
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "8e7RofXexvZRWMfg07ETDAk9W4wvYXDnV6cvrb6pH41CJOn41sg0tyoDe6gB",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"type": "text",
-								"value": "application/json"
-							}
-						],
-						"url": {
-							"raw": "http://192.168.1.139:8000/api/ataa/markers?userId=1",
-							"protocol": "http",
-							"host": [
-								"192",
-								"168",
-								"1",
-								"139"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"ataa",
-								"markers"
-							],
-							"query": [
-								{
-									"key": "userId",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Collect Food Sharing Marker",
-					"protocolProfileBehavior": {
-						"disabledSystemHeaders": {
-							"accept": true
-						}
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "iPF5Xa9ml9eo7qmNXxga4SECBg7mTY9jViU55K6qbDil18W9cgxigrMegz47",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Accept",
-								"type": "text",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "language",
-									"value": "Ar",
-									"type": "text"
-								},
-								{
-									"key": "userId",
-									"value": "3",
-									"type": "text"
-								},
-								{
-									"key": "_method",
-									"value": "patch",
-									"type": "text"
-								},
-								{
-									"key": "exists",
-									"value": "1",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "http://192.168.1.139:8000/api/ataa/collect/51",
-							"protocol": "http",
-							"host": [
-								"192",
-								"168",
-								"1",
-								"139"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"ataa",
-								"collect",
-								"51"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "User",
-			"item": [
-				{
-					"name": "Register",
-					"protocolProfileBehavior": {
-						"disabledSystemHeaders": {
-							"accept": true
-						}
-					},
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "name",
-									"value": "Mahmoued",
-									"type": "text"
-								},
-								{
-									"key": "user_name",
-									"value": "Mahmoued",
-									"type": "text"
-								},
-								{
-									"key": "email",
-									"value": "Mahmoued@yahoo.com",
-									"type": "text"
-								},
-								{
-									"key": "password",
-									"value": "Mahmoued",
-									"type": "text"
-								},
-								{
-									"key": "phone_number",
-									"value": "1",
-									"type": "text"
-								},
-								{
-									"key": "gender",
-									"value": "male",
-									"type": "text"
-								},
-								{
-									"key": "image",
-									"type": "file",
-									"src": "/C:/Users/mahmo/Desktop/66835913_2371001462966380_7442377746358992896_o.jpg"
-								},
-								{
-									"key": "nationality",
-									"value": "Egyptian",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "http://192.168.1.5:8000/api/register",
-							"protocol": "http",
-							"host": [
-								"192",
-								"168",
-								"1",
-								"5"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"register"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Change Profile Picture",
-					"protocolProfileBehavior": {
-						"disabledSystemHeaders": {
-							"accept": true
-						}
-					},
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "_method",
-									"value": "patch",
-									"type": "text"
-								},
-								{
-									"key": "userId",
-									"value": "2",
-									"type": "text"
-								},
-								{
-									"key": "image",
-									"type": "file",
-									"src": "/C:/Users/mahmo/Downloads/unnamed.png"
-								}
-							]
-						},
-						"url": {
-							"raw": "http://192.168.1.6:8000/api/profile/1/picture",
-							"protocol": "http",
-							"host": [
-								"192",
-								"168",
-								"1",
-								"6"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"profile",
-								"1",
-								"picture"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Change Cover Picture",
-					"protocolProfileBehavior": {
-						"disabledSystemHeaders": {
-							"accept": true
-						}
-					},
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Accept",
-								"type": "text",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "_method",
-									"value": "patch",
-									"type": "text"
-								},
-								{
-									"key": "userId",
-									"value": "2",
-									"type": "text"
-								},
-								{
-									"key": "image",
-									"type": "file",
-									"src": "/C:/Users/mahmo/Downloads/unnamed.png"
-								}
-							]
-						},
-						"url": {
-							"raw": "http://192.168.1.6:8000/api/profile/1/cover",
-							"protocol": "http",
-							"host": [
-								"192",
-								"168",
-								"1",
-								"6"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"profile",
-								"1",
-								"cover"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update Information",
-					"protocolProfileBehavior": {
-						"disabledSystemHeaders": {
-							"accept": true
-						}
-					},
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Accept",
-								"type": "text",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "_method",
-									"value": "patch",
-									"type": "text"
-								},
-								{
-									"key": "userId",
-									"value": "2",
-									"type": "text"
-								},
-								{
-									"key": "bio",
-									"value": "bio",
-									"type": "text"
-								},
-								{
-									"key": "phoneNumber",
-									"value": "1234335",
-									"type": "text"
-								},
-								{
-									"key": "address",
-									"value": "here",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "http://192.168.1.6:8000/api/profile/1/information",
-							"protocol": "http",
-							"host": [
-								"192",
-								"168",
-								"1",
-								"6"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"profile",
-								"1",
-								"information"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Login",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "http://192.168.1.5:8000/api/login?email=Mahmoued@yahoo.com&password=Mahmoued&accessType=Mobile&appType=MemoryWall",
-							"protocol": "http",
-							"host": [
-								"192",
-								"168",
-								"1",
-								"5"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"login"
-							],
-							"query": [
-								{
-									"key": "email",
-									"value": "Mahmoued@yahoo.com"
-								},
-								{
-									"key": "password",
-									"value": "Mahmoued"
-								},
-								{
-									"key": "accessType",
-									"value": "Mobile"
-								},
-								{
-									"key": "appType",
-									"value": "MemoryWall"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Refresh Token",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "oauthAccessToken",
-									"value": "uJPP7P1pxwl8ZiHOmiOdMML8SvR7B0gpY6tsELTyJNdbM48ftBIG3VwGoGk1",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "http://192.168.1.3:8000/api/token/refresh",
-							"protocol": "http",
-							"host": [
-								"192",
-								"168",
-								"1",
-								"3"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"token",
-								"refresh"
 							]
 						}
 					},
@@ -1900,33 +885,62 @@
 			"name": "Ahed",
 			"item": [
 				{
-					"name": "Offline Transaction",
+					"name": "Online Transaction",
 					"item": [
 						{
 							"name": "Get All",
 							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://192.168.1.6:8000/api/ahed/offlinetransactions?userId=1",
-									"protocol": "http",
+									"raw": "{{base_url}}/api/ahed/onlinetransactions",
 									"host": [
-										"192",
-										"168",
-										"1",
-										"6"
+										"{{base_url}}"
 									],
-									"port": "8000",
 									"path": [
 										"api",
 										"ahed",
-										"offlinetransactions"
-									],
-									"query": [
+										"onlinetransactions"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get By ID",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
 										{
-											"key": "userId",
-											"value": "1"
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
 										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/ahed/onlinetransactions/502833c3-716f-4b03-b0bb-cc4e8d2618c7",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"ahed",
+										"onlinetransactions",
+										"502833c3-716f-4b03-b0bb-cc4e8d2618c7"
 									]
 								}
 							},
@@ -1935,6 +949,16 @@
 						{
 							"name": "Add",
 							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
 								"method": "POST",
 								"header": [],
 								"body": {
@@ -1946,18 +970,131 @@
 											"type": "text"
 										},
 										{
-											"key": "giver",
-											"value": "1",
-											"type": "text"
-										},
-										{
 											"key": "needy",
-											"value": "1",
+											"value": "13691b08-69ce-4255-8798-3e45f809f274",
 											"type": "text"
 										},
 										{
 											"key": "amount",
 											"value": "23.55",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/api/ahed/onlinetransactions",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"ahed",
+										"onlinetransactions"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Offline Transaction",
+					"item": [
+						{
+							"name": "Get All",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/ahed/offlinetransactions",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"ahed",
+										"offlinetransactions"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get By ID",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/ahed/offlinetransactions/211de0b7-d2e4-467c-a9e4-054f4bb37579",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"ahed",
+										"offlinetransactions",
+										"211de0b7-d2e4-467c-a9e4-054f4bb37579"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "preferredSection",
+											"value": "سداد الديون",
+											"type": "text"
+										},
+										{
+											"key": "needy",
+											"value": "13691b08-69ce-4255-8798-3e45f809f274",
+											"type": "text"
+										},
+										{
+											"key": "amount",
+											"value": "23.55",
+											"type": "text"
+										},
+										{
+											"key": "phoneNumber",
+											"value": "234324535",
 											"type": "text"
 										},
 										{
@@ -1976,57 +1113,21 @@
 											"type": "text"
 										},
 										{
-											"key": "phoneNumber",
-											"value": "12346655",
+											"key": "giver",
+											"value": "5a5004fa-5663-4748-8b05-db2df52c67f0",
 											"type": "text"
 										}
 									]
 								},
 								"url": {
-									"raw": "http://192.168.1.139:8000/api/ahed/offlinetransactions",
-									"protocol": "http",
+									"raw": "{{base_url}}/api/ahed/offlinetransactions",
 									"host": [
-										"192",
-										"168",
-										"1",
-										"139"
+										"{{base_url}}"
 									],
-									"port": "8000",
 									"path": [
 										"api",
 										"ahed",
 										"offlinetransactions"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Get By ID",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://127.0.0.1:8000/api/ahed/offlinetransactions/1?userId=1",
-									"protocol": "http",
-									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
-									],
-									"port": "8000",
-									"path": [
-										"api",
-										"ahed",
-										"offlinetransactions",
-										"1"
-									],
-									"query": [
-										{
-											"key": "userId",
-											"value": "1"
-										}
 									]
 								}
 							},
@@ -2040,6 +1141,16 @@
 								}
 							},
 							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
 								"method": "POST",
 								"header": [
 									{
@@ -2063,18 +1174,13 @@
 											"type": "text"
 										},
 										{
-											"key": "userId",
-											"value": "1",
-											"type": "text"
-										},
-										{
 											"key": "preferredSection",
 											"value": "إيجاد علاج",
 											"type": "text"
 										},
 										{
 											"key": "needy",
-											"value": "3",
+											"value": "13691b08-69ce-4255-8798-3e45f809f274",
 											"type": "text"
 										},
 										{
@@ -2096,24 +1202,24 @@
 											"key": "endCollectDate",
 											"value": "2021-05-03 00:15:37",
 											"type": "text"
+										},
+										{
+											"key": "phoneNumber",
+											"value": "234324535",
+											"type": "text"
 										}
 									]
 								},
 								"url": {
-									"raw": "http://192.168.1.6:8000/api/ahed/offlinetransactions/2",
-									"protocol": "http",
+									"raw": "{{base_url}}/api/ahed/offlinetransactions/211de0b7-d2e4-467c-a9e4-054f4bb37579",
 									"host": [
-										"192",
-										"168",
-										"1",
-										"6"
+										"{{base_url}}"
 									],
-									"port": "8000",
 									"path": [
 										"api",
 										"ahed",
 										"offlinetransactions",
-										"2"
+										"211de0b7-d2e4-467c-a9e4-054f4bb37579"
 									]
 								}
 							},
@@ -2122,138 +1228,28 @@
 						{
 							"name": "Delete",
 							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:8000/api/ahed/offlinetransactions/2?userId=1",
-									"protocol": "http",
+									"raw": "{{base_url}}/api/ahed/offlinetransactions/211de0b7-d2e4-467c-a9e4-054f4bb37579",
 									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
+										"{{base_url}}"
 									],
-									"port": "8000",
 									"path": [
 										"api",
 										"ahed",
 										"offlinetransactions",
-										"2"
-									],
-									"query": [
-										{
-											"key": "userId",
-											"value": "1"
-										}
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "Online Transaction",
-					"item": [
-						{
-							"name": "Get All",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://192.168.1.6:8000/api/ahed/onlinetransactions?userId=1",
-									"protocol": "http",
-									"host": [
-										"192",
-										"168",
-										"1",
-										"6"
-									],
-									"port": "8000",
-									"path": [
-										"api",
-										"ahed",
-										"onlinetransactions"
-									],
-									"query": [
-										{
-											"key": "userId",
-											"value": "1"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Get By ID",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://127.0.0.1:8000/api/ahed/onlinetransactions?userId=1",
-									"protocol": "http",
-									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
-									],
-									"port": "8000",
-									"path": [
-										"api",
-										"ahed",
-										"onlinetransactions"
-									],
-									"query": [
-										{
-											"key": "userId",
-											"value": "1"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Add",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "giver",
-											"value": "2",
-											"type": "text"
-										},
-										{
-											"key": "needy",
-											"value": "10",
-											"type": "text"
-										},
-										{
-											"key": "amount",
-											"value": "20",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "http://192.168.1.5:8000/api/ahed/onlinetransactions",
-									"protocol": "http",
-									"host": [
-										"192",
-										"168",
-										"1",
-										"5"
-									],
-									"port": "8000",
-									"path": [
-										"api",
-										"ahed",
-										"onlinetransactions"
+										"211de0b7-d2e4-467c-a9e4-054f4bb37579"
 									]
 								}
 							},
@@ -2272,6 +1268,16 @@
 								}
 							},
 							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
 								"method": "GET",
 								"header": [
 									{
@@ -2281,15 +1287,10 @@
 									}
 								],
 								"url": {
-									"raw": "http://127.0.0.1:8000/api/ahed/needies",
-									"protocol": "http",
+									"raw": "{{base_url}}/api/ahed/needies",
 									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
+										"{{base_url}}"
 									],
-									"port": "8000",
 									"path": [
 										"api",
 										"ahed",
@@ -2300,58 +1301,52 @@
 							"response": []
 						},
 						{
-							"name": "Get All by IDs",
-							"protocolProfileBehavior": {
-								"disabledSystemHeaders": {
-									"accept": true
-								}
-							},
+							"name": "Get All Urgent",
 							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
 								"method": "GET",
-								"header": [
-									{
-										"key": "Accept",
-										"type": "text",
-										"value": "application/json"
-									}
-								],
+								"header": [],
 								"url": {
-									"raw": "http://192.168.1.2:8000/api/ahed/neediesWithIDs?ids[0]=1&ids[1]=2",
-									"protocol": "http",
+									"raw": "{{base_url}}/api/ahed/urgent-needies",
 									"host": [
-										"192",
-										"168",
-										"1",
-										"2"
+										"{{base_url}}"
 									],
-									"port": "8000",
 									"path": [
 										"api",
 										"ahed",
-										"neediesWithIDs"
-									],
-									"query": [
-										{
-											"key": "ids[0]",
-											"value": "1"
-										},
-										{
-											"key": "ids[1]",
-											"value": "2"
-										}
+										"urgent-needies"
 									]
 								}
 							},
 							"response": []
 						},
 						{
-							"name": "Add Medicine Need Needy",
+							"name": "Add Image to Needy",
 							"protocolProfileBehavior": {
 								"disabledSystemHeaders": {
 									"accept": true
 								}
 							},
 							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
 								"method": "POST",
 								"header": [
 									{
@@ -2364,77 +1359,93 @@
 									"mode": "formdata",
 									"formdata": [
 										{
-											"key": "createdBy",
-											"value": "1",
-											"type": "text"
-										},
-										{
-											"key": "name",
-											"value": "Leo",
-											"type": "text"
-										},
-										{
-											"key": "age",
-											"value": "1",
-											"type": "text"
-										},
-										{
-											"key": "severity",
-											"value": "1",
-											"type": "text"
-										},
-										{
-											"key": "type",
-											"value": "تحسين مستوي المعيشة",
-											"type": "text"
-										},
-										{
-											"key": "details",
-											"value": "Needs Alot of money",
-											"type": "text"
-										},
-										{
-											"key": "need",
-											"value": "1000000",
-											"type": "text"
-										},
-										{
-											"key": "address",
-											"value": "here",
-											"type": "text"
-										},
-										{
 											"key": "images[0]",
 											"type": "file",
-											"src": "/C:/Users/mahmo/AndroidStudioProjects/breed_me/assets/images/0.jpg"
+											"src": "/C:/Users/Mahmoued Mohamed/Downloads/طارق اسامه عبدالمنعم ابوالمجد_selfie.png"
 										},
 										{
 											"key": "images[1]",
 											"type": "file",
-											"src": "/C:/Users/mahmo/AndroidStudioProjects/breed_me/assets/images/1.jpg"
+											"src": "/C:/Users/Mahmoued Mohamed/Downloads/طارق اسامه عبدالمنعم ابوالمجد_id_back.png"
 										},
 										{
-											"key": "images",
+											"key": "before",
 											"value": "1",
-											"type": "text",
-											"disabled": true
+											"type": "text"
+										},
+										{
+											"key": "_method",
+											"value": "put",
+											"type": "text"
 										}
 									]
 								},
 								"url": {
-									"raw": "http://192.168.1.2:8000/api/ahed/needies",
-									"protocol": "http",
+									"raw": "{{base_url}}/api/ahed/needies/d9fa7bf9-70cc-4b2c-9f4a-8539126f5bdf/add-images/",
 									"host": [
-										"192",
-										"168",
-										"1",
-										"2"
+										"{{base_url}}"
 									],
-									"port": "8000",
 									"path": [
 										"api",
 										"ahed",
-										"needies"
+										"needies",
+										"d9fa7bf9-70cc-4b2c-9f4a-8539126f5bdf",
+										"add-images",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Remove image from needy",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								}
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "_method",
+											"value": "put",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/api/ahed/needies/medias/0162dcb6-2a8a-45cb-b138-306f811877c8/remove-image/",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"ahed",
+										"needies",
+										"medias",
+										"0162dcb6-2a8a-45cb-b138-306f811877c8",
+										"remove-image",
+										""
 									]
 								}
 							},
@@ -2453,7 +1464,7 @@
 									"bearer": [
 										{
 											"key": "token",
-											"value": "loHtVpKdv5QglnT6Z20X58DdUP8U8hgjvTu32QE5gUILtQ10F2kxjb6LGwX5",
+											"value": "{{token}}",
 											"type": "string"
 										}
 									]
@@ -2464,6 +1475,11 @@
 										"key": "Accept",
 										"type": "text",
 										"value": "application/json"
+									},
+									{
+										"key": "Content-Language",
+										"value": "ar",
+										"type": "text"
 									}
 								],
 								"body": {
@@ -2471,7 +1487,7 @@
 									"formdata": [
 										{
 											"key": "createdBy",
-											"value": "2",
+											"value": "359b460e-3e28-4b19-9661-7be4c5e0291a",
 											"type": "text"
 										},
 										{
@@ -2512,12 +1528,7 @@
 										{
 											"key": "images[0]",
 											"type": "file",
-											"src": "/C:/Users/MohamedMahmoud/Downloads/Ahed-main/Ahed-main/assets/images/8468Image.jpg"
-										},
-										{
-											"key": "images[1]",
-											"type": "file",
-											"src": []
+											"src": "/C:/Users/Mahmoued Mohamed/Downloads/download (1).jpg"
 										},
 										{
 											"key": "images",
@@ -2528,15 +1539,10 @@
 									]
 								},
 								"url": {
-									"raw": "http://192.168.1.139:8000/api/ahed/needies",
-									"protocol": "http",
+									"raw": "{{base_url}}/api/ahed/needies",
 									"host": [
-										"192",
-										"168",
-										"1",
-										"139"
+										"{{base_url}}"
 									],
-									"port": "8000",
 									"path": [
 										"api",
 										"ahed",
@@ -2628,55 +1634,19 @@
 									]
 								},
 								"url": {
-									"raw": "http://192.168.1.6:8000/api/ahed/needies",
+									"raw": "http://192.168.1.51:8000/api/ahed/needies",
 									"protocol": "http",
 									"host": [
 										"192",
 										"168",
 										"1",
-										"6"
+										"51"
 									],
 									"port": "8000",
 									"path": [
 										"api",
 										"ahed",
 										"needies"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Get By ID",
-							"protocolProfileBehavior": {
-								"disabledSystemHeaders": {
-									"accept": true
-								}
-							},
-							"request": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "Accept",
-										"type": "text",
-										"value": "application/json"
-									}
-								],
-								"url": {
-									"raw": "http://192.168.1.6:8000/api/ahed/needies/1",
-									"protocol": "http",
-									"host": [
-										"192",
-										"168",
-										"1",
-										"6"
-									],
-									"port": "8000",
-									"path": [
-										"api",
-										"ahed",
-										"needies",
-										"1"
 									]
 								}
 							},
@@ -2760,13 +1730,13 @@
 									]
 								},
 								"url": {
-									"raw": "http://192.168.1.6:8000/api/ahed/needies",
+									"raw": "http://192.168.1.51:8000/api/ahed/needies",
 									"protocol": "http",
 									"host": [
 										"192",
 										"168",
 										"1",
-										"6"
+										"51"
 									],
 									"port": "8000",
 									"path": [
@@ -2779,7 +1749,7 @@
 							"response": []
 						},
 						{
-							"name": "Add Image to Needy",
+							"name": "Add Medicine Need Needy",
 							"protocolProfileBehavior": {
 								"disabledSystemHeaders": {
 									"accept": true
@@ -2798,141 +1768,77 @@
 									"mode": "formdata",
 									"formdata": [
 										{
-											"key": "userId",
+											"key": "createdBy",
 											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "name",
+											"value": "Leo",
+											"type": "text"
+										},
+										{
+											"key": "age",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "severity",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "type",
+											"value": "تحسين مستوي المعيشة",
+											"type": "text"
+										},
+										{
+											"key": "details",
+											"value": "Needs Alot of money",
+											"type": "text"
+										},
+										{
+											"key": "need",
+											"value": "1000000",
+											"type": "text"
+										},
+										{
+											"key": "address",
+											"value": "here",
 											"type": "text"
 										},
 										{
 											"key": "images[0]",
 											"type": "file",
-											"src": "/C:/Users/mahmo/AndroidStudioProjects/breed_me/assets/images/giving.png"
+											"src": "/C:/Users/mahmo/AndroidStudioProjects/breed_me/assets/images/0.jpg"
 										},
 										{
 											"key": "images[1]",
 											"type": "file",
-											"src": "/C:/Users/mahmo/AndroidStudioProjects/breed_me/assets/images/9.jpg"
+											"src": "/C:/Users/mahmo/AndroidStudioProjects/breed_me/assets/images/1.jpg"
 										},
 										{
-											"key": "before",
+											"key": "images",
 											"value": "1",
-											"type": "text"
+											"type": "text",
+											"disabled": true
 										}
 									]
 								},
 								"url": {
-									"raw": "http://127.0.0.1:8000/api/ahed/needies/addImages/1",
+									"raw": "http://192.168.1.51:8000/api/ahed/needies",
 									"protocol": "http",
 									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
+										"192",
+										"168",
+										"1",
+										"51"
 									],
 									"port": "8000",
 									"path": [
 										"api",
 										"ahed",
-										"needies",
-										"addImages",
-										"1"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Remove image from needy",
-							"protocolProfileBehavior": {
-								"disabledSystemHeaders": {
-									"accept": true
-								}
-							},
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Accept",
-										"type": "text",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "userId",
-											"value": "1",
-											"type": "text"
-										},
-										{
-											"key": "imageId",
-											"value": "74",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "http://127.0.0.1:8000/api/ahed/needies/removeImage/23",
-									"protocol": "http",
-									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
-									],
-									"port": "8000",
-									"path": [
-										"api",
-										"ahed",
-										"needies",
-										"removeImage",
-										"23"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Remove Needy",
-							"protocolProfileBehavior": {
-								"disabledSystemHeaders": {
-									"accept": true
-								}
-							},
-							"request": {
-								"method": "DELETE",
-								"header": [
-									{
-										"key": "Accept",
-										"type": "text",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "formdata",
-									"formdata": []
-								},
-								"url": {
-									"raw": "http://127.0.0.1:8000/api/ahed/needies/25?userId=1",
-									"protocol": "http",
-									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
-									],
-									"port": "8000",
-									"path": [
-										"api",
-										"ahed",
-										"needies",
-										"25"
-									],
-									"query": [
-										{
-											"key": "userId",
-											"value": "1"
-										}
+										"needies"
 									]
 								}
 							},
@@ -2946,6 +1852,16 @@
 								}
 							},
 							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "VTiYn1flYMcFCSftDOKMhUwv5KrBV3npaxmrGbveJ1Fa3vmHjGkeKUu1IOVx",
+											"type": "string"
+										}
+									]
+								},
 								"method": "POST",
 								"header": [
 									{
@@ -2970,12 +1886,7 @@
 										},
 										{
 											"key": "userId",
-											"value": "1",
-											"type": "text"
-										},
-										{
-											"key": "createdBy",
-											"value": "1",
+											"value": "359b460e-3e28-4b19-9661-7be4c5e0291a",
 											"type": "text"
 										},
 										{
@@ -3000,7 +1911,7 @@
 										},
 										{
 											"key": "type",
-											"value": "Cure",
+											"value": "سداد الديون",
 											"type": "text"
 										},
 										{
@@ -3016,49 +1927,155 @@
 									]
 								},
 								"url": {
-									"raw": "http://127.0.0.1:8000/api/ahed/needies/20",
+									"raw": "http://192.168.1.51:8000/api/ahed/needies/5bef506a-2957-4c10-aad7-fccf9f038ea3",
 									"protocol": "http",
 									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
+										"192",
+										"168",
+										"1",
+										"51"
 									],
 									"port": "8000",
 									"path": [
 										"api",
 										"ahed",
 										"needies",
-										"20"
+										"5bef506a-2957-4c10-aad7-fccf9f038ea3"
 									]
 								}
 							},
 							"response": []
 						},
 						{
-							"name": "Get All Urgent",
+							"name": "Remove Needy",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								}
+							},
 							"request": {
-								"method": "GET",
-								"header": [],
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
 								"url": {
-									"raw": "http://192.168.1.2:8000/api/ahed/urgentneedies?page=1",
-									"protocol": "http",
+									"raw": "{{base_url}}/api/ahed/needies/d9fa7bf9-70cc-4b2c-9f4a-8539126f5bdf",
 									"host": [
-										"192",
-										"168",
-										"1",
-										"2"
+										"{{base_url}}"
 									],
-									"port": "8000",
 									"path": [
 										"api",
 										"ahed",
-										"urgentneedies"
+										"needies",
+										"d9fa7bf9-70cc-4b2c-9f4a-8539126f5bdf"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Show",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								}
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/ahed/needies/bb633cdb-52e3-496c-ac27-f61ce48bf58f",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"ahed",
+										"needies",
+										"bb633cdb-52e3-496c-ac27-f61ce48bf58f"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get All by IDs",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								}
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/ahed/needies-with-ids?ids[0]=d9fa7bf9-70cc-4b2c-9f4a-8539126f5bdf&ids[1]=655fe3ee-c5db-43e0-a39d-03b6184baff3",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"ahed",
+										"needies-with-ids"
 									],
 									"query": [
 										{
-											"key": "page",
-											"value": "1"
+											"key": "ids[0]",
+											"value": "d9fa7bf9-70cc-4b2c-9f4a-8539126f5bdf"
+										},
+										{
+											"key": "ids[1]",
+											"value": "655fe3ee-c5db-43e0-a39d-03b6184baff3"
 										}
 									]
 								}
@@ -3075,7 +2092,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "iPF5Xa9ml9eo7qmNXxga4SECBg7mTY9jViU55K6qbDil18W9cgxigrMegz47",
+									"value": "{{token}}",
 									"type": "string"
 								}
 							]
@@ -3083,20 +2100,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://192.168.1.139:8000/api/ahed/ahedachievement/1",
-							"protocol": "http",
+							"raw": "{{base_url}}/api/ahed/ahedachievement",
 							"host": [
-								"192",
-								"168",
-								"1",
-								"139"
+								"{{base_url}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"ahed",
-								"ahedachievement",
-								"1"
+								"ahedachievement"
 							]
 						}
 					},
@@ -3105,60 +2116,573 @@
 			]
 		},
 		{
-			"name": "MemoryWall",
+			"name": "User",
 			"item": [
 				{
-					"name": "Memory",
+					"name": "Register",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Mahmoued",
+									"type": "text"
+								},
+								{
+									"key": "user_name",
+									"value": "Mahmoued",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "Mahmoued@yahoo.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "Mahmoued23",
+									"type": "text"
+								},
+								{
+									"key": "phone_number",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "gender",
+									"value": "Male",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "nationality",
+									"value": "Egyptian",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"register"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Mahmoued",
+									"disabled": true
+								},
+								{
+									"key": "email",
+									"value": "mahmouedmartin2222@yahoo.com",
+									"disabled": true
+								},
+								{
+									"key": "password",
+									"value": "Mahmoued233",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change Profile Picture",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "_method",
+									"value": "patch",
+									"type": "text"
+								},
+								{
+									"key": "userId",
+									"value": "{{user_id}}",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/Mahmoued Mohamed/Downloads/IMG_4588.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/users/{{user_id}}/profile/picture",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"{{user_id}}",
+								"profile",
+								"picture"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change Cover Picture",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "_method",
+									"value": "patch",
+									"type": "text"
+								},
+								{
+									"key": "userId",
+									"value": "{{user_id}}",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/Mahmoued Mohamed/Downloads/IMG_4588.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/users/{{user_id}}/profile/cover",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"{{user_id}}",
+								"profile",
+								"cover"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Information",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "_method",
+									"value": "patch",
+									"type": "text"
+								},
+								{
+									"key": "userId",
+									"value": "{{user_id}}",
+									"type": "text"
+								},
+								{
+									"key": "bio",
+									"value": "bio",
+									"type": "text"
+								},
+								{
+									"key": "phoneNumber",
+									"value": "1234335",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "there",
+									"type": "text"
+								},
+								{
+									"key": "nationality",
+									"value": "Egyptian",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/users/{{user_id}}/profile/information",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"{{user_id}}",
+								"profile",
+								"information"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"Mahmoued@yahoo.com\",\r\n    \"password\": \"Mahmoued23\",\r\n    \"password_confirmation\": \"Mahmoued23\",\r\n    \"accessType\": \"API\",\r\n    \"appType\": \"Ahed\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/token/refresh",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"token",
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Anonymous Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"deviceId\": \"QP1A.190711.020\",\r\n    \"accessType\": \"Mobile\",\r\n    \"appType\": \"Ataa\",\r\n    \"nationality\": \"Egyptian\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/anonymous-login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"anonymous-login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Ataa",
+			"item": [
+				{
+					"name": "Food Sharing Marker",
 					"item": [
 						{
-							"name": "Add",
+							"name": "Collect Food Sharing Marker",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								}
+							},
 							"request": {
 								"auth": {
 									"type": "bearer",
 									"bearer": [
 										{
 											"key": "token",
-											"value": "d1Hc0xziVZe1rXWnE50LMSmkPIWmfe2wzMMY3DcDST7zCjh3k2SertMJrHuE",
+											"value": "{{token}}",
 											"type": "string"
 										}
 									]
 								},
 								"method": "POST",
-								"header": [],
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
 										{
-											"key": "createdBy",
-											"value": "1",
+											"key": "language",
+											"value": "Ar",
 											"type": "text"
 										},
 										{
-											"key": "personName",
-											"value": "Samy",
+											"key": "userId",
+											"value": "{{user_id}}",
 											"type": "text"
 										},
 										{
-											"key": "birthDate",
-											"value": "1985-12-02",
+											"key": "exists",
+											"value": "0",
 											"type": "text"
-										},
-										{
-											"key": "deathDate",
-											"value": "2020-12-11",
-											"type": "text"
-										},
-										{
-											"key": "lifeStory",
-											"value": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-											"type": "text"
-										},
-										{
-											"key": "image",
-											"type": "file",
-											"src": "/C:/Users/mahmo/Downloads/istockphoto-1159414326-612x612.jpg"
 										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/api/ataa/markers/aae09c0c-9a41-46d5-b4fd-e2f0ecc919fa/collect",
+									"host": [
+										"{{base_url}}"
 									],
+									"path": [
+										"api",
+										"ataa",
+										"markers",
+										"aae09c0c-9a41-46d5-b4fd-e2f0ecc919fa",
+										"collect"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Food Sharing Markers",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								}
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/ataa/markers?latitude=29.9832678&longitude=31.2282846",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"ataa",
+										"markers"
+									],
+									"query": [
+										{
+											"key": "latitude",
+											"value": "29.9832678"
+										},
+										{
+											"key": "longitude",
+											"value": "31.2282846"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Show Food Sharing Marker",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								}
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/ataa/markers/aae09c0c-9a41-46d5-b4fd-e2f0ecc919fa",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"ataa",
+										"markers",
+										"aae09c0c-9a41-46d5-b4fd-e2f0ecc919fa"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add Food Sharing Marker",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								}
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Language",
+										"type": "text",
+										"value": "ar"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"latitude\": 29.983014,\r\n    \"longitude\": 31.2380738,\r\n    \"type\": \"Food\",\r\n    \"description\": \"هنا\",\r\n    \"quantity\": 1.0,\r\n    \"priority\": 1\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -3166,15 +2690,308 @@
 									}
 								},
 								"url": {
-									"raw": "http://192.168.1.5:8000/api/memorywall/memories",
-									"protocol": "http",
+									"raw": "{{base_url}}/api/ataa/markers",
 									"host": [
-										"192",
-										"168",
-										"1",
-										"5"
+										"{{base_url}}"
 									],
-									"port": "8000",
+									"path": [
+										"api",
+										"ataa",
+										"markers"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Food Sharing Marker",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								}
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "language",
+											"value": "Ar",
+											"type": "text"
+										},
+										{
+											"key": "latitude",
+											"value": "29.9832678",
+											"type": "text"
+										},
+										{
+											"key": "longitude",
+											"value": "31.2282846",
+											"type": "text"
+										},
+										{
+											"key": "type",
+											"value": "Food",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "هنا يوجد صلصة",
+											"type": "text"
+										},
+										{
+											"key": "quantity",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "priority",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "images",
+											"value": "1",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "_method",
+											"value": "patch",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/api/ataa/markers/aae09c0c-9a41-46d5-b4fd-e2f0ecc919fa",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"ataa",
+										"markers",
+										"aae09c0c-9a41-46d5-b4fd-e2f0ecc919fa"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Food Sharing Marker",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								}
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/ataa/markers/0e6dc3c5-88d1-4471-a7a8-8065375fb7ba",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"ataa",
+										"markers",
+										"0e6dc3c5-88d1-4471-a7a8-8065375fb7ba"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Ataa Achievement \"User\"",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/ataa/achievement",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"ataa",
+								"achievement"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ataa Aquired Prizes \"User\"",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/ataa/prizes",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"ataa",
+								"prizes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ataa Aquired Badges \"User\"",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/ataa/badges",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"ataa",
+								"badges"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Memory Wall",
+			"item": [
+				{
+					"name": "Memories",
+					"item": [
+						{
+							"name": "Get All Memories",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Language",
+										"value": "ar",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/memorywall/memories",
+									"host": [
+										"{{base_url}}"
+									],
 									"path": [
 										"api",
 										"memorywall",
@@ -3185,14 +3002,318 @@
 							"response": []
 						},
 						{
-							"name": "Update",
+							"name": "Add Memory",
 							"request": {
 								"auth": {
 									"type": "bearer",
 									"bearer": [
 										{
 											"key": "token",
-											"value": "d1Hc0xziVZe1rXWnE50LMSmkPIWmfe2wzMMY3DcDST7zCjh3k2SertMJrHuE",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "personName",
+											"value": "محمد",
+											"type": "text"
+										},
+										{
+											"key": "birthDate",
+											"value": "2020-04-14",
+											"type": "text"
+										},
+										{
+											"key": "deathDate",
+											"value": "2021-05-20",
+											"type": "text"
+										},
+										{
+											"key": "brief",
+											"value": "Lorem ipsum adf df wer qwe vcvsd rewra sdasd re rads adsd rerasd freasrasr",
+											"type": "text"
+										},
+										{
+											"key": "lifeStory",
+											"value": "aSDf adf dasfsdf  dfsdf dsf asdf sfd sdf sdfs fd fasdfsfsadfas fas f",
+											"type": "text"
+										},
+										{
+											"key": "image",
+											"type": "file",
+											"src": "/C:/Users/Mahmoued Mohamed/Downloads/IMG_4588.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/api/memorywall/memories",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"memorywall",
+										"memories"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Memory",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "personName",
+											"value": "محمد محمد",
+											"type": "text"
+										},
+										{
+											"key": "birthDate",
+											"value": "2020-04-14",
+											"type": "text"
+										},
+										{
+											"key": "deathDate",
+											"value": "2021-05-20",
+											"type": "text"
+										},
+										{
+											"key": "brief",
+											"value": "Lorem ipsum adf df wer qwe vcvsd rewra sdasd re rads adsd rerasd freasrasr",
+											"type": "text"
+										},
+										{
+											"key": "lifeStory",
+											"value": "aSDf adf dasfsdf  dfsdf dsf asdf sfd sdf sdfs fd fasdfsfsadfas fas f",
+											"type": "text"
+										},
+										{
+											"key": "image",
+											"type": "file",
+											"src": "/C:/Users/Mahmoued Mohamed/Documents/GitHub/OgiveWeb/public/images/pug.png"
+										},
+										{
+											"key": "_method",
+											"value": "patch",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/api/memorywall/memories/0149aa8d-16f8-4f2d-9786-7d344b6b53ca",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"memorywall",
+										"memories",
+										"0149aa8d-16f8-4f2d-9786-7d344b6b53ca"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Memory",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userId\": \"359b460e-3e28-4b19-9661-7be4c5e0291a\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/memorywall/memories/0149aa8d-16f8-4f2d-9786-7d344b6b53ca",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"memorywall",
+										"memories",
+										"0149aa8d-16f8-4f2d-9786-7d344b6b53ca"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Memory",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/memorywall/memories/0149aa8d-16f8-4f2d-9786-7d344b6b53ca",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"memorywall",
+										"memories",
+										"0149aa8d-16f8-4f2d-9786-7d344b6b53ca"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Top Memories",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/memorywall/memories/top",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"memorywall",
+										"memories",
+										"top"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Likes",
+					"item": [
+						{
+							"name": "Get All Likes",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{base_url}}/api/memorywall/likes",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"memorywall",
+										"likes"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add Like",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"type\": \"Love\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/memorywall/memories/1ce3b7d5-4372-456b-9cda-ae5b5fc5b5e6/like",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"memorywall",
+										"memories",
+										"1ce3b7d5-4372-456b-9cda-ae5b5fc5b5e6",
+										"like"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Like",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "VTiYn1flYMcFCSftDOKMhUwv5KrBV3npaxmrGbveJ1Fa3vmHjGkeKUu1IOVx",
 											"type": "string"
 										}
 									]
@@ -3206,301 +3327,69 @@
 											"key": "_method",
 											"value": "patch",
 											"type": "text"
-										},
-										{
-											"key": "userId",
-											"value": "1",
-											"type": "text"
-										},
-										{
-											"key": "personName",
-											"value": "Samyy",
-											"type": "text"
-										},
-										{
-											"key": "birthDate",
-											"value": "1985-12-02",
-											"type": "text",
-											"disabled": true
-										},
-										{
-											"key": "deathDate",
-											"value": "2020-12-11",
-											"type": "text",
-											"disabled": true
-										},
-										{
-											"key": "lifeStory",
-											"value": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-											"type": "text",
-											"disabled": true
-										},
-										{
-											"key": "image",
-											"type": "file",
-											"src": "/C:/Users/mahmo/Downloads/cases/315fc45e-678c-408b-9ee3-88c10e9b4467_3545474351.jpeg"
 										}
 									]
 								},
 								"url": {
-									"raw": "http://192.168.1.5:8000/api/memorywall/memories/1",
+									"raw": "http://192.168.1.51:8000/api/memorywall/likes/3b9017dd-5d8c-4246-85ce-7a60f4144935",
 									"protocol": "http",
 									"host": [
 										"192",
 										"168",
 										"1",
-										"5"
-									],
-									"port": "8000",
-									"path": [
-										"api",
-										"memorywall",
-										"memories",
-										"1"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Delete",
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "d1Hc0xziVZe1rXWnE50LMSmkPIWmfe2wzMMY3DcDST7zCjh3k2SertMJrHuE",
-											"type": "string"
-										}
-									]
-								},
-								"method": "DELETE",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": []
-								},
-								"url": {
-									"raw": "http://192.168.1.5:8000/api/memorywall/memories/7?userId=1",
-									"protocol": "http",
-									"host": [
-										"192",
-										"168",
-										"1",
-										"5"
-									],
-									"port": "8000",
-									"path": [
-										"api",
-										"memorywall",
-										"memories",
-										"7"
-									],
-									"query": [
-										{
-											"key": "userId",
-											"value": "1"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Get All",
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "d1Hc0xziVZe1rXWnE50LMSmkPIWmfe2wzMMY3DcDST7zCjh3k2SertMJrHuE",
-											"type": "string"
-										}
-									]
-								},
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://192.168.1.5:8000/api/memorywall/memories?userId=1",
-									"protocol": "http",
-									"host": [
-										"192",
-										"168",
-										"1",
-										"5"
-									],
-									"port": "8000",
-									"path": [
-										"api",
-										"memorywall",
-										"memories"
-									],
-									"query": [
-										{
-											"key": "userId",
-											"value": "1"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Get By ID",
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "d1Hc0xziVZe1rXWnE50LMSmkPIWmfe2wzMMY3DcDST7zCjh3k2SertMJrHuE",
-											"type": "string"
-										}
-									]
-								},
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://192.168.1.5:8000/api/memorywall/memories/1?language=Ar",
-									"protocol": "http",
-									"host": [
-										"192",
-										"168",
-										"1",
-										"5"
-									],
-									"port": "8000",
-									"path": [
-										"api",
-										"memorywall",
-										"memories",
-										"1"
-									],
-									"query": [
-										{
-											"key": "language",
-											"value": "Ar"
-										}
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "Like",
-					"item": [
-						{
-							"name": "Add",
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "d1Hc0xziVZe1rXWnE50LMSmkPIWmfe2wzMMY3DcDST7zCjh3k2SertMJrHuE",
-											"type": "string"
-										}
-									]
-								},
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "userId",
-											"value": "1",
-											"type": "text"
-										},
-										{
-											"key": "memoryId",
-											"value": "9",
-											"type": "text"
-										}
-									],
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "http://192.168.1.5:8000/api/memorywall/likes",
-									"protocol": "http",
-									"host": [
-										"192",
-										"168",
-										"1",
-										"5"
-									],
-									"port": "8000",
-									"path": [
-										"api",
-										"memorywall",
-										"likes"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Delete",
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "d1Hc0xziVZe1rXWnE50LMSmkPIWmfe2wzMMY3DcDST7zCjh3k2SertMJrHuE",
-											"type": "string"
-										}
-									]
-								},
-								"method": "DELETE",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": []
-								},
-								"url": {
-									"raw": "http://192.168.1.5:8000/api/memorywall/likes/8?userId=1",
-									"protocol": "http",
-									"host": [
-										"192",
-										"168",
-										"1",
-										"5"
+										"51"
 									],
 									"port": "8000",
 									"path": [
 										"api",
 										"memorywall",
 										"likes",
-										"8"
-									],
-									"query": [
-										{
-											"key": "userId",
-											"value": "1"
-										}
+										"3b9017dd-5d8c-4246-85ce-7a60f4144935"
 									]
 								}
 							},
 							"response": []
 						},
 						{
-							"name": "Get All",
+							"name": "Delete Like",
 							"request": {
 								"auth": {
 									"type": "bearer",
 									"bearer": [
 										{
 											"key": "token",
-											"value": "d1Hc0xziVZe1rXWnE50LMSmkPIWmfe2wzMMY3DcDST7zCjh3k2SertMJrHuE",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/memorywall/memories/1ce3b7d5-4372-456b-9cda-ae5b5fc5b5e6/unlike",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"memorywall",
+										"memories",
+										"1ce3b7d5-4372-456b-9cda-ae5b5fc5b5e6",
+										"unlike"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Like",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "VTiYn1flYMcFCSftDOKMhUwv5KrBV3npaxmrGbveJ1Fa3vmHjGkeKUu1IOVx",
 											"type": "string"
 										}
 									]
@@ -3508,25 +3397,20 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://192.168.1.5:8000/api/memorywall/likes?userId=1",
+									"raw": "http://192.168.1.51:8000/api/memorywall/likes/3b9017dd-5d8c-4246-85ce-7a60f4144935",
 									"protocol": "http",
 									"host": [
 										"192",
 										"168",
 										"1",
-										"5"
+										"51"
 									],
 									"port": "8000",
 									"path": [
 										"api",
 										"memorywall",
-										"likes"
-									],
-									"query": [
-										{
-											"key": "userId",
-											"value": "1"
-										}
+										"likes",
+										"3b9017dd-5d8c-4246-85ce-7a60f4144935"
 									]
 								}
 							},
@@ -3535,6 +3419,70 @@
 					]
 				}
 			]
+		},
+		{
+			"name": "Options",
+			"item": [
+				{
+					"name": "{{base_url}}/api/options/nationalities",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/options/nationalities",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"options",
+								"nationalities"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://192.168.1.4:8000"
+		},
+		{
+			"key": "a_token",
+			"value": "w1zVxbtEuzgI2QsLLSR1LV0Jl02JeP094DP2VmoSYUeI7FuBa7qFDIatqvPZ"
+		},
+		{
+			"key": "user_id",
+			"value": "330a8a91-1e25-4a79-9aad-a1f138233dff",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "C0pBzTEKOPw0PYuSTqUevbO2Ah1l0ZGuWznCCfl_XVIOVr0nw675yiyztdHONH3EFWnBvH4ija41eEBYT_mn7KIXC2oiOBonzk0uq9v43WNHHI-anCAzxICl8AFNbYkw-XehODBa8ns4ZhKD-PL2nvaIBIMP38W3IQhQRh82OHmL4FPsL2Es3z75NSIg5g==.rOWeY6C3Ifirf3WHtsHoML3XKx7Z8fA9.RmwwXpNoJxWtBvGBYGjmQMz-ViXCjEeRBr56ZFSCVgw=",
+			"type": "string"
 		}
 	]
 }

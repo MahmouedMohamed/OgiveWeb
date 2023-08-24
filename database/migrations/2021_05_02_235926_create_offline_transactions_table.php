@@ -16,7 +16,7 @@ class CreateOfflineTransactionsTable extends Migration
         Schema::create('offline_transactions', function (Blueprint $table) {
             $table->uuid('id');
             $table->primary('id');
-            $table->string('giver')->nullable();
+            $table->string('giver_id')->nullable();
             $table->string('needy_id');
             $table->double('amount');
             $table->text('preferred_section');
@@ -27,7 +27,7 @@ class CreateOfflineTransactionsTable extends Migration
             $table->dateTime('selected_date')->nullable();
             $table->boolean('collected')->default(0);
             $table->timestamps();
-            $table->foreign('giver')
+            $table->foreign('giver_id')
                 ->references('id')
                 ->on('users')
                 ->onUpdate('cascade')

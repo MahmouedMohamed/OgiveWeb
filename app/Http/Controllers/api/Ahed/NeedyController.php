@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers\api\Ahed;
 
-use App\Exceptions\NeedyNotFound;
 use App\Exceptions\UserNotAuthorized;
-use App\Exceptions\UserNotFound;
 use App\Http\Controllers\api\BaseController;
 use App\Http\Requests\CreateNeedyRequest;
 use App\Http\Requests\NeedyImagesRequest;
@@ -18,7 +16,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-class NeediesController extends BaseController
+class NeedyController extends BaseController
 {
     use UserValidator, NeedyValidator;
 
@@ -35,6 +33,7 @@ class NeediesController extends BaseController
             Cache::remember('needies-'.$currentPage, 60 * 60 * 24, function () {
                 return
                     Needy::approved()
+                        ->notSatisfied()
                         ->where('severity', '<', '7')
                         ->latest('needies.created_at')
                         ->with(['createdBy.profile', 'mediasBefore:id,path,needy_id', 'mediasAfter:id,path,needy_id'])
@@ -57,6 +56,7 @@ class NeediesController extends BaseController
             Cache::remember('urgentNeedies-'.$currentPage, 60 * 60 * 24, function () {
                 return
                     Needy::approved()
+                        ->notSatisfied()
                         ->where('severity', '>=', '7')
                         ->latest('needies.created_at')
                         ->with(['createdBy.profile', 'mediasBefore:id,path,needy_id', 'mediasAfter:id,path,needy_id'])
@@ -75,6 +75,7 @@ class NeediesController extends BaseController
     {
         return $this->sendResponse(
             Needy::whereIn('id', $request['ids'])
+                ->notSatisfied()
                 ->approved()
                 ->latest('needies.created_at')
                 ->with(['createdBy.profile', 'mediasBefore:id,path,needy_id', 'mediasAfter:id,path,needy_id'])->get(),
@@ -125,14 +126,10 @@ class NeediesController extends BaseController
      */
     public function show(Needy $needy)
     {
-        try {
-            return $this->sendResponse(
-                $needy->with(['createdBy.profile', 'mediasBefore:id,path,needy_id', 'mediasAfter:id,path,needy_id'])->first(),
-                __('General.DataRetrievedSuccessMessage')
-            ); ///Data Retrieved Successfully!
-        } catch (NeedyNotFound $e) {
-            return $this->sendError(__('Ahed.NeedyNotFound'));   ///Case Not Found
-        }
+        return $this->sendResponse(
+            $needy->with(['createdBy.profile', 'mediasBefore:id,path,needy_id', 'mediasAfter:id,path,needy_id'])->first(),
+            __('General.DataRetrievedSuccessMessage')
+        ); ///Data Retrieved Successfully!
     }
 
     /**
@@ -184,10 +181,6 @@ class NeediesController extends BaseController
             $needy->addImages($imagePaths, $request['before']);
 
             return $this->sendResponse([], __('Ahed.NeedyMediaCreationSuccessMessage'));
-        } catch (NeedyNotFound $e) {
-            return $this->sendError(__('Ahed.NeedyNotFound'));
-        } catch (UserNotFound $e) {
-            return $this->sendError(__('General.UserNotFound'));
         } catch (UserNotAuthorized $e) {
             return $this->sendForbidden(__('Ahed.NeediesUpdateForbiddenMessage'));
         }

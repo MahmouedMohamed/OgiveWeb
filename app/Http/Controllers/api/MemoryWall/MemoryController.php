@@ -9,7 +9,6 @@ use App\Http\Requests\UpdateMemoryRequest;
 use App\Http\Resources\MemoryPaginationResource;
 use App\Http\Resources\MemoryResource;
 use App\Models\MemoryWall\Memory;
-use App\Traits\ControllersTraits\MemoryValidator;
 use App\Traits\ControllersTraits\UserValidator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -17,7 +16,7 @@ use Illuminate\Support\Facades\Storage;
 
 class MemoryController extends BaseController
 {
-    use UserValidator, MemoryValidator;
+    use UserValidator;
 
     /**
      * Display a listing of the resource.

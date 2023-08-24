@@ -8,4 +8,8 @@ return [
     'UserBanNotFound' => 'العنصر غير موجود',
     'InvalidAccess' => 'أنت لا تملك الصلاحية الكافية',
     'ValidationFailure' => 'خطأ في البيانات',
+    'UserAccountDepositSuccessMessage' => 'تم إضافة المبلغ لحسابك بنجاح',
+    'UserAccountWithdrawalSuccessMessage' => 'تم سحب المبلغ من حسابك بنجاح',
+    'UserAccountWithdrawalNoBalanceErrorMessage' => 'أنت لا تملك رصيد كافي',
+    'UserSettingsSuccessMessage' => 'تم إضافة الإعدادات بنجاح',
 ];

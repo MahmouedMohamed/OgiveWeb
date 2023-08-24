@@ -33,7 +33,7 @@ class OnlineTransactionPolicy
     public function view(User $user, OnlineTransaction $transaction)
     {
         return ($this->hasAbility($user, AvailableAbilities::ViewOnlineTransaction)
-            || $user->id == $transaction->giver)
+            || $user->id == $transaction->giver_id)
             && $this->hasNoBan($user, BanTypes::ViewOnlineTransaction);
     }
 
