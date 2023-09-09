@@ -3,11 +3,8 @@
 namespace App\Events;
 
 use App\Services\SegmentService;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
@@ -24,7 +21,8 @@ class UserRegistered
     {
     }
 
-    public function handle() {
+    public function handle()
+    {
         $segmentService = new SegmentService();
         $segmentService->identify($this->user, $this->extraParams);
         $segmentService->track(class_basename($this), $this->user, $this->extraParams);

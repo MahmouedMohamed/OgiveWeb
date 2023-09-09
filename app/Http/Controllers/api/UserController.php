@@ -12,7 +12,6 @@ use App\Http\Requests\UpdateImageRequest;
 use App\Http\Requests\UpdateProfileRequest;
 use App\Http\Resources\ProfileResource;
 use App\Http\Resources\UserResource;
-use App\Jobs\SendSegmentJob;
 use App\Models\Ahed\Needy;
 use App\Models\Ahed\OfflineTransaction;
 use App\Models\Ahed\OnlineTransaction;
@@ -120,11 +119,12 @@ class UserController extends BaseController
             $user,
             [
                 'ip' => $registerRequest->ip(),
-                'locale' => app()->getLocale()
+                'locale' => app()->getLocale(),
             ]
         );
 
         DB::commit();
+
         return $this->sendResponse(UserResource::make($user), 'User Created Successfully');
     }
 

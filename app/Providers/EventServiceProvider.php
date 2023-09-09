@@ -22,7 +22,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         UserRegistered::class => [
             SendSegmentNotification::class,
-        ]
+        ],
     ];
 
     /**
