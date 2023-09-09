@@ -23,4 +23,9 @@ class Nationality extends BaseConvertorModel
         1 => 'مصري',
         2 => 'فلسطيني',
     ];
+
+    public static $country = [
+        1 => 'Egypt',
+        2 => 'Palestine',
+    ];
 }
