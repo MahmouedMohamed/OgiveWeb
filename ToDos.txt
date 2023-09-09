@@ -9,4 +9,4 @@
 *9- Dispatch Ataa Auto Donation Job every 15 min
 *10- Dispatch Slice Ataa Auto Donation Job per User when Settings turn to Auto Donate => Observer (Settings) => Listener (Dispatch Job)
 *11- Listener => Send SMS when Transaction from Auto Donation is Made
-12-
+12- Add Extra Segment Events
