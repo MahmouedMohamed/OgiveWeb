@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\ConverterModels\CaseType;
+use App\Events\UserRegistered;
 use App\Exceptions\UserNotAuthorized;
 use App\Http\Requests\AnonymousLoginRequest;
 use App\Http\Requests\LoginRequest;
@@ -11,6 +12,7 @@ use App\Http\Requests\UpdateImageRequest;
 use App\Http\Requests\UpdateProfileRequest;
 use App\Http\Resources\ProfileResource;
 use App\Http\Resources\UserResource;
+use App\Jobs\SendSegmentJob;
 use App\Models\Ahed\Needy;
 use App\Models\Ahed\OfflineTransaction;
 use App\Models\Ahed\OnlineTransaction;
@@ -20,6 +22,7 @@ use App\Models\User;
 use App\Traits\ControllersTraits\LoginValidator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends BaseController
@@ -92,6 +95,7 @@ class UserController extends BaseController
     //ToDo: Move to Job
     public function register(RegisterRequest $registerRequest)
     {
+        DB::beginTransaction();
         $user = User::create([
             'name' => request('name'),
             'user_name' => request('user_name'),
@@ -112,6 +116,15 @@ class UserController extends BaseController
             $profile->save();
         }
 
+        UserRegistered::dispatch(
+            $user,
+            [
+                'ip' => $registerRequest->ip(),
+                'locale' => app()->getLocale()
+            ]
+        );
+
+        DB::commit();
         return $this->sendResponse(UserResource::make($user), 'User Created Successfully');
     }
 

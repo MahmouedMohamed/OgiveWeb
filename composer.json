@@ -19,6 +19,7 @@
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.1",
         "pusher/pusher-php-server": "^7.0",
+        "segmentio/analytics-php": "^3.6",
         "spatie/laravel-query-builder": "^3.3"
     },
     "require-dev": {
@@ -74,5 +75,11 @@
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
         ]
-    }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:segmentio/analytics-php.git"
+        }
+    ]
 }
